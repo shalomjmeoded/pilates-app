@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { LayoutChangeEvent, PanResponder, Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -36,6 +36,9 @@ function getPaceLabel(pace: Pace | null): string {
 export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProps) {
   const selectedIndex = getPaceIndex(value);
   const displayPace = value ?? PACE_VALUES[selectedIndex];
+  const [trackWidth, setTrackWidth] = useState(0);
+  const dragStartProgress = useRef(selectedIndex / (PACE_VALUES.length - 1));
+  const lastDragIndex = useRef(selectedIndex);
   const fillProgress = useSharedValue(paceToPercent(displayPace) / 100);
   const thumbProgress = useSharedValue(selectedIndex / (PACE_VALUES.length - 1));
 
@@ -52,6 +55,10 @@ export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProp
     });
   }, [fillProgress, selectedIndex, thumbProgress, value]);
 
+  useEffect(() => {
+    lastDragIndex.current = selectedIndex;
+  }, [selectedIndex]);
+
   const fillStyle = useAnimatedStyle(() => ({
     width: `${fillProgress.value * 100}%`,
   }));
@@ -59,6 +66,35 @@ export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProp
   const thumbStyle = useAnimatedStyle(() => ({
     left: `${thumbProgress.value * 100}%`,
   }));
+
+  const commitIndex = (index: number) => {
+    const clampedIndex = Math.min(PACE_VALUES.length - 1, Math.max(0, index));
+    if (clampedIndex !== lastDragIndex.current) {
+      lastDragIndex.current = clampedIndex;
+      onChange(PACE_VALUES[clampedIndex]);
+    }
+  };
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponder: (_, gesture) => Math.abs(gesture.dx) > 3,
+    onPanResponderGrant: () => {
+      dragStartProgress.current = selectedIndex / (PACE_VALUES.length - 1);
+      lastDragIndex.current = selectedIndex;
+    },
+    onPanResponderMove: (_, gesture) => {
+      if (trackWidth <= 0) {
+        return;
+      }
+      const progress = Math.min(1, Math.max(0, dragStartProgress.current + gesture.dx / trackWidth));
+      commitIndex(Math.round(progress * (PACE_VALUES.length - 1)));
+    },
+    onPanResponderTerminationRequest: () => false,
+  });
+
+  const handleTrackLayout = (event: LayoutChangeEvent) => {
+    setTrackWidth(event.nativeEvent.layout.width);
+  };
 
   return (
     <View style={styles.container}>
@@ -85,9 +121,11 @@ export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProp
         }}
         style={styles.trackShell}
       >
-        <View style={styles.track}>
-          <Animated.View style={[styles.trackFill, fillStyle]} />
-          <Animated.View style={[styles.thumb, thumbStyle]} />
+        <View style={styles.trackHitArea} {...panResponder.panHandlers}>
+          <View style={styles.track} onLayout={handleTrackLayout}>
+            <Animated.View style={[styles.trackFill, fillStyle]} />
+            <Animated.View style={[styles.thumb, thumbStyle]} />
+          </View>
         </View>
 
         <View style={styles.tickRow}>
@@ -160,6 +198,10 @@ const styles = StyleSheet.create({
   trackShell: {
     gap: spacing.sm,
     paddingHorizontal: THUMB_SIZE / 2,
+  },
+  trackHitArea: {
+    minHeight: 44,
+    justifyContent: 'center',
   },
   track: {
     height: 12,
