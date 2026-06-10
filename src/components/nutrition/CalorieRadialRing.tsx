@@ -71,8 +71,7 @@ export function CalorieRadialRing({
           strokeLinecap="round"
           strokeDasharray={`${circumference} ${circumference}`}
           animatedProps={animatedProps}
-          rotation="-90"
-          origin={`${size / 2}, ${size / 2}`}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
       </Svg>
       <View style={styles.center}>

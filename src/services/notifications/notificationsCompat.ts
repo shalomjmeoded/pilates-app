@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
 export type NotificationPermissionStatus = 'undetermined' | 'granted' | 'denied';
 
@@ -11,7 +12,7 @@ function loadNotificationsModule(): ExpoNotificationsModule | null {
     return cachedModule;
   }
 
-  if (Constants.appOwnership === 'expo') {
+  if (Constants.appOwnership === 'expo' || Platform.OS === 'web') {
     cachedModule = null;
     return null;
   }
@@ -39,6 +40,10 @@ export function getNotificationsSupportMessage(): string | null {
 
   if (Constants.appOwnership === 'expo') {
     return 'Local reminders need a development build. Expo Go cannot schedule notifications.';
+  }
+
+  if (Platform.OS === 'web') {
+    return 'Notifications are unavailable on web.';
   }
 
   return 'Notifications are unavailable in this environment.';
