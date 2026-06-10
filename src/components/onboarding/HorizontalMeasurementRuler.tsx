@@ -14,12 +14,12 @@ import { MOTION, colors, radius, spacing } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
 import { kgToLb } from '@/utils/units';
 
-const TICK_WIDTH = 8;
+const TICK_WIDTH = 10;
 const MIN_KG = 35;
 const MAX_KG = 250;
-const STEP_KG = 0.1;
-const FINE_STEP_LB = 0.5;
 const LB_PER_KG = 2.20462;
+const KG_STEP = 0.2;
+const LB_STEP = 0.5;
 const VIEWPORT_WIDTH = 320;
 
 interface HorizontalMeasurementRulerProps {
@@ -29,13 +29,13 @@ interface HorizontalMeasurementRulerProps {
   onToggleUnit: () => void;
 }
 
-function stepsCount(): number {
-  return Math.round((MAX_KG - MIN_KG) / STEP_KG);
+function stepsCount(stepKg: number): number {
+  return Math.round((MAX_KG - MIN_KG) / stepKg);
 }
 
-function kgFromOffset(offsetX: number): number {
-  const raw = MIN_KG + (offsetX / TICK_WIDTH) * STEP_KG;
-  const snapped = Math.round(raw / STEP_KG) * STEP_KG;
+function kgFromOffset(offsetX: number, stepKg: number): number {
+  const raw = MIN_KG + (offsetX / TICK_WIDTH) * stepKg;
+  const snapped = Math.round(raw / stepKg) * stepKg;
   return Math.min(MAX_KG, Math.max(MIN_KG, Math.round(snapped * 10) / 10));
 }
 
@@ -60,14 +60,16 @@ export function HorizontalMeasurementRuler({
   const scrollRef = useRef<ScrollView>(null);
   const lastKg = useRef(valueKg);
   const hasMounted = useRef(false);
+  const isInteracting = useRef(false);
   const scale = useSharedValue(1);
   const padding = VIEWPORT_WIDTH / 2;
-  const steps = stepsCount();
+  const stepKg = unit === 'kg' ? KG_STEP : LB_STEP / LB_PER_KG;
+  const steps = stepsCount(stepKg);
 
   const scrollToKg = useCallback((kg: number, animated = false) => {
-    const offset = ((kg - MIN_KG) / STEP_KG) * TICK_WIDTH;
+    const offset = ((kg - MIN_KG) / stepKg) * TICK_WIDTH;
     scrollRef.current?.scrollTo({ x: offset, animated });
-  }, []);
+  }, [stepKg]);
 
   useEffect(() => {
     if (!hasMounted.current) {
@@ -77,7 +79,7 @@ export function HorizontalMeasurementRuler({
       return;
     }
 
-    if (valueKg === lastKg.current) {
+    if (isInteracting.current || valueKg === lastKg.current) {
       return;
     }
 
@@ -89,27 +91,35 @@ export function HorizontalMeasurementRuler({
     transform: [{ scale: scale.value }],
   }));
 
-  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const kg = kgFromOffset(event.nativeEvent.contentOffset.x);
-    if (kg !== lastKg.current) {
-      selectionHaptic();
-      lastKg.current = kg;
-      scale.value = withTiming(1.04, { duration: MOTION.fast }, () => {
-        scale.value = withTiming(1, { duration: MOTION.normal });
-      });
-    }
-    onChangeKg(kg);
-    scrollToKg(kg, true);
-  };
-
-  const adjustByStep = (direction: 1 | -1) => {
-    const deltaKg = unit === 'kg' ? STEP_KG : FINE_STEP_LB / LB_PER_KG;
-    const next = clampKg(valueKg + direction * deltaKg);
-    selectionHaptic();
-    lastKg.current = next;
+  const pulseValue = () => {
     scale.value = withTiming(1.04, { duration: MOTION.fast }, () => {
       scale.value = withTiming(1, { duration: MOTION.normal });
     });
+  };
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const kg = kgFromOffset(event.nativeEvent.contentOffset.x, stepKg);
+    if (kg !== lastKg.current) {
+      selectionHaptic();
+      lastKg.current = kg;
+      pulseValue();
+      onChangeKg(kg);
+    }
+  };
+
+  const handleScrollStart = () => {
+    isInteracting.current = true;
+  };
+
+  const handleScrollEnd = () => {
+    isInteracting.current = false;
+  };
+
+  const adjustByStep = (direction: 1 | -1) => {
+    const next = clampKg(valueKg + direction * stepKg);
+    selectionHaptic();
+    lastKg.current = next;
+    pulseValue();
     onChangeKg(next);
     scrollToKg(next, true);
   };
@@ -127,21 +137,36 @@ export function HorizontalMeasurementRuler({
         </Pressable>
       </Animated.View>
 
-      <View style={styles.rulerShell}>
+      <View
+        accessibilityRole="adjustable"
+        accessibilityLabel="Weight ruler"
+        accessibilityValue={{ min: MIN_KG, max: MAX_KG, now: valueKg, text: displayValue(valueKg, unit) }}
+        style={styles.rulerShell}
+      >
         <View style={styles.centerNeedle} pointerEvents="none" />
         <ScrollView
           ref={scrollRef}
           horizontal
+          directionalLockEnabled
+          alwaysBounceHorizontal={false}
           showsHorizontalScrollIndicator={false}
           snapToInterval={TICK_WIDTH}
-          decelerationRate="fast"
-          onMomentumScrollEnd={handleScrollEnd}
+          decelerationRate="normal"
+          scrollEventThrottle={16}
+          onScroll={handleScroll}
+          onScrollBeginDrag={handleScrollStart}
+          onMomentumScrollBegin={handleScrollStart}
           onScrollEndDrag={handleScrollEnd}
+          onMomentumScrollEnd={handleScrollEnd}
           contentContainerStyle={{ paddingHorizontal: padding }}
         >
           {Array.from({ length: steps + 1 }, (_, index) => {
-            const kg = Math.round((MIN_KG + index * STEP_KG) * 10) / 10;
-            const major = Math.round(kg * 10) % 5 === 0;
+            const kg = MIN_KG + index * stepKg;
+            const displayMagnitude = unit === 'kg' ? kg : kgToLb(kg);
+            const major =
+              unit === 'kg'
+                ? Math.round(displayMagnitude * 10) % 10 === 0
+                : Math.round(displayMagnitude * 10) % 50 === 0;
             return (
               <View key={`${kg}-${index}`} style={[styles.tickCol, { width: TICK_WIDTH }]}>
                 <View style={[styles.tick, major && styles.tickMajor]} />
@@ -154,18 +179,18 @@ export function HorizontalMeasurementRuler({
       <View style={styles.nudgeRow}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Decrease weight by ${unit === 'kg' ? '0.1 kilogram' : '0.5 pound'}`}
+          accessibilityLabel={`Decrease weight by ${unit === 'kg' ? '0.2 kilogram' : '0.5 pound'}`}
           onPress={() => adjustByStep(-1)}
           style={styles.nudge}
         >
           <Text variant="body">−</Text>
         </Pressable>
         <Text variant="bodyMuted" style={styles.nudgeHint}>
-          Tap for {unit === 'kg' ? '0.1 kg' : '0.5 lb'} steps
+          Tap for {unit === 'kg' ? '0.2 kg' : '0.5 lb'} steps
         </Text>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Increase weight by ${unit === 'kg' ? '0.1 kilogram' : '0.5 pound'}`}
+          accessibilityLabel={`Increase weight by ${unit === 'kg' ? '0.2 kilogram' : '0.5 pound'}`}
           onPress={() => adjustByStep(1)}
           style={styles.nudge}
         >

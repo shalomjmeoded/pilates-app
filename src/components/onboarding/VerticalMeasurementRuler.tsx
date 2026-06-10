@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
+  PanResponder,
   Pressable,
-  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -43,72 +41,41 @@ export function VerticalMeasurementRuler({
   onChangeCm,
   onToggleUnit,
 }: VerticalMeasurementRulerProps) {
-  const scrollRef = useRef<ScrollView>(null);
   const lastCm = useRef(valueCm);
-  const hasMounted = useRef(false);
-  const isUserScrolling = useRef(false);
+  const gestureStartCm = useRef(valueCm);
   const padding = (VIEWPORT_HEIGHT - TICK_HEIGHT) / 2;
   const steps = MAX_CM - MIN_CM;
 
-  const scrollToCm = useCallback((cm: number, animated = false) => {
-    const offset = (cm - MIN_CM) * TICK_HEIGHT;
-    scrollRef.current?.scrollTo({ y: offset, animated });
-  }, []);
-
   useEffect(() => {
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      lastCm.current = valueCm;
-      scrollToCm(valueCm, false);
-      return;
-    }
-
-    if (isUserScrolling.current || valueCm === lastCm.current) {
-      return;
-    }
-
     lastCm.current = valueCm;
-    scrollToCm(valueCm, false);
-  }, [scrollToCm, valueCm]);
+  }, [valueCm]);
 
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const cm = cmFromOffset(event.nativeEvent.contentOffset.y);
-    if (cm !== lastCm.current) {
-      selectionHaptic();
-      lastCm.current = cm;
-      onChangeCm(cm);
-    }
-  };
-
-  const handleScrollBegin = () => {
-    isUserScrolling.current = true;
-  };
-
-  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const cm = cmFromOffset(event.nativeEvent.contentOffset.y);
-    isUserScrolling.current = false;
-    if (cm !== lastCm.current) {
-      selectionHaptic();
-      lastCm.current = cm;
-      onChangeCm(cm);
-    }
-    scrollToCm(cm, true);
-  };
-
-  const handleDragEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const velocityY = Math.abs(event.nativeEvent.velocity?.y ?? 0);
-    if (velocityY < 0.05) {
-      handleScrollEnd(event);
-    }
-  };
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gesture) => Math.abs(gesture.dy) > 4,
+      onPanResponderGrant: () => {
+        gestureStartCm.current = lastCm.current;
+      },
+      onPanResponderMove: (_, gesture) => {
+        const cm = cmFromOffset((gestureStartCm.current - MIN_CM) * TICK_HEIGHT - gesture.dy);
+        if (cm !== lastCm.current) {
+          selectionHaptic();
+          lastCm.current = cm;
+          onChangeCm(cm);
+        }
+      },
+      onPanResponderTerminationRequest: () => false,
+    }),
+  ).current;
 
   const adjustByStep = (delta: number) => {
     const next = Math.min(MAX_CM, Math.max(MIN_CM, valueCm + delta));
     selectionHaptic();
     lastCm.current = next;
     onChangeCm(next);
-    scrollToCm(next, true);
   };
+
+  const rulerOffset = padding - (valueCm - MIN_CM) * TICK_HEIGHT;
 
   return (
     <View style={styles.container}>
@@ -123,24 +90,15 @@ export function VerticalMeasurementRuler({
         </Pressable>
       </View>
 
-      <View style={[styles.rulerShell, { height: VIEWPORT_HEIGHT }]}>
+      <View
+        accessibilityRole="adjustable"
+        accessibilityLabel="Height ruler"
+        accessibilityValue={{ min: MIN_CM, max: MAX_CM, now: valueCm, text: displayValue(valueCm, unit) }}
+        style={[styles.rulerShell, { height: VIEWPORT_HEIGHT }]}
+        {...panResponder.panHandlers}
+      >
         <View style={styles.centerIndicator} pointerEvents="none" />
-        <ScrollView
-          ref={scrollRef}
-          nestedScrollEnabled
-          directionalLockEnabled
-          alwaysBounceVertical={false}
-          showsVerticalScrollIndicator={false}
-          snapToInterval={TICK_HEIGHT}
-          decelerationRate="fast"
-          scrollEventThrottle={16}
-          onScroll={handleScroll}
-          onScrollBeginDrag={handleScrollBegin}
-          onMomentumScrollBegin={handleScrollBegin}
-          onMomentumScrollEnd={handleScrollEnd}
-          onScrollEndDrag={handleDragEnd}
-          contentContainerStyle={{ paddingVertical: padding }}
-        >
+        <View style={[styles.rulerTicks, { transform: [{ translateY: rulerOffset }] }]}>
           {Array.from({ length: steps + 1 }, (_, index) => {
             const cm = MIN_CM + index;
             const major = cm % 5 === 0;
@@ -155,7 +113,7 @@ export function VerticalMeasurementRuler({
               </View>
             );
           })}
-        </ScrollView>
+        </View>
       </View>
 
       <View style={styles.nudgeRow}>
@@ -216,6 +174,11 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: colors.brandPrimary,
     zIndex: 2,
+  },
+  rulerTicks: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
   },
   tickRow: {
     flexDirection: 'row',
