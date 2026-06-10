@@ -49,8 +49,8 @@ export default function Step15Loading() {
     useCallback(() => {
       glow.value = withRepeat(
         withSequence(
-          withTiming(1, { duration: 900, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0.55, { duration: 900, easing: Easing.inOut(Easing.ease) }),
+          withTiming(1, { duration: 1100, easing: Easing.inOut(Easing.ease) }),
+          withTiming(0.55, { duration: 1100, easing: Easing.inOut(Easing.ease) }),
         ),
         -1,
         false,
@@ -60,6 +60,7 @@ export default function Step15Loading() {
 
   const glowStyle = useAnimatedStyle(() => ({
     opacity: glow.value,
+    transform: [{ scale: 0.96 + glow.value * 0.04 }],
   }));
 
   const handleComplete = useCallback(() => {
@@ -76,7 +77,7 @@ export default function Step15Loading() {
           <Text variant="bodyMuted" style={styles.subtitle}>
             {error}
           </Text>
-          <Button label="Go back" onPress={() => goToStep(15)} />
+          <Button label="Go back" onPress={() => goToStep(14)} />
         </View>
       </SafeAreaView>
     );
@@ -87,12 +88,15 @@ export default function Step15Loading() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Animated.View style={[styles.mark, glowStyle]}>
-            <Text variant="h1" style={styles.logo}>
+            <Text variant="display" style={styles.logo}>
               Tune
             </Text>
           </Animated.View>
-          <Text variant="h2" style={styles.title}>
-            Tuning your personalized plan
+          <Text variant="h1" style={styles.title}>
+            Building your plan
+          </Text>
+          <Text variant="bodyMuted" style={styles.subtitle}>
+            Personalizing nutrition, movement, and milestones on your device.
           </Text>
         </View>
       </SafeAreaView>
@@ -103,15 +107,15 @@ export default function Step15Loading() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Animated.View style={[styles.mark, glowStyle]}>
-          <Text variant="h1" style={styles.logo}>
+          <Text variant="display" style={styles.logo}>
             Tune
           </Text>
         </Animated.View>
-        <Text variant="h2" style={styles.title}>
-          Tuning your personalized plan
+        <Text variant="h1" style={styles.title}>
+          Building Your Plan
         </Text>
         <Text variant="bodyMuted" style={styles.subtitle}>
-          Calculating calories, macros, and your movement profile locally on your device.
+          Sustainable progress takes intention — we&apos;re shaping yours now.
         </Text>
         <OnboardingPlanProgress onComplete={handleComplete} />
       </View>
@@ -132,9 +136,9 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   mark: {
-    width: 112,
-    height: 112,
-    borderRadius: 56,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: colors.surfaceCanvas,
     borderWidth: 1,
     borderColor: colors.borderLight,
@@ -143,11 +147,13 @@ const styles = StyleSheet.create({
   },
   logo: {
     color: colors.brandPrimary,
+    fontSize: 28,
   },
   title: {
     textAlign: 'center',
   },
   subtitle: {
     textAlign: 'center',
+    maxWidth: 320,
   },
 });

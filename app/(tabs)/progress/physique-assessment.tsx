@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -39,6 +40,7 @@ export default function PhysiqueAssessmentScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={disclaimerAccepted} />
       <ScrollView contentContainerStyle={styles.container}>
         <Text variant="h1">Visual Physique Assessment</Text>
         <Text variant="bodyMuted">Experimental premium feature</Text>
@@ -84,11 +86,6 @@ export default function PhysiqueAssessmentScreen() {
           label="Continue to photo upload"
           onPress={startCapture}
           disabled={!disclaimerAccepted || isLoading}
-        />
-        <Button
-          label="Back to Progress"
-          variant="secondary"
-          onPress={() => router.replace('/(tabs)/progress')}
         />
       </ScrollView>
     </SafeAreaView>

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { exportDataViaShareSheet } from '@/services/export/exportData';
-import { spacing } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 export default function DataSettingsScreen() {
   const [isExporting, setIsExporting] = useState(false);
@@ -53,6 +53,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   error: {
-    color: '#C97A87',
+    color: colors.brandPrimary,
   },
 });

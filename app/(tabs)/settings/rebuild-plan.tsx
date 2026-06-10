@@ -9,7 +9,7 @@ import { Text } from '@/components/ui/Text';
 import { getProfile } from '@/db/repositories/profileRepository';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
-import { spacing } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 export default function RebuildPlanScreen() {
   const router = useRouter();
@@ -56,7 +56,6 @@ export default function RebuildPlanScreen() {
       </Text>
       {error ? <Text variant="body" style={styles.error}>{error}</Text> : null}
       <Button label={isStarting ? 'Starting...' : 'Rebuild my plan'} onPress={() => void handleRebuild()} disabled={isStarting} />
-      <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
     </SettingsScreenShell>
   );
 }
@@ -69,6 +68,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   error: {
-    color: '#C97A87',
+    color: colors.brandPrimary,
   },
 });

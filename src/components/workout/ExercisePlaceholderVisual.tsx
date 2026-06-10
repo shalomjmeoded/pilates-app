@@ -1,4 +1,4 @@
-import { ExerciseIllustration } from '@/components/illustrations/ExerciseIllustration';
+import { VisualAsset, muscleGroupIcon } from '@/components/media';
 import { ExerciseMediaView } from '@/components/workout/ExerciseMediaView';
 import type { Exercise } from '@/types/exercise';
 
@@ -21,5 +21,12 @@ export function ExercisePlaceholderVisual({
     return <ExerciseMediaView exercise={exercise} variant="thumbnail" size={size} />;
   }
 
-  return <ExerciseIllustration muscleGroup={muscleGroup} size={size} />;
+  return (
+    <VisualAsset
+      icon={muscleGroupIcon(muscleGroup)}
+      fallback="icon"
+      size={size}
+      accessibilityLabel={`${muscleGroup} exercise`}
+    />
+  );
 }

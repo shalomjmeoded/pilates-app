@@ -10,11 +10,15 @@ import type { ExercisePreference, Profile } from '@/types/profile';
 import { spacing } from '@/theme';
 
 export default function PreferencesSettingsScreen() {
+  const [savedProfile, setSavedProfile] = useState<Profile | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    void getProfile().then(setProfile);
+    void getProfile().then((loaded) => {
+      setSavedProfile(loaded);
+      setProfile(loaded);
+    });
   }, []);
 
   if (!profile) {
@@ -35,11 +39,19 @@ export default function PreferencesSettingsScreen() {
   const handleSave = async () => {
     setIsSaving(true);
     await saveProfile(profile);
+    setSavedProfile(profile);
     setIsSaving(false);
   };
 
+  const hasUnsavedChanges =
+    savedProfile !== null && JSON.stringify(profile) !== JSON.stringify(savedProfile);
+
   return (
-    <SettingsScreenShell title="Preferences" subtitle="Media and exercise style preferences.">
+    <SettingsScreenShell
+      title="Preferences"
+      subtitle="Media and exercise style preferences."
+      hasUnsavedChanges={hasUnsavedChanges}
+    >
       <Text variant="label" style={{ marginTop: spacing.xs }}>Media preference</Text>
       {MEDIA_OPTIONS.map((option) => (
         <OptionCard

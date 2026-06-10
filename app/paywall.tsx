@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { PremiumGate } from '@/components/premium';
-import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { PAYWALL_BENEFITS, PAYWALL_SUBTITLE, PAYWALL_TITLE } from '@/constants/premiumBenefits';
 import { useFinishOnboarding } from '@/hooks/useFinishOnboarding';
@@ -47,6 +47,7 @@ export default function PaywallScreen() {
   if (hasAccess && onboardingCompleted) {
     return (
       <SafeAreaView style={styles.safeArea}>
+        <SubscreenTopBar />
         <View style={styles.centered}>
           <Text variant="h1">You&apos;re subscribed</Text>
           <Text variant="bodyMuted">Your Tune plan is unlocked.</Text>
@@ -57,6 +58,7 @@ export default function PaywallScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar />
       <ScrollView contentContainerStyle={styles.container}>
         <PremiumGate
           title={PAYWALL_TITLE}

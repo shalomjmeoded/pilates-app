@@ -1,18 +1,24 @@
 import { StyleSheet, View } from 'react-native';
 
-import { OnboardingShell } from '@/components/onboarding';
-import { Card } from '@/components/ui/Card';
+import { OnboardingShell, PlanRevealHero } from '@/components/onboarding';
 import { Text } from '@/components/ui/Text';
+import {
+  estimateWeeksToGoal,
+  formatFirstMilestone,
+  formatRoadmapTargetDate,
+} from '@/engines/calculations';
 import { SAFETY_WARNING_MESSAGE } from '@/engines/calculations';
 import { trainingFrequencyToWorkoutsPerWeek } from '@/engines/monetization/premiumAccess';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
-import { colors, spacing } from '@/theme';
+import { usePreferencesStore } from '@/stores/preferencesStore';
+import { colors, radius, spacing } from '@/theme';
 
 export default function Step16PlanReveal() {
   const { step, goNext, goToStep } = useOnboardingNavigation(17);
   const draft = useOnboardingStore((state) => state.draft);
   const baselinePlan = draft.baselinePlan;
+  const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
 
   if (!baselinePlan) {
     return null;
@@ -20,45 +26,37 @@ export default function Step16PlanReveal() {
 
   const { macros, goalCalories, safetyWarning } = baselinePlan;
   const workoutsPerWeek = trainingFrequencyToWorkoutsPerWeek(draft.trainingFrequency);
+  const currentWeight = draft.currentWeightKg ?? 68;
+  const goalWeight = draft.goalWeightKg ?? currentWeight;
+  const pace = draft.paceKgPerWeek ?? 0.5;
+  const trajectory = draft.weightTrajectory ?? 'weight_loss';
+  const weeksToGoal = estimateWeeksToGoal(currentWeight, goalWeight, trajectory, pace);
+  const timelineLabel =
+    weeksToGoal === null
+      ? 'Build consistency for long-term wellness'
+      : weeksToGoal === 0
+        ? 'You are aligned with your goal weight'
+        : `~${weeksToGoal} weeks · target ${formatRoadmapTargetDate(weeksToGoal)}`;
 
   return (
     <OnboardingShell
       step={step}
-      title="Your Personalized Plan"
-      subtitle="Built specifically for you."
+      title="Your plan is ready"
+      subtitle="Built for sustainable progress — stronger every week."
       onBack={() => goToStep(15)}
       onNext={goNext}
-      nextLabel="Continue"
+      nextLabel="Start with Tune"
     >
-      <Card>
-        <Text variant="label">Calories</Text>
-        <Text variant="h1">{goalCalories}</Text>
-      </Card>
-
-      <Card>
-        <Text variant="label">Protein</Text>
-        <Text variant="h1">{macros.proteinG}g</Text>
-      </Card>
-
-      <Card>
-        <Text variant="label">Workouts</Text>
-        <Text variant="h1">{workoutsPerWeek}/week</Text>
-      </Card>
-
-      <View style={styles.macroGrid}>
-        <Card style={styles.macroCard}>
-          <Text variant="h2">{macros.carbsG}g</Text>
-          <Text variant="label">Carbs</Text>
-        </Card>
-        <Card style={styles.macroCard}>
-          <Text variant="h2">{macros.fatG}g</Text>
-          <Text variant="label">Fat</Text>
-        </Card>
-        <Card style={styles.macroCard}>
-          <Text variant="h2">{macros.fiberG}g</Text>
-          <Text variant="label">Fiber</Text>
-        </Card>
-      </View>
+      <PlanRevealHero
+        calories={goalCalories}
+        proteinG={macros.proteinG}
+        workoutsPerWeek={workoutsPerWeek}
+        carbsG={macros.carbsG}
+        fatG={macros.fatG}
+        fiberG={macros.fiberG}
+        timelineLabel={timelineLabel}
+        firstMilestone={formatFirstMilestone(currentWeight, trajectory, pace, weightUnit)}
+      />
 
       {safetyWarning.triggered ? (
         <View style={styles.warning}>
@@ -72,18 +70,9 @@ export default function Step16PlanReveal() {
 }
 
 const styles = StyleSheet.create({
-  macroGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  macroCard: {
-    width: '31%',
-    gap: spacing.xs,
-  },
   warning: {
-    backgroundColor: '#FFF4EC',
-    borderRadius: 16,
+    backgroundColor: colors.surfacePeach,
+    borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.accentWarm,
     padding: spacing.sm,

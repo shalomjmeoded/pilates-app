@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -24,6 +25,7 @@ export default function ReviewAiMealScreen() {
   const [fatG, setFatG] = useState('');
   const [fiberG, setFiberG] = useState('');
   const [saveToLibrary, setSaveToLibrary] = useState(false);
+  const [initialSnapshot, setInitialSnapshot] = useState<string | null>(null);
 
   const { save, errors, isSaving, parseField } = useSaveReviewedAiMeal(mealDate, estimate);
 
@@ -39,17 +41,45 @@ export default function ReviewAiMealScreen() {
       return;
     }
 
-    setTitle(estimate.mealTitle);
-    setCalories(String(estimate.calories));
-    setProteinG(String(estimate.proteinG));
-    setCarbsG(String(estimate.carbsG));
-    setFatG(String(estimate.fatG));
-    setFiberG(String(estimate.fiberG));
+    const snapshot = {
+      title: estimate.mealTitle,
+      calories: String(estimate.calories),
+      proteinG: String(estimate.proteinG),
+      carbsG: String(estimate.carbsG),
+      fatG: String(estimate.fatG),
+      fiberG: String(estimate.fiberG),
+      saveToLibrary: false,
+    };
+    setTitle(snapshot.title);
+    setCalories(snapshot.calories);
+    setProteinG(snapshot.proteinG);
+    setCarbsG(snapshot.carbsG);
+    setFatG(snapshot.fatG);
+    setFiberG(snapshot.fiberG);
+    setSaveToLibrary(false);
+    setInitialSnapshot(JSON.stringify(snapshot));
   }, [estimate, mealDate, router, source]);
 
   if (!estimate) {
     return null;
   }
+
+  const currentSnapshot = JSON.stringify({
+    title,
+    calories,
+    proteinG,
+    carbsG,
+    fatG,
+    fiberG,
+    saveToLibrary,
+  });
+  const hasUnsavedChanges =
+    initialSnapshot !== null && currentSnapshot !== initialSnapshot;
+
+  const handleBack = () => {
+    clear();
+    router.back();
+  };
 
   const handleSave = () => {
     void save(
@@ -67,6 +97,7 @@ export default function ReviewAiMealScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} onPress={handleBack} />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text variant="h1">Review Estimate</Text>
         <Text variant="bodyMuted">

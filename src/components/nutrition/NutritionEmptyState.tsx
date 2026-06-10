@@ -10,7 +10,7 @@ export function NutritionEmptyState() {
         No meals logged yet
       </Text>
       <Text variant="bodyMuted" style={styles.copy}>
-        Tap Add Meal above to log your first entry for this day.
+        Tap + Add Meal to log your first entry for this day.
       </Text>
     </View>
   );

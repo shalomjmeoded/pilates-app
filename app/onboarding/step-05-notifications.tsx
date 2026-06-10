@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { OptionCard, OnboardingShell } from '@/components/onboarding';
-import { NotificationsIllustration } from '@/components/illustrations/OnboardingIllustrations';
-import { FadeInView } from '@/components/motion/FadeInView';
+import { VisualAsset } from '@/components/media';
 import { Text } from '@/components/ui/Text';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import {
@@ -40,21 +39,22 @@ export default function Step05Notifications() {
     <OnboardingShell
       step={step}
       title="Stay gently on track"
+      titleLines={2}
       subtitle="Local reminders only — never ads or marketing pushes."
       onBack={goBack}
       onNext={goNext}
       nextLabel={notificationsEnabled ? 'Continue' : 'Continue without reminders'}
     >
-      <FadeInView>
-        <View style={styles.illustrationWrap}>
-          <NotificationsIllustration />
-        </View>
-      </FadeInView>
+      <View style={styles.iconRow}>
+        <VisualAsset icon="bell-ring-outline" fallback="icon" size={72} accessibilityLabel="Reminders" />
+        <Text variant="bodyMuted" style={styles.iconCopy}>
+          Gentle nudges for meals and movement, on your schedule.
+        </Text>
+      </View>
 
       <View style={styles.card}>
         <Text variant="body">
-          Gentle nudges for meals and movement, on your schedule. You can change or turn them off
-          anytime in Settings.
+          You can change or turn reminders off anytime in Settings.
         </Text>
       </View>
 
@@ -75,9 +75,14 @@ export default function Step05Notifications() {
 }
 
 const styles = StyleSheet.create({
-  illustrationWrap: {
+  iconRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: spacing.xs,
+    gap: spacing.sm,
+  },
+  iconCopy: {
+    flex: 1,
+    lineHeight: 22,
   },
   card: {
     backgroundColor: colors.surfaceCanvas,

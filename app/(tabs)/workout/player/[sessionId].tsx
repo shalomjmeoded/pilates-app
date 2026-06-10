@@ -1,9 +1,9 @@
-import { Feather } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { ExerciseMediaView, WorkoutExitSheet } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
@@ -19,6 +19,7 @@ export default function WorkoutPlayerScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [exitVisible, setExitVisible] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -31,11 +32,14 @@ export default function WorkoutPlayerScreen() {
   }, [session]);
 
   useEffect(() => {
+    if (isPaused) {
+      return;
+    }
     const timer = setInterval(() => {
       setElapsedSeconds((value) => value + 1);
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isPaused]);
 
   useEffect(() => {
     if (!session) {
@@ -65,12 +69,12 @@ export default function WorkoutPlayerScreen() {
   if (error || !session || exercises.length === 0) {
     return (
       <SafeAreaView style={styles.safeArea}>
+        <SubscreenTopBar />
         <View style={styles.center}>
           <Text variant="h2">Session unavailable</Text>
           <Text variant="bodyMuted" style={styles.copy}>
             {error ?? 'This workout could not be loaded.'}
           </Text>
-          <Button label="Back to Workout" onPress={() => router.back()} />
         </View>
       </SafeAreaView>
     );
@@ -122,18 +126,13 @@ export default function WorkoutPlayerScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.topBar}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Exit workout"
+        <SubscreenTopBar
           onPress={() => setExitVisible(true)}
-          style={styles.closeButton}
-        >
-          <Feather name="x" size={22} color={colors.textDark} />
-        </Pressable>
-        <Text variant="label">
+          accessibilityLabel="Exit workout"
+        />
+        <Text variant="label" style={styles.progressLabel}>
           {currentIndex + 1} / {exercises.length} · {minutes}:{seconds.toString().padStart(2, '0')}
         </Text>
-        <View style={styles.closeSpacer} />
       </View>
 
       <ScrollView
@@ -162,18 +161,25 @@ export default function WorkoutPlayerScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
+        <Button
+          label={isPaused ? 'Resume' : 'Pause'}
+          variant="secondary"
+          onPress={() => setIsPaused((value) => !value)}
+          accessibilityLabel={isPaused ? 'Resume workout' : 'Pause workout'}
+        />
         <View style={styles.footerRow}>
           <Button
             label="Previous"
             variant="secondary"
             onPress={handlePrevious}
-            disabled={isFirst}
+            disabled={isFirst || isPaused}
             style={styles.footerButton}
             accessibilityLabel="Go to previous exercise"
           />
           <Button
             label={isLast ? 'Complete' : 'Next'}
             onPress={() => void handleNext()}
+            disabled={isPaused}
             style={styles.footerButton}
             accessibilityLabel={isLast ? 'Complete workout' : 'Go to next exercise'}
           />
@@ -200,24 +206,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.sm,
+    gap: spacing.xs,
     paddingTop: spacing.xs,
   },
-  closeButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.surfaceCanvas,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeSpacer: {
-    width: 44,
+  progressLabel: {
+    textAlign: 'center',
+    paddingHorizontal: spacing.sm,
   },
   scrollContent: {
     paddingHorizontal: spacing.sm,
@@ -247,6 +241,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: spacing.sm,
     paddingBottom: spacing.sm,
+    gap: spacing.xs,
   },
   footerRow: {
     flexDirection: 'row',

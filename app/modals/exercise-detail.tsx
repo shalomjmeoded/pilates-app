@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { ExerciseMediaView, ExerciseSwapReasonSheet } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -103,6 +104,7 @@ export default function ExerciseDetailModal() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text variant="h1">{exercise.name}</Text>
@@ -164,7 +166,6 @@ export default function ExerciseDetailModal() {
         {swapMessage ? <Text variant="bodyMuted">{swapMessage}</Text> : null}
         {error ? <Text variant="body" style={styles.errorText}>{error}</Text> : null}
 
-        <Button label="Close" variant="secondary" onPress={() => router.back()} />
       </ScrollView>
 
       <ExerciseSwapReasonSheet

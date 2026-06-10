@@ -5,6 +5,7 @@ export { FloatingAddButton } from './FloatingAddButton';
 export { MacroProgressBar } from './MacroProgressBar';
 export { NutritionDayHeader } from './NutritionDayHeader';
 export { MealCard } from './MealCard';
+export { RemainingCaloriesHero } from './RemainingCaloriesHero';
 export { NutritionEmptyState } from './NutritionEmptyState';
 export { NutritionScoreBadge } from './NutritionScoreBadge';
 export { NutritionTodayCard } from './NutritionTodayCard';

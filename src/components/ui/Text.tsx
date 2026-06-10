@@ -2,7 +2,7 @@ import { Text as RNText, TextProps as RNTextProps, StyleSheet } from 'react-nati
 
 import { typography } from '@/theme/typography';
 
-type TextVariant = 'h1' | 'h2' | 'body' | 'bodyMuted' | 'label';
+type TextVariant = 'display' | 'h1' | 'h2' | 'body' | 'bodyMuted' | 'label';
 
 interface TextProps extends RNTextProps {
   variant?: TextVariant;

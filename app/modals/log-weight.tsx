@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { getWeightLogById, saveWeightLog, updateWeightLog } from '@/db/repositories/weightLogRepository';
@@ -25,6 +26,7 @@ export default function LogWeightModal() {
   const [note, setNote] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [initialSnapshot, setInitialSnapshot] = useState<string | null>(null);
 
   useEffect(() => {
     if (!params.editId) return;
@@ -35,6 +37,12 @@ export default function LogWeightModal() {
         units.weight === 'kg' ? String(log.weightKg) : String(kgToLb(log.weightKg)),
       );
       setNote(log.note ?? '');
+      setInitialSnapshot(
+        JSON.stringify({
+          weight: units.weight === 'kg' ? String(log.weightKg) : String(kgToLb(log.weightKg)),
+          note: log.note ?? '',
+        }),
+      );
     })();
   }, [params.editId, units.weight]);
 
@@ -84,8 +92,14 @@ export default function LogWeightModal() {
     }
   };
 
+  const hasUnsavedChanges =
+    initialSnapshot !== null
+      ? initialSnapshot !== JSON.stringify({ weight: weightValue, note })
+      : weightValue.length > 0 || note.length > 0;
+
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text variant="h1">{isEditing ? 'Edit Weight' : 'Log Weight'}</Text>
         <Text variant="bodyMuted">Track how you are feeling over time.</Text>
@@ -132,7 +146,6 @@ export default function LogWeightModal() {
         ))}
 
         <View style={styles.actions}>
-          <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
           <Button label={isSaving ? 'Saving...' : 'Save'} onPress={handleSave} disabled={isSaving} />
         </View>
       </ScrollView>

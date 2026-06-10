@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Tabs, router } from 'expo-router';
 import type { ColorValue } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,10 +6,24 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '@/theme';
 import { fontFamily } from '@/theme/typography';
 
-type TabIconName = 'activity' | 'pie-chart' | 'trending-up' | 'settings';
+type TabIconName = 'dumbbell' | 'food-apple' | 'chart-line' | 'cog';
 
-function TabIcon({ name, color, focused }: { name: TabIconName; color: ColorValue; focused: boolean }) {
-  return <Feather name={name} size={focused ? 22 : 20} color={color} />;
+function TabIcon({
+  name,
+  color,
+  focused,
+}: {
+  name: TabIconName;
+  color: ColorValue;
+  focused: boolean;
+}) {
+  return (
+    <MaterialCommunityIcons
+      name={name}
+      size={focused ? 24 : 22}
+      color={color}
+    />
+  );
 }
 
 export default function TabsLayout() {
@@ -40,7 +54,7 @@ export default function TabsLayout() {
         options={{
           title: 'Workout',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="activity" color={color} focused={focused} />
+            <TabIcon name="dumbbell" color={color} focused={focused} />
           ),
         }}
       />
@@ -49,7 +63,7 @@ export default function TabsLayout() {
         options={{
           title: 'Nutrition',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="pie-chart" color={color} focused={focused} />
+            <TabIcon name="food-apple" color={color} focused={focused} />
           ),
         }}
       />
@@ -63,7 +77,7 @@ export default function TabsLayout() {
         options={{
           title: 'Progress',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="trending-up" color={color} focused={focused} />
+            <TabIcon name="chart-line" color={color} focused={focused} />
           ),
         }}
       />
@@ -72,7 +86,7 @@ export default function TabsLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="settings" color={color} focused={focused} />
+            <TabIcon name="cog" color={color} focused={focused} />
           ),
         }}
       />

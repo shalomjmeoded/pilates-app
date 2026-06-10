@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
+  FadeIn,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -9,14 +10,15 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Text } from '@/components/ui/Text';
-import { colors, spacing } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
-const LOADING_DURATION_MS = 900;
+const LOADING_DURATION_MS = 3200;
 
 const STAGES = [
-  'Calculating metabolism...',
-  'Balancing macros...',
-  'Finalizing your plan...',
+  'Analyzing goals',
+  'Building workouts',
+  'Calculating nutrition',
+  'Preparing milestones',
 ] as const;
 
 interface OnboardingPlanProgressProps {
@@ -29,8 +31,9 @@ export function OnboardingPlanProgress({ onComplete }: OnboardingPlanProgressPro
 
   useEffect(() => {
     const stageTimers = [
-      setTimeout(() => setStageIndex(1), LOADING_DURATION_MS * 0.34),
-      setTimeout(() => setStageIndex(2), LOADING_DURATION_MS * 0.67),
+      setTimeout(() => setStageIndex(1), LOADING_DURATION_MS * 0.22),
+      setTimeout(() => setStageIndex(2), LOADING_DURATION_MS * 0.48),
+      setTimeout(() => setStageIndex(3), LOADING_DURATION_MS * 0.74),
     ];
 
     progress.value = withTiming(
@@ -57,9 +60,23 @@ export function OnboardingPlanProgress({ onComplete }: OnboardingPlanProgressPro
       <View style={styles.track}>
         <Animated.View style={[styles.fill, fillStyle]} />
       </View>
-      <Text variant="bodyMuted" style={styles.stageLabel}>
-        {STAGES[stageIndex]}
-      </Text>
+      <View style={styles.stageList}>
+        {STAGES.map((label, index) => {
+          const active = index <= stageIndex;
+          return (
+            <Animated.View
+              key={label}
+              entering={FadeIn.duration(240)}
+              style={[styles.stageRow, active && styles.stageRowActive]}
+            >
+              <View style={[styles.dot, active && styles.dotActive]} />
+              <Text variant="body" style={active ? styles.stageActive : styles.stagePending}>
+                {label}
+              </Text>
+            </Animated.View>
+          );
+        })}
+      </View>
     </View>
   );
 }
@@ -69,21 +86,46 @@ export const ONBOARDING_PLAN_LOADING_MS = LOADING_DURATION_MS;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    maxWidth: 320,
-    gap: spacing.sm,
+    maxWidth: 340,
+    gap: spacing.md,
   },
   track: {
-    height: 8,
-    borderRadius: 4,
+    height: 6,
+    borderRadius: radius.pill,
     backgroundColor: colors.borderLight,
     overflow: 'hidden',
   },
   fill: {
     height: '100%',
     backgroundColor: colors.brandPrimary,
-    borderRadius: 4,
+    borderRadius: radius.pill,
   },
-  stageLabel: {
-    textAlign: 'center',
+  stageList: {
+    gap: spacing.sm,
+  },
+  stageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    opacity: 0.45,
+  },
+  stageRowActive: {
+    opacity: 1,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.borderLight,
+  },
+  dotActive: {
+    backgroundColor: colors.brandSecondary,
+  },
+  stageActive: {
+    color: colors.textDark,
+    fontFamily: 'PlusJakartaSans_500Medium',
+  },
+  stagePending: {
+    color: colors.textMuted,
   },
 });
