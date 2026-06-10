@@ -1,6 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import { Tabs, router } from 'expo-router';
 import type { ColorValue } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors } from '@/theme';
 import { fontFamily } from '@/theme/typography';
@@ -12,6 +13,9 @@ function TabIcon({ name, color, focused }: { name: TabIconName; color: ColorValu
 }
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+  const bottomInset = Math.max(insets.bottom, 6);
+
   return (
     <Tabs
       screenOptions={{
@@ -21,13 +25,13 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: colors.surfaceCanvas,
           borderTopColor: colors.borderLight,
-          height: 64,
+          height: 58 + bottomInset,
           paddingTop: 6,
+          paddingBottom: bottomInset,
         },
         tabBarLabelStyle: {
           fontFamily: fontFamily.medium,
           fontSize: 11,
-          marginBottom: 6,
         },
       }}
     >

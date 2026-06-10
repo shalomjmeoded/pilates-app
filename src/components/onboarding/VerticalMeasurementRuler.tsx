@@ -11,7 +11,7 @@ import {
 import { Text } from '@/components/ui/Text';
 import { colors, radius, spacing } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
-import { cmToInches, inchesToCm } from '@/utils/units';
+import { cmToInches } from '@/utils/units';
 
 const TICK_HEIGHT = 10;
 const MIN_CM = 120;
@@ -45,7 +45,9 @@ export function VerticalMeasurementRuler({
 }: VerticalMeasurementRulerProps) {
   const scrollRef = useRef<ScrollView>(null);
   const lastCm = useRef(valueCm);
-  const padding = VIEWPORT_HEIGHT / 2;
+  const hasMounted = useRef(false);
+  const isUserScrolling = useRef(false);
+  const padding = (VIEWPORT_HEIGHT - TICK_HEIGHT) / 2;
   const steps = MAX_CM - MIN_CM;
 
   const scrollToCm = useCallback((cm: number, animated = false) => {
@@ -54,22 +56,56 @@ export function VerticalMeasurementRuler({
   }, []);
 
   useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      lastCm.current = valueCm;
+      scrollToCm(valueCm, false);
+      return;
+    }
+
+    if (isUserScrolling.current || valueCm === lastCm.current) {
+      return;
+    }
+
+    lastCm.current = valueCm;
     scrollToCm(valueCm, false);
   }, [scrollToCm, valueCm]);
 
-  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const cm = cmFromOffset(event.nativeEvent.contentOffset.y);
     if (cm !== lastCm.current) {
       selectionHaptic();
       lastCm.current = cm;
+      onChangeCm(cm);
     }
-    onChangeCm(cm);
+  };
+
+  const handleScrollBegin = () => {
+    isUserScrolling.current = true;
+  };
+
+  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const cm = cmFromOffset(event.nativeEvent.contentOffset.y);
+    isUserScrolling.current = false;
+    if (cm !== lastCm.current) {
+      selectionHaptic();
+      lastCm.current = cm;
+      onChangeCm(cm);
+    }
     scrollToCm(cm, true);
+  };
+
+  const handleDragEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const velocityY = Math.abs(event.nativeEvent.velocity?.y ?? 0);
+    if (velocityY < 0.05) {
+      handleScrollEnd(event);
+    }
   };
 
   const adjustByStep = (delta: number) => {
     const next = Math.min(MAX_CM, Math.max(MIN_CM, valueCm + delta));
     selectionHaptic();
+    lastCm.current = next;
     onChangeCm(next);
     scrollToCm(next, true);
   };
@@ -94,8 +130,12 @@ export function VerticalMeasurementRuler({
           showsVerticalScrollIndicator={false}
           snapToInterval={TICK_HEIGHT}
           decelerationRate="fast"
+          scrollEventThrottle={16}
+          onScroll={handleScroll}
+          onScrollBeginDrag={handleScrollBegin}
+          onMomentumScrollBegin={handleScrollBegin}
           onMomentumScrollEnd={handleScrollEnd}
-          onScrollEndDrag={handleScrollEnd}
+          onScrollEndDrag={handleDragEnd}
           contentContainerStyle={{ paddingVertical: padding }}
         >
           {Array.from({ length: steps + 1 }, (_, index) => {

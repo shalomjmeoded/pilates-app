@@ -7,6 +7,7 @@ import {
 } from '@expo-google-fonts/plus-jakarta-sans';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
 import { GlobalUpsellModal } from '@/components/premium';
 import { TuneBootError } from '@/components/ui/TuneBootError';
@@ -33,28 +34,28 @@ export default function RootLayout() {
     hydratePreferences();
   }, [hydratePreferences]);
 
+  let content;
+
   if (!fontsLoaded) {
-    return <TuneBootLoader />;
+    content = <TuneBootLoader />;
+  } else if (error) {
+    content = <TuneBootError message={error} onRetry={() => setBootAttempt((attempt) => attempt + 1)} />;
+  } else if (!isReady) {
+    content = <TuneBootLoader />;
+  } else {
+    content = (
+      <>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: colors.backgroundPrimary },
+            animation: 'slide_from_right',
+          }}
+        />
+        <GlobalUpsellModal />
+      </>
+    );
   }
 
-  if (error) {
-    return <TuneBootError message={error} onRetry={() => setBootAttempt((attempt) => attempt + 1)} />;
-  }
-
-  if (!isReady) {
-    return <TuneBootLoader />;
-  }
-
-  return (
-    <>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: colors.backgroundPrimary },
-          animation: 'slide_from_right',
-        }}
-      />
-      <GlobalUpsellModal />
-    </>
-  );
+  return <SafeAreaProvider initialMetrics={initialWindowMetrics}>{content}</SafeAreaProvider>;
 }
