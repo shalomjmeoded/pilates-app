@@ -2,6 +2,7 @@ export { CompactYearPicker } from './CompactYearPicker';
 export { HorizontalMeasurementRuler } from './HorizontalMeasurementRuler';
 export { NumericMeasurementInput } from './NumericMeasurementInput';
 export { OnboardingPlanProgress } from './OnboardingPlanProgress';
+export { PlanRevealHero } from './PlanRevealHero';
 export { PaceIntensityPicker } from './PaceIntensityPicker';
 export { OnboardingShell } from './OnboardingShell';
 export { OptionCard } from './OptionCard';

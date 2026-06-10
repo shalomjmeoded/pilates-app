@@ -4,6 +4,7 @@ import { Alert, FlatList, Pressable, StyleSheet, TextInput, View } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { format, parseISO } from 'date-fns';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -52,10 +53,8 @@ export default function WeightHistoryScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar />
       <View style={styles.container}>
-        <Pressable accessibilityRole="button" onPress={() => router.back()}>
-          <Text variant="bodyMuted">← Progress</Text>
-        </Pressable>
         <Text variant="h1">Weight History</Text>
         <TextInput
           accessibilityLabel="Search weight entries"

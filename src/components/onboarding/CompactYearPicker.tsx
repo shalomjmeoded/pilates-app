@@ -6,6 +6,7 @@ import { getBirthYearOptions } from '@/onboarding/helpers';
 import { colors, radius, spacing } from '@/theme';
 
 const YEAR_OPTIONS = getBirthYearOptions();
+const PICKER_MAX_HEIGHT = 220;
 
 interface CompactYearPickerProps {
   value: number;
@@ -15,7 +16,7 @@ interface CompactYearPickerProps {
 export function CompactYearPicker({ value, onChange }: CompactYearPickerProps) {
   return (
     <View style={styles.wrap}>
-      <Text variant="h1" style={styles.selectedYear}>
+      <Text variant="display" style={styles.selectedYear}>
         {value}
       </Text>
       <Text variant="bodyMuted" style={styles.caption}>
@@ -40,30 +41,33 @@ export function CompactYearPicker({ value, onChange }: CompactYearPickerProps) {
 const styles = StyleSheet.create({
   wrap: {
     alignItems: 'center',
-    gap: spacing.xs,
+    gap: spacing.sm,
   },
   selectedYear: {
     color: colors.brandPrimary,
-    fontSize: 48,
-    lineHeight: 52,
+    fontSize: 42,
+    lineHeight: 48,
   },
   caption: {
     marginBottom: spacing.xs,
   },
   pickerShell: {
     width: '100%',
+    maxHeight: PICKER_MAX_HEIGHT,
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.borderLight,
     overflow: 'hidden',
-    minHeight: Platform.OS === 'ios' ? 148 : 128,
+    height: Platform.OS === 'ios' ? PICKER_MAX_HEIGHT : 180,
   },
   picker: {
     width: '100%',
+    height: PICKER_MAX_HEIGHT,
   },
   pickerItem: {
-    fontSize: 18,
+    fontSize: 20,
     color: colors.textDark,
+    height: PICKER_MAX_HEIGHT,
   },
 });

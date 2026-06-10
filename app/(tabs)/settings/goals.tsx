@@ -10,7 +10,7 @@ import { FITNESS_GOAL_OPTIONS, TRAJECTORY_OPTIONS } from '@/onboarding/constants
 import { parsePositiveNumber } from '@/onboarding/helpers';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import type { Profile } from '@/types/profile';
-import { spacing } from '@/theme';
+import { colors, spacing } from '@/theme';
 import { kgToLb, lbToKg } from '@/utils/units';
 
 export default function GoalsSettingsScreen() {
@@ -42,8 +42,15 @@ export default function GoalsSettingsScreen() {
     setDraft((current) => (current ? { ...current, ...patch } : current));
   };
 
+  const hasUnsavedChanges =
+    profile !== null && JSON.stringify(draft) !== JSON.stringify(profile);
+
   return (
-    <SettingsScreenShell title="Goals" subtitle="Shape your direction and pace.">
+    <SettingsScreenShell
+      title="Goals"
+      subtitle="Shape your direction and pace."
+      hasUnsavedChanges={hasUnsavedChanges}
+    >
       <NumericMeasurementInput
         label="Goal weight"
         value={goalWeightDisplay}
@@ -94,6 +101,6 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   error: {
-    color: '#C97A87',
+    color: colors.brandPrimary,
   },
 });

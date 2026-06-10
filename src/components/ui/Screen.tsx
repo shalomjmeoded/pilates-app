@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.sm,
-    paddingTop: spacing.sm,
-    gap: spacing.sm,
+    paddingTop: spacing.md,
+    gap: spacing.md,
   },
   subtitle: {
     marginBottom: spacing.xs,

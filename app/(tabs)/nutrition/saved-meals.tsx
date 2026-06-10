@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PremiumGate } from '@/components/premium';
 import { MealFormField } from '@/components/nutrition/MealFormField';
+import { SubscreenTopBar } from '@/components/navigation';
 import { usePremium } from '@/hooks/usePremium';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
@@ -33,9 +34,18 @@ export default function SavedMealsScreen() {
     void reload();
   }, [reload]);
 
+  const hasUnsavedChanges =
+    title.length > 0 ||
+    calories.length > 0 ||
+    proteinG.length > 0 ||
+    carbsG.length > 0 ||
+    fatG.length > 0 ||
+    fiberG.length > 0;
+
   if (!hasAccess) {
     return (
       <SafeAreaView style={styles.safeArea}>
+        <SubscreenTopBar />
         <PremiumGate description="Save meals you eat often and log them with one tap." />
       </SafeAreaView>
     );
@@ -80,6 +90,7 @@ export default function SavedMealsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
       <ScrollView contentContainerStyle={styles.container}>
         <Text variant="h1">Saved Meals</Text>
         <Text variant="bodyMuted">Templates for faster logging.</Text>

@@ -172,8 +172,8 @@ export default function ProgressScreen() {
 
 const styles = StyleSheet.create({
   scroll: {
-    gap: spacing.sm,
-    paddingBottom: spacing.lg,
+    gap: spacing.md,
+    paddingBottom: spacing.xl,
   },
   adherenceRow: {
     flexDirection: 'row',

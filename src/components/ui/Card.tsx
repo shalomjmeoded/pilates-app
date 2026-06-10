@@ -1,15 +1,16 @@
 import { ReactNode } from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
 
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
 
 interface CardProps extends ViewProps {
   children: ReactNode;
+  elevated?: boolean;
 }
 
-export function Card({ children, style, ...props }: CardProps) {
+export function Card({ children, style, elevated = true, ...props }: CardProps) {
   return (
-    <View style={[styles.card, style]} {...props}>
+    <View style={[styles.card, elevated && shadows.card, style]} {...props}>
       {children}
     </View>
   );

@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans_600SemiBold',
   },
   primaryLabel: {
-    color: colors.surfaceCanvas,
+    color: colors.warmWhite,
   },
   secondaryLabel: {
     color: colors.brandPrimary,

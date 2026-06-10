@@ -1,7 +1,12 @@
 import { useMemo } from 'react';
 
 import { OnboardingShell, RoadmapChart } from '@/components/onboarding';
-import { buildRoadmapProjection } from '@/engines/calculations';
+import {
+  buildRoadmapProjection,
+  estimateWeeksToGoal,
+  formatRoadmapTargetDate,
+  roadmapConfidenceLabel,
+} from '@/engines/calculations';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
@@ -11,34 +16,34 @@ export default function Step13Roadmap() {
   const draft = useOnboardingStore((state) => state.draft);
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
 
-  const points = useMemo(() => {
-    if (!draft.currentWeightKg || !draft.weightTrajectory || draft.paceKgPerWeek === null) {
-      return buildRoadmapProjection(
-        draft.currentWeightKg ?? 68,
-        draft.weightTrajectory ?? 'weight_loss',
-        draft.paceKgPerWeek ?? 0.5,
-      );
-    }
+  const currentWeight = draft.currentWeightKg ?? 68;
+  const trajectory = draft.weightTrajectory ?? 'weight_loss';
+  const pace = draft.paceKgPerWeek ?? 0.5;
+  const goalWeight = draft.goalWeightKg ?? currentWeight;
 
-    return buildRoadmapProjection(
-      draft.currentWeightKg,
-      draft.weightTrajectory,
-      draft.paceKgPerWeek,
-    );
-  }, [draft.currentWeightKg, draft.paceKgPerWeek, draft.weightTrajectory]);
+  const points = useMemo(
+    () => buildRoadmapProjection(currentWeight, trajectory, pace),
+    [currentWeight, pace, trajectory],
+  );
+
+  const weeksToGoal = estimateWeeksToGoal(currentWeight, goalWeight, trajectory, pace);
+  const targetDateLabel = formatRoadmapTargetDate(weeksToGoal);
+  const confidenceLabel = roadmapConfidenceLabel(trajectory, pace);
 
   return (
     <OnboardingShell
       step={step}
-      title="Your 24-week roadmap"
-      subtitle="A projected curve based on your current selections."
+      title="Your wellness roadmap"
+      subtitle="A projected curve based on sustainable, steady progress."
       onBack={goBack}
       onNext={goNext}
     >
       <RoadmapChart
         points={points}
-        goalWeightKg={draft.goalWeightKg ?? draft.currentWeightKg ?? 0}
+        goalWeightKg={goalWeight}
         weightUnit={weightUnit}
+        targetDateLabel={targetDateLabel}
+        confidenceLabel={confidenceLabel}
       />
     </OnboardingShell>
   );

@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { ONBOARDING_TOTAL_STEPS } from '@/onboarding/constants';
@@ -19,6 +20,8 @@ interface OnboardingShellProps {
   nextDisabled?: boolean;
   showBack?: boolean;
   hideFooter?: boolean;
+  hideStepIndicator?: boolean;
+  titleLines?: number;
 }
 
 export function OnboardingShell({
@@ -32,20 +35,25 @@ export function OnboardingShell({
   nextDisabled = false,
   showBack = true,
   hideFooter = false,
+  hideStepIndicator = false,
+  titleLines = 3,
 }: OnboardingShellProps) {
   const { height } = useWindowDimensions();
   const isCompact = height < 760;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <Text variant="label">
-          {step} / {ONBOARDING_TOTAL_STEPS}
-        </Text>
-        <View style={styles.progressTrack}>
-          <View style={[styles.progressFill, { width: `${(step / ONBOARDING_TOTAL_STEPS) * 100}%` }]} />
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+      {showBack && onBack ? <SubscreenTopBar onPress={onBack} /> : null}
+      {!hideStepIndicator ? (
+        <View style={styles.header}>
+          <Text variant="label">
+            {step} / {ONBOARDING_TOTAL_STEPS}
+          </Text>
+          <View style={styles.progressTrack}>
+            <View style={[styles.progressFill, { width: `${(step / ONBOARDING_TOTAL_STEPS) * 100}%` }]} />
+          </View>
         </View>
-      </View>
+      ) : null}
 
       <ScrollView
         style={styles.scrollView}
@@ -60,7 +68,13 @@ export function OnboardingShell({
           style={[styles.page, isCompact && styles.pageCompact]}
         >
           <View style={styles.intro}>
-            <Text variant="h1" style={styles.title} numberOfLines={3}>
+            <Text
+              variant="h1"
+              style={styles.title}
+              numberOfLines={titleLines}
+              adjustsFontSizeToFit
+              minimumFontScale={0.85}
+            >
               {title}
             </Text>
             {subtitle ? (
@@ -74,22 +88,16 @@ export function OnboardingShell({
       </ScrollView>
 
       {!hideFooter ? (
-        <View style={styles.footer}>
-          {showBack && onBack ? (
-            <Pressable accessibilityRole="button" onPress={onBack} style={styles.backButton}>
-              <Text variant="body" style={styles.backLabel}>
-                Back
-              </Text>
-            </Pressable>
-          ) : (
+        <SafeAreaView edges={['bottom']} style={styles.footerSafe}>
+          <View style={styles.footer}>
             <View style={styles.backSpacer} />
-          )}
-          {onNext ? (
-            <View style={styles.nextWrap}>
-              <Button label={nextLabel} onPress={onNext} disabled={nextDisabled} />
-            </View>
-          ) : null}
-        </View>
+            {onNext ? (
+              <View style={styles.nextWrap}>
+                <Button label={nextLabel} onPress={onNext} disabled={nextDisabled} />
+              </View>
+            ) : null}
+          </View>
+        </SafeAreaView>
       ) : null}
     </SafeAreaView>
   );
@@ -142,9 +150,13 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     maxWidth: 560,
+    lineHeight: 24,
   },
   body: {
     gap: spacing.sm,
+  },
+  footerSafe: {
+    backgroundColor: colors.backgroundPrimary,
   },
   footer: {
     flexDirection: 'row',
@@ -156,14 +168,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.borderLight,
     backgroundColor: colors.backgroundPrimary,
-  },
-  backButton: {
-    minHeight: 48,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.xs,
-  },
-  backLabel: {
-    color: colors.brandPrimary,
   },
   backSpacer: {
     width: 64,

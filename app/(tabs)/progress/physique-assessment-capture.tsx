@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Image, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -38,8 +39,12 @@ export default function PhysiqueAssessmentCaptureScreen() {
     assess,
   } = usePhysiquePhotoAssessment(disclaimerAcceptedAt);
 
+  const hasUnsavedChanges =
+    Boolean(photos.front || photos.side || photos.back) || notes.trim().length > 0;
+
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text variant="h1">Upload Photos</Text>
         <Text variant="bodyMuted">

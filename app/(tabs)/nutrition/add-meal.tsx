@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -17,6 +18,7 @@ export default function AddMealHubScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar />
       <View style={styles.container}>
         <Text variant="h1">Add Meal</Text>
         <Text variant="bodyMuted">Choose how you want to log this meal.</Text>
@@ -74,7 +76,6 @@ export default function AddMealHubScreen() {
           />
         </Card>
 
-        <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
       </View>
     </SafeAreaView>
   );
