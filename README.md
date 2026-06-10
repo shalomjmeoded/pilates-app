@@ -11,7 +11,7 @@ Local-first Pilates and wellness app built with **Expo (React Native)**. Workout
 ## Quick start
 
 ```bash
-git clone https://github.com/shalomm-gloat/pilates-app.git
+git clone https://github.com/shalomjmeoded/pilates-app.git
 cd pilates-app
 npm install --legacy-peer-deps
 cp .env.example .env
