@@ -4,7 +4,7 @@ import { FITNESS_GOAL_OPTIONS } from '@/onboarding/constants';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
 export default function Step10FitnessGoal() {
-  const { step, goNext, goBack } = useOnboardingNavigation(11);
+  const { step, goNext, goBack } = useOnboardingNavigation(9);
   const fitnessGoal = useOnboardingStore((state) => state.draft.fitnessGoal);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
 

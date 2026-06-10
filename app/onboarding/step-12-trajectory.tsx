@@ -4,7 +4,7 @@ import { TRAJECTORY_OPTIONS } from '@/onboarding/constants';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
 export default function Step12Trajectory() {
-  const { step, goNext, goBack } = useOnboardingNavigation(13);
+  const { step, goNext, goBack } = useOnboardingNavigation(11);
   const weightTrajectory = useOnboardingStore((state) => state.draft.weightTrajectory);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
 

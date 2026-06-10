@@ -4,7 +4,7 @@ import { MEDIA_OPTIONS } from '@/onboarding/constants';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
 export default function Step04Media() {
-  const { step, goNext, goBack } = useOnboardingNavigation(5);
+  const { step, goNext, goBack } = useOnboardingNavigation(4);
   const mediaPreference = useOnboardingStore((state) => state.draft.mediaPreference);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
 

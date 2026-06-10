@@ -20,7 +20,8 @@ interface VerticalMeasurementRulerProps {
   valueCm: number;
   unit: 'cm' | 'in';
   onChangeCm: (cm: number) => void;
-  onToggleUnit: () => void;
+  selectedSystem: 'metric' | 'imperial';
+  onSelectSystem: (metric: boolean) => void;
 }
 
 function displayValue(cm: number, unit: 'cm' | 'in'): string {
@@ -39,7 +40,8 @@ export function VerticalMeasurementRuler({
   valueCm,
   unit,
   onChangeCm,
-  onToggleUnit,
+  selectedSystem,
+  onSelectSystem,
 }: VerticalMeasurementRulerProps) {
   const lastCm = useRef(valueCm);
   const gestureStartCm = useRef(valueCm);
@@ -79,15 +81,50 @@ export function VerticalMeasurementRuler({
 
   return (
     <View style={styles.container}>
+      <View style={styles.segmentedControl}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ selected: selectedSystem === 'metric' }}
+          onPress={() => onSelectSystem(true)}
+          style={[
+            styles.segment,
+            selectedSystem === 'metric' && styles.segmentSelected,
+          ]}
+        >
+          <Text
+            variant="label"
+            style={selectedSystem === 'metric' ? styles.segmentLabelSelected : styles.segmentLabel}
+          >
+            Metric
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ selected: selectedSystem === 'imperial' }}
+          onPress={() => onSelectSystem(false)}
+          style={[
+            styles.segment,
+            selectedSystem === 'imperial' && styles.segmentSelected,
+          ]}
+        >
+          <Text
+            variant="label"
+            style={selectedSystem === 'imperial' ? styles.segmentLabelSelected : styles.segmentLabel}
+          >
+            Imperial
+          </Text>
+        </Pressable>
+      </View>
+
       <View style={styles.valueRow}>
         <Text variant="h1" style={styles.value}>
           {displayValue(valueCm, unit)}
         </Text>
-        <Pressable accessibilityRole="button" onPress={onToggleUnit} style={styles.unitPill}>
+        <View style={styles.unitPill}>
           <Text variant="label" style={styles.unitLabel}>
             {unit.toUpperCase()}
           </Text>
-        </Pressable>
+        </View>
       </View>
 
       <View
@@ -138,6 +175,31 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     gap: spacing.sm,
+  },
+  segmentedControl: {
+    flexDirection: 'row',
+    backgroundColor: colors.surfaceCanvas,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    padding: 4,
+    gap: 4,
+  },
+  segment: {
+    flex: 1,
+    minHeight: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.pill,
+  },
+  segmentSelected: {
+    backgroundColor: colors.surfaceRose,
+  },
+  segmentLabel: {
+    color: colors.textMuted,
+  },
+  segmentLabelSelected: {
+    color: colors.brandPrimary,
   },
   value: {
     fontSize: 56,

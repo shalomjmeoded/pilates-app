@@ -4,7 +4,7 @@ import { GENDER_OPTIONS } from '@/onboarding/constants';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
 export default function Step01Gender() {
-  const { step, goNext, goBack } = useOnboardingNavigation(2);
+  const { step, goNext, goBack } = useOnboardingNavigation(1);
   const genderIdentity = useOnboardingStore((state) => state.draft.genderIdentity);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
 

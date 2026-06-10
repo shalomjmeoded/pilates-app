@@ -10,14 +10,11 @@ import { Text } from '@/components/ui/Text';
 import { getActiveNutritionTargets } from '@/db/repositories/nutritionRepository';
 import { validateManualTargets } from '@/engines/settings';
 import { useSettingsProfile } from '@/hooks/useSettingsProfile';
-import { NUTRITION_MODE_OPTIONS } from '@/onboarding/constants';
 import {
-  recalibrateFromProfile,
   restoreAutoNutritionTargets,
   saveManualNutritionTargets,
 } from '@/services/recalibration/recalibrateProfile';
 import { useRecalibrationStore } from '@/stores/recalibrationStore';
-import type { NutritionMode } from '@/types/profile';
 import { colors, spacing } from '@/theme';
 import { useRouter } from 'expo-router';
 
@@ -25,7 +22,6 @@ export default function NutritionSettingsScreen() {
   const router = useRouter();
   const { profile, isLoading, isSaving, error, saveAndRecalibrate } = useSettingsProfile();
   const setComparison = useRecalibrationStore((state) => state.setComparison);
-  const [mode, setMode] = useState<NutritionMode>('full_tracking');
   const [manualMode, setManualMode] = useState(false);
   const [calories, setCalories] = useState('');
   const [proteinG, setProteinG] = useState('');
@@ -38,7 +34,6 @@ export default function NutritionSettingsScreen() {
   useEffect(() => {
     async function load() {
       if (!profile) return;
-      setMode(profile.nutritionMode);
       const today = format(new Date(), 'yyyy-MM-dd');
       const targets = await getActiveNutritionTargets(today);
       if (targets) {
@@ -60,13 +55,6 @@ export default function NutritionSettingsScreen() {
       </SettingsScreenShell>
     );
   }
-
-  const handleModeSave = async () => {
-    const nextProfile = { ...profile, nutritionMode: mode };
-    const comparison = await recalibrateFromProfile(nextProfile);
-    setComparison(comparison);
-    router.push('/(tabs)/settings/plan-updated' as const);
-  };
 
   const handleManualSave = async () => {
     const targets = {
@@ -99,27 +87,12 @@ export default function NutritionSettingsScreen() {
     router.push('/(tabs)/settings/plan-updated');
   };
 
-  const hasUnsavedChanges = mode !== profile.nutritionMode;
-
   return (
     <SettingsScreenShell
       title="Nutrition"
       subtitle="Targets that match your rhythm."
-      hasUnsavedChanges={hasUnsavedChanges}
     >
-      <Text variant="label">Tracking mode</Text>
-      {NUTRITION_MODE_OPTIONS.map((option) => (
-        <OptionCard
-          key={option.value}
-          label={option.label}
-          description={option.description}
-          selected={mode === option.value}
-          onPress={() => setMode(option.value)}
-        />
-      ))}
-      <Button label="Save tracking mode" onPress={() => void handleModeSave()} disabled={isSaving} />
-
-      <Text variant="label" style={styles.section}>Target source</Text>
+      <Text variant="label">Target source</Text>
       <OptionCard
         label="Auto-calculated"
         description="Based on your profile and goals."

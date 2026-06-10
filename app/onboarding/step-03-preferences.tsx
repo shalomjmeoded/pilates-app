@@ -5,7 +5,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import type { ExercisePreference } from '@/types/profile';
 
 export default function Step03Preferences() {
-  const { step, goNext, goBack } = useOnboardingNavigation(4);
+  const { step, goNext, goBack } = useOnboardingNavigation(3);
   const exercisePreferences = useOnboardingStore((state) => state.draft.exercisePreferences);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
 

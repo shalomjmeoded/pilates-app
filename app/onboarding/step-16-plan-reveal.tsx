@@ -15,7 +15,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 import { colors, radius, spacing } from '@/theme';
 
 export default function Step16PlanReveal() {
-  const { step, goNext, goToStep } = useOnboardingNavigation(17);
+  const { step, goNext, goToStep } = useOnboardingNavigation(15);
   const draft = useOnboardingStore((state) => state.draft);
   const baselinePlan = draft.baselinePlan;
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
@@ -43,7 +43,7 @@ export default function Step16PlanReveal() {
       step={step}
       title="Your plan is ready"
       subtitle="Built for sustainable progress — stronger every week."
-      onBack={() => goToStep(15)}
+      onBack={() => goToStep(14)}
       onNext={goNext}
       nextLabel="Start with Tune"
     >

@@ -8,7 +8,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 import { kgToLb, lbToKg } from '@/utils/units';
 
 export default function Step11GoalWeight() {
-  const { step, goNext, goBack } = useOnboardingNavigation(12);
+  const { step, goNext, goBack } = useOnboardingNavigation(10);
   const goalWeightKg = useOnboardingStore((state) => state.draft.goalWeightKg);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const units = usePreferencesStore((state) => state.preferences.units);

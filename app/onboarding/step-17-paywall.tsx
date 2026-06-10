@@ -14,7 +14,7 @@ import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
 import { colors, spacing } from '@/theme';
 
 export default function Step17Paywall() {
-  const { step, goBack } = useOnboardingNavigation(18);
+  const { step, goBack } = useOnboardingNavigation(16);
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
   const { beginFreeTrial, restore } = usePremium();
   const [actionError, setActionError] = useState<string | null>(null);

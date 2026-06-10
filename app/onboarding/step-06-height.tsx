@@ -8,7 +8,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 const DEFAULT_HEIGHT_CM = 168;
 
 export default function Step06Height() {
-  const { step, goNext, goBack } = useOnboardingNavigation(7);
+  const { step, goNext, goBack } = useOnboardingNavigation(6);
   const heightCm = useOnboardingStore((state) => state.draft.heightCm);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const units = usePreferencesStore((state) => state.preferences.units);
@@ -21,12 +21,16 @@ export default function Step06Height() {
   }, [heightCm, patchDraft]);
 
   const valueCm = heightCm ?? DEFAULT_HEIGHT_CM;
+  const isMetric = units.height === 'cm' && units.weight === 'kg';
+  const applyUnitSystem = (metric: boolean) => {
+    setUnits(metric ? { height: 'cm', weight: 'kg' } : { height: 'in', weight: 'lb' });
+  };
 
   return (
     <OnboardingShell
       step={step}
       title="Your height"
-      subtitle="Scroll the ruler to match you — like Apple Health."
+      subtitle="Choose your unit style, then scroll the ruler to match you."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueCm < 120 || valueCm > 230}
@@ -36,9 +40,8 @@ export default function Step06Height() {
         valueCm={valueCm}
         unit={units.height}
         onChangeCm={(cm) => patchDraft({ heightCm: cm })}
-        onToggleUnit={() =>
-          setUnits({ ...units, height: units.height === 'cm' ? 'in' : 'cm' })
-        }
+        selectedSystem={isMetric ? 'metric' : 'imperial'}
+        onSelectSystem={applyUnitSystem}
       />
     </OnboardingShell>
   );

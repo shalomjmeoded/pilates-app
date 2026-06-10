@@ -1,4 +1,4 @@
-import type { ExercisePreference, FitnessGoal, GenderIdentity, MediaPreference, NutritionMode, Pace, TrainingFrequency, WeightTrajectory } from '@/types/profile';
+import type { ExercisePreference, FitnessGoal, GenderIdentity, MediaPreference, Pace, TrainingFrequency, WeightTrajectory } from '@/types/profile';
 
 export const ONBOARDING_SPRING = {
   mass: 1,
@@ -6,10 +6,9 @@ export const ONBOARDING_SPRING = {
   stiffness: 120,
 } as const;
 
-export const ONBOARDING_TOTAL_STEPS = 18;
+export const ONBOARDING_TOTAL_STEPS = 16;
 
 export const ONBOARDING_ROUTES = [
-  'step-00-units',
   'step-01-gender',
   'step-02-frequency',
   'step-03-preferences',
@@ -17,7 +16,6 @@ export const ONBOARDING_ROUTES = [
   'step-05-notifications',
   'step-06-height',
   'step-07-weight',
-  'step-08-nutrition-mode',
   'step-09-birth-year',
   'step-10-fitness-goal',
   'step-11-goal-weight',
@@ -63,19 +61,6 @@ export const MEDIA_OPTIONS: Array<{ value: MediaPreference; label: string; descr
     value: 'static_only',
     label: 'Static images / GIFs only',
     description: 'Keep workouts lightweight with on-device visuals.',
-  },
-];
-
-export const NUTRITION_MODE_OPTIONS: Array<{ value: NutritionMode; label: string; description: string }> = [
-  {
-    value: 'full_tracking',
-    label: 'Full calorie & macro plan',
-    description: 'Track meals, macros, and daily targets.',
-  },
-  {
-    value: 'workouts_only',
-    label: 'Workouts only',
-    description: 'Focus on movement. Nutrition dashboard stays minimal.',
   },
 ];
 

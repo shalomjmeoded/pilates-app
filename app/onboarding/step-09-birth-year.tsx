@@ -7,7 +7,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 const DEFAULT_YEAR = 1994;
 
 export default function Step09BirthYear() {
-  const { step, goNext, goBack } = useOnboardingNavigation(10);
+  const { step, goNext, goBack } = useOnboardingNavigation(8);
   const birthYear = useOnboardingStore((state) => state.draft.birthYear);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const selectedYear = birthYear ?? DEFAULT_YEAR;

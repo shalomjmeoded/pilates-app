@@ -22,7 +22,7 @@ export interface OnboardingDraft {
   notificationsEnabled: boolean;
   heightCm: number | null;
   currentWeightKg: number | null;
-  nutritionMode: NutritionMode | null;
+  nutritionMode: NutritionMode;
   birthYear: number | null;
   fitnessGoal: FitnessGoal | null;
   goalWeightKg: number | null;
@@ -39,7 +39,7 @@ const INITIAL_DRAFT: OnboardingDraft = {
   notificationsEnabled: false,
   heightCm: null,
   currentWeightKg: null,
-  nutritionMode: null,
+  nutritionMode: 'full_tracking',
   birthYear: null,
   fitnessGoal: null,
   goalWeightKg: null,
@@ -82,7 +82,6 @@ function isCompleteDraft(draft: OnboardingDraft): draft is CompleteOnboardingDra
     draft.mediaPreference !== null &&
     draft.heightCm !== null &&
     draft.currentWeightKg !== null &&
-    draft.nutritionMode !== null &&
     draft.birthYear !== null &&
     draft.fitnessGoal !== null &&
     draft.goalWeightKg !== null &&

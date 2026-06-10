@@ -4,7 +4,7 @@ import { FREQUENCY_OPTIONS } from '@/onboarding/constants';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
 export default function Step02Frequency() {
-  const { step, goNext, goBack } = useOnboardingNavigation(3);
+  const { step, goNext, goBack } = useOnboardingNavigation(2);
   const trainingFrequency = useOnboardingStore((state) => state.draft.trainingFrequency);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
 
