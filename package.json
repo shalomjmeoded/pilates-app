@@ -1,22 +1,59 @@
 {
-  "name": "pilates-app",
+  "name": "tune",
   "version": "1.0.0",
-  "main": "index.ts",
-  "dependencies": {
-    "expo": "~56.0.9",
-    "expo-status-bar": "~56.0.4",
-    "react": "19.2.3",
-    "react-native": "0.85.3"
-  },
-  "devDependencies": {
-    "@types/react": "~19.2.2",
-    "typescript": "~6.0.3"
-  },
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "ai-proxy": "tsx server/ai-proxy/dev-server.ts",
+    "import-exercises": "tsx scripts/import-free-exercise-db.ts",
+    "validate-seed": "tsx scripts/validate-exercise-seed.ts",
+    "audit-exercises": "tsx scripts/audit-exercise-library.ts",
+    "build:exercises": "npm run import-exercises && npm run validate-seed && npm run audit-exercises"
+  },
+  "dependencies": {
+    "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
+    "@expo/vector-icons": "^15.1.1",
+    "@react-native-picker/picker": "2.11.4",
+    "babel-preset-expo": "~56.0.0",
+    "date-fns": "^4.1.0",
+    "expo": "~56.0.9",
+    "expo-constants": "~56.0.17",
+    "expo-crypto": "~56.0.4",
+    "expo-font": "~56.0.5",
+    "expo-haptics": "~56.0.3",
+    "expo-image-manipulator": "~56.0.17",
+    "expo-image-picker": "~56.0.16",
+    "expo-linking": "~56.0.13",
+    "expo-notifications": "~56.0.16",
+    "expo-router": "~56.2.9",
+    "expo-sqlite": "~56.0.4",
+    "expo-status-bar": "~56.0.4",
+    "react": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-mmkv": "^2.12.2",
+    "react-native-reanimated": "4.3.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "4.25.2",
+    "react-native-svg": "15.15.4",
+    "react-native-worklets": "^0.8.3",
+    "uuid": "^11.1.0",
+    "zod": "^3.25.76",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^25.9.2",
+    "@types/react": "~19.2.2",
+    "@types/uuid": "^10.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.11",
+    "tsx": "^4.20.3",
+    "typescript": "~6.0.3"
   },
   "private": true
 }

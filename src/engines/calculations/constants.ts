@@ -1,0 +1,1 @@
+export const MIN_AUTO_CALORIE_TARGET = 1000;

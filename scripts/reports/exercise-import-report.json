@@ -1,0 +1,198 @@
+{
+  "importedAt": "2026-06-09T22:13:41.881Z",
+  "source": "https://github.com/yuhonas/free-exercise-db",
+  "sourcePath": "/Users/mymac/Documents/Code/pilates-app/.vendor/free-exercise-db",
+  "sourceRecordCount": 873,
+  "removedCount": 619,
+  "removedByReason": {
+    "not_a_movement": 210,
+    "machine_equipment": 326,
+    "smr_or_foam_roll": 14,
+    "body_part_only": 1,
+    "bodybuilding_only": 36,
+    "excluded_category": 27,
+    "missing_instructions": 5
+  },
+  "removedExamples": [
+    {
+      "id": "90_90_Hamstring",
+      "name": "90/90 Hamstring",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Ab_Crunch_Machine",
+      "name": "Ab Crunch Machine",
+      "reason": "machine_equipment"
+    },
+    {
+      "id": "Ab_Roller",
+      "name": "Ab Roller",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Adductor",
+      "name": "Adductor",
+      "reason": "smr_or_foam_roll"
+    },
+    {
+      "id": "Adductor_Groin",
+      "name": "Adductor/Groin",
+      "reason": "body_part_only"
+    },
+    {
+      "id": "Air_Bike",
+      "name": "Air Bike",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "All_Fours_Quad_Stretch",
+      "name": "All Fours Quad Stretch",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Alternate_Hammer_Curl",
+      "name": "Alternate Hammer Curl",
+      "reason": "bodybuilding_only"
+    },
+    {
+      "id": "Alternate_Heel_Touchers",
+      "name": "Alternate Heel Touchers",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Alternate_Incline_Dumbbell_Curl",
+      "name": "Alternate Incline Dumbbell Curl",
+      "reason": "bodybuilding_only"
+    },
+    {
+      "id": "Alternating_Cable_Shoulder_Press",
+      "name": "Alternating Cable Shoulder Press",
+      "reason": "machine_equipment"
+    },
+    {
+      "id": "Alternating_Hang_Clean",
+      "name": "Alternating Hang Clean",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Anterior_Tibialis-SMR",
+      "name": "Anterior Tibialis-SMR",
+      "reason": "smr_or_foam_roll"
+    },
+    {
+      "id": "Anti-Gravity_Press",
+      "name": "Anti-Gravity Press",
+      "reason": "machine_equipment"
+    },
+    {
+      "id": "Around_The_Worlds",
+      "name": "Around The Worlds",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Atlas_Stone_Trainer",
+      "name": "Atlas Stone Trainer",
+      "reason": "excluded_category"
+    },
+    {
+      "id": "Atlas_Stones",
+      "name": "Atlas Stones",
+      "reason": "excluded_category"
+    },
+    {
+      "id": "Axle_Deadlift",
+      "name": "Axle Deadlift",
+      "reason": "excluded_category"
+    },
+    {
+      "id": "Back_Flyes_-_With_Bands",
+      "name": "Back Flyes - With Bands",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Backward_Drag",
+      "name": "Backward Drag",
+      "reason": "excluded_category"
+    },
+    {
+      "id": "Backward_Medicine_Ball_Throw",
+      "name": "Backward Medicine Ball Throw",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Balance_Board",
+      "name": "Balance Board",
+      "reason": "not_a_movement"
+    },
+    {
+      "id": "Ball_Leg_Curl",
+      "name": "Ball Leg Curl",
+      "reason": "bodybuilding_only"
+    },
+    {
+      "id": "Band_Good_Morning",
+      "name": "Band Good Morning",
+      "reason": "excluded_category"
+    },
+    {
+      "id": "Band_Good_Morning_Pull_Through",
+      "name": "Band Good Morning (Pull Through)",
+      "reason": "excluded_category"
+    }
+  ],
+  "exerciseCount": 160,
+  "thumbnailCount": 160,
+  "detailFrameCount": 160,
+  "thumbnailCoveragePercent": 100,
+  "detailFrameCoveragePercent": 100,
+  "bodyPartEntriesRemaining": 0,
+  "muscleFixExamples": [
+    {
+      "id": "Crossover_Reverse_Lunge",
+      "name": "Crossover Reverse Lunge",
+      "muscleGroup": "glutes"
+    },
+    {
+      "id": "Frog_Hops",
+      "name": "Frog Hops",
+      "muscleGroup": "quadriceps"
+    }
+  ],
+  "sourceField": "free_exercise_db",
+  "byDifficulty": {
+    "beginner": 133,
+    "intermediate": 25,
+    "advanced": 2
+  },
+  "byMuscleGroup": {
+    "quadriceps": 37,
+    "glutes": 14,
+    "core": 37,
+    "lower back": 1,
+    "inner thighs": 2,
+    "arms": 17,
+    "full body": 19,
+    "upper back": 11,
+    "outer thighs": 1,
+    "hamstrings": 2,
+    "shoulders": 19
+  },
+  "byEquipment": {
+    "none": 99,
+    "light weights": 45,
+    "mat": 4,
+    "resistance band": 12
+  },
+  "byCategory": {
+    "bodyweight": 136,
+    "mobility": 48,
+    "glutes": 15,
+    "core": 37,
+    "posture": 37,
+    "flexibility": 5,
+    "resistance_band": 12
+  },
+  "bySessionRole": {
+    "main": 160
+  }
+}
