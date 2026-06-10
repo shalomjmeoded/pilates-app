@@ -30,6 +30,7 @@ export default function Step06Height() {
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueCm < 120 || valueCm > 230}
+      scrollEnabled={false}
     >
       <VerticalMeasurementRuler
         valueCm={valueCm}

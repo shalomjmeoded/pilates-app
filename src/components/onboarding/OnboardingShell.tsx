@@ -22,6 +22,7 @@ interface OnboardingShellProps {
   hideFooter?: boolean;
   hideStepIndicator?: boolean;
   titleLines?: number;
+  scrollEnabled?: boolean;
 }
 
 export function OnboardingShell({
@@ -37,6 +38,7 @@ export function OnboardingShell({
   hideFooter = false,
   hideStepIndicator = false,
   titleLines = 3,
+  scrollEnabled = true,
 }: OnboardingShellProps) {
   const { height } = useWindowDimensions();
   const isCompact = height < 760;
@@ -60,6 +62,7 @@ export function OnboardingShell({
         contentContainerStyle={styles.scrollContent}
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
+        scrollEnabled={scrollEnabled}
         showsVerticalScrollIndicator={false}
       >
         <Animated.View

@@ -127,6 +127,9 @@ export function VerticalMeasurementRuler({
         <View style={styles.centerIndicator} pointerEvents="none" />
         <ScrollView
           ref={scrollRef}
+          nestedScrollEnabled
+          directionalLockEnabled
+          alwaysBounceVertical={false}
           showsVerticalScrollIndicator={false}
           snapToInterval={TICK_HEIGHT}
           decelerationRate="fast"
