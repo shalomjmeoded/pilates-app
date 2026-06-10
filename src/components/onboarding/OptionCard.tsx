@@ -38,11 +38,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    minHeight: 64,
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.borderLight,
-    padding: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 14,
     gap: spacing.sm,
   },
   cardSelected: {
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
     color: colors.brandPrimary,
   },
   description: {
-    marginTop: 2,
+    lineHeight: 20,
   },
   indicator: {
     width: 20,

@@ -30,33 +30,37 @@ export default function Step16PlanReveal() {
       onNext={goNext}
       nextLabel="Continue"
     >
-      <Card>
-        <Text variant="label">Calories</Text>
-        <Text variant="h1">{goalCalories}</Text>
-      </Card>
+      <View style={styles.summaryGrid}>
+        <Card style={[styles.metricCard, styles.metricCardPrimary]}>
+          <Text variant="label">Calories</Text>
+          <Text variant="h1" style={styles.primaryValue}>
+            {goalCalories}
+          </Text>
+        </Card>
 
-      <Card>
-        <Text variant="label">Protein</Text>
-        <Text variant="h1">{macros.proteinG}g</Text>
-      </Card>
+        <Card style={styles.metricCard}>
+          <Text variant="label">Protein</Text>
+          <Text variant="h2">{macros.proteinG}g</Text>
+        </Card>
 
-      <Card>
-        <Text variant="label">Workouts</Text>
-        <Text variant="h1">{workoutsPerWeek}/week</Text>
-      </Card>
+        <Card style={styles.metricCard}>
+          <Text variant="label">Workouts</Text>
+          <Text variant="h2">{workoutsPerWeek}/week</Text>
+        </Card>
 
-      <View style={styles.macroGrid}>
-        <Card style={styles.macroCard}>
-          <Text variant="h2">{macros.carbsG}g</Text>
+        <Card style={styles.metricCard}>
           <Text variant="label">Carbs</Text>
+          <Text variant="h2">{macros.carbsG}g</Text>
         </Card>
-        <Card style={styles.macroCard}>
-          <Text variant="h2">{macros.fatG}g</Text>
+
+        <Card style={styles.metricCard}>
           <Text variant="label">Fat</Text>
+          <Text variant="h2">{macros.fatG}g</Text>
         </Card>
-        <Card style={styles.macroCard}>
-          <Text variant="h2">{macros.fiberG}g</Text>
+
+        <Card style={styles.metricCard}>
           <Text variant="label">Fiber</Text>
+          <Text variant="h2">{macros.fiberG}g</Text>
         </Card>
       </View>
 
@@ -72,14 +76,25 @@ export default function Step16PlanReveal() {
 }
 
 const styles = StyleSheet.create({
-  macroGrid: {
+  summaryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
   },
-  macroCard: {
-    width: '31%',
+  metricCard: {
+    width: '47.8%',
     gap: spacing.xs,
+    minHeight: 92,
+    justifyContent: 'space-between',
+  },
+  metricCardPrimary: {
+    width: '100%',
+    minHeight: 112,
+    backgroundColor: colors.surfaceRose,
+    borderColor: colors.brandPrimary,
+  },
+  primaryValue: {
+    color: colors.brandPrimary,
   },
   warning: {
     backgroundColor: '#FFF4EC',

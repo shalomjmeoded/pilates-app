@@ -121,7 +121,7 @@ export function HorizontalMeasurementRuler({
 
 const styles = StyleSheet.create({
   container: {
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   valueWrap: {
     flexDirection: 'row',
@@ -186,5 +186,6 @@ const styles = StyleSheet.create({
   },
   hint: {
     textAlign: 'center',
+    paddingHorizontal: spacing.sm,
   },
 });

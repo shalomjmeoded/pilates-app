@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -33,6 +33,9 @@ export function OnboardingShell({
   showBack = true,
   hideFooter = false,
 }: OnboardingShellProps) {
+  const { height } = useWindowDimensions();
+  const isCompact = height < 760;
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
@@ -47,18 +50,25 @@ export function OnboardingShell({
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
+        contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View entering={FadeInRight.duration(280)} exiting={FadeOutLeft.duration(200)}>
-          <Text variant="h1" style={styles.title} numberOfLines={3}>
-            {title}
-          </Text>
-          {subtitle ? (
-            <Text variant="bodyMuted" style={styles.subtitle}>
-              {subtitle}
+        <Animated.View
+          entering={FadeInRight.duration(280)}
+          exiting={FadeOutLeft.duration(200)}
+          style={[styles.page, isCompact && styles.pageCompact]}
+        >
+          <View style={styles.intro}>
+            <Text variant="h1" style={styles.title} numberOfLines={3}>
+              {title}
             </Text>
-          ) : null}
+            {subtitle ? (
+              <Text variant="bodyMuted" style={styles.subtitle}>
+                {subtitle}
+              </Text>
+            ) : null}
+          </View>
           <View style={styles.body}>{children}</View>
         </Animated.View>
       </ScrollView>
@@ -92,7 +102,8 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: spacing.sm,
-    paddingTop: spacing.xs,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
     gap: spacing.xs,
   },
   progressTrack: {
@@ -110,27 +121,41 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: spacing.sm,
-    paddingBottom: spacing.lg,
+    paddingBottom: spacing.md,
     flexGrow: 1,
   },
+  page: {
+    flexGrow: 1,
+    paddingTop: spacing.sm,
+    gap: spacing.md,
+  },
+  pageCompact: {
+    paddingTop: spacing.xs,
+    gap: spacing.sm,
+  },
+  intro: {
+    gap: spacing.xs,
+  },
   title: {
-    marginTop: spacing.sm,
     flexShrink: 1,
     paddingRight: spacing.xs,
   },
   subtitle: {
-    marginTop: spacing.xs,
+    maxWidth: 560,
   },
   body: {
-    marginTop: spacing.md,
     gap: spacing.sm,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: spacing.sm,
+    paddingTop: spacing.xs,
     paddingBottom: spacing.sm,
     gap: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.borderLight,
+    backgroundColor: colors.backgroundPrimary,
   },
   backButton: {
     minHeight: 48,

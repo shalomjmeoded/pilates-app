@@ -138,12 +138,12 @@ const THUMB_SIZE = 28;
 
 const styles = StyleSheet.create({
   container: {
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   hero: {
     alignItems: 'center',
     gap: 6,
-    paddingVertical: 4,
+    paddingVertical: spacing.xs,
   },
   percent: {
     color: colors.brandPrimary,
@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
+    minHeight: 48,
     borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.borderLight,
