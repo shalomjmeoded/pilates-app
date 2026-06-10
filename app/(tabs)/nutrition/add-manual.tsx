@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { saveMeal } from '@/db/repositories/nutritionRepository';
@@ -62,8 +63,17 @@ export default function AddManualMealScreen() {
     }
   };
 
+  const hasUnsavedChanges =
+    title.length > 0 ||
+    calories.length > 0 ||
+    proteinG.length > 0 ||
+    carbsG.length > 0 ||
+    fatG.length > 0 ||
+    fiberG.length > 0;
+
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text variant="h1">Quick Add</Text>
         <Text variant="bodyMuted">Enter macros manually when you already know them.</Text>
@@ -131,7 +141,6 @@ export default function AddManualMealScreen() {
         ) : null}
 
         <Button label={isSaving ? 'Saving...' : 'Save Meal'} onPress={() => void handleSave()} disabled={isSaving} />
-        <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -32,8 +33,14 @@ export default function PhysiqueAssessmentReviewScreen() {
     return null;
   }
 
+  const handleBack = () => {
+    clear();
+    router.back();
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar onPress={handleBack} />
       <ScrollView contentContainerStyle={styles.container}>
         <Text variant="h1">Review Assessment</Text>
         <Text variant="bodyMuted">

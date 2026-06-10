@@ -18,7 +18,13 @@ export { calculateGoalCalories, paceToDailyDeficit } from './goalCalories';
 export { calculateMacros, calculateFiberTarget } from './macros';
 export { calculateBmi } from './bmi';
 export { evaluateCalorieSafety, getCalorieSafetyThreshold, SAFETY_WARNING_MESSAGE } from './safety';
-export { buildRoadmapProjection } from './roadmap';
+export {
+  buildRoadmapProjection,
+  estimateWeeksToGoal,
+  formatFirstMilestone,
+  formatRoadmapTargetDate,
+  roadmapConfidenceLabel,
+} from './roadmap';
 
 export function buildBaselinePlan(input: CalculationInput): BaselinePlanResult {
   const { bmr } = calculateBmr({

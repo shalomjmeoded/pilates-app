@@ -14,7 +14,7 @@ import {
 } from '@/onboarding/constants';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import type { ExercisePreference, Profile } from '@/types/profile';
-import { spacing } from '@/theme';
+import { colors, spacing } from '@/theme';
 import { kgToLb, lbToKg, cmToInches, inchesToCm } from '@/utils/units';
 import { parsePositiveNumber } from '@/onboarding/helpers';
 
@@ -69,8 +69,16 @@ export default function ProfileSettingsScreen() {
     void saveAndRecalibrate({ ...draft, birthYear: year });
   };
 
+  const hasUnsavedChanges =
+    profile !== null &&
+    (JSON.stringify(draft) !== JSON.stringify(profile) || birthYear !== String(profile.birthYear));
+
   return (
-    <SettingsScreenShell title="Profile" subtitle="Body details and movement preferences.">
+    <SettingsScreenShell
+      title="Profile"
+      subtitle="Body details and movement preferences."
+      hasUnsavedChanges={hasUnsavedChanges}
+    >
       <Text variant="label">Gender</Text>
       {GENDER_OPTIONS.map((option) => (
         <OptionCard
@@ -144,6 +152,6 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   error: {
-    color: '#C97A87',
+    color: colors.brandPrimary,
   },
 });

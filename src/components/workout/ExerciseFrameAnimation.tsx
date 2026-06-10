@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
-import { ExerciseIllustration } from '@/components/illustrations/ExerciseIllustration';
+import { VisualAsset, muscleGroupIcon } from '@/components/media';
 import { getExerciseGifSource, getExerciseThumbnailSource } from '@/constants/exerciseMedia';
 import type { Exercise } from '@/types/exercise';
 import { colors, radius } from '@/theme';
@@ -23,7 +23,7 @@ export function ExerciseFrameAnimation({
   const endFrame = getExerciseGifSource(exercise.id);
   const [showEndFrame, setShowEndFrame] = useState(false);
 
-  const hasTwoFrames = Boolean(startFrame && endFrame);
+  const hasTwoFrames = Boolean(startFrame && endFrame && startFrame !== endFrame);
 
   useEffect(() => {
     if (!hasTwoFrames) {
@@ -35,22 +35,29 @@ export function ExerciseFrameAnimation({
     return () => clearInterval(timer);
   }, [exercise.id, hasTwoFrames]);
 
-  const source = showEndFrame && endFrame ? endFrame : startFrame;
-
-  if (!source) {
-    return <ExerciseIllustration muscleGroup={exercise.muscleGroup} size={size} />;
+  if (!startFrame && !endFrame) {
+    return (
+      <VisualAsset
+        icon={muscleGroupIcon(exercise.muscleGroup)}
+        fallback="icon"
+        size={size}
+        fillWidth={fillWidth}
+        fillHeight={260}
+        accessibilityLabel={`${exercise.name} movement demonstration`}
+      />
+    );
   }
 
+  const source = showEndFrame && endFrame ? endFrame : startFrame ?? endFrame;
+
+  const frameStyle = fillWidth
+    ? styles.fillWidth
+    : { width: size, height: size, borderRadius: size > 100 ? radius.card : radius.square };
+
   return (
-    <View
-      style={[
-        styles.frame,
-        fillWidth ? styles.fillWidth : { width: size, height: size },
-        { borderRadius: size > 100 || fillWidth ? radius.card : radius.square },
-      ]}
-    >
+    <View style={[styles.frame, frameStyle]}>
       <Image
-        source={source}
+        source={source!}
         style={fillWidth ? styles.fillImage : { width: size, height: size }}
         resizeMode="cover"
         accessibilityLabel={`${exercise.name} movement demonstration`}
@@ -61,7 +68,7 @@ export function ExerciseFrameAnimation({
 
 const styles = StyleSheet.create({
   frame: {
-    backgroundColor: colors.illustrationBg,
+    backgroundColor: colors.surfaceRose,
     borderWidth: 1,
     borderColor: colors.borderLight,
     overflow: 'hidden',

@@ -18,7 +18,7 @@ import {
 } from '@/services/recalibration/recalibrateProfile';
 import { useRecalibrationStore } from '@/stores/recalibrationStore';
 import type { NutritionMode } from '@/types/profile';
-import { spacing } from '@/theme';
+import { colors, spacing } from '@/theme';
 import { useRouter } from 'expo-router';
 
 export default function NutritionSettingsScreen() {
@@ -99,8 +99,14 @@ export default function NutritionSettingsScreen() {
     router.push('/(tabs)/settings/plan-updated');
   };
 
+  const hasUnsavedChanges = mode !== profile.nutritionMode;
+
   return (
-    <SettingsScreenShell title="Nutrition" subtitle="Targets that match your rhythm.">
+    <SettingsScreenShell
+      title="Nutrition"
+      subtitle="Targets that match your rhythm."
+      hasUnsavedChanges={hasUnsavedChanges}
+    >
       <Text variant="label">Tracking mode</Text>
       {NUTRITION_MODE_OPTIONS.map((option) => (
         <OptionCard
@@ -157,6 +163,6 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   error: {
-    color: '#C97A87',
+    color: colors.brandPrimary,
   },
 });

@@ -3,14 +3,14 @@ import { useCallback, useMemo, useState } from 'react';
 import { Alert, FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import {
-  CalorieRadialRing,
   MealCard,
   NutritionDayHeader,
   NutritionEmptyState,
+  RemainingCaloriesHero,
   WorkoutsOnlyState,
 } from '@/components/nutrition';
 import { WeekCalendarStrip } from '@/components/workout';
-import { Button } from '@/components/ui/Button';
+import { FloatingActionButton } from '@/components/ui/FloatingActionButton';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import {
@@ -27,6 +27,8 @@ import { useNutritionDay } from '@/hooks/useNutritionDay';
 import { usePremium } from '@/hooks/usePremium';
 import { useNutritionStore } from '@/stores/nutritionStore';
 import { colors, radius, spacing } from '@/theme';
+
+const FAB_BOTTOM_PADDING = 88;
 
 export default function NutritionScreen() {
   const router = useRouter();
@@ -123,23 +125,18 @@ export default function NutritionScreen() {
         </Text>
       ) : null}
 
+      <RemainingCaloriesHero
+        remainingCalories={summary.remainingCalories}
+        targetCalories={summary.targets.calories}
+        consumedCalories={summary.consumed.calories}
+      />
+
       <NutritionDayHeader
         mealDate={selectedDate}
         mealCount={summary.mealCount}
         consumed={summary.consumed}
         targets={summary.targets}
       />
-
-      <View style={styles.ringCard}>
-        <CalorieRadialRing
-          consumed={summary.consumed.calories}
-          target={summary.targets.calories}
-          remaining={summary.remainingCalories}
-          size={188}
-        />
-      </View>
-
-      <Button label="Add Meal" onPress={openAddMeal} accessibilityLabel="Add a meal" />
 
       {recentMeals.length > 0 ? (
         <View style={styles.recentWrap}>
@@ -181,28 +178,31 @@ export default function NutritionScreen() {
   return (
     <Screen title="Nutrition" isLoading={isLoading} loadingLabel="Loading your day...">
       {summary ? (
-        <FlatList
-          style={styles.list}
-          data={meals}
-          keyExtractor={(meal) => meal.id}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          ListHeaderComponent={listHeader}
-          ListEmptyComponent={<NutritionEmptyState />}
-          renderItem={({ item: meal }) => (
-            <MealCard
-              meal={meal}
-              onPortionChange={handlePortionChange}
-              onPortionStep={handlePortionStep}
-              onEdit={(mealId) =>
-                router.push({ pathname: '/(tabs)/nutrition/edit-meal', params: { mealId } })
-              }
-              onDelete={handleDeleteMeal}
-              onDuplicate={(mealId) => void handleDuplicateMeal(mealId)}
-            />
-          )}
-        />
+        <>
+          <FlatList
+            style={styles.list}
+            data={meals}
+            keyExtractor={(meal) => meal.id}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            ListHeaderComponent={listHeader}
+            ListEmptyComponent={<NutritionEmptyState />}
+            renderItem={({ item: meal }) => (
+              <MealCard
+                meal={meal}
+                onPortionChange={handlePortionChange}
+                onPortionStep={handlePortionStep}
+                onEdit={(mealId) =>
+                  router.push({ pathname: '/(tabs)/nutrition/edit-meal', params: { mealId } })
+                }
+                onDelete={handleDeleteMeal}
+                onDuplicate={(mealId) => void handleDuplicateMeal(mealId)}
+              />
+            )}
+          />
+          <FloatingActionButton label="Add Meal" onPress={openAddMeal} accessibilityLabel="Add a meal" />
+        </>
       ) : null}
     </Screen>
   );
@@ -213,22 +213,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    gap: spacing.sm,
-    paddingBottom: spacing.lg,
+    gap: spacing.md,
+    paddingBottom: FAB_BOTTOM_PADDING,
   },
   header: {
-    gap: spacing.sm,
+    gap: spacing.md,
   },
   error: {
     color: colors.brandPrimary,
-  },
-  ringCard: {
-    backgroundColor: colors.surfaceCanvas,
-    borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    paddingVertical: spacing.xs,
-    alignItems: 'center',
   },
   sectionHeader: {
     flexDirection: 'row',

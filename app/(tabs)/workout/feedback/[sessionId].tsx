@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { FeedbackSelector } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -30,6 +31,7 @@ export default function WorkoutFeedbackScreen() {
   );
 
   const canComplete = isFeedbackComplete(required, feedbackMap);
+  const hasUnsavedChanges = Object.values(feedbackMap).some((value) => value !== undefined);
 
   if (isLoading) {
     return <TuneBootLoader message="Preparing feedback..." />;
@@ -38,9 +40,9 @@ export default function WorkoutFeedbackScreen() {
   if (error || !session || !planDate) {
     return (
       <SafeAreaView style={styles.safeArea}>
+        <SubscreenTopBar />
         <View style={styles.center}>
           <Text variant="h2">Feedback unavailable</Text>
-          <Button label="Back" onPress={() => router.back()} />
         </View>
       </SafeAreaView>
     );
@@ -55,6 +57,7 @@ export default function WorkoutFeedbackScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
       <ScrollView contentContainerStyle={styles.container}>
         <Text variant="h1">How did it go?</Text>
         <Text variant="bodyMuted" style={styles.subtitle}>

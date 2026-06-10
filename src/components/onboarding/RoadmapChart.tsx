@@ -19,9 +19,11 @@ interface RoadmapChartProps {
   points: RoadmapPoint[];
   goalWeightKg: number;
   weightUnit?: 'kg' | 'lb';
+  targetDateLabel?: string;
+  confidenceLabel?: string;
 }
 
-const CHART_HEIGHT = 200;
+const CHART_HEIGHT = 220;
 const PADDING = 28;
 const MILESTONE_WEEKS = [0, 6, 12, 18, 24];
 
@@ -60,6 +62,8 @@ export function RoadmapChart({
   points,
   goalWeightKg,
   weightUnit = 'kg',
+  targetDateLabel,
+  confidenceLabel,
 }: RoadmapChartProps) {
   const [width, setWidth] = useState(0);
   const [activeWeek, setActiveWeek] = useState(12);
@@ -104,12 +108,29 @@ export function RoadmapChart({
 
   return (
     <View style={styles.wrap} onLayout={onLayout}>
+      <View style={styles.metaRow}>
+        {targetDateLabel ? (
+          <View style={styles.metaBadge}>
+            <Text variant="label">Target</Text>
+            <Text variant="body">{targetDateLabel}</Text>
+          </View>
+        ) : null}
+        {confidenceLabel ? (
+          <View style={[styles.metaBadge, styles.confidenceBadge]}>
+            <Text variant="label">Confidence</Text>
+            <Text variant="bodyMuted" numberOfLines={2}>
+              {confidenceLabel}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+
       <View style={styles.card}>
         {chart ? (
           <>
             <View style={styles.tooltip}>
               <Text variant="label" style={styles.tooltipLabel}>
-                Week {chart.active.week}
+                Week {chart.active.week} milestone
               </Text>
               <Text variant="h2" style={styles.tooltipValue}>
                 {formatWeight(chart.active.weight)}
@@ -118,8 +139,8 @@ export function RoadmapChart({
             <Svg width={width} height={CHART_HEIGHT}>
               <Defs>
                 <LinearGradient id="roadmapFill" x1="0" y1="0" x2="0" y2="1">
-                  <Stop offset="0%" stopColor={colors.brandPrimary} stopOpacity="0.28" />
-                  <Stop offset="100%" stopColor={colors.brandPrimary} stopOpacity="0.02" />
+                  <Stop offset="0%" stopColor={colors.brandSecondary} stopOpacity="0.32" />
+                  <Stop offset="100%" stopColor={colors.brandSecondary} stopOpacity="0.02" />
                 </LinearGradient>
               </Defs>
               <Line
@@ -186,11 +207,25 @@ export function RoadmapChart({
 
 const styles = StyleSheet.create({
   wrap: {
+    gap: spacing.md,
+  },
+  metaRow: {
     gap: spacing.sm,
+  },
+  metaBadge: {
+    backgroundColor: colors.surfaceCanvas,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    padding: spacing.sm,
+    gap: 4,
+  },
+  confidenceBadge: {
+    backgroundColor: colors.surfaceRose,
   },
   card: {
     backgroundColor: colors.surfaceCanvas,
-    borderRadius: radius.card,
+    borderRadius: radius.hero,
     borderWidth: 1,
     borderColor: colors.borderLight,
     overflow: 'hidden',

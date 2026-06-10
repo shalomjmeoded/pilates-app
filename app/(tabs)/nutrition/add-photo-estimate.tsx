@@ -1,7 +1,8 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -9,7 +10,6 @@ import { useMealPhotoEstimate } from '@/hooks/useMealPhotoEstimate';
 import { colors, radius, spacing } from '@/theme';
 
 export default function AddPhotoEstimateScreen() {
-  const router = useRouter();
   const params = useLocalSearchParams<{ mealDate: string }>();
   const mealDate = params.mealDate ?? new Date().toISOString().slice(0, 10);
 
@@ -24,6 +24,7 @@ export default function AddPhotoEstimateScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={previewUri !== null} />
       <View style={styles.container}>
         <Text variant="h1">Photo Estimate</Text>
         <Text variant="bodyMuted">
@@ -76,7 +77,6 @@ export default function AddPhotoEstimateScreen() {
           onPress={openManualFallback}
           disabled={isEstimating}
         />
-        <Button label="Cancel" variant="secondary" onPress={() => router.back()} />
       </View>
     </SafeAreaView>
   );

@@ -1,10 +1,11 @@
+import { Feather } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { format, parseISO } from 'date-fns';
 
 import { Text } from '@/components/ui/Text';
 import { applyPortionToMeal } from '@/engines/nutrition';
 import type { Meal } from '@/types/nutrition';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
 
 import { PortionControls } from './PortionControls';
 
@@ -15,6 +16,23 @@ interface MealCardProps {
   onEdit?: (mealId: string) => void;
   onDelete?: (mealId: string) => void;
   onDuplicate?: (mealId: string) => void;
+}
+
+function mealIconName(title: string): keyof typeof Feather.glyphMap {
+  const lower = title.toLowerCase();
+  if (lower.includes('breakfast') || lower.includes('oat')) {
+    return 'sunrise';
+  }
+  if (lower.includes('lunch') || lower.includes('salad')) {
+    return 'sun';
+  }
+  if (lower.includes('dinner') || lower.includes('soup')) {
+    return 'moon';
+  }
+  if (lower.includes('snack') || lower.includes('bar')) {
+    return 'coffee';
+  }
+  return 'feather';
 }
 
 export function MealCard({
@@ -29,23 +47,40 @@ export function MealCard({
   const timeLabel = format(parseISO(meal.loggedAt), 'h:mm a');
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, shadows.card]}>
       <View style={styles.header}>
-        <View style={styles.titleWrap}>
-          <Text variant="h2" style={styles.title}>
-            {meal.title}
-          </Text>
-          <Text variant="bodyMuted">{timeLabel}</Text>
+        <View style={styles.mediaRow}>
+          <View style={styles.imagePlaceholder}>
+            <Feather name={mealIconName(meal.title)} size={22} color={colors.brandSecondary} />
+          </View>
+          <View style={styles.titleWrap}>
+            <Text variant="h2" style={styles.title}>
+              {meal.title}
+            </Text>
+            <Text variant="bodyMuted">{timeLabel}</Text>
+          </View>
         </View>
+        {onEdit ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Edit ${meal.title}`}
+            onPress={() => onEdit(meal.id)}
+            style={styles.editButton}
+          >
+            <Feather name="edit-2" size={18} color={colors.brandPrimary} />
+          </Pressable>
+        ) : null}
+      </View>
+
+      <View style={styles.macroRow}>
+        <Text variant="bodyMuted" style={styles.macros}>
+          P {Math.round(scaled.proteinG)}g · C {Math.round(scaled.carbsG)}g · F{' '}
+          {Math.round(scaled.fatG)}g
+        </Text>
         <Text variant="h2" style={styles.calories}>
           {Math.round(scaled.calories)} kcal
         </Text>
       </View>
-
-      <Text variant="bodyMuted" style={styles.macros}>
-        P {Math.round(scaled.proteinG)}g • C {Math.round(scaled.carbsG)}g • F {Math.round(scaled.fatG)}
-        g • Fi {Math.round(scaled.fiberG)}g
-      </Text>
 
       <PortionControls
         multiplier={meal.portionMultiplier}
@@ -53,21 +88,28 @@ export function MealCard({
         onStep={(direction) => onPortionStep(meal.id, direction)}
       />
 
-      {onEdit || onDelete || onDuplicate ? (
+      {onDelete || onDuplicate ? (
         <View style={styles.actions}>
-          {onEdit ? (
-            <Pressable accessibilityRole="button" accessibilityLabel={`Edit ${meal.title}`} onPress={() => onEdit(meal.id)} style={styles.actionButton}>
-              <Text variant="label">Edit</Text>
-            </Pressable>
-          ) : null}
           {onDuplicate ? (
-            <Pressable accessibilityRole="button" accessibilityLabel={`Duplicate ${meal.title}`} onPress={() => onDuplicate(meal.id)} style={styles.actionButton}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Duplicate ${meal.title}`}
+              onPress={() => onDuplicate(meal.id)}
+              style={styles.actionButton}
+            >
               <Text variant="label">Duplicate</Text>
             </Pressable>
           ) : null}
           {onDelete ? (
-            <Pressable accessibilityRole="button" accessibilityLabel={`Delete ${meal.title}`} onPress={() => onDelete(meal.id)} style={styles.actionButton}>
-              <Text variant="label" style={styles.delete}>Delete</Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Delete ${meal.title}`}
+              onPress={() => onDelete(meal.id)}
+              style={styles.actionButton}
+            >
+              <Text variant="label" style={styles.delete}>
+                Delete
+              </Text>
             </Pressable>
           ) : null}
         </View>
@@ -83,17 +125,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.borderLight,
     padding: spacing.sm,
-    gap: spacing.xs,
-    shadowColor: colors.brandPrimary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    gap: spacing.sm,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
     gap: spacing.sm,
+  },
+  mediaRow: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    alignItems: 'center',
+  },
+  imagePlaceholder: {
+    width: 52,
+    height: 52,
+    borderRadius: radius.square,
+    backgroundColor: colors.surfaceRose,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   titleWrap: {
     flex: 1,
@@ -103,16 +155,29 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 24,
   },
-  calories: {
-    color: colors.brandPrimary,
+  editButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.surfaceRose,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  macroRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
   macros: {
-    marginTop: 2,
+    flex: 1,
+  },
+  calories: {
+    color: colors.brandPrimary,
   },
   actions: {
     flexDirection: 'row',
     gap: spacing.sm,
-    marginTop: spacing.xs,
   },
   actionButton: {
     minHeight: 44,

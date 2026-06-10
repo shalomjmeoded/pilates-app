@@ -1,14 +1,28 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { format, parseISO } from 'date-fns';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
+import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { deleteMeal, getMealById, updateMeal } from '@/db/repositories/nutritionRepository';
 import { parseMealNumber, validateMealInput } from '@/engines/nutrition';
+import { colors, spacing } from '@/theme';
+
+function formSnapshot(fields: {
+  title: string;
+  calories: string;
+  proteinG: string;
+  carbsG: string;
+  fatG: string;
+  fiberG: string;
+  loggedAt: string;
+}): string {
+  return JSON.stringify(fields);
+}
 
 export default function EditMealScreen() {
   const router = useRouter();
@@ -22,20 +36,56 @@ export default function EditMealScreen() {
   const [loggedAt, setLoggedAt] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [initialSnapshot, setInitialSnapshot] = useState<string | null>(null);
 
   useEffect(() => {
     void (async () => {
       const meal = await getMealById(params.mealId);
       if (!meal) return;
-      setTitle(meal.title);
-      setCalories(String(meal.calories));
-      setProteinG(String(meal.proteinG));
-      setCarbsG(String(meal.carbsG));
-      setFatG(String(meal.fatG));
-      setFiberG(String(meal.fiberG));
-      setLoggedAt(format(parseISO(meal.loggedAt), "yyyy-MM-dd'T'HH:mm"));
+      const nextTitle = meal.title;
+      const nextCalories = String(meal.calories);
+      const nextProteinG = String(meal.proteinG);
+      const nextCarbsG = String(meal.carbsG);
+      const nextFatG = String(meal.fatG);
+      const nextFiberG = String(meal.fiberG);
+      const nextLoggedAt = format(parseISO(meal.loggedAt), "yyyy-MM-dd'T'HH:mm");
+      setTitle(nextTitle);
+      setCalories(nextCalories);
+      setProteinG(nextProteinG);
+      setCarbsG(nextCarbsG);
+      setFatG(nextFatG);
+      setFiberG(nextFiberG);
+      setLoggedAt(nextLoggedAt);
+      setInitialSnapshot(
+        formSnapshot({
+          title: nextTitle,
+          calories: nextCalories,
+          proteinG: nextProteinG,
+          carbsG: nextCarbsG,
+          fatG: nextFatG,
+          fiberG: nextFiberG,
+          loggedAt: nextLoggedAt,
+        }),
+      );
     })();
   }, [params.mealId]);
+
+  const currentSnapshot = useMemo(
+    () =>
+      formSnapshot({
+        title,
+        calories,
+        proteinG,
+        carbsG,
+        fatG,
+        fiberG,
+        loggedAt,
+      }),
+    [title, calories, proteinG, carbsG, fatG, fiberG, loggedAt],
+  );
+
+  const hasUnsavedChanges =
+    initialSnapshot !== null && currentSnapshot !== initialSnapshot;
 
   const handleSave = async () => {
     const input = {
@@ -84,6 +134,7 @@ export default function EditMealScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text variant="h1">Edit Meal</Text>
         <MealFormField label="Name" value={title} onChangeText={setTitle} />
@@ -94,7 +145,9 @@ export default function EditMealScreen() {
         <MealFormField label="Fiber (g)" value={fiberG} onChangeText={setFiberG} keyboardType="decimal-pad" />
         <MealFormField label="Logged at (ISO local)" value={loggedAt} onChangeText={setLoggedAt} />
         {errors.map((error) => (
-          <Text key={error} variant="body" style={styles.error}>{error}</Text>
+          <Text key={error} variant="body" style={styles.error}>
+            {error}
+          </Text>
         ))}
         <View style={styles.actions}>
           <Button label={isSaving ? 'Saving...' : 'Save'} onPress={() => void handleSave()} disabled={isSaving} />
@@ -106,8 +159,19 @@ export default function EditMealScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
-  container: { padding: 16, gap: 16 },
-  actions: { gap: 12 },
-  error: { color: '#C97A87' },
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.backgroundPrimary,
+  },
+  container: {
+    padding: spacing.sm,
+    gap: spacing.sm,
+    paddingBottom: spacing.lg,
+  },
+  actions: {
+    gap: spacing.sm,
+  },
+  error: {
+    color: colors.brandPrimary,
+  },
 });
