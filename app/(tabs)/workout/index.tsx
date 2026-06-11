@@ -47,7 +47,8 @@ export default function WorkoutScreen() {
   const selectedDate = useWorkoutStore((state) => state.selectedDate);
   const setSelectedDate = useWorkoutStore((state) => state.setSelectedDate);
   const calendarDates = useMemo(() => getCalendarDates(), []);
-  const { data, isLoading, errorCode, errorMessage, reload } = useWorkoutDay(selectedDate);
+  const { data, isLoading, isRefreshing, errorCode, errorMessage, reload } =
+    useWorkoutDay(selectedDate);
   const { completedDates, reload: reloadCalendar } = useWorkoutCalendarCompletion(calendarDates);
   const { stats: streakStats, reload: reloadStreak } = useWorkoutStreak();
   const { requirePremium } = usePremium();
@@ -91,6 +92,8 @@ export default function WorkoutScreen() {
         onSelectDate={setSelectedDate}
         completedDates={completedDates}
       />
+
+      {isRefreshing ? <Text variant="bodyMuted">Updating plan...</Text> : null}
 
       {errorMessage ? (
         <WorkoutErrorState code={errorCode} message={errorMessage} onRetry={() => void reload()} />

@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import { useEffect, useMemo, useState, type ComponentProps } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {
   Image,
@@ -20,6 +20,7 @@ export interface VisualAssetProps {
   gif?: ImageSourcePropType | null;
   /** When true, prefers `gif` over `image` if both exist. */
   preferGif?: boolean;
+  animateFrames?: boolean;
   icon?: VisualAssetIconName;
   fallback?: VisualAssetFallback;
   size?: number;
@@ -33,6 +34,7 @@ export function VisualAsset({
   image,
   gif,
   preferGif = false,
+  animateFrames = false,
   icon = 'image-outline',
   fallback = 'icon',
   size = 120,
@@ -41,7 +43,28 @@ export function VisualAsset({
   accessibilityLabel,
   style,
 }: VisualAssetProps) {
-  const source = preferGif ? gif ?? image : image ?? gif;
+  const frames = useMemo(() => {
+    if (!animateFrames || !image || !gif || image === gif) {
+      return null;
+    }
+    return [image, gif] as const;
+  }, [animateFrames, gif, image]);
+  const [frameIndex, setFrameIndex] = useState(0);
+  const source = frames ? frames[frameIndex] : preferGif ? gif ?? image : image ?? gif;
+
+  useEffect(() => {
+    if (!frames) {
+      setFrameIndex(0);
+      return undefined;
+    }
+
+    setFrameIndex(0);
+    const interval = setInterval(() => {
+      setFrameIndex((current) => (current + 1) % frames.length);
+    }, 850);
+
+    return () => clearInterval(interval);
+  }, [frames]);
 
   if (source) {
     const frameStyle = fillWidth
@@ -51,6 +74,7 @@ export function VisualAsset({
     return (
       <View style={[styles.frame, frameStyle, style]}>
         <Image
+          key={frames ? frameIndex : undefined}
           source={source}
           style={fillWidth ? styles.fillImage : { width: size, height: size }}
           resizeMode="cover"

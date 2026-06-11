@@ -12,7 +12,7 @@ import { getSessionForPlan, getWorkoutPlanByDate } from '@/db/repositories/worko
 import { preferencesStorage } from '@/storage/mmkv';
 import type { Exercise } from '@/types/exercise';
 
-export const EXERCISE_LIBRARY_VERSION = 5;
+export const EXERCISE_LIBRARY_VERSION = 6;
 const LIBRARY_VERSION_KEY = 'exercise_library_version';
 const LIBRARY_MIN = 120;
 const LIBRARY_MAX = 200;

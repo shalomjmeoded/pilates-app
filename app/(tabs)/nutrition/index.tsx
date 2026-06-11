@@ -35,7 +35,7 @@ export default function NutritionScreen() {
   const selectedDate = useNutritionStore((state) => state.selectedDate);
   const setSelectedDate = useNutritionStore((state) => state.setSelectedDate);
   const calendarDates = useMemo(() => getCalendarDates(), []);
-  const { summary, meals, isLoading, error, reload } = useNutritionDay(selectedDate);
+  const { summary, meals, isLoading, isRefreshing, error, reload } = useNutritionDay(selectedDate);
   const { hasAccess, requirePremium } = usePremium();
   const [recentMeals, setRecentMeals] = useState<Meal[]>([]);
 
@@ -122,6 +122,8 @@ export default function NutritionScreen() {
         selectedDate={selectedDate}
         onSelectDate={setSelectedDate}
       />
+
+      {isRefreshing ? <Text variant="bodyMuted">Updating day...</Text> : null}
 
       {error ? (
         <LoadErrorState

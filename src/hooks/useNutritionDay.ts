@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   getMealsForDate,
@@ -13,6 +13,7 @@ interface NutritionDayState {
   meals: Meal[];
   dailyTotals: NutritionDailyTotalsRow | null;
   isLoading: boolean;
+  isRefreshing: boolean;
   error: string | null;
   reload: () => Promise<void>;
 }
@@ -22,10 +23,13 @@ export function useNutritionDay(mealDate: string): NutritionDayState {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [dailyTotals, setDailyTotals] = useState<NutritionDailyTotalsRow | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasLoadedOnceRef = useRef(false);
 
   const reload = useCallback(async () => {
-    setIsLoading(true);
+    setIsLoading(!hasLoadedOnceRef.current);
+    setIsRefreshing(hasLoadedOnceRef.current);
     setError(null);
 
     try {
@@ -45,6 +49,7 @@ export function useNutritionDay(mealDate: string): NutritionDayState {
       setSummary(daySummary);
       setMeals(dayMeals);
       setDailyTotals(totals);
+      hasLoadedOnceRef.current = true;
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : 'Failed to load nutrition.');
       setSummary(null);
@@ -52,6 +57,7 @@ export function useNutritionDay(mealDate: string): NutritionDayState {
       setDailyTotals(null);
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   }, [mealDate]);
 
@@ -59,5 +65,5 @@ export function useNutritionDay(mealDate: string): NutritionDayState {
     void reload();
   }, [reload]);
 
-  return { summary, meals, dailyTotals, isLoading, error, reload };
+  return { summary, meals, dailyTotals, isLoading, isRefreshing, error, reload };
 }

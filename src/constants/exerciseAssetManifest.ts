@@ -162,6 +162,15 @@ export const EXERCISE_THUMBNAIL_MANIFEST: Record<string, ImageSourcePropType> = 
   'Side_Lateral_Raise': require('../../assets/exercises/thumbnails/Side_Lateral_Raise.jpg'),
   'Side_Laterals_to_Front_Raise': require('../../assets/exercises/thumbnails/Side_Laterals_to_Front_Raise.jpg'),
   'Single_Dumbbell_Raise': require('../../assets/exercises/thumbnails/Single_Dumbbell_Raise.jpg'),
+  'Pilates_Hundred': require('../../assets/exercises/thumbnails/Pilates_Hundred.jpg'),
+  'Pilates_Roll_Up': require('../../assets/exercises/thumbnails/Pilates_Roll_Up.jpg'),
+  'Pilates_Teaser': require('../../assets/exercises/thumbnails/Pilates_Teaser.jpg'),
+  'Side_Lying_Leg_Lift': require('../../assets/exercises/thumbnails/Side_Lying_Leg_Lift.jpg'),
+  'Bird_Dog': require('../../assets/exercises/thumbnails/Bird_Dog.jpg'),
+  'Cat_Cow': require('../../assets/exercises/thumbnails/Cat_Cow.jpg'),
+  'Pilates_Swan': require('../../assets/exercises/thumbnails/Pilates_Swan.jpg'),
+  'Pilates_Swimming': require('../../assets/exercises/thumbnails/Pilates_Swimming.jpg'),
+  'Pilates_Shoulder_Bridge': require('../../assets/exercises/thumbnails/Pilates_Shoulder_Bridge.jpg'),
 };
 
 export const EXERCISE_GIF_MANIFEST: Record<string, ImageSourcePropType> = {
@@ -325,4 +334,13 @@ export const EXERCISE_GIF_MANIFEST: Record<string, ImageSourcePropType> = {
   'Side_Lateral_Raise': require('../../assets/exercises/gifs/Side_Lateral_Raise.jpg'),
   'Side_Laterals_to_Front_Raise': require('../../assets/exercises/gifs/Side_Laterals_to_Front_Raise.jpg'),
   'Single_Dumbbell_Raise': require('../../assets/exercises/gifs/Single_Dumbbell_Raise.jpg'),
+  'Pilates_Hundred': require('../../assets/exercises/gifs/Pilates_Hundred.jpg'),
+  'Pilates_Roll_Up': require('../../assets/exercises/gifs/Pilates_Roll_Up.jpg'),
+  'Pilates_Teaser': require('../../assets/exercises/gifs/Pilates_Teaser.jpg'),
+  'Side_Lying_Leg_Lift': require('../../assets/exercises/gifs/Side_Lying_Leg_Lift.jpg'),
+  'Bird_Dog': require('../../assets/exercises/gifs/Bird_Dog.jpg'),
+  'Cat_Cow': require('../../assets/exercises/gifs/Cat_Cow.jpg'),
+  'Pilates_Swan': require('../../assets/exercises/gifs/Pilates_Swan.jpg'),
+  'Pilates_Swimming': require('../../assets/exercises/gifs/Pilates_Swimming.jpg'),
+  'Pilates_Shoulder_Bridge': require('../../assets/exercises/gifs/Pilates_Shoulder_Bridge.jpg'),
 };

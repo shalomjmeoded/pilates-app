@@ -5894,5 +5894,362 @@
     "repsBaseline": 12,
     "holdSeconds": null,
     "caloriesFactor": 0.06
+  },
+  {
+    "id": "Pilates_Hundred",
+    "name": "Hundred",
+    "description": "A classic mat Pilates core endurance exercise using breath and small arm pumps.",
+    "instructions": [
+      "Lie on your back and curl your head and shoulders off the mat.",
+      "Lift legs to tabletop or a long diagonal.",
+      "Reach arms long by your sides and pump them with controlled breathing.",
+      "Keep the low back heavy and the neck relaxed."
+    ],
+    "commonMistakes": [
+      "Letting the low back arch",
+      "Pulling from the neck",
+      "Moving too fast"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors",
+      "shoulders"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Pilates_Hundred.jpg",
+    "gifUri": "assets/exercises/gifs/Pilates_Hundred.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "generated_tune",
+    "repsBaseline": 50,
+    "holdSeconds": null,
+    "caloriesFactor": 0.045
+  },
+  {
+    "id": "Pilates_Roll_Up",
+    "name": "Roll Up",
+    "description": "A slow spinal articulation movement that builds abdominal control and hamstring length.",
+    "instructions": [
+      "Lie long with arms reaching overhead.",
+      "Nod the chin and peel the spine off the mat one vertebra at a time.",
+      "Reach forward over the legs without collapsing the chest.",
+      "Roll back down with control."
+    ],
+    "commonMistakes": [
+      "Using momentum",
+      "Letting shoulders creep up",
+      "Skipping the slow lower phase"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors",
+      "hamstrings"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Pilates_Roll_Up.jpg",
+    "gifUri": "assets/exercises/gifs/Pilates_Roll_Up.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "flexibility",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "generated_tune",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.04
+  },
+  {
+    "id": "Pilates_Teaser",
+    "name": "Teaser",
+    "description": "A V-sit Pilates balance exercise for deep core strength and control.",
+    "instructions": [
+      "Sit tall and roll back until the legs can float.",
+      "Reach arms toward the toes while keeping the chest broad.",
+      "Hold the V shape with steady breath.",
+      "Lower with control before resetting."
+    ],
+    "commonMistakes": [
+      "Rounding the upper back too much",
+      "Holding breath",
+      "Kicking the legs up with momentum"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Pilates_Teaser.jpg",
+    "gifUri": "assets/exercises/gifs/Pilates_Teaser.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "generated_tune",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.052
+  },
+  {
+    "id": "Side_Lying_Leg_Lift",
+    "name": "Side-Lying Leg Lift",
+    "description": "A mat exercise for outer thigh and hip stability with a Pilates-style setup.",
+    "instructions": [
+      "Lie on one side with hips stacked and body long.",
+      "Flex the top foot slightly and lift the leg without rolling the pelvis back.",
+      "Lower with control and keep the waist lifted.",
+      "Repeat before switching sides."
+    ],
+    "commonMistakes": [
+      "Rolling the hips backward",
+      "Swinging the leg",
+      "Collapsing into the bottom shoulder"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "outer thighs",
+    "secondaryMuscles": [
+      "glutes",
+      "core"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Side_Lying_Leg_Lift.jpg",
+    "gifUri": "assets/exercises/gifs/Side_Lying_Leg_Lift.jpg",
+    "tags": [
+      "mat_pilates",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "generated_tune",
+    "repsBaseline": 12,
+    "holdSeconds": null,
+    "caloriesFactor": 0.035
+  },
+  {
+    "id": "Bird_Dog",
+    "name": "Bird Dog",
+    "description": "A low-impact stability exercise that trains core control, posture, and glute activation.",
+    "instructions": [
+      "Start on hands and knees with a neutral spine.",
+      "Reach one arm and the opposite leg long.",
+      "Pause while keeping the hips level.",
+      "Return with control and alternate sides."
+    ],
+    "commonMistakes": [
+      "Arching the low back",
+      "Opening the hips",
+      "Rushing the reach"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "glutes",
+      "lower back",
+      "shoulders"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Bird_Dog.jpg",
+    "gifUri": "assets/exercises/gifs/Bird_Dog.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "posture",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "generated_tune",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.034
+  },
+  {
+    "id": "Cat_Cow",
+    "name": "Cat-Cow",
+    "description": "A gentle spinal mobility drill for warmups, cooldowns, and posture-focused sessions.",
+    "instructions": [
+      "Start on hands and knees.",
+      "Round the spine upward and gently tuck the chin.",
+      "Reverse the curve by broadening the chest and lengthening the tailbone.",
+      "Move slowly with breath."
+    ],
+    "commonMistakes": [
+      "Forcing the neck",
+      "Moving too quickly",
+      "Locking the elbows"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "lower back",
+    "secondaryMuscles": [
+      "core",
+      "upper back"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Cat_Cow.jpg",
+    "gifUri": "assets/exercises/gifs/Cat_Cow.jpg",
+    "tags": [
+      "mat_pilates",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "mobility",
+      "flexibility",
+      "posture"
+    ],
+    "sessionRole": "warmup",
+    "source": "generated_tune",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.02
+  },
+  {
+    "id": "Pilates_Swan",
+    "name": "Swan",
+    "description": "A prone Pilates back-extension exercise for posture, spinal strength, and chest opening.",
+    "instructions": [
+      "Lie face down with hands near the ribs.",
+      "Lengthen through the crown of the head.",
+      "Press lightly into the hands and lift the chest without crunching the low back.",
+      "Lower slowly to the mat."
+    ],
+    "commonMistakes": [
+      "Overarching the low back",
+      "Shrugging shoulders",
+      "Pressing too hard through the hands"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "lower back",
+    "secondaryMuscles": [
+      "upper back",
+      "glutes"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Pilates_Swan.jpg",
+    "gifUri": "assets/exercises/gifs/Pilates_Swan.jpg",
+    "tags": [
+      "mat_pilates",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "posture",
+      "flexibility",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "generated_tune",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.032
+  },
+  {
+    "id": "Pilates_Swimming",
+    "name": "Swimming",
+    "description": "A prone Pilates movement that alternates arms and legs to train posterior-chain endurance.",
+    "instructions": [
+      "Lie face down with arms and legs reaching long.",
+      "Lift the chest, arms, and legs slightly from the mat.",
+      "Flutter opposite arm and leg with small controlled pulses.",
+      "Keep the neck long and breathe steadily."
+    ],
+    "commonMistakes": [
+      "Lifting too high",
+      "Holding breath",
+      "Letting the low back pinch"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "lower back",
+    "secondaryMuscles": [
+      "glutes",
+      "shoulders",
+      "upper back"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Pilates_Swimming.jpg",
+    "gifUri": "assets/exercises/gifs/Pilates_Swimming.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "posture",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "generated_tune",
+    "repsBaseline": 20,
+    "holdSeconds": null,
+    "caloriesFactor": 0.042
+  },
+  {
+    "id": "Pilates_Shoulder_Bridge",
+    "name": "Shoulder Bridge",
+    "description": "A controlled bridge variation for glutes, hamstrings, and spinal articulation.",
+    "instructions": [
+      "Lie on your back with knees bent and feet grounded.",
+      "Roll the pelvis up into a bridge one segment at a time.",
+      "Keep ribs soft and knees tracking forward.",
+      "Roll down slowly through the spine."
+    ],
+    "commonMistakes": [
+      "Pushing into the neck",
+      "Flaring the ribs",
+      "Letting knees drift outward"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Pilates_Shoulder_Bridge.jpg",
+    "gifUri": "assets/exercises/gifs/Pilates_Shoulder_Bridge.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "generated_tune",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.036
   }
 ]
