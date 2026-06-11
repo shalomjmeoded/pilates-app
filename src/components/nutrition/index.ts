@@ -10,4 +10,3 @@ export { NutritionEmptyState } from './NutritionEmptyState';
 export { NutritionScoreBadge } from './NutritionScoreBadge';
 export { NutritionTodayCard } from './NutritionTodayCard';
 export { PortionControls } from './PortionControls';
-export { WorkoutsOnlyState } from './WorkoutsOnlyState';

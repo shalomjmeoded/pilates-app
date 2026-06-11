@@ -11,7 +11,6 @@ import {
   WeeklyCoachInsightCard,
   GoalProjectionCard,
   MilestoneGrid,
-  NutritionTrackingDisabled,
   ProgressEmptyState,
   WeightChart,
   WeightJourneyHeroCard,
@@ -129,18 +128,12 @@ export default function ProgressScreen() {
           onPress={() => router.push('/(tabs)/progress/weight-history')}
         />
 
-        {data.nutritionMode === 'workouts_only' ? (
-          <NutritionTrackingDisabled />
-        ) : (
-          <>
-            <View style={styles.adherenceRow}>
-              <AdherenceCard metric={data.adherence.calories} />
-              <AdherenceCard metric={data.adherence.protein} />
-              <AdherenceCard metric={data.adherence.fiber} />
-            </View>
-            <ConsistencyScoreRing consistency={data.consistency} />
-          </>
-        )}
+        <View style={styles.adherenceRow}>
+          <AdherenceCard metric={data.adherence.calories} />
+          <AdherenceCard metric={data.adherence.protein} />
+          <AdherenceCard metric={data.adherence.fiber} />
+        </View>
+        <ConsistencyScoreRing consistency={data.consistency} />
 
         {data.bmi && data.tdee ? (
           <BmiTdeeCards

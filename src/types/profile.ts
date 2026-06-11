@@ -6,7 +6,9 @@ export type FitnessGoal = 'get_toned' | 'maintain' | 'build_muscle';
 
 export type MediaPreference = 'video_streaming' | 'static_only';
 
-export type NutritionMode = 'full_tracking' | 'workouts_only';
+export type NutritionMode = 'full_tracking';
+
+export type StoredNutritionMode = NutritionMode | 'workouts_only';
 
 export type WeightTrajectory = 'weight_loss' | 'lean_mass' | 'steady_state';
 
@@ -47,7 +49,7 @@ export interface ProfileRow {
   fitness_goal: FitnessGoal;
   exercise_preferences: string;
   media_preference: MediaPreference;
-  nutrition_mode: NutritionMode;
+  nutrition_mode: StoredNutritionMode;
   weight_trajectory: WeightTrajectory;
   pace_kg_per_week: number;
   created_at: string;

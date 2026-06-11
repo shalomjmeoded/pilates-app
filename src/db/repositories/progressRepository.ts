@@ -138,25 +138,21 @@ export async function loadProgressDashboard(): Promise<ProgressDashboardData> {
   const weightTrends = buildWeightTrendAverages(weightLogs);
 
   const today = format(new Date(), 'yyyy-MM-dd');
-  let coachingTip =
+  const insight = buildCoachingInsights({
+    nutritionRows,
+    completedWorkoutsThisWeek: await countCompletedWorkoutsInLastDays(7),
+    weightLogs,
+    insightDate: today,
+  });
+  await upsertCoachingInsight(insight);
+  const coachingTip =
+    insight.dailyTip ??
     (await getCoachingInsightForDate(today))?.dailyTip ??
     'Small daily actions build lasting momentum.';
-
-  if (profile.nutritionMode !== 'workouts_only') {
-    const insight = buildCoachingInsights({
-      nutritionRows,
-      completedWorkoutsThisWeek: await countCompletedWorkoutsInLastDays(7),
-      weightLogs,
-      insightDate: today,
-    });
-    await upsertCoachingInsight(insight);
-    coachingTip = insight.dailyTip;
-  }
 
   return {
     journey,
     goalWeightKg: profile.goalWeightKg,
-    nutritionMode: profile.nutritionMode,
     weightLogs,
     adherence,
     consistency,

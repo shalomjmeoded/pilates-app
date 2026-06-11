@@ -1,4 +1,3 @@
-import type { NutritionMode } from '@/types/profile';
 import type { PhysiqueCategory, PhysiqueConfidence } from '@/types/physiqueAssessment';
 import type { WorkoutStreakStats } from '@/types/workout';
 
@@ -100,7 +99,6 @@ export interface WeightTrendAverages {
 export interface ProgressDashboardData {
   journey: WeightJourney | null;
   goalWeightKg: number;
-  nutritionMode: NutritionMode;
   weightLogs: WeightLog[];
   adherence: {
     calories: AdherenceMetric;

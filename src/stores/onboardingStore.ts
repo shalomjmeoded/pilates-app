@@ -116,7 +116,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
         mediaPreference: profile.mediaPreference,
         heightCm: profile.heightCm,
         currentWeightKg: profile.currentWeightKg,
-        nutritionMode: profile.nutritionMode,
+        nutritionMode: 'full_tracking',
         birthYear: profile.birthYear,
         fitnessGoal: profile.fitnessGoal,
         goalWeightKg: profile.goalWeightKg,
@@ -164,7 +164,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       fitnessGoal: draft.fitnessGoal,
       exercisePreferences: draft.exercisePreferences,
       mediaPreference: draft.mediaPreference,
-      nutritionMode: draft.nutritionMode,
+      nutritionMode: 'full_tracking',
       weightTrajectory: draft.weightTrajectory,
       paceKgPerWeek: draft.paceKgPerWeek,
     };

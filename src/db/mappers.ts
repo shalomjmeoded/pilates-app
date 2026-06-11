@@ -38,7 +38,7 @@ export function mapProfileRow(row: ProfileRow): Profile {
     fitnessGoal: row.fitness_goal,
     exercisePreferences: JSON.parse(row.exercise_preferences),
     mediaPreference: row.media_preference,
-    nutritionMode: row.nutrition_mode,
+    nutritionMode: 'full_tracking',
     weightTrajectory: row.weight_trajectory,
     paceKgPerWeek: row.pace_kg_per_week as Profile['paceKgPerWeek'],
     createdAt: row.created_at,
@@ -58,7 +58,7 @@ export function profileToRow(profile: Profile): Omit<ProfileRow, 'created_at' | 
     fitness_goal: profile.fitnessGoal,
     exercise_preferences: JSON.stringify(profile.exercisePreferences),
     media_preference: profile.mediaPreference,
-    nutrition_mode: profile.nutritionMode,
+    nutrition_mode: 'full_tracking',
     weight_trajectory: profile.weightTrajectory,
     pace_kg_per_week: profile.paceKgPerWeek,
   };

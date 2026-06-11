@@ -5,7 +5,6 @@ export { BmiTdeeCards } from './BmiTdeeCards';
 export { ConsistencyScoreRing } from './ConsistencyScoreRing';
 export { GoalProjectionCard } from './GoalProjectionCard';
 export { MilestoneGrid } from './MilestoneGrid';
-export { NutritionTrackingDisabled } from './NutritionTrackingDisabled';
 export { PhysiqueAssessmentCard } from './PhysiqueAssessmentCard';
 export { ProgressEmptyState } from './ProgressEmptyState';
 export { WeightChart } from './WeightChart';

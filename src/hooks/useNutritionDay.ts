@@ -5,16 +5,13 @@ import {
   getOrCreateNutritionTargets,
   syncDailyTotalsForDate,
 } from '@/db/repositories/nutritionRepository';
-import { getProfile } from '@/db/repositories/profileRepository';
 import { buildNutritionDaySummary } from '@/engines/nutrition/summaries';
 import type { Meal, NutritionDaySummary, NutritionDailyTotalsRow } from '@/types/nutrition';
-import type { NutritionMode } from '@/types/profile';
 
 interface NutritionDayState {
   summary: NutritionDaySummary | null;
   meals: Meal[];
   dailyTotals: NutritionDailyTotalsRow | null;
-  nutritionMode: NutritionMode | null;
   isLoading: boolean;
   error: string | null;
   reload: () => Promise<void>;
@@ -24,7 +21,6 @@ export function useNutritionDay(mealDate: string): NutritionDayState {
   const [summary, setSummary] = useState<NutritionDaySummary | null>(null);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [dailyTotals, setDailyTotals] = useState<NutritionDailyTotalsRow | null>(null);
-  const [nutritionMode, setNutritionMode] = useState<NutritionMode | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,16 +29,6 @@ export function useNutritionDay(mealDate: string): NutritionDayState {
     setError(null);
 
     try {
-      const profile = await getProfile();
-      setNutritionMode(profile?.nutritionMode ?? null);
-
-      if (profile?.nutritionMode === 'workouts_only') {
-        setSummary(null);
-        setMeals([]);
-        setDailyTotals(null);
-        return;
-      }
-
       const targets = await getOrCreateNutritionTargets(mealDate);
       if (!targets) {
         setError('Nutrition targets unavailable. Complete onboarding first.');
@@ -73,5 +59,5 @@ export function useNutritionDay(mealDate: string): NutritionDayState {
     void reload();
   }, [reload]);
 
-  return { summary, meals, dailyTotals, nutritionMode, isLoading, error, reload };
+  return { summary, meals, dailyTotals, isLoading, error, reload };
 }

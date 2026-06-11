@@ -7,7 +7,6 @@ import {
   NutritionDayHeader,
   NutritionEmptyState,
   RemainingCaloriesHero,
-  WorkoutsOnlyState,
 } from '@/components/nutrition';
 import { WeekCalendarStrip } from '@/components/workout';
 import { FloatingActionButton } from '@/components/ui/FloatingActionButton';
@@ -35,7 +34,7 @@ export default function NutritionScreen() {
   const selectedDate = useNutritionStore((state) => state.selectedDate);
   const setSelectedDate = useNutritionStore((state) => state.setSelectedDate);
   const calendarDates = useMemo(() => getCalendarDates(), []);
-  const { summary, meals, nutritionMode, isLoading, error, reload } = useNutritionDay(selectedDate);
+  const { summary, meals, isLoading, error, reload } = useNutritionDay(selectedDate);
   const { hasAccess, requirePremium } = usePremium();
   const [recentMeals, setRecentMeals] = useState<Meal[]>([]);
 
@@ -99,14 +98,6 @@ export default function NutritionScreen() {
     return (
       <Screen title="Nutrition">
         <PremiumGate description="Log meals against your personalized macro targets with Tune Premium." />
-      </Screen>
-    );
-  }
-
-  if (nutritionMode === 'workouts_only' && !isLoading) {
-    return (
-      <Screen title="Nutrition">
-        <WorkoutsOnlyState />
       </Screen>
     );
   }
