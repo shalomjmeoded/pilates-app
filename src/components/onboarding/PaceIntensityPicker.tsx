@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { LayoutChangeEvent, PanResponder, Pressable, StyleSheet, View } from 'react-native';
+import { useEffect } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -36,28 +36,22 @@ function getPaceLabel(pace: Pace | null): string {
 export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProps) {
   const selectedIndex = getPaceIndex(value);
   const displayPace = value ?? PACE_VALUES[selectedIndex];
-  const [trackWidth, setTrackWidth] = useState(0);
-  const dragStartProgress = useRef(selectedIndex / (PACE_VALUES.length - 1));
-  const lastDragIndex = useRef(selectedIndex);
-  const fillProgress = useSharedValue(paceToPercent(displayPace) / 100);
+  const fillProgress = useSharedValue(selectedIndex / (PACE_VALUES.length - 1));
   const thumbProgress = useSharedValue(selectedIndex / (PACE_VALUES.length - 1));
 
   useEffect(() => {
     const pace = value ?? PACE_VALUES[selectedIndex];
     const index = getPaceIndex(pace);
-    fillProgress.value = withTiming(paceToPercent(pace) / 100, {
+    const optionProgress = index / (PACE_VALUES.length - 1);
+    fillProgress.value = withTiming(optionProgress, {
       duration: 280,
       easing: Easing.out(Easing.cubic),
     });
-    thumbProgress.value = withTiming(index / (PACE_VALUES.length - 1), {
+    thumbProgress.value = withTiming(optionProgress, {
       duration: 280,
       easing: Easing.out(Easing.cubic),
     });
   }, [fillProgress, selectedIndex, thumbProgress, value]);
-
-  useEffect(() => {
-    lastDragIndex.current = selectedIndex;
-  }, [selectedIndex]);
 
   const fillStyle = useAnimatedStyle(() => ({
     width: `${fillProgress.value * 100}%`,
@@ -66,35 +60,6 @@ export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProp
   const thumbStyle = useAnimatedStyle(() => ({
     left: `${thumbProgress.value * 100}%`,
   }));
-
-  const commitIndex = (index: number) => {
-    const clampedIndex = Math.min(PACE_VALUES.length - 1, Math.max(0, index));
-    if (clampedIndex !== lastDragIndex.current) {
-      lastDragIndex.current = clampedIndex;
-      onChange(PACE_VALUES[clampedIndex]);
-    }
-  };
-
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponder: (_, gesture) => Math.abs(gesture.dx) > 3,
-    onPanResponderGrant: () => {
-      dragStartProgress.current = selectedIndex / (PACE_VALUES.length - 1);
-      lastDragIndex.current = selectedIndex;
-    },
-    onPanResponderMove: (_, gesture) => {
-      if (trackWidth <= 0) {
-        return;
-      }
-      const progress = Math.min(1, Math.max(0, dragStartProgress.current + gesture.dx / trackWidth));
-      commitIndex(Math.round(progress * (PACE_VALUES.length - 1)));
-    },
-    onPanResponderTerminationRequest: () => false,
-  });
-
-  const handleTrackLayout = (event: LayoutChangeEvent) => {
-    setTrackWidth(event.nativeEvent.layout.width);
-  };
 
   return (
     <View style={styles.container}>
@@ -121,10 +86,24 @@ export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProp
         }}
         style={styles.trackShell}
       >
-        <View style={styles.trackHitArea} {...panResponder.panHandlers}>
-          <View style={styles.track} onLayout={handleTrackLayout}>
+        <View style={styles.trackHitArea}>
+          <View style={styles.track}>
             <Animated.View style={[styles.trackFill, fillStyle]} />
             <Animated.View style={[styles.thumb, thumbStyle]} />
+            {PACE_OPTIONS.map((option, index) => (
+              <Pressable
+                key={`track-${option.value}`}
+                accessibilityRole="button"
+                accessibilityLabel={`Set pace to ${option.label}`}
+                onPress={() => onChange(option.value)}
+                style={[
+                  styles.trackStop,
+                  {
+                    left: `${(index / (PACE_OPTIONS.length - 1)) * 100}%`,
+                  },
+                ]}
+              />
+            ))}
           </View>
         </View>
 
@@ -209,6 +188,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.borderLight,
     overflow: 'visible',
     justifyContent: 'center',
+  },
+  trackStop: {
+    position: 'absolute',
+    top: -16,
+    width: 72,
+    height: 44,
+    marginLeft: -36,
   },
   trackFill: {
     position: 'absolute',
