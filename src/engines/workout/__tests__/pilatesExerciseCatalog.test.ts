@@ -27,12 +27,52 @@ const profile: Profile = {
   paceKgPerWeek: 0.5,
 };
 
+const weekDates = [
+  '2026-06-07',
+  '2026-06-08',
+  '2026-06-09',
+  '2026-06-10',
+  '2026-06-11',
+  '2026-06-12',
+  '2026-06-13',
+];
+
+function planSignature(plan: ReturnType<typeof generateWorkoutPlan>): string {
+  return plan.exercises.map((exercise) => exercise.exerciseId).join(',');
+}
+
+function buildWeeklyPlans(inputProfile: Profile) {
+  return weekDates.map((date) => generateWorkoutPlan(inputProfile, library, date, date));
+}
+
 describe('pilatesExerciseCatalog', () => {
   it('excludes generic gym movements from Pilates workouts', () => {
     const squat = library.find((exercise) => exercise.name.includes('Squat'));
     expect(squat).toBeTruthy();
     expect(isHardExcludedExercise(squat!)).toBe(true);
     expect(isPilatesAlignedExercise(squat!)).toBe(false);
+  });
+
+  it('excludes equipment-heavy movements from Pilates workouts', () => {
+    const ballBridge = library.find((exercise) => exercise.name === 'Physioball Hip Bridge');
+    const benchLegRaise = library.find((exercise) => exercise.name === 'Flat Bench Lying Leg Raise');
+    const suspendedCrunch = library.find(
+      (exercise) => exercise.name === 'Suspended Reverse Crunch',
+    );
+    const declineCrunch = library.find((exercise) => exercise.name === 'Decline Crunch');
+
+    expect(ballBridge).toBeTruthy();
+    expect(benchLegRaise).toBeTruthy();
+    expect(suspendedCrunch).toBeTruthy();
+    expect(declineCrunch).toBeTruthy();
+    expect(isHardExcludedExercise(ballBridge!)).toBe(true);
+    expect(isHardExcludedExercise(benchLegRaise!)).toBe(true);
+    expect(isHardExcludedExercise(suspendedCrunch!)).toBe(true);
+    expect(isHardExcludedExercise(declineCrunch!)).toBe(true);
+    expect(isPilatesAlignedExercise(ballBridge!)).toBe(false);
+    expect(isPilatesAlignedExercise(benchLegRaise!)).toBe(false);
+    expect(isPilatesAlignedExercise(suspendedCrunch!)).toBe(false);
+    expect(isPilatesAlignedExercise(declineCrunch!)).toBe(false);
   });
 
   it('keeps classical mat movements in the Pilates pool', () => {
@@ -60,6 +100,71 @@ describe('generateWorkoutPlan pilates focus', () => {
     expect(pilatesCount).toBeGreaterThanOrEqual(8);
     expect(selected.some((exercise) => /squat|walking lunge|frog hop/i.test(exercise.name))).toBe(
       false,
+    );
+  });
+
+  it('generates a balanced Pilates workout flow', () => {
+    const plan = generateWorkoutPlan(profile, library, '2026-06-09', 'plan-1');
+    const byId = new Map(library.map((exercise) => [exercise.id, exercise]));
+    const selected = plan.exercises.map((item) => byId.get(item.exerciseId)!);
+    const muscleGroups = new Set(selected.map((exercise) => exercise.muscleGroup));
+
+    expect(muscleGroups.size).toBeGreaterThanOrEqual(4);
+    expect(
+      selected.every(
+        (exercise) => !/physioball|exercise ball|bench|decline|suspended|hanging/i.test(exercise.name),
+      ),
+    ).toBe(true);
+
+    const firstMainIndex = selected.findIndex((exercise) => exercise.sessionRole === 'main');
+    const warmupAfterMain = selected
+      .slice(Math.max(firstMainIndex, 0))
+      .some((exercise) => exercise.sessionRole === 'warmup');
+    expect(warmupAfterMain).toBe(false);
+  });
+
+  it('keeps plans stable per date while varying adjacent dates', () => {
+    const first = generateWorkoutPlan(profile, library, '2026-06-09', 'plan-1');
+    const repeated = generateWorkoutPlan(profile, library, '2026-06-09', 'plan-2');
+    const nextDay = generateWorkoutPlan(profile, library, '2026-06-10', 'plan-3');
+
+    expect(planSignature(repeated)).toBe(planSignature(first));
+    expect(planSignature(nextDay)).not.toBe(planSignature(first));
+  });
+
+  it('rotates coherent workouts across a week', () => {
+    const weeklyPlans = buildWeeklyPlans(profile);
+    const uniquePlans = new Set(weeklyPlans.map(planSignature));
+    const byId = new Map(library.map((exercise) => [exercise.id, exercise]));
+
+    expect(uniquePlans.size).toBeGreaterThanOrEqual(4);
+    for (const plan of weeklyPlans) {
+      const selected = plan.exercises.map((item) => byId.get(item.exerciseId)!);
+      expect(selected.filter(isPilatesAlignedExercise).length).toBeGreaterThanOrEqual(8);
+      expect(new Set(selected.map((exercise) => exercise.muscleGroup)).size).toBeGreaterThanOrEqual(
+        4,
+      );
+    }
+  });
+
+  it('prescribes more work for build-muscle weeks than maintenance weeks', () => {
+    const maintenanceProfile: Profile = {
+      ...profile,
+      fitnessGoal: 'maintain',
+      weightTrajectory: 'steady_state',
+      paceKgPerWeek: 0.25,
+    };
+    const buildMuscleProfile: Profile = {
+      ...profile,
+      fitnessGoal: 'build_muscle',
+      weightTrajectory: 'lean_mass',
+      paceKgPerWeek: 0.25,
+    };
+    const countFourSetExercises = (plans: ReturnType<typeof buildWeeklyPlans>) =>
+      plans.flatMap((plan) => plan.exercises).filter((exercise) => exercise.sets === 4).length;
+
+    expect(countFourSetExercises(buildWeeklyPlans(buildMuscleProfile))).toBeGreaterThan(
+      countFourSetExercises(buildWeeklyPlans(maintenanceProfile)),
     );
   });
 });

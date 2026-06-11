@@ -3,7 +3,7 @@ import type { Profile } from '@/types/profile';
 
 /** Generic gym / HIIT movements that are not Pilates-aligned. */
 const HARD_EXCLUDE_NAME_PATTERN =
-  /\b(squat|squats|lunge|lunges|burpee|burpees|jump|jumps|hop|hops|jack|jacks|mountain climber|frog hop|walking lunge|forward lunge|reverse lunge|box jump|broad jump|sprint|barbell|bench press|deadlift|kettlebell|leg press|calf raise|hamstring curl|leg curl|leg extension|tricep dip|bicep curl|lat pulldown|smith machine|clean and press|snatch|thruster|farmer.?s walk|push press|military press|incline press|decline press|dip|chin-up|pull-up|muscle up|rower|treadmill)\b/i;
+  /\b(squat|squats|lunge|lunges|burpee|burpees|jump|jumps|hop|hops|jack|jacks|mountain climber|frog hop|walking lunge|forward lunge|reverse lunge|box jump|broad jump|sprint|barbell|bench|decline|physioball|exercise ball|stability ball|swiss ball|hanging|suspended|parallel bars|deadlift|kettlebell|leg press|calf raise|hamstring curl|leg curl|leg extension|tricep dip|bicep curl|lat pulldown|smith machine|clean and press|snatch|thruster|farmer.?s walk|push press|military press|incline press|decline press|dip|chin-up|pull-up|muscle up|rower|treadmill)\b/i;
 
 /** Classical and mat Pilates naming cues. */
 const PILATES_NAME_PATTERN =
