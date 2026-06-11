@@ -235,13 +235,13 @@ describe('Phase 8.8 AI QA — client', () => {
     expect(violations).toEqual([]);
   });
 
-  it('privacy copy mentions Gemini routing and review-before-save', () => {
+  it('privacy copy mentions AI routing and review-before-save', () => {
     const privacy = fs.readFileSync(
       path.join(process.cwd(), 'app/(tabs)/settings/privacy.tsx'),
       'utf8',
     );
 
-    expect(privacy).toContain('Gemini');
+    expect(privacy).toContain('AI processing service');
     expect(privacy).toContain('review every AI meal estimate before saving');
     expect(privacy).toContain('physique photos');
     expect(privacy).not.toContain('GEMINI_API_KEY');

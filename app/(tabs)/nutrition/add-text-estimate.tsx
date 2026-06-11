@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
@@ -22,11 +22,16 @@ export default function AddTextEstimateScreen() {
     estimate,
     openManualFallback,
   } = useMealTextEstimate(mealDate);
+  const insets = useSafeAreaInsets();
+  const bottomPadding = insets.bottom + spacing.lg;
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar hasUnsavedChanges={description.trim().length > 0} />
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="h1">Text Estimate</Text>
         <Text variant="bodyMuted">{MEAL_TEXT_ESTIMATE_COPY}</Text>
 
@@ -73,7 +78,6 @@ const styles = StyleSheet.create({
   container: {
     padding: spacing.sm,
     gap: spacing.sm,
-    paddingBottom: spacing.lg,
   },
   card: {
     gap: spacing.xs,

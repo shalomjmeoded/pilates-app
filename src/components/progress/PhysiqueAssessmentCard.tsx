@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Text } from '@/components/ui/Text';
 import {
   formatBodyFatRange,
@@ -17,6 +18,7 @@ interface PhysiqueAssessmentCardProps {
   isLoading?: boolean;
   error?: string | null;
   onOpen: () => void;
+  onRetry?: () => void;
   onDelete?: () => void;
 }
 
@@ -25,6 +27,7 @@ export function PhysiqueAssessmentCard({
   isLoading = false,
   error,
   onOpen,
+  onRetry,
   onDelete,
 }: PhysiqueAssessmentCardProps) {
   return (
@@ -47,7 +50,14 @@ export function PhysiqueAssessmentCard({
         </Text>
       )}
 
-      {error ? <Text variant="body" style={styles.error}>{error}</Text> : null}
+      {error ? (
+        <LoadErrorState
+          title="Couldn’t load assessment"
+          message="Your saved assessment did not load. Try again in a moment."
+          compact
+          onRetry={onRetry}
+        />
+      ) : null}
 
       <Button
         label={isLoading ? 'Loading...' : latest ? 'View assessment' : 'Start assessment'}
@@ -69,8 +79,5 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: 4,
-  },
-  error: {
-    color: colors.brandPrimary,
   },
 });

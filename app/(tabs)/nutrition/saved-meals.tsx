@@ -8,6 +8,7 @@ import { MealFormField } from '@/components/nutrition/MealFormField';
 import { SubscreenTopBar } from '@/components/navigation';
 import { usePremium } from '@/hooks/usePremium';
 import { Button } from '@/components/ui/Button';
+import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Text } from '@/components/ui/Text';
 import { saveMeal } from '@/db/repositories/nutritionRepository';
 import { deleteSavedMeal, getSavedMeals, saveSavedMeal } from '@/db/repositories/savedMealRepository';
@@ -25,9 +26,19 @@ export default function SavedMealsScreen() {
   const [carbsG, setCarbsG] = useState('');
   const [fatG, setFatG] = useState('');
   const [fiberG, setFiberG] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
-    setSavedMeals(await getSavedMeals());
+    setIsLoading(true);
+    setLoadError(null);
+    try {
+      setSavedMeals(await getSavedMeals());
+    } catch {
+      setLoadError('load_failed');
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -95,7 +106,15 @@ export default function SavedMealsScreen() {
         <Text variant="h1">Saved Meals</Text>
         <Text variant="bodyMuted">Templates for faster logging.</Text>
 
-        {savedMeals.map((meal) => (
+        {loadError ? (
+          <LoadErrorState
+            title="Couldn’t load saved meals"
+            message="Your saved meals did not load. Try refreshing this list."
+            onRetry={() => void reload()}
+          />
+        ) : null}
+
+        {!loadError && !isLoading ? savedMeals.map((meal) => (
           <View key={meal.id} style={styles.templateCard}>
             <Text variant="h2">{meal.title}</Text>
             <Text variant="bodyMuted">{Math.round(meal.calories)} kcal</Text>
@@ -106,7 +125,7 @@ export default function SavedMealsScreen() {
               </Pressable>
             </View>
           </View>
-        ))}
+        )) : null}
 
         <Text variant="h2">New template</Text>
         <MealFormField label="Name" value={title} onChangeText={setTitle} />

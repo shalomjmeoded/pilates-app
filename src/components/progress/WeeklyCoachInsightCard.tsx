@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Text } from '@/components/ui/Text';
 import type { WeeklyCoachInsightContent } from '@/types/coaching';
 import { colors, spacing } from '@/theme';
@@ -76,7 +77,15 @@ export function WeeklyCoachInsightCard({
         </View>
       ) : null}
 
-      {error ? <Text variant="body" style={styles.error}>{error}</Text> : null}
+      {error ? (
+        <LoadErrorState
+          title="Couldn’t load coach summary"
+          message="The weekly summary did not load. Try refreshing it."
+          compact
+          onRetry={onGenerate}
+          retryLabel="Refresh"
+        />
+      ) : null}
 
       <Button
         label={isLoading ? 'Loading...' : insight ? 'Refresh weekly summary' : 'Generate weekly summary'}
@@ -114,8 +123,5 @@ const styles = StyleSheet.create({
   },
   lockOverlay: {
     marginTop: spacing.xs,
-  },
-  error: {
-    color: colors.brandPrimary,
   },
 });

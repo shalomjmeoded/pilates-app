@@ -7,6 +7,7 @@ import { format, parseISO } from 'date-fns';
 import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Text } from '@/components/ui/Text';
 import {
   deleteWeightLog,
@@ -23,10 +24,21 @@ export default function WeightHistoryScreen() {
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
   const [logs, setLogs] = useState<WeightLog[]>([]);
   const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
-    const rows = query.trim() ? await searchWeightLogs(query) : await getAllWeightLogs();
-    setLogs([...rows].reverse());
+    setIsLoading(true);
+    setLoadError(null);
+    try {
+      const rows = query.trim() ? await searchWeightLogs(query) : await getAllWeightLogs();
+      setLogs([...rows].reverse());
+    } catch {
+      setLoadError('load_failed');
+      setLogs([]);
+    } finally {
+      setIsLoading(false);
+    }
   }, [query]);
 
   useEffect(() => {
@@ -64,29 +76,41 @@ export default function WeightHistoryScreen() {
           onChangeText={setQuery}
           style={styles.search}
         />
-        <FlatList
-          data={listData}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <Card style={styles.card}>
-              <Text variant="h2">{displayWeight(item.weightKg, weightUnit)}</Text>
-              <Text variant="bodyMuted">{format(parseISO(item.loggedAt), 'MMM d, yyyy · h:mm a')}</Text>
-              {item.note ? <Text variant="body">{item.note}</Text> : null}
-              <View style={styles.row}>
-                <Button
-                  label="Edit"
-                  variant="secondary"
-                  onPress={() => router.push({ pathname: '/modals/log-weight', params: { editId: item.id } })}
-                />
-                <Pressable accessibilityRole="button" onPress={() => handleDelete(item)} style={styles.deleteButton}>
-                  <Text variant="label" style={styles.delete}>Delete</Text>
-                </Pressable>
-              </View>
-            </Card>
-          )}
-          ListEmptyComponent={<Text variant="bodyMuted">No weight entries found.</Text>}
-        />
+        {loadError ? (
+          <LoadErrorState
+            title="Couldn’t load weight history"
+            message="Your weight entries did not load. Try refreshing this list."
+            onRetry={() => void reload()}
+          />
+        ) : (
+          <FlatList
+            data={listData}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.list}
+            renderItem={({ item }) => (
+              <Card style={styles.card}>
+                <Text variant="h2">{displayWeight(item.weightKg, weightUnit)}</Text>
+                <Text variant="bodyMuted">{format(parseISO(item.loggedAt), 'MMM d, yyyy · h:mm a')}</Text>
+                {item.note ? <Text variant="body">{item.note}</Text> : null}
+                <View style={styles.row}>
+                  <Button
+                    label="Edit"
+                    variant="secondary"
+                    onPress={() => router.push({ pathname: '/modals/log-weight', params: { editId: item.id } })}
+                  />
+                  <Pressable accessibilityRole="button" onPress={() => handleDelete(item)} style={styles.deleteButton}>
+                    <Text variant="label" style={styles.delete}>Delete</Text>
+                  </Pressable>
+                </View>
+              </Card>
+            )}
+            ListEmptyComponent={
+              <Text variant="bodyMuted">
+                {isLoading ? 'Loading weight entries...' : 'No weight entries found.'}
+              </Text>
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );

@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
 import { SubscreenTopBar } from '@/components/navigation';
@@ -26,6 +26,8 @@ export default function ReviewAiMealScreen() {
   const [fiberG, setFiberG] = useState('');
   const [saveToLibrary, setSaveToLibrary] = useState(false);
   const [initialSnapshot, setInitialSnapshot] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
+  const bottomPadding = insets.bottom + spacing.lg;
 
   const { save, errors, isSaving, parseField } = useSaveReviewedAiMeal(mealDate, estimate);
 
@@ -98,7 +100,10 @@ export default function ReviewAiMealScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} onPress={handleBack} />
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="h1">Review Estimate</Text>
         <Text variant="bodyMuted">
           AI estimate — adjust if needed. Tune never auto-saves AI results.
@@ -192,7 +197,6 @@ const styles = StyleSheet.create({
   container: {
     padding: spacing.sm,
     gap: spacing.sm,
-    paddingBottom: spacing.lg,
   },
   card: {
     gap: spacing.xs,

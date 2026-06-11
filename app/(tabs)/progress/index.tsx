@@ -20,6 +20,7 @@ import {
 import { WorkoutStreakCard } from '@/components/workout';
 import { PremiumGate } from '@/components/premium';
 import { Button } from '@/components/ui/Button';
+import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { SettingsRow } from '@/components/settings';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
@@ -66,8 +67,11 @@ export default function ProgressScreen() {
   if (error || !data) {
     return (
       <Screen title="Progress" subtitle="Your analytics at a glance.">
-        <Text variant="bodyMuted">{error ?? 'Progress unavailable.'}</Text>
-        <Button label="Try again" onPress={() => void reload()} />
+        <LoadErrorState
+          title="Couldn’t load progress"
+          message="Your progress data is still safe. Try reloading this screen."
+          onRetry={() => void reload()}
+        />
       </Screen>
     );
   }
@@ -150,6 +154,7 @@ export default function ProgressScreen() {
           isLoading={physiqueAssessment.isLoading}
           error={physiqueAssessment.error}
           onOpen={() => router.push('/(tabs)/progress/physique-assessment')}
+          onRetry={() => void physiqueAssessment.load()}
           onDelete={
             physiqueAssessment.latest
               ? () => void physiqueAssessment.deleteAssessment(physiqueAssessment.latest!.id)

@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
@@ -15,11 +15,16 @@ export default function AddMealHubScreen() {
   const params = useLocalSearchParams<{ mealDate: string }>();
   const mealDate = params.mealDate ?? new Date().toISOString().slice(0, 10);
   const { requirePremium } = usePremium();
+  const insets = useSafeAreaInsets();
+  const bottomPadding = insets.bottom + spacing.lg;
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar />
-      <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="h1">Add Meal</Text>
         <Text variant="bodyMuted">Choose how you want to log this meal.</Text>
 
@@ -76,7 +81,7 @@ export default function AddMealHubScreen() {
           />
         </Card>
 
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -87,7 +92,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   container: {
-    flex: 1,
     padding: spacing.sm,
     gap: spacing.sm,
   },

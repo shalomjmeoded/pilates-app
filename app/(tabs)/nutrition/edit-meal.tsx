@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { format, parseISO } from 'date-fns';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
@@ -37,6 +37,8 @@ export default function EditMealScreen() {
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [initialSnapshot, setInitialSnapshot] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
+  const bottomPadding = insets.bottom + spacing.lg;
 
   useEffect(() => {
     void (async () => {
@@ -135,7 +137,10 @@ export default function EditMealScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="h1">Edit Meal</Text>
         <MealFormField label="Name" value={title} onChangeText={setTitle} />
         <MealFormField label="Calories" value={calories} onChangeText={setCalories} keyboardType="decimal-pad" />
@@ -166,7 +171,6 @@ const styles = StyleSheet.create({
   container: {
     padding: spacing.sm,
     gap: spacing.sm,
-    paddingBottom: spacing.lg,
   },
   actions: {
     gap: spacing.sm,

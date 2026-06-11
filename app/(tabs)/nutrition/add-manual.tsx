@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
 import { SubscreenTopBar } from '@/components/navigation';
@@ -25,6 +25,8 @@ export default function AddManualMealScreen() {
   const [fiberG, setFiberG] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const insets = useSafeAreaInsets();
+  const bottomPadding = insets.bottom + spacing.lg;
 
   const applyPreset = (preset: MealPreset) => {
     setTitle(preset);
@@ -74,7 +76,10 @@ export default function AddManualMealScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="h1">Quick Add</Text>
         <Text variant="bodyMuted">Enter macros manually when you already know them.</Text>
 
@@ -154,7 +159,6 @@ const styles = StyleSheet.create({
   container: {
     padding: spacing.sm,
     gap: spacing.sm,
-    paddingBottom: spacing.lg,
   },
   presets: {
     flexDirection: 'row',

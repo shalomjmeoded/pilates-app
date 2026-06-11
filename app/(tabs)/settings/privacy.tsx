@@ -23,7 +23,7 @@ export default function PrivacySettingsScreen() {
         <Text variant="h2">What leaves device</Text>
         <Text variant="bodyMuted" style={styles.copy}>
           Only the specific AI request you start — meal text, a meal photo, physique photos, workout context, or coach prompts.
-          Requests are sent to Google’s Gemini API with only the data needed for that feature.
+          Requests are sent to our AI processing service with only the data needed for that feature.
         </Text>
       </Card>
 

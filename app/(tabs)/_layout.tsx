@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Tabs, router } from 'expo-router';
+import { Tabs, router, useSegments } from 'expo-router';
 import type { ColorValue } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -28,7 +28,9 @@ function TabIcon({
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
+  const segments = useSegments();
   const bottomInset = Math.max(insets.bottom, 6);
+  const hideTabBar = segments.length > 2;
 
   return (
     <Tabs
@@ -36,13 +38,15 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.brandPrimary,
         tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: {
-          backgroundColor: colors.surfaceCanvas,
-          borderTopColor: colors.borderLight,
-          height: 58 + bottomInset,
-          paddingTop: 6,
-          paddingBottom: bottomInset,
-        },
+        tabBarStyle: hideTabBar
+          ? { display: 'none' }
+          : {
+              backgroundColor: colors.surfaceCanvas,
+              borderTopColor: colors.borderLight,
+              height: 58 + bottomInset,
+              paddingTop: 6,
+              paddingBottom: bottomInset,
+            },
         tabBarLabelStyle: {
           fontFamily: fontFamily.medium,
           fontSize: 11,

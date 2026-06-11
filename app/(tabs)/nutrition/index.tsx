@@ -10,6 +10,7 @@ import {
 } from '@/components/nutrition';
 import { WeekCalendarStrip } from '@/components/workout';
 import { FloatingActionButton } from '@/components/ui/FloatingActionButton';
+import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import {
@@ -94,6 +95,18 @@ export default function NutritionScreen() {
     await reload();
   };
 
+  if (error && !summary && !isLoading) {
+    return (
+      <Screen title="Nutrition">
+        <LoadErrorState
+          title="Couldn’t load nutrition"
+          message="Your meal history and targets are still safe. Try reloading this day."
+          onRetry={() => void reload()}
+        />
+      </Screen>
+    );
+  }
+
   if (!hasAccess && !isLoading) {
     return (
       <Screen title="Nutrition">
@@ -111,9 +124,12 @@ export default function NutritionScreen() {
       />
 
       {error ? (
-        <Text variant="body" style={styles.error}>
-          {error}
-        </Text>
+        <LoadErrorState
+          title="Couldn’t refresh nutrition"
+          message="Some nutrition details did not update. Try again when you’re ready."
+          compact
+          onRetry={() => void reload()}
+        />
       ) : null}
 
       <RemainingCaloriesHero
@@ -209,9 +225,6 @@ const styles = StyleSheet.create({
   },
   header: {
     gap: spacing.md,
-  },
-  error: {
-    color: colors.brandPrimary,
   },
   sectionHeader: {
     flexDirection: 'row',

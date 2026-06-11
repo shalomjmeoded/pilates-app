@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Image, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
@@ -22,11 +22,16 @@ export default function AddPhotoEstimateScreen() {
     estimateSelectedPhoto,
     openManualFallback,
   } = useMealPhotoEstimate(mealDate);
+  const insets = useSafeAreaInsets();
+  const bottomPadding = insets.bottom + spacing.lg;
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar hasUnsavedChanges={previewUri !== null} />
-      <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="h1">Photo Estimate</Text>
         <Text variant="bodyMuted">
           Photo estimates are best for simple visible meals. Premium only.
@@ -77,7 +82,7 @@ export default function AddPhotoEstimateScreen() {
           onPress={openManualFallback}
           disabled={isEstimating}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -88,7 +93,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   container: {
-    flex: 1,
     padding: spacing.sm,
     gap: spacing.sm,
   },
