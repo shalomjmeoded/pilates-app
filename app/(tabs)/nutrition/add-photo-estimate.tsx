@@ -6,6 +6,7 @@ import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
+import { MEAL_PHOTO_AI_DISCLOSURE } from '@/constants/compliance';
 import { useMealPhotoEstimate } from '@/hooks/useMealPhotoEstimate';
 import { colors, radius, spacing } from '@/theme';
 
@@ -33,8 +34,7 @@ export default function AddPhotoEstimateScreen() {
 
         <Card style={styles.card}>
           <Text variant="body">
-            Photos are compressed on your device before upload. You will review the AI estimate
-            before saving.
+            {MEAL_PHOTO_AI_DISCLOSURE}
           </Text>
         </Card>
 

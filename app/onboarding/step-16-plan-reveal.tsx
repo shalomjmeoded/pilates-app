@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { OnboardingShell, PlanRevealHero } from '@/components/onboarding';
 import { Text } from '@/components/ui/Text';
+import { WELLNESS_DISCLAIMER } from '@/constants/compliance';
 import {
   estimateWeeksToGoal,
   formatFirstMilestone,
@@ -65,6 +66,12 @@ export default function Step16PlanReveal() {
           </Text>
         </View>
       ) : null}
+
+      <View style={styles.disclaimer}>
+        <Text variant="bodyMuted" style={styles.disclaimerText}>
+          {WELLNESS_DISCLAIMER}
+        </Text>
+      </View>
     </OnboardingShell>
   );
 }
@@ -79,5 +86,15 @@ const styles = StyleSheet.create({
   },
   warningText: {
     color: colors.textDark,
+  },
+  disclaimer: {
+    backgroundColor: colors.surfaceCanvas,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    padding: spacing.sm,
+  },
+  disclaimerText: {
+    lineHeight: 22,
   },
 });

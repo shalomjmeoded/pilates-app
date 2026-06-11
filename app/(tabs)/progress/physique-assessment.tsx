@@ -7,6 +7,7 @@ import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
+import { PHYSIQUE_PHOTO_AI_DISCLOSURE, WELLNESS_DISCLAIMER } from '@/constants/compliance';
 import {
   formatBodyFatRange,
   formatPhysiqueCategory,
@@ -48,6 +49,8 @@ export default function PhysiqueAssessmentScreen() {
         <Card style={styles.card}>
           <Text variant="body">{PHYSIQUE_DISCLAIMER_COPY}</Text>
           <Text variant="bodyMuted">{PHYSIQUE_EXPERIMENTAL_NOTE}</Text>
+          <Text variant="bodyMuted">{PHYSIQUE_PHOTO_AI_DISCLOSURE}</Text>
+          <Text variant="bodyMuted">{WELLNESS_DISCLAIMER}</Text>
         </Card>
 
         <Pressable

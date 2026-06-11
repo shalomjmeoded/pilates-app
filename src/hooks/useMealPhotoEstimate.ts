@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 
+import { MEAL_PHOTO_AI_DISCLOSURE } from '@/constants/compliance';
 import {
   buildManualFallbackParams,
   shouldFallbackToManual,
@@ -12,6 +13,7 @@ import { aiFacade } from '@/services/ai';
 import { AiProxyError } from '@/services/ai/aiProxyClient';
 import { compressMealPhotoForUpload } from '@/services/nutrition/compressMealPhoto';
 import { useAiMealReviewStore } from '@/stores/aiMealReviewStore';
+import { confirmThirdPartyAiUse } from '@/utils/confirmThirdPartyAiUse';
 
 const PHOTO_MEAL_FALLBACK_TITLE = 'Photo meal';
 
@@ -128,6 +130,15 @@ export function useMealPhotoEstimate(mealDate: string) {
     async (source: 'camera' | 'library') => {
       setError(null);
       try {
+        const accepted = await confirmThirdPartyAiUse({
+          title: 'Send photo to AI?',
+          message: MEAL_PHOTO_AI_DISCLOSURE,
+        });
+
+        if (!accepted) {
+          return;
+        }
+
         const uri =
           source === 'camera' ? await pickImageFromCamera() : await pickImageFromLibrary();
         if (!uri) {

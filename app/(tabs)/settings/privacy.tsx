@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { SettingsScreenShell } from '@/components/settings';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
+import { WELLNESS_DISCLAIMER } from '@/constants/compliance';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { colors, spacing } from '@/theme';
 
@@ -32,6 +33,13 @@ export default function PrivacySettingsScreen() {
           AI is optional and premium-gated. You review every AI meal estimate before saving. Tune stores local audit
           rows in ai_outputs (feature, request summary, validation result) and quota counters in ai_usage — never full
           meal photos. AI is never used for ads.
+        </Text>
+      </Card>
+
+      <Card style={styles.card}>
+        <Text variant="h2">Wellness disclaimer</Text>
+        <Text variant="bodyMuted" style={styles.copy}>
+          {WELLNESS_DISCLAIMER}
         </Text>
       </Card>
 

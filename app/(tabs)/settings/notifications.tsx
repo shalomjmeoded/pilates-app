@@ -70,6 +70,7 @@ export default function NotificationsSettingsScreen() {
   }
 
   const supportMessage = getNotificationsSupportMessage();
+  const permissionDenied = permissionStatus === 'denied';
 
   return (
     <SettingsScreenShell
@@ -90,9 +91,14 @@ export default function NotificationsSettingsScreen() {
       {permissionStatus !== 'granted' ? (
         <>
           <Text variant="body">
-            Enable notifications to receive breakfast, meal, workout, and coaching reminders.
+            {permissionDenied
+              ? 'Notifications are denied. Open system settings to re-enable breakfast, meal, workout, and coaching reminders.'
+              : 'Enable notifications to receive breakfast, meal, workout, and coaching reminders.'}
           </Text>
-          <Button label="Enable notifications" onPress={() => void handlePermission()} />
+          <Button
+            label={permissionDenied ? 'Open system settings' : 'Enable notifications'}
+            onPress={() => void handlePermission()}
+          />
         </>
       ) : null}
 
@@ -105,9 +111,9 @@ export default function NotificationsSettingsScreen() {
         />
       ))}
 
-      {permissionStatus === 'denied' ? (
+      {permissionDenied ? (
         <Text variant="bodyMuted" style={styles.denied}>
-          Notifications are denied. Open system settings to re-enable them.
+          You can keep using Tune without notifications.
         </Text>
       ) : null}
     </SettingsScreenShell>

@@ -48,8 +48,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Tune uses your photo library to estimate meal nutrition from pictures.",
-          "cameraPermission": "Tune uses your camera to photograph meals for nutrition estimates."
+          "photosPermission": "Tune uses selected photos for meal nutrition estimates and optional physique wellness assessments.",
+          "cameraPermission": "Tune uses your camera for meal nutrition estimates and optional physique wellness assessments."
         }
       ]
     ]

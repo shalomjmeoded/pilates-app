@@ -2,12 +2,14 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 
+import { PHYSIQUE_PHOTO_AI_DISCLOSURE } from '@/constants/compliance';
 import { MealPhotoTooLargeError } from '@/engines/nutrition/mealPhotoCompression';
 import { runPhysiqueAssessment } from '@/services/physique/physiqueAssessmentService';
 import { AiProxyError } from '@/services/ai/aiProxyClient';
 import { compressPhysiquePhotoForUpload } from '@/services/physique/compressPhysiquePhoto';
 import { usePhysiqueAssessmentReviewStore } from '@/stores/physiqueAssessmentReviewStore';
 import type { PhysiquePhotoAngle, PhysiquePhotos } from '@/types/physiqueAssessment';
+import { confirmThirdPartyAiUse } from '@/utils/confirmThirdPartyAiUse';
 
 const EMPTY_PHOTOS: PhysiquePhotos = {
   front: null,
@@ -74,6 +76,15 @@ export function usePhysiquePhotoAssessment(disclaimerAcceptedAt: string) {
 
     if (!photos.front) {
       setError('A front photo is required.');
+      return;
+    }
+
+    const accepted = await confirmThirdPartyAiUse({
+      title: 'Send photos to AI?',
+      message: PHYSIQUE_PHOTO_AI_DISCLOSURE,
+    });
+
+    if (!accepted) {
       return;
     }
 
