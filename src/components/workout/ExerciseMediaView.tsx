@@ -23,7 +23,7 @@ export function ExerciseMediaView({
       image={thumbnail}
       gif={gif}
       preferGif={variant === 'gif'}
-      animateFrames={variant === 'gif'}
+      animateFrames={false}
       icon={muscleGroupIcon(exercise.muscleGroup)}
       fallback="icon"
       size={size}

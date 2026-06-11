@@ -6,12 +6,12 @@ import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { getWorkoutPlanByDate, swapPlanExercise } from '@/db/repositories/workoutRepository';
 import { resolveExerciseSubstitution } from '@/engines/workout/exerciseSubstitution';
 import { aiFacade } from '@/services/ai';
-import { AiProxyError } from '@/services/ai/aiProxyClient';
 import type { Exercise } from '@/types/exercise';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
 import type { WorkoutPlanExercise } from '@/types/workout';
 
 export interface ExerciseSubstitutionResult {
+  exercise: Exercise;
   exerciseName: string;
   reason: string;
   coachingNote: string;
@@ -59,13 +59,8 @@ export function useExerciseSubstitution(planDate: string) {
               libraryExerciseIds: candidates,
               swapReason: input.reason,
             });
-          } catch (substitutionError) {
-            if (
-              substitutionError instanceof AiProxyError &&
-              substitutionError.code === 'UNAUTHORIZED'
-            ) {
-              setError('AI exercise substitutions require Tune Premium. Using local fallback.');
-            }
+          } catch {
+            aiSuggestion = null;
           }
         }
 
@@ -89,6 +84,7 @@ export function useExerciseSubstitution(planDate: string) {
         );
 
         return {
+          exercise: resolved.exercise,
           exerciseName: resolved.exercise.name,
           reason: resolved.reason,
           coachingNote: resolved.coachingNote,

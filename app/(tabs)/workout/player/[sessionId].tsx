@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { AppState, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { AppState, Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -11,6 +11,7 @@ import { TuneBootLoader } from '@/components/ui/TuneBootLoader';
 import { discardWorkoutSession, updateSessionProgress } from '@/db/repositories/workoutRepository';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
 import { colors, spacing } from '@/theme';
+import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
 
 export default function WorkoutPlayerScreen() {
   const router = useRouter();
@@ -158,6 +159,12 @@ export default function WorkoutPlayerScreen() {
             </Text>
           ))}
         </View>
+
+        <Button
+          label="Watch Reference Video"
+          variant="secondary"
+          onPress={() => void Linking.openURL(buildExerciseYouTubeSearchUrl(current.exercise))}
+        />
       </ScrollView>
 
       <View style={styles.footer}>

@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -17,6 +17,7 @@ import type { Exercise } from '@/types/exercise';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
 import type { WorkoutPlanExercise } from '@/types/workout';
 import { colors, spacing } from '@/theme';
+import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
 
 function titleCase(value: string): string {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
@@ -98,8 +99,9 @@ export default function ExerciseDetailModal() {
     setSwapMessage(
       `Swapped to ${result.exerciseName}. ${result.reason} ${result.coachingNote}`,
     );
+    setExercise(result.exercise);
+    setPlanExercise({ ...planExercise, exerciseId: result.exercise.id });
     setSwapSheetVisible(false);
-    await reload();
   };
 
   return (
@@ -143,6 +145,13 @@ export default function ExerciseDetailModal() {
             </Text>
           ))}
         </Card>
+
+        <Button
+          label="Watch Reference Video"
+          variant="secondary"
+          onPress={() => void Linking.openURL(buildExerciseYouTubeSearchUrl(exercise))}
+          accessibilityLabel={`Search YouTube for ${exercise.name} reference videos`}
+        />
 
         <Card style={styles.card}>
           <Text variant="label">Common mistakes</Text>
