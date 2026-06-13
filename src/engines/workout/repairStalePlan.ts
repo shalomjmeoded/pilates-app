@@ -4,10 +4,14 @@ import {
   deleteWorkoutPlanByDate,
   getWorkoutPlanByDate,
 } from '@/db/repositories/workoutRepository';
-import type { WorkoutPlan } from '@/types/workout';
+import type { WorkoutGenerationOverrides, WorkoutPlan } from '@/types/workout';
 
 import { ensureWorkoutPlanForDate, formatPlanDate } from './ensureDailyPlan';
 import { validatePlanExerciseIds } from './planGenerator';
+
+interface RefreshWorkoutPlanOptions {
+  allowFutureGeneration?: boolean;
+}
 
 export async function planMatchesLibrary(
   plan: WorkoutPlan,
@@ -17,9 +21,13 @@ export async function planMatchesLibrary(
   return validatePlanExerciseIds(plan.exercises, resolvedLibrary);
 }
 
-export async function refreshWorkoutPlanForDate(planDate: string): Promise<WorkoutPlan> {
+export async function refreshWorkoutPlanForDate(
+  planDate: string,
+  overrides?: WorkoutGenerationOverrides,
+  options?: RefreshWorkoutPlanOptions,
+): Promise<WorkoutPlan> {
   await deleteWorkoutPlanByDate(planDate);
-  return ensureWorkoutPlanForDate(planDate);
+  return ensureWorkoutPlanForDate(planDate, overrides, options);
 }
 
 export async function repairTodayWorkoutPlanIfStale(): Promise<boolean> {

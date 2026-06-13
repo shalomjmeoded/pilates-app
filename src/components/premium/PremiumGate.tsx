@@ -1,31 +1,25 @@
 import { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { PAYWALL_BENEFITS, PAYWALL_SUBTITLE, PAYWALL_TITLE } from '@/constants/premiumBenefits';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Text } from '@/components/ui/Text';
+import { PaywallHero } from '@/components/premium/PaywallHero';
 import { usePremium } from '@/hooks/usePremium';
-import { colors, spacing } from '@/theme';
+import { spacing } from '@/theme';
 
 interface PremiumGateProps {
-  title?: string;
-  description?: string;
-  bullets?: string[];
   children?: ReactNode;
   onStartTrial?: () => void;
   onRestore?: () => void;
+  compact?: boolean;
 }
 
+/** @deprecated Prefer PaywallHero or tab-specific preview gates. */
 export function PremiumGate({
-  title = PAYWALL_TITLE,
-  description = PAYWALL_SUBTITLE,
-  bullets = [...PAYWALL_BENEFITS],
   children,
   onStartTrial,
   onRestore,
+  compact = false,
 }: PremiumGateProps) {
-  const { restore, openPaywall } = usePremium();
+  const { beginFreeTrial, restore, openPaywall } = usePremium();
 
   const handleStartTrial = () => {
     if (onStartTrial) {
@@ -50,20 +44,11 @@ export function PremiumGate({
   return (
     <View style={styles.container}>
       {children}
-      <Card style={styles.card}>
-        <Text variant="label">Premium required</Text>
-        <Text variant="h1">{title}</Text>
-        <Text variant="bodyMuted">{description}</Text>
-        <View style={styles.bullets}>
-          {bullets.map((item) => (
-            <Text key={item} variant="body">
-              ✓ {item}
-            </Text>
-          ))}
-        </View>
-        <Button label="Start Free Trial" onPress={handleStartTrial} />
-        <Button label="Restore Purchase" variant="secondary" onPress={() => void handleRestore()} />
-      </Card>
+      <PaywallHero
+        compact={compact}
+        onStartTrial={handleStartTrial}
+        onRestore={() => void handleRestore()}
+      />
     </View>
   );
 }
@@ -71,12 +56,5 @@ export function PremiumGate({
 const styles = StyleSheet.create({
   container: {
     gap: spacing.sm,
-  },
-  card: {
-    gap: spacing.sm,
-    backgroundColor: '#F7F3F2',
-  },
-  bullets: {
-    gap: 4,
   },
 });

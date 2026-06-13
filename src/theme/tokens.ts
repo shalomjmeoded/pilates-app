@@ -11,7 +11,12 @@ export const colors = {
   surfaceCanvas: '#FDFCFA',
   surfaceRose: '#F5EEEB',
   surfacePeach: '#F3EDE6',
+  surfaceSelected: '#F1E8E5',
+  surfaceMuted: '#F5F0EB',
+  warningSurface: '#F8EDEA',
   illustrationBg: '#EDE4DF',
+  surfaceHero: '#F3EAE6',
+  surfaceLuxury: '#EFE6E1',
 
   brandPrimary: '#4A3048',
   brandSecondary: '#B8898E',
@@ -21,7 +26,10 @@ export const colors = {
 
   textDark: '#2D2926',
   textMuted: '#6E6764',
+  textStrong: '#1F1C1A',
   borderLight: '#E5DDD6',
+  borderStrong: '#CDBEB2',
+  destructive: '#8D4958',
 } as const;
 
 export const spacing = {
@@ -47,6 +55,17 @@ export const shadows = {
     shadowRadius: 16,
     elevation: 3,
   },
+  hero: {
+    shadowColor: '#4A3048',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 24,
+    elevation: 5,
+  },
+} as const;
+
+export const metrics = {
+  touchTargetMin: 44,
 } as const;
 
 export type ColorToken = keyof typeof colors;

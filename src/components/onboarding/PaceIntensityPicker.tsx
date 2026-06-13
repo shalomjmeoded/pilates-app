@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
   chipSelected: {
     borderColor: colors.brandPrimary,
-    backgroundColor: '#FFF8F7',
+    backgroundColor: colors.surfaceSelected,
   },
   chipLabel: {
     color: colors.textMuted,

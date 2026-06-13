@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { AppState, Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, AppState, Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -8,10 +8,12 @@ import { ExerciseMediaView, WorkoutExitSheet } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { TuneBootLoader } from '@/components/ui/TuneBootLoader';
+import { hasAnimatedExerciseDemo } from '@/constants/exerciseMedia';
 import { discardWorkoutSession, updateSessionProgress } from '@/db/repositories/workoutRepository';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
 import { colors, spacing } from '@/theme';
 import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
+import { successNotificationHaptic } from '@/utils/haptics';
 
 export default function WorkoutPlayerScreen() {
   const router = useRouter();
@@ -87,6 +89,7 @@ export default function WorkoutPlayerScreen() {
   const prescription = current.holdSeconds
     ? `${current.sets} sets · ${current.holdSeconds}s hold`
     : `${current.sets} sets · ${current.reps ?? '—'} reps`;
+  const hasAnimatedDemo = hasAnimatedExerciseDemo(current.exercise.id);
 
   const persistIndex = async (nextIndex: number) => {
     setCurrentIndex(nextIndex);
@@ -103,6 +106,8 @@ export default function WorkoutPlayerScreen() {
   const handleNext = async () => {
     if (isLast) {
       await updateSessionProgress(session.id, currentIndex, elapsedSeconds);
+      successNotificationHaptic();
+      AccessibilityInfo.announceForAccessibility('Workout completed.');
       router.replace(`/(tabs)/workout/feedback/${session.id}`);
       return;
     }
@@ -123,6 +128,7 @@ export default function WorkoutPlayerScreen() {
 
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;
+  const completionProgress = ((currentIndex + 1) / exercises.length) * 100;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -134,6 +140,9 @@ export default function WorkoutPlayerScreen() {
         <Text variant="label" style={styles.progressLabel}>
           {currentIndex + 1} / {exercises.length} · {minutes}:{seconds.toString().padStart(2, '0')}
         </Text>
+        <View style={styles.progressTrack}>
+          <View style={[styles.progressFill, { width: `${completionProgress}%` }]} />
+        </View>
       </View>
 
       <ScrollView
@@ -141,6 +150,11 @@ export default function WorkoutPlayerScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ExerciseMediaView exercise={current.exercise} variant="gif" fillWidth />
+        {!hasAnimatedDemo ? (
+          <Text variant="caption" style={styles.mediaHint}>
+            Static movement preview available for this exercise.
+          </Text>
+        ) : null}
 
         <Text variant="h1" style={styles.title}>
           {current.exercise.name}
@@ -220,6 +234,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: spacing.sm,
   },
+  progressTrack: {
+    marginHorizontal: spacing.sm,
+    height: 4,
+    borderRadius: 4,
+    backgroundColor: colors.borderLight,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 4,
+    backgroundColor: colors.brandPrimary,
+  },
   scrollContent: {
     paddingHorizontal: spacing.sm,
     paddingBottom: spacing.md,
@@ -237,6 +263,9 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: spacing.xs,
+  },
+  mediaHint: {
+    textAlign: 'center',
   },
   prescription: {
     color: colors.brandPrimary,

@@ -65,7 +65,7 @@ export function MealCard({
             accessibilityRole="button"
             accessibilityLabel={`Edit ${meal.title}`}
             onPress={() => onEdit(meal.id)}
-            style={styles.editButton}
+            style={({ pressed }) => [styles.editButton, pressed && styles.pressed]}
           >
             <Feather name="edit-2" size={18} color={colors.brandPrimary} />
           </Pressable>
@@ -95,7 +95,7 @@ export function MealCard({
               accessibilityRole="button"
               accessibilityLabel={`Duplicate ${meal.title}`}
               onPress={() => onDuplicate(meal.id)}
-              style={styles.actionButton}
+              style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}
             >
               <Text variant="label">Duplicate</Text>
             </Pressable>
@@ -105,7 +105,7 @@ export function MealCard({
               accessibilityRole="button"
               accessibilityLabel={`Delete ${meal.title}`}
               onPress={() => onDelete(meal.id)}
-              style={styles.actionButton}
+              style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}
             >
               <Text variant="label" style={styles.delete}>
                 Delete
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.borderStrong,
     padding: spacing.sm,
     gap: spacing.sm,
   },
@@ -144,6 +144,8 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: radius.square,
     backgroundColor: colors.surfaceRose,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -159,7 +161,9 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.surfaceRose,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -168,6 +172,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: spacing.sm,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.square,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.xs,
   },
   macros: {
     flex: 1,
@@ -181,10 +189,18 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     minHeight: 44,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceCanvas,
     justifyContent: 'center',
     paddingHorizontal: spacing.xs,
   },
   delete: {
-    color: colors.brandPrimary,
+    color: colors.destructive,
+  },
+  pressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.99 }],
   },
 });

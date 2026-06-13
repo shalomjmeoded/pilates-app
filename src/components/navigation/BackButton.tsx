@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { useCallback } from 'react';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { Text } from '@/components/ui/Text';
-import { colors } from '@/theme';
+import { colors, metrics, radius } from '@/theme';
 
 import { confirmDiscardBack } from './confirmDiscardBack';
 import { useDiscardBackHandler } from './useDiscardBackHandler';
@@ -43,27 +43,24 @@ export function BackButton({
       hitSlop={8}
       style={({ pressed }) => [styles.button, pressed && styles.pressed]}
     >
-      <Text variant="h2" style={styles.arrow}>
-        ←
-      </Text>
+      <MaterialCommunityIcons name="chevron-left" size={24} color={colors.brandPrimary} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    minWidth: 44,
-    minHeight: 44,
+    minWidth: metrics.touchTargetMin,
+    minHeight: metrics.touchTargetMin,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceCanvas,
   },
   pressed: {
-    opacity: 0.72,
-  },
-  arrow: {
-    color: colors.brandPrimary,
-    fontSize: 28,
-    lineHeight: 32,
+    opacity: 0.88,
   },
 });

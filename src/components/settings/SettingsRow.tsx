@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
 import { Text } from '@/components/ui/Text';
 import { colors, radius, spacing } from '@/theme';
@@ -31,7 +32,11 @@ export function SettingsRow({
         </Text>
         {value ? <Text variant="bodyMuted">{value}</Text> : null}
       </View>
-      {showChevron && onPress ? <Text variant="bodyMuted">›</Text> : null}
+      {showChevron && onPress ? (
+        <View style={styles.chevronWrap}>
+          <Feather name="chevron-right" size={18} color={colors.textMuted} />
+        </View>
+      ) : null}
     </Pressable>
   );
 }
@@ -41,7 +46,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.borderStrong,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
     flexDirection: 'row',
@@ -50,7 +55,8 @@ const styles = StyleSheet.create({
     minHeight: 52,
   },
   pressed: {
-    opacity: 0.85,
+    opacity: 0.94,
+    transform: [{ scale: 0.992 }],
   },
   content: {
     flex: 1,
@@ -58,6 +64,14 @@ const styles = StyleSheet.create({
     paddingRight: spacing.xs,
   },
   destructive: {
-    color: colors.brandPrimary,
+    color: colors.destructive,
+  },
+  chevronWrap: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surfaceMuted,
   },
 });

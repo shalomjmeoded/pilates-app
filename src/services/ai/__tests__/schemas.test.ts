@@ -2,6 +2,7 @@ import { AiValidationError } from '../errors';
 import {
   aiMealEstimateSchema,
   aiPhysiqueAssessmentSchema,
+  aiWorkoutChangeSuggestionSchema,
   parseMealEstimateResponse,
 } from '../schemas';
 import { parseAiResponse } from '../parseAiResponse';
@@ -77,5 +78,17 @@ describe('ai meal schemas', () => {
         ingredients: [],
       }),
     ).toThrow(AiValidationError);
+  });
+
+  it('parses workout change suggestion payload', () => {
+    const parsed = parseAiResponse(aiWorkoutChangeSuggestionSchema, {
+      focusArea: 'mobility',
+      targetMinutes: 25,
+      intensity: 'balanced',
+      coachRationale: 'This keeps your week consistent while reducing strain.',
+    });
+
+    expect(parsed.focusArea).toBe('mobility');
+    expect(parsed.targetMinutes).toBe(25);
   });
 });

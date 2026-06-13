@@ -75,7 +75,7 @@ export function PhysiqueAssessmentCard({
 const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
-    backgroundColor: '#F7F3F2',
+    backgroundColor: colors.surfaceMuted,
   },
   section: {
     gap: 4,

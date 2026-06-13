@@ -7,6 +7,9 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { kgToLb, lbToKg } from '@/utils/units';
 
+const MIN_GOAL_WEIGHT_KG = 35;
+const MAX_GOAL_WEIGHT_KG = 250;
+
 export default function Step11GoalWeight() {
   const { step, goNext, goBack } = useOnboardingNavigation(10);
   const goalWeightKg = useOnboardingStore((state) => state.draft.goalWeightKg);
@@ -47,10 +50,12 @@ export default function Step11GoalWeight() {
   return (
     <OnboardingShell
       step={step}
-      title="Goal weight"
+      title="Where would you like to land?"
+      subtitle="A clear destination makes milestones feel achievable, not overwhelming."
       onBack={goBack}
       onNext={goNext}
-      nextDisabled={!goalWeightKg || goalWeightKg < 35 || goalWeightKg > 250}
+      nextDisabled={!goalWeightKg || goalWeightKg < MIN_GOAL_WEIGHT_KG || goalWeightKg > MAX_GOAL_WEIGHT_KG}
+      nextDisabledReason={`Enter a goal weight between ${MIN_GOAL_WEIGHT_KG} and ${MAX_GOAL_WEIGHT_KG} kg.`}
     >
       <NumericMeasurementInput
         label="Goal weight"

@@ -1,12 +1,10 @@
-import { Picker } from '@react-native-picker/picker';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { getBirthYearOptions } from '@/onboarding/helpers';
-import { colors, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 
 const YEAR_OPTIONS = getBirthYearOptions();
-const PICKER_MAX_HEIGHT = 220;
 
 interface CompactYearPickerProps {
   value: number;
@@ -14,25 +12,76 @@ interface CompactYearPickerProps {
 }
 
 export function CompactYearPicker({ value, onChange }: CompactYearPickerProps) {
+  const latestYear = YEAR_OPTIONS[0]!;
+  const earliestYear = YEAR_OPTIONS[YEAR_OPTIONS.length - 1]!;
+
+  const nudgeYear = (delta: number) => {
+    const nextYear = Math.min(latestYear, Math.max(earliestYear, value + delta));
+    if (nextYear !== value) {
+      onChange(nextYear);
+    }
+  };
+
   return (
     <View style={styles.wrap}>
       <Text variant="display" style={styles.selectedYear}>
         {value}
       </Text>
-      <Text variant="bodyMuted" style={styles.caption}>
-        Birth year
-      </Text>
-      <View style={styles.pickerShell}>
-        <Picker
-          selectedValue={value}
-          onValueChange={(year) => onChange(Number(year))}
-          style={styles.picker}
-          itemStyle={styles.pickerItem}
+
+      <View style={styles.nudgeRow}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Select previous year"
+          onPress={() => nudgeYear(-1)}
+          style={({ pressed }) => [styles.nudgeButton, pressed && styles.nudgePressed]}
         >
-          {YEAR_OPTIONS.map((year) => (
-            <Picker.Item key={year} label={String(year)} value={year} />
-          ))}
-        </Picker>
+          <Text variant="body" style={styles.nudgeLabel}>
+            −1
+          </Text>
+        </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Select next year"
+          onPress={() => nudgeYear(1)}
+          style={({ pressed }) => [styles.nudgeButton, pressed && styles.nudgePressed]}
+        >
+          <Text variant="body" style={styles.nudgeLabel}>
+            +1
+          </Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.yearStripShell}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.yearStripContent}
+          accessibilityLabel="Birth year options"
+          accessibilityHint="Swipe left or right and tap a year"
+        >
+          {YEAR_OPTIONS.map((year) => {
+            const selected = year === value;
+            return (
+              <Pressable
+                key={year}
+                accessibilityRole="button"
+                accessibilityLabel={`Select birth year ${year}`}
+                accessibilityState={{ selected }}
+                onPress={() => onChange(year)}
+                style={({ pressed }) => [
+                  styles.yearChip,
+                  selected && styles.yearChipSelected,
+                  pressed && styles.yearChipPressed,
+                ]}
+              >
+                <Text variant="body" style={selected ? styles.yearChipTextSelected : styles.yearChipText}>
+                  {year}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
       </View>
     </View>
   );
@@ -48,26 +97,64 @@ const styles = StyleSheet.create({
     fontSize: 42,
     lineHeight: 48,
   },
-  caption: {
-    marginBottom: spacing.xs,
-  },
-  pickerShell: {
+  nudgeRow: {
     width: '100%',
-    maxHeight: PICKER_MAX_HEIGHT,
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  nudgeButton: {
+    flex: 1,
+    minHeight: metrics.touchTargetMin,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceCanvas,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nudgePressed: {
+    opacity: 0.9,
+  },
+  nudgeLabel: {
+    color: colors.brandPrimary,
+  },
+  yearStripShell: {
+    width: '100%',
+    minHeight: 84,
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.borderLight,
     overflow: 'hidden',
-    height: Platform.OS === 'ios' ? PICKER_MAX_HEIGHT : 180,
   },
-  picker: {
-    width: '100%',
-    height: PICKER_MAX_HEIGHT,
+  yearStripContent: {
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
   },
-  pickerItem: {
-    fontSize: 20,
-    color: colors.textDark,
-    height: PICKER_MAX_HEIGHT,
+  yearChip: {
+    minHeight: metrics.touchTargetMin,
+    minWidth: 72,
+    paddingHorizontal: spacing.sm,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.backgroundPrimary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  yearChipSelected: {
+    borderColor: colors.brandPrimary,
+    backgroundColor: colors.surfaceSelected,
+  },
+  yearChipPressed: {
+    opacity: 0.9,
+  },
+  yearChipText: {
+    color: colors.textMuted,
+  },
+  yearChipTextSelected: {
+    color: colors.brandPrimary,
   },
 });

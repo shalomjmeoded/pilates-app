@@ -1,7 +1,7 @@
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 import { fontFamily } from '@/theme/typography';
 
 interface NumericMeasurementInputProps {
@@ -34,11 +34,19 @@ export function NumericMeasurementInput({
           style={styles.input}
           value={value}
         />
-        <Text variant="body" onPress={onToggleUnit} style={styles.unitToggle}>
-          {unitLabel}
-        </Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Switch unit. Current unit ${unitLabel}`}
+          accessibilityHint="Toggles between metric and imperial units"
+          onPress={onToggleUnit}
+          style={({ pressed }) => [styles.unitToggleButton, pressed && styles.unitTogglePressed]}
+        >
+          <Text variant="body" style={styles.unitToggle}>
+            {unitLabel}
+          </Text>
+        </Pressable>
       </View>
-      <Text variant="bodyMuted">Tap the unit label to switch display. Values are stored in metric internally.</Text>
+      <Text variant="bodyMuted">Tap the unit to switch between kilograms and pounds.</Text>
     </View>
   );
 }
@@ -67,7 +75,17 @@ const styles = StyleSheet.create({
   },
   unitToggle: {
     color: colors.brandPrimary,
-    minWidth: 48,
-    textAlign: 'right',
+    textAlign: 'center',
+  },
+  unitToggleButton: {
+    minWidth: metrics.touchTargetMin,
+    minHeight: metrics.touchTargetMin,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing.xs,
+    borderRadius: radius.pill,
+  },
+  unitTogglePressed: {
+    opacity: 0.9,
   },
 });

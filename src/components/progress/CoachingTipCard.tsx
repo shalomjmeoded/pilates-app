@@ -24,7 +24,7 @@ export function CoachingTipCard({ tip }: CoachingTipCardProps) {
 const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
-    backgroundColor: '#F7F3F2',
+    backgroundColor: colors.surfaceMuted,
   },
   eyebrow: {
     color: colors.textMuted,

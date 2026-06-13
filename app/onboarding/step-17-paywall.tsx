@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { OnboardingShell } from '@/components/onboarding';
-import { PremiumGate } from '@/components/premium';
+import { PaywallHero } from '@/components/premium';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
-import { PAYWALL_BENEFITS, PAYWALL_SUBTITLE, PAYWALL_TITLE } from '@/constants/premiumBenefits';
 import { useFinishOnboarding } from '@/hooks/useFinishOnboarding';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { usePremium } from '@/hooks/usePremium';
@@ -41,10 +40,11 @@ export default function Step17Paywall() {
     return (
       <OnboardingShell
         step={step}
-        title="Rebuild complete"
-        subtitle="Your history stays intact. We will refresh your plan targets."
+        title="Your rhythm, refreshed"
+        subtitle="Your history stays intact. We will update your plan targets from your new answers."
         onBack={goBack}
         hideFooter
+        hideStepIndicator
       >
         <Card>
           <Text variant="h2">Update my plan</Text>
@@ -69,27 +69,21 @@ export default function Step17Paywall() {
   return (
     <OnboardingShell
       step={step}
-      title={PAYWALL_TITLE}
-      subtitle="Start your 7-day free trial to unlock Tune."
+      title="Your plan is ready to begin"
+      subtitle="Start your free trial to unlock movement, nourishment, and coaching — shaped entirely around you."
       onBack={goBack}
       hideFooter
       showBack
+      scrollEnabled
+      hideStepIndicator
+      phaseLabel="Unlock your plan"
+      reasonWhy={null}
     >
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        <PremiumGate
-          title={PAYWALL_TITLE}
-          description={PAYWALL_SUBTITLE}
-          bullets={[...PAYWALL_BENEFITS]}
+        <PaywallHero
           onStartTrial={() => void unlockPlan(beginFreeTrial)}
           onRestore={() => void unlockPlan(restore)}
         />
-
-        <View style={styles.trialNote}>
-          <Text variant="bodyMuted">
-            7-day free trial, then subscription required. Payment processing ships with RevenueCat in a
-            later phase — this build unlocks locally for development.
-          </Text>
-        </View>
 
         {isSubmitting ? <Text variant="bodyMuted">Unlocking your plan...</Text> : null}
         {actionError || error ? (
@@ -110,11 +104,8 @@ const styles = StyleSheet.create({
   copy: {
     marginTop: 2,
   },
-  trialNote: {
-    paddingHorizontal: spacing.xs,
-  },
   error: {
-    color: colors.brandPrimary,
+    color: colors.destructive,
     textAlign: 'center',
   },
 });

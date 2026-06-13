@@ -52,6 +52,11 @@ const styles = StyleSheet.create({
   stat: {
     flex: 1,
     gap: 4,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    padding: spacing.xs,
   },
   value: {
     fontSize: 20,

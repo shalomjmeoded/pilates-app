@@ -9,6 +9,7 @@ export const PREMIUM_QUOTAS: Record<AiFeature, QuotaPeriod> = {
   meal_text_estimate: { limit: 20, period: 'day' },
   meal_photo_estimate: { limit: 10, period: 'day' },
   exercise_substitution: { limit: 10, period: 'day' },
+  workout_change_suggestion: { limit: 10, period: 'day' },
   weekly_coach: { limit: 2, period: 'week' },
   physique_assessment: { limit: 2, period: 'month' },
 };

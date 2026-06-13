@@ -22,7 +22,7 @@ export function Screen({
 }: ScreenProps) {
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator color={colors.brandPrimary} />
           <Text variant="bodyMuted" style={styles.loadingText}>
@@ -34,13 +34,17 @@ export function Screen({
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <View style={styles.container}>
-        {title ? <Text variant="h1">{title}</Text> : null}
-        {subtitle ? (
-          <Text variant="bodyMuted" style={styles.subtitle}>
-            {subtitle}
-          </Text>
+        {title || subtitle ? (
+          <View style={styles.header}>
+            {title ? <Text variant="h1" style={styles.title}>{title}</Text> : null}
+            {subtitle ? (
+              <Text variant="bodyMuted" style={styles.subtitle}>
+                {subtitle}
+              </Text>
+            ) : null}
+          </View>
         ) : null}
         {children}
       </View>
@@ -56,11 +60,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.sm,
-    paddingTop: spacing.md,
+    paddingTop: spacing.xs,
     gap: spacing.md,
+  },
+  header: {
+    gap: spacing.xs,
+    paddingTop: spacing.xs,
+  },
+  title: {
+    color: colors.textStrong,
   },
   subtitle: {
     marginBottom: spacing.xs,
+    maxWidth: 560,
   },
   loadingContainer: {
     flex: 1,

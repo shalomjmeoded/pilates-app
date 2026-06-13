@@ -14,3 +14,7 @@ export function selectionHaptic(): void {
 export function lightImpactHaptic(): void {
   void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
 }
+
+export function successNotificationHaptic(): void {
+  void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+}

@@ -12,7 +12,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 
 export default function Step13Roadmap() {
-  const { step, goNext, goBack } = useOnboardingNavigation(12);
+  const { step, goNext, goBack } = useOnboardingNavigation(13);
   const draft = useOnboardingStore((state) => state.draft);
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
 
@@ -33,8 +33,8 @@ export default function Step13Roadmap() {
   return (
     <OnboardingShell
       step={step}
-      title="Your wellness roadmap"
-      subtitle="A projected curve based on sustainable, steady progress."
+      title="See your journey unfold"
+      subtitle="This projection reflects the pace you chose — a guide, not a deadline."
       onBack={goBack}
       onNext={goNext}
     >

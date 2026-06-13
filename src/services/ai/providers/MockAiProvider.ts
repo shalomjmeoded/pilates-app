@@ -2,16 +2,19 @@ import type {
   AiExerciseSubstitution,
   AiMealEstimate,
   AiPhysiqueAssessment,
+  AiWorkoutChangeSuggestion,
   AiWeeklyCoachInsight,
   PhysiqueAssessmentRequest,
 } from '@/types/ai';
 import type { WeeklyCoachSummary } from '@/types/coaching';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
+import type { WorkoutChangeRequest, WorkoutFocusArea } from '@/types/workout';
 
 import type { AiProvider } from '../AiProvider';
 import { logAiAudit } from '../aiAudit';
 import {
   aiExerciseSubstitutionSchema,
+  aiWorkoutChangeSuggestionSchema,
   aiWeeklyCoachSchema,
   aiPhysiqueAssessmentSchema,
   parseMealEstimateResponse,
@@ -113,6 +116,36 @@ export class MockAiProvider implements AiProvider {
           replacementExerciseId: replacement,
           reason: 'Similar muscle focus with lower joint stress.',
           coachingNote: 'Move slowly and keep your core engaged throughout.',
+        }),
+    );
+  }
+
+  suggestWorkoutChange(context: WorkoutChangeRequest & {
+    availableMinuteOptions: number[];
+    availableFocusAreas: WorkoutFocusArea[];
+    todayMovementCount: number;
+    todayEstimatedMinutes: number;
+  }): Promise<AiWorkoutChangeSuggestion> {
+    const minuteOption =
+      context.availableMinuteOptions.find((value) => value === context.targetMinutes) ??
+      context.availableMinuteOptions[0] ??
+      context.targetMinutes;
+
+    return withMockAudit(
+      'workout_change_suggestion',
+      {
+        focusArea: context.focusArea,
+        targetMinutes: context.targetMinutes,
+        intensity: context.intensity,
+      },
+      JSON.stringify(context),
+      () =>
+        parseAiResponse(aiWorkoutChangeSuggestionSchema, {
+          focusArea: context.focusArea,
+          targetMinutes: minuteOption,
+          intensity: context.intensity,
+          coachRationale:
+            'Great choice. This adjustment keeps your plan aligned with your focus while preserving steady weekly progress.',
         }),
     );
   }

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { buildBaselinePlan } from '@/engines/calculations';
+import { isBirthYearWithinSupportedAge } from '@/onboarding/helpers';
 import type { BaselinePlanResult } from '@/types/calculations';
 import type {
   ExercisePreference,
@@ -83,6 +84,7 @@ function isCompleteDraft(draft: OnboardingDraft): draft is CompleteOnboardingDra
     draft.heightCm !== null &&
     draft.currentWeightKg !== null &&
     draft.birthYear !== null &&
+    isBirthYearWithinSupportedAge(draft.birthYear) &&
     draft.fitnessGoal !== null &&
     draft.goalWeightKg !== null &&
     draft.weightTrajectory !== null &&

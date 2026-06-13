@@ -15,10 +15,10 @@ import { colors, radius, spacing } from '@/theme';
 const LOADING_DURATION_MS = 3200;
 
 const STAGES = [
-  'Analyzing goals',
-  'Building workouts',
-  'Calculating nutrition',
-  'Preparing milestones',
+  'Understanding your rhythm',
+  'Crafting your movement plan',
+  'Balancing nourishment targets',
+  'Mapping your milestones',
 ] as const;
 
 interface OnboardingPlanProgressProps {

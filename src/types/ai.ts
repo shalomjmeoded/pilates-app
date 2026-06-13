@@ -4,6 +4,7 @@ import type {
   PhysiqueCategory,
   PhysiqueConfidence,
 } from './physiqueAssessment';
+import type { WorkoutFocusArea, WorkoutIntensity } from './workout';
 
 export interface AiMealEstimate {
   mealTitle: string;
@@ -38,6 +39,13 @@ export interface AiExerciseSubstitution {
   replacementExerciseId: string;
   reason: string;
   coachingNote: string;
+}
+
+export interface AiWorkoutChangeSuggestion {
+  focusArea: WorkoutFocusArea;
+  targetMinutes: number;
+  intensity: WorkoutIntensity;
+  coachRationale: string;
 }
 
 export interface AiPhysiqueAssessment {

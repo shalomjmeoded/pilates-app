@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import type { WeightChartRange } from '@/types/progress';
-import { colors, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 
 const RANGES: Array<{ key: WeightChartRange; label: string }> = [
   { key: '7d', label: '7D' },
@@ -48,20 +48,23 @@ const styles = StyleSheet.create({
   },
   chip: {
     paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
+    paddingVertical: 10,
+    minHeight: metrics.touchTargetMin,
     borderRadius: radius.pill,
     backgroundColor: colors.surfaceCanvas,
     borderWidth: 1,
     borderColor: colors.borderLight,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chipSelected: {
-    backgroundColor: colors.brandPrimary,
+    backgroundColor: colors.surfaceSelected,
     borderColor: colors.brandPrimary,
   },
   chipText: {
     color: colors.textMuted,
   },
   chipTextSelected: {
-    color: colors.surfaceCanvas,
+    color: colors.brandPrimary,
   },
 });

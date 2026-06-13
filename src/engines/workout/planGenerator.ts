@@ -1,7 +1,13 @@
 import type { Exercise } from '@/types/exercise';
 import type { Profile } from '@/types/profile';
 import type { PhysiqueCategory } from '@/types/physiqueAssessment';
-import type { WorkoutPlan, WorkoutPlanExercise } from '@/types/workout';
+import type {
+  WorkoutFocusArea,
+  WorkoutGenerationOverrides,
+  WorkoutIntensity,
+  WorkoutPlan,
+  WorkoutPlanExercise,
+} from '@/types/workout';
 
 import {
   isPilatesAlignedExercise,
@@ -15,13 +21,20 @@ export interface PhysiquePlanContext {
   physiqueCategory: PhysiqueCategory;
 }
 
-type WorkoutFocus = 'core_control' | 'posterior_chain' | 'mobility_recovery' | 'full_body_control';
+export type WorkoutFocus = 'core_control' | 'posterior_chain' | 'mobility_recovery' | 'full_body_control';
 
 const TARGET_MIN = 9;
 const TARGET_MAX = 12;
 const MIN_PILATES_ALIGNED = 8;
 const TARGET_DISTINCT_MUSCLE_GROUPS = 4;
 const DATE_VARIETY_WEIGHT = 6;
+
+interface PlanControls {
+  focus: WorkoutFocus;
+  targetMin: number;
+  targetMax: number;
+  intensity: WorkoutIntensity;
+}
 
 const GOAL_WEEKLY_FOCUS: Record<Profile['fitnessGoal'], WorkoutFocus[]> = {
   get_toned: [
@@ -76,6 +89,50 @@ function dayIndex(planDate: string): number {
 function weeklyFocusFor(profile: Profile, planDate: string): WorkoutFocus {
   const weeklyFocus = GOAL_WEEKLY_FOCUS[profile.fitnessGoal];
   return weeklyFocus[dayIndex(planDate)] ?? 'full_body_control';
+}
+
+function mapFocusAreaToWorkoutFocus(area: WorkoutFocusArea): WorkoutFocus {
+  switch (area) {
+    case 'core':
+      return 'core_control';
+    case 'glutes':
+      return 'posterior_chain';
+    case 'posture':
+    case 'mobility':
+      return 'mobility_recovery';
+    case 'full_body':
+    default:
+      return 'full_body_control';
+  }
+}
+
+function targetMaxForMinutes(targetMinutes: number): number {
+  if (targetMinutes <= 18) {
+    return 9;
+  }
+  if (targetMinutes <= 28) {
+    return 10;
+  }
+  return TARGET_MAX;
+}
+
+function resolvePlanControls(
+  profile: Profile,
+  planDate: string,
+  overrides?: WorkoutGenerationOverrides,
+): PlanControls {
+  const intensity = overrides?.intensity ?? 'balanced';
+  const focus = overrides?.focusArea
+    ? mapFocusAreaToWorkoutFocus(overrides.focusArea)
+    : weeklyFocusFor(profile, planDate);
+  const targetMax = overrides?.targetMinutes ? targetMaxForMinutes(overrides.targetMinutes) : TARGET_MAX;
+
+  return {
+    focus,
+    targetMin: Math.min(TARGET_MIN, targetMax),
+    targetMax,
+    intensity,
+  };
 }
 
 function focusExerciseBonus(exercise: Exercise, focus: WorkoutFocus): number {
@@ -179,6 +236,7 @@ function scoreExercise(
   deprioritizedIds: Set<string>,
   planDate: string,
   focus: WorkoutFocus,
+  intensity: WorkoutIntensity,
   physique?: PhysiquePlanContext,
 ): number {
   let score =
@@ -205,6 +263,25 @@ function scoreExercise(
     score += 1;
   }
 
+  if (intensity === 'lighter') {
+    if (exercise.difficulty === 'beginner') {
+      score += 2;
+    }
+    if (exercise.difficulty === 'advanced') {
+      score -= 4;
+    }
+  } else if (intensity === 'challenging') {
+    if (exercise.difficulty === 'advanced') {
+      score += 3;
+    }
+    if (exercise.difficulty === 'intermediate') {
+      score += 1;
+    }
+    if (exercise.difficulty === 'beginner') {
+      score -= 2;
+    }
+  }
+
   return score;
 }
 
@@ -216,11 +293,11 @@ function countMuscleGroups(exercises: Exercise[]): Map<string, number> {
   return counts;
 }
 
-function targetDistinctMuscleGroups(candidates: Exercise[]): number {
+function targetDistinctMuscleGroups(candidates: Exercise[], targetMin: number): number {
   return Math.min(
     TARGET_DISTINCT_MUSCLE_GROUPS,
     new Set(candidates.map((exercise) => exercise.muscleGroup)).size,
-    TARGET_MIN,
+    targetMin,
   );
 }
 
@@ -229,18 +306,18 @@ function selectBalancedExercises(
   profile: Profile,
   deprioritizedIds: Set<string>,
   planDate: string,
-  focus: WorkoutFocus,
+  controls: PlanControls,
   physique?: PhysiquePlanContext,
 ): Exercise[] {
   const selected: Exercise[] = [];
   const selectedIds = new Set<string>();
-  const targetGroups = targetDistinctMuscleGroups(candidates);
+  const targetGroups = targetDistinctMuscleGroups(candidates, controls.targetMin);
 
-  while (selected.length < TARGET_MAX && selected.length < candidates.length) {
+  while (selected.length < controls.targetMax && selected.length < candidates.length) {
     const muscleGroupCounts = countMuscleGroups(selected);
     const distinctGroups = muscleGroupCounts.size;
     const shouldPrioritizeNewGroup =
-      selected.length < TARGET_MIN && distinctGroups < targetGroups;
+      selected.length < controls.targetMin && distinctGroups < targetGroups;
 
     const next = candidates
       .filter((exercise) => !selectedIds.has(exercise.id))
@@ -254,8 +331,26 @@ function selectBalancedExercises(
         }
 
         return (
-          scoreExercise(b, profile, muscleGroupCounts, deprioritizedIds, planDate, focus, physique) -
-          scoreExercise(a, profile, muscleGroupCounts, deprioritizedIds, planDate, focus, physique)
+          scoreExercise(
+            b,
+            profile,
+            muscleGroupCounts,
+            deprioritizedIds,
+            planDate,
+            controls.focus,
+            controls.intensity,
+            physique,
+          ) -
+          scoreExercise(
+            a,
+            profile,
+            muscleGroupCounts,
+            deprioritizedIds,
+            planDate,
+            controls.focus,
+            controls.intensity,
+            physique,
+          )
         );
       })[0];
 
@@ -287,18 +382,32 @@ function orderWorkoutFlow(exercises: Exercise[]): Exercise[] {
   return [...exercises].sort((a, b) => sessionRoleOrder(a) - sessionRoleOrder(b));
 }
 
-function setsForExercise(profile: Profile, exercise: Exercise, focus: WorkoutFocus): number {
+function setsForExercise(
+  profile: Profile,
+  exercise: Exercise,
+  focus: WorkoutFocus,
+  intensity: WorkoutIntensity,
+): number {
+  let sets: number;
   if (focus === 'mobility_recovery' && exercise.difficulty === 'beginner') {
-    return 2;
-  }
-  if (
+    sets = 2;
+  } else if (
     profile.fitnessGoal === 'build_muscle' &&
     focus !== 'mobility_recovery' &&
     exercise.difficulty !== 'beginner'
   ) {
-    return 4;
+    sets = 4;
+  } else {
+    sets = exercise.difficulty === 'advanced' ? 4 : 3;
   }
-  return exercise.difficulty === 'advanced' ? 4 : 3;
+
+  if (intensity === 'lighter') {
+    return Math.max(2, sets - 1);
+  }
+  if (intensity === 'challenging') {
+    return Math.min(5, sets + 1);
+  }
+  return sets;
 }
 
 export function validatePlanExerciseIds(
@@ -316,10 +425,11 @@ export function generateWorkoutPlan(
   planId: string,
   adaptation?: AdaptationContext,
   physique?: PhysiquePlanContext,
+  overrides?: WorkoutGenerationOverrides,
 ): WorkoutPlan {
   const deprioritizedIds = adaptation?.skippedFrequentIds ?? new Set<string>();
   const pilatesPool = selectPilatesCandidatePool(exercises);
-  const focus = weeklyFocusFor(profile, planDate);
+  const controls = resolvePlanControls(profile, planDate, overrides);
 
   const preferencePool = pilatesPool.filter(
     (exercise) =>
@@ -344,11 +454,11 @@ export function generateWorkoutPlan(
     profile,
     deprioritizedIds,
     planDate,
-    focus,
+    controls,
     physique,
   );
 
-  while (selected.length < TARGET_MIN && selected.length < finalCandidates.length) {
+  while (selected.length < controls.targetMin && selected.length < finalCandidates.length) {
     const next = finalCandidates.find(
       (exercise) => !selected.some((item) => item.id === exercise.id),
     );
@@ -371,7 +481,8 @@ export function generateWorkoutPlan(
             countMuscleGroups(selected),
             deprioritizedIds,
             planDate,
-            focus,
+            controls.focus,
+            controls.intensity,
             physique,
           ) -
           scoreExercise(
@@ -380,7 +491,8 @@ export function generateWorkoutPlan(
             countMuscleGroups(selected),
             deprioritizedIds,
             planDate,
-            focus,
+            controls.focus,
+            controls.intensity,
             physique,
           ),
       );
@@ -403,7 +515,7 @@ export function generateWorkoutPlan(
   let planExercises: WorkoutPlanExercise[] = orderWorkoutFlow(selected).map((exercise, index) => ({
     exerciseId: exercise.id,
     sortOrder: index + 1,
-    sets: setsForExercise(profile, exercise, focus),
+    sets: setsForExercise(profile, exercise, controls.focus, controls.intensity),
     reps: exercise.repsBaseline,
     holdSeconds: exercise.holdSeconds,
   }));
@@ -412,8 +524,8 @@ export function generateWorkoutPlan(
     planExercises = swapSkippedExercises(planExercises, adaptation.lastSessionFeedback, adaptation);
   }
 
-  if (planExercises.length < TARGET_MIN) {
-    throw new Error(`Plan must include at least ${TARGET_MIN} exercises.`);
+  if (planExercises.length < controls.targetMin) {
+    throw new Error(`Plan must include at least ${controls.targetMin} exercises.`);
   }
 
   if (!validatePlanExerciseIds(planExercises, exercises)) {
@@ -423,7 +535,7 @@ export function generateWorkoutPlan(
   return {
     id: planId,
     planDate,
-    exercises: planExercises.slice(0, TARGET_MAX),
+    exercises: planExercises.slice(0, controls.targetMax),
     source: 'deterministic',
     generatedAt: new Date().toISOString(),
   };

@@ -57,6 +57,30 @@ export interface WorkoutDayView {
   partialLibraryMatch?: boolean;
 }
 
+export type WorkoutFocusArea = 'core' | 'glutes' | 'posture' | 'mobility' | 'full_body';
+
+export type WorkoutIntensity = 'lighter' | 'balanced' | 'challenging';
+
+export interface WorkoutChangeRequest {
+  focusArea: WorkoutFocusArea;
+  targetMinutes: number;
+  intensity: WorkoutIntensity;
+  coachNote?: string;
+}
+
+export interface WorkoutGenerationOverrides {
+  focusArea?: WorkoutFocusArea;
+  targetMinutes?: number;
+  intensity?: WorkoutIntensity;
+}
+
+export interface WorkoutChangeFeedback extends WorkoutChangeRequest {
+  weekStart: string;
+  sourceDate: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export type PlanGenerationErrorCode =
   | 'NO_PROFILE'
   | 'EMPTY_LIBRARY'

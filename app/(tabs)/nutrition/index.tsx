@@ -22,7 +22,7 @@ import {
 import type { Meal } from '@/types/nutrition';
 import { adjustPortionByStep, clampPortion } from '@/engines/nutrition';
 import { getCalendarDates } from '@/engines/workout';
-import { PremiumGate } from '@/components/premium';
+import { NutritionPreviewGate } from '@/components/premium';
 import { useNutritionDay } from '@/hooks/useNutritionDay';
 import { usePremium } from '@/hooks/usePremium';
 import { useNutritionStore } from '@/stores/nutritionStore';
@@ -109,8 +109,8 @@ export default function NutritionScreen() {
 
   if (!hasAccess && !isLoading) {
     return (
-      <Screen title="Nutrition">
-        <PremiumGate description="Log meals against your personalized macro targets with Tune Premium." />
+      <Screen title="Nutrition" subtitle="Nourishment shaped around your body.">
+        <NutritionPreviewGate />
       </Screen>
     );
   }

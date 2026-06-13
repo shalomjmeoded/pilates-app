@@ -1,4 +1,5 @@
 export { ExerciseCard } from './ExerciseCard';
+export { ChangeWorkoutSheet } from './ChangeWorkoutSheet';
 export { ExerciseGridCard } from './ExerciseGridCard';
 export { ExerciseFrameAnimation } from './ExerciseFrameAnimation';
 export { ExerciseMediaView } from './ExerciseMediaView';
@@ -9,5 +10,6 @@ export { FeedbackSelector, feedbackLabel } from './FeedbackSelector';
 export { WeekCalendarStrip, buildCompletedDatesSet } from './WeekCalendarStrip';
 export { ResumeWorkoutBanner } from './ResumeWorkoutBanner';
 export { WorkoutStreakCard } from './WorkoutStreakCard';
+export { WorkoutCompletedBanner } from './WorkoutCompletedBanner';
 export { WorkoutEmptyState, WorkoutErrorState, WorkoutReadOnlyBanner } from './WorkoutStateViews';
 export { ExerciseSwapReasonSheet } from './ExerciseSwapReasonSheet';

@@ -100,7 +100,7 @@ export function WeeklyCoachInsightCard({
 const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
-    backgroundColor: '#F7F3F2',
+    backgroundColor: colors.surfaceMuted,
   },
   highlighted: {
     borderColor: colors.brandPrimary,

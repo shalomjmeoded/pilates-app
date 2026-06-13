@@ -3,7 +3,8 @@ import { Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, metrics, radius, shadows, spacing } from '@/theme';
+import { fontFamily } from '@/theme/typography';
 
 interface FloatingActionButtonProps {
   label: string;
@@ -49,11 +50,11 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     paddingHorizontal: spacing.sm,
     paddingVertical: 14,
-    minHeight: 52,
+    minHeight: Math.max(metrics.touchTargetMin, 52),
   },
   label: {
     color: colors.warmWhite,
-    fontFamily: 'PlusJakartaSans_600SemiBold',
+    fontFamily: fontFamily.semibold,
   },
   pressed: {
     opacity: 0.9,

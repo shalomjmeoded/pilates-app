@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -25,6 +26,7 @@ interface AuditIssue {
 }
 
 const issues: AuditIssue[] = [];
+const staticMediaPairs: string[] = [];
 
 function report(category: string, message: string): void {
   issues.push({ category, message });
@@ -41,6 +43,10 @@ for (const [name, ids] of names) {
   if (ids.length > 1) {
     report('duplicate_name', `Duplicate name "${name}" → ${ids.join(', ')}`);
   }
+}
+
+function fileHash(filePath: string): string {
+  return createHash('sha1').update(readFileSync(filePath)).digest('hex');
 }
 
 let thumbsOk = 0;
@@ -60,6 +66,10 @@ for (const exercise of exercises) {
     report('missing_detail_frame', `${exercise.id}: ${exercise.gifUri}`);
   } else {
     detailOk += 1;
+  }
+
+  if (existsSync(thumbPath) && existsSync(gifPath) && fileHash(thumbPath) === fileHash(gifPath)) {
+    staticMediaPairs.push(exercise.id);
   }
 
   if (isBodyPartLikeName(exercise.name)) {
@@ -124,6 +134,10 @@ console.log('By category:', byCategory);
 console.log('\nMedia coverage:');
 console.log(`  Thumbnails: ${thumbsOk}/${exercises.length} (${thumbPct}%)`);
 console.log(`  Detail frames (gifUri): ${detailOk}/${exercises.length} (${detailPct}%)`);
+console.log(`  Static thumbnail/gif duplicates: ${staticMediaPairs.length}`);
+if (staticMediaPairs.length > 0) {
+  console.log(`  Duplicate IDs: ${staticMediaPairs.slice(0, 12).join(', ')}`);
+}
 
 const examples = exercises.filter((e) =>
   ['Crossover_Reverse_Lunge', 'Frog_Hops', 'Dead_Bug', 'Plank', 'Butt_Lift_Bridge'].includes(e.id),

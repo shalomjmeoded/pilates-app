@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   chipSelected: {
     borderColor: colors.brandPrimary,
-    backgroundColor: '#FFF8F7',
+    backgroundColor: colors.surfaceSelected,
   },
   chipTextSelected: {
     color: colors.brandPrimary,

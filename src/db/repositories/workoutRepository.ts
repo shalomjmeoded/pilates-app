@@ -3,6 +3,8 @@ import { createId } from '@/utils/createId';
 import { getDatabase } from '@/db/connection';
 import type { ExerciseFeedback } from '@/types/exercise';
 import type {
+  WorkoutChangeFeedback,
+  WorkoutChangeRequest,
   WorkoutPlan,
   WorkoutPlanExercise,
   WorkoutSession,
@@ -42,6 +44,18 @@ interface SessionExerciseRow {
   sort_order: number;
   feedback: ExerciseFeedback | null;
   completed_at: string | null;
+}
+
+interface WorkoutChangeFeedbackRow {
+  id: string;
+  week_start: string;
+  source_date: string;
+  focus_area: WorkoutChangeFeedback['focusArea'];
+  target_minutes: number;
+  intensity: WorkoutChangeFeedback['intensity'];
+  coach_note: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export async function saveWorkoutPlan(plan: WorkoutPlan): Promise<void> {
@@ -450,4 +464,125 @@ export async function getLatestCompletedSessionFeedback(
   }
 
   return getSessionFeedback(session.id);
+}
+
+function mapWorkoutChangeFeedbackRow(row: WorkoutChangeFeedbackRow): WorkoutChangeFeedback {
+  return {
+    weekStart: row.week_start,
+    sourceDate: row.source_date,
+    focusArea: row.focus_area,
+    targetMinutes: row.target_minutes,
+    intensity: row.intensity,
+    coachNote: row.coach_note ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function getWorkoutChangeFeedbackForWeek(
+  weekStart: string,
+): Promise<WorkoutChangeFeedback | null> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<WorkoutChangeFeedbackRow>(
+    'SELECT * FROM workout_change_feedback WHERE week_start = ?',
+    weekStart,
+  );
+
+  return row ? mapWorkoutChangeFeedbackRow(row) : null;
+}
+
+export async function getLatestWorkoutChangeFeedback(
+  beforeWeekStart?: string,
+): Promise<WorkoutChangeFeedback | null> {
+  const db = await getDatabase();
+  const row = beforeWeekStart
+    ? await db.getFirstAsync<WorkoutChangeFeedbackRow>(
+        `SELECT * FROM workout_change_feedback
+         WHERE week_start < ?
+         ORDER BY week_start DESC
+         LIMIT 1`,
+        beforeWeekStart,
+      )
+    : await db.getFirstAsync<WorkoutChangeFeedbackRow>(
+        `SELECT * FROM workout_change_feedback
+         ORDER BY week_start DESC
+         LIMIT 1`,
+      );
+
+  return row ? mapWorkoutChangeFeedbackRow(row) : null;
+}
+
+export async function upsertWorkoutChangeFeedback(
+  weekStart: string,
+  sourceDate: string,
+  request: WorkoutChangeRequest,
+): Promise<void> {
+  const db = await getDatabase();
+  const existing = await db.getFirstAsync<{ id: string }>(
+    'SELECT id FROM workout_change_feedback WHERE week_start = ?',
+    weekStart,
+  );
+
+  if (existing) {
+    await db.runAsync(
+      `UPDATE workout_change_feedback
+       SET source_date = ?,
+           focus_area = ?,
+           target_minutes = ?,
+           intensity = ?,
+           coach_note = ?,
+           updated_at = datetime('now')
+       WHERE id = ?`,
+      sourceDate,
+      request.focusArea,
+      request.targetMinutes,
+      request.intensity,
+      request.coachNote ?? null,
+      existing.id,
+    );
+    return;
+  }
+
+  await db.runAsync(
+    `INSERT INTO workout_change_feedback (
+      id, week_start, source_date, focus_area, target_minutes, intensity, coach_note
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    createId(),
+    weekStart,
+    sourceDate,
+    request.focusArea,
+    request.targetMinutes,
+    request.intensity,
+    request.coachNote ?? null,
+  );
+}
+
+export async function countWorkoutChangeEventsForDate(eventDate: string): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ count: number }>(
+    `SELECT COUNT(*) as count
+     FROM workout_change_events
+     WHERE event_date = ?`,
+    eventDate,
+  );
+  return row?.count ?? 0;
+}
+
+export async function logWorkoutChangeEvent(
+  eventDate: string,
+  planDate: string,
+  request: WorkoutChangeRequest,
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `INSERT INTO workout_change_events (
+      id, event_date, plan_date, focus_area, target_minutes, intensity
+    ) VALUES (?, ?, ?, ?, ?, ?)`,
+    createId(),
+    eventDate,
+    planDate,
+    request.focusArea,
+    request.targetMinutes,
+    request.intensity,
+  );
 }

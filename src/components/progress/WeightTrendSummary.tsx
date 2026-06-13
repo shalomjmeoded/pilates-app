@@ -19,12 +19,14 @@ export function WeightTrendSummary({ trends, weightUnit }: WeightTrendSummaryPro
         Trend averages
       </Text>
       <View style={styles.row}>
-        <Text variant="body">
-          7-day avg: {formatTrendLabel(trends.weeklyAverageKg, weightUnit, kgToLb)}
-        </Text>
-        <Text variant="body">
-          30-day avg: {formatTrendLabel(trends.monthlyAverageKg, weightUnit, kgToLb)}
-        </Text>
+        <View style={styles.metric}>
+          <Text variant="caption">7-day avg</Text>
+          <Text variant="body">{formatTrendLabel(trends.weeklyAverageKg, weightUnit, kgToLb)}</Text>
+        </View>
+        <View style={styles.metric}>
+          <Text variant="caption">30-day avg</Text>
+          <Text variant="body">{formatTrendLabel(trends.monthlyAverageKg, weightUnit, kgToLb)}</Text>
+        </View>
       </View>
       <Text variant="bodyMuted">Averages smooth daily fluctuations.</Text>
     </Card>
@@ -41,6 +43,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
   },
   row: {
-    gap: 4,
+    gap: spacing.xs,
+  },
+  metric: {
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    padding: spacing.xs,
   },
 });

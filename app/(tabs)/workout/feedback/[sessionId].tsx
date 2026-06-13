@@ -59,9 +59,9 @@ export default function WorkoutFeedbackScreen() {
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
       <ScrollView contentContainerStyle={styles.container}>
-        <Text variant="h1">How did it go?</Text>
+        <Text variant="h1">You showed up — beautifully</Text>
         <Text variant="bodyMuted" style={styles.subtitle}>
-          Every movement needs feedback before your session can be saved.
+          Share how each movement felt. Your feedback helps Tune adapt with care, not pressure.
         </Text>
 
         {exercises.map((item, index) => {

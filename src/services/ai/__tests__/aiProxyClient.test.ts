@@ -11,6 +11,9 @@ describe('aiProxyClient endpoints', () => {
     expect(buildAiEndpointUrl('http://localhost:8787', 'exercise_substitution')).toBe(
       'http://localhost:8787/ai/exercise-swap',
     );
+    expect(buildAiEndpointUrl('http://localhost:8787', 'workout_change_suggestion')).toBe(
+      'http://localhost:8787/ai/workout-change',
+    );
     expect(buildAiEndpointUrl('http://localhost:8787', 'weekly_coach')).toBe(
       'http://localhost:8787/ai/weekly-coach',
     );

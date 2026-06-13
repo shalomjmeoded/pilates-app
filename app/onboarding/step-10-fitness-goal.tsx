@@ -11,10 +11,12 @@ export default function Step10FitnessGoal() {
   return (
     <OnboardingShell
       step={step}
-      title="Your fitness goal"
+      title="What feels right for your body?"
+      subtitle="Your goal shapes workout focus and daily nourishment — without aggressive targets."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!fitnessGoal}
+      nextDisabledReason="Pick your primary goal to continue."
     >
       {FITNESS_GOAL_OPTIONS.map((option) => (
         <OptionCard

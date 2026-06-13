@@ -34,6 +34,10 @@ class UnconfiguredAiProvider implements AiProvider {
     return Promise.reject(this.fail());
   }
 
+  suggestWorkoutChange(): Promise<never> {
+    return Promise.reject(this.fail());
+  }
+
   assessPhysique(): Promise<never> {
     return Promise.reject(this.fail());
   }

@@ -2,11 +2,13 @@ import type {
   AiExerciseSubstitution,
   AiMealEstimate,
   AiPhysiqueAssessment,
+  AiWorkoutChangeSuggestion,
   AiWeeklyCoachInsight,
   PhysiqueAssessmentRequest,
 } from '@/types/ai';
 import type { WeeklyCoachSummary } from '@/types/coaching';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
+import type { WorkoutChangeRequest, WorkoutFocusArea } from '@/types/workout';
 
 import type { AiProvider } from '../AiProvider';
 import { logAiAudit } from '../aiAudit';
@@ -14,6 +16,7 @@ import { AiProxyError, callAiProxy } from '../aiProxyClient';
 import { parseAiResponse } from '../parseAiResponse';
 import {
   aiExerciseSubstitutionSchema,
+  aiWorkoutChangeSuggestionSchema,
   aiWeeklyCoachSchema,
   aiPhysiqueAssessmentSchema,
   parseMealEstimateResponse,
@@ -111,6 +114,30 @@ export class GeminiProxyProvider implements AiProvider {
       async () => {
         const raw = await callAiProxy<unknown>('exercise_substitution', context);
         return parseAiResponse(aiExerciseSubstitutionSchema, raw);
+      },
+    );
+  }
+
+  suggestWorkoutChange(context: WorkoutChangeRequest & {
+    availableMinuteOptions: number[];
+    availableFocusAreas: WorkoutFocusArea[];
+    todayMovementCount: number;
+    todayEstimatedMinutes: number;
+  }): Promise<AiWorkoutChangeSuggestion> {
+    return withAudit(
+      'workout_change_suggestion',
+      {
+        focusArea: context.focusArea,
+        targetMinutes: context.targetMinutes,
+        intensity: context.intensity,
+        hasCoachNote: Boolean(context.coachNote),
+        todayMovementCount: context.todayMovementCount,
+      },
+      JSON.stringify(context),
+      async () => {
+        const payload: Record<string, unknown> = { ...context };
+        const raw = await callAiProxy<unknown>('workout_change_suggestion', payload);
+        return parseAiResponse(aiWorkoutChangeSuggestionSchema, raw);
       },
     );
   }

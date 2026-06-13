@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { PORTION_PRESETS } from '@/types/nutrition';
-import { colors, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 
 interface PortionControlsProps {
   multiplier: number;
@@ -14,13 +14,23 @@ export function PortionControls({ multiplier, onChange, onStep }: PortionControl
   return (
     <View style={styles.wrap}>
       <View style={styles.stepRow}>
-        <Pressable accessibilityRole="button" onPress={() => onStep(-1)} style={styles.stepButton}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Decrease portion by 10 percent"
+          onPress={() => onStep(-1)}
+          style={styles.stepButton}
+        >
           <Text variant="body" style={styles.stepLabel}>
             −10%
           </Text>
         </Pressable>
         <Text variant="bodyMuted">{multiplier.toFixed(1)}× portion</Text>
-        <Pressable accessibilityRole="button" onPress={() => onStep(1)} style={styles.stepButton}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Increase portion by 10 percent"
+          onPress={() => onStep(1)}
+          style={styles.stepButton}
+        >
           <Text variant="body" style={styles.stepLabel}>
             +10%
           </Text>
@@ -33,6 +43,7 @@ export function PortionControls({ multiplier, onChange, onStep }: PortionControl
             <Pressable
               key={preset}
               accessibilityRole="button"
+              accessibilityLabel={`Set portion to ${preset}x`}
               accessibilityState={{ selected }}
               onPress={() => onChange(preset)}
               style={[styles.chip, selected && styles.chipSelected]}
@@ -58,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   stepButton: {
-    minHeight: 36,
+    minHeight: metrics.touchTargetMin,
     minWidth: 56,
     borderRadius: radius.pill,
     borderWidth: 1,
@@ -81,12 +92,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.borderLight,
     paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
+    paddingVertical: 10,
+    minHeight: metrics.touchTargetMin,
     backgroundColor: colors.surfaceCanvas,
+    justifyContent: 'center',
   },
   chipSelected: {
     borderColor: colors.brandPrimary,
-    backgroundColor: '#FFF8F7',
+    backgroundColor: colors.surfaceSelected,
   },
   chipTextSelected: {
     color: colors.brandPrimary,

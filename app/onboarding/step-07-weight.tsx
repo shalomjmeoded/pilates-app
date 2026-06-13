@@ -25,8 +25,8 @@ export default function Step07Weight() {
   return (
     <OnboardingShell
       step={step}
-      title="Current weight"
-      subtitle="Drag the ruler — smooth, precise, and private on your device."
+      title="Where are you starting from?"
+      subtitle="Your current weight helps us chart a sustainable path — never a punishment."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueKg < 35 || valueKg > 250}

@@ -7,7 +7,8 @@ import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { ONBOARDING_TOTAL_STEPS } from '@/onboarding/constants';
-import { colors, spacing } from '@/theme';
+import { getOnboardingPhase, getOnboardingReason } from '@/onboarding/stepCopy';
+import { colors, radius, spacing } from '@/theme';
 
 interface OnboardingShellProps {
   step: number;
@@ -18,11 +19,14 @@ interface OnboardingShellProps {
   onBack?: () => void;
   nextLabel?: string;
   nextDisabled?: boolean;
+  nextDisabledReason?: string;
   showBack?: boolean;
   hideFooter?: boolean;
   hideStepIndicator?: boolean;
   titleLines?: number;
   scrollEnabled?: boolean;
+  phaseLabel?: string;
+  reasonWhy?: string | null;
 }
 
 export function OnboardingShell({
@@ -34,24 +38,39 @@ export function OnboardingShell({
   onBack,
   nextLabel = 'Continue',
   nextDisabled = false,
+  nextDisabledReason,
   showBack = true,
   hideFooter = false,
   hideStepIndicator = false,
   titleLines = 3,
   scrollEnabled = true,
+  phaseLabel,
+  reasonWhy,
 }: OnboardingShellProps) {
   const { height } = useWindowDimensions();
   const isCompact = height < 760;
+  const phase = phaseLabel ?? getOnboardingPhase(step);
+  const reason = reasonWhy === null ? undefined : (reasonWhy ?? getOnboardingReason(step));
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       {showBack && onBack ? <SubscreenTopBar onPress={onBack} /> : null}
       {!hideStepIndicator ? (
         <View style={styles.header}>
-          <Text variant="label">
-            {step} / {ONBOARDING_TOTAL_STEPS}
+          <Text variant="label" style={styles.phase}>
+            {phase}
           </Text>
-          <View style={styles.progressTrack}>
+          <View style={styles.stepRow}>
+            <Text variant="caption">
+              Step {step} of {ONBOARDING_TOTAL_STEPS}
+            </Text>
+          </View>
+          <View
+            accessibilityRole="progressbar"
+            accessibilityLabel="Onboarding progress"
+            accessibilityValue={{ min: 0, max: ONBOARDING_TOTAL_STEPS, now: step }}
+            style={styles.progressTrack}
+          >
             <View style={[styles.progressFill, { width: `${(step / ONBOARDING_TOTAL_STEPS) * 100}%` }]} />
           </View>
         </View>
@@ -66,17 +85,17 @@ export function OnboardingShell({
         showsVerticalScrollIndicator={false}
       >
         <Animated.View
-          entering={FadeInRight.duration(280)}
-          exiting={FadeOutLeft.duration(200)}
+          entering={FadeInRight.duration(320)}
+          exiting={FadeOutLeft.duration(220)}
           style={[styles.page, isCompact && styles.pageCompact]}
         >
           <View style={styles.intro}>
             <Text
-              variant="h1"
+              variant="hero"
               style={styles.title}
               numberOfLines={titleLines}
               adjustsFontSizeToFit
-              minimumFontScale={0.85}
+              minimumFontScale={0.82}
             >
               {title}
             </Text>
@@ -84,6 +103,16 @@ export function OnboardingShell({
               <Text variant="bodyMuted" style={styles.subtitle}>
                 {subtitle}
               </Text>
+            ) : null}
+            {reason ? (
+              <View style={styles.reasonCard}>
+                <Text variant="caption" style={styles.reasonLabel}>
+                  Why we ask
+                </Text>
+                <Text variant="body" style={styles.reasonText}>
+                  {reason}
+                </Text>
+              </View>
             ) : null}
           </View>
           <View style={styles.body}>{children}</View>
@@ -93,10 +122,23 @@ export function OnboardingShell({
       {!hideFooter ? (
         <SafeAreaView edges={['bottom']} style={styles.footerSafe}>
           <View style={styles.footer}>
-            <View style={styles.backSpacer} />
             {onNext ? (
               <View style={styles.nextWrap}>
-                <Button label={nextLabel} onPress={onNext} disabled={nextDisabled} />
+                <Button
+                  label={nextLabel}
+                  onPress={onNext}
+                  disabled={nextDisabled}
+                  accessibilityHint={
+                    nextDisabled
+                      ? nextDisabledReason ?? 'Complete this step before continuing.'
+                      : undefined
+                  }
+                />
+                {nextDisabled && nextDisabledReason ? (
+                  <Text variant="bodyMuted" style={styles.nextDisabledReason}>
+                    {nextDisabledReason}
+                  </Text>
+                ) : null}
               </View>
             ) : null}
           </View>
@@ -115,17 +157,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.sm,
     paddingBottom: spacing.xs,
-    gap: spacing.xs,
+    gap: 6,
+  },
+  phase: {
+    color: colors.brandSecondary,
+  },
+  stepRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   progressTrack: {
-    height: 4,
-    borderRadius: 2,
+    height: 5,
+    borderRadius: 3,
     backgroundColor: colors.borderLight,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     backgroundColor: colors.brandPrimary,
+    borderRadius: 3,
   },
   scrollView: {
     flex: 1,
@@ -145,15 +196,34 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   intro: {
-    gap: spacing.xs,
+    gap: spacing.sm,
   },
   title: {
     flexShrink: 1,
     paddingRight: spacing.xs,
+    fontSize: 32,
+    lineHeight: 38,
   },
   subtitle: {
     maxWidth: 560,
     lineHeight: 24,
+  },
+  reasonCard: {
+    backgroundColor: colors.surfaceRose,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    padding: spacing.sm,
+    gap: 4,
+  },
+  reasonLabel: {
+    color: colors.brandPrimary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  reasonText: {
+    lineHeight: 22,
+    color: colors.textDark,
   },
   body: {
     gap: spacing.sm,
@@ -162,20 +232,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.xs,
     paddingBottom: spacing.sm,
-    gap: spacing.sm,
     borderTopWidth: 1,
     borderTopColor: colors.borderLight,
     backgroundColor: colors.backgroundPrimary,
   },
-  backSpacer: {
-    width: 64,
-  },
   nextWrap: {
-    flex: 1,
+    width: '100%',
+    gap: spacing.xs,
+  },
+  nextDisabledReason: {
+    textAlign: 'center',
   },
 });

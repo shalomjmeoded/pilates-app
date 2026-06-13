@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -15,20 +16,22 @@ export function MilestoneGrid({ milestones }: MilestoneGridProps) {
       <Text variant="h2">Milestones</Text>
       <View style={styles.grid}>
         {milestones.map((milestone) => (
-          <Card
+          <Animated.View
             key={milestone.key}
-            style={[styles.card, !milestone.unlocked && styles.cardLocked]}
+            entering={FadeInUp.duration(milestone.unlocked ? 320 : 180)}
           >
-            <Text variant="label" style={milestone.unlocked ? styles.unlocked : styles.locked}>
-              {milestone.unlocked ? 'Unlocked' : 'Locked'}
-            </Text>
-            <Text variant="body" style={!milestone.unlocked ? styles.mutedTitle : undefined}>
-              {milestone.title}
-            </Text>
-            <Text variant="bodyMuted" style={styles.description}>
-              {milestone.description}
-            </Text>
-          </Card>
+            <Card style={[styles.card, !milestone.unlocked && styles.cardLocked]}>
+              <Text variant="label" style={milestone.unlocked ? styles.unlocked : styles.locked}>
+                {milestone.unlocked ? 'Unlocked' : 'Locked'}
+              </Text>
+              <Text variant="body" style={!milestone.unlocked ? styles.mutedTitle : undefined}>
+                {milestone.title}
+              </Text>
+              <Text variant="bodyMuted" style={styles.description}>
+                {milestone.description}
+              </Text>
+            </Card>
+          </Animated.View>
         ))}
       </View>
     </View>
