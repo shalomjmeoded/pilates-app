@@ -12,6 +12,7 @@ interface WorkoutHeroCardProps {
   estimatedMinutes: number;
   streak?: WorkoutStreakStats | null;
   canStart: boolean;
+  onChangeWorkout?: () => void;
   onStart: () => void;
 }
 
@@ -21,6 +22,7 @@ export function WorkoutHeroCard({
   estimatedMinutes,
   streak,
   canStart,
+  onChangeWorkout,
   onStart,
 }: WorkoutHeroCardProps) {
   return (
@@ -41,9 +43,10 @@ export function WorkoutHeroCard({
           {streak.currentStreak} day streak · best {streak.longestStreak}
         </Text>
       ) : null}
-      {canStart ? (
-        <Button label="Start Workout" onPress={onStart} style={styles.cta} />
+      {onChangeWorkout ? (
+        <Button label="Change Workout" variant="secondary" onPress={onChangeWorkout} style={styles.secondaryCta} />
       ) : null}
+      {canStart ? <Button label="Start Workout" onPress={onStart} style={styles.cta} /> : null}
     </Card>
   );
 }
@@ -70,6 +73,9 @@ const styles = StyleSheet.create({
     color: colors.brandPrimary,
   },
   cta: {
+    marginTop: spacing.xs,
+  },
+  secondaryCta: {
     marginTop: spacing.xs,
   },
 });

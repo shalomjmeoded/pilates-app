@@ -2,11 +2,13 @@ import type {
   AiExerciseSubstitution,
   AiMealEstimate,
   AiPhysiqueAssessment,
+  AiWorkoutChangeSuggestion,
   AiWeeklyCoachInsight,
   PhysiqueAssessmentRequest,
 } from '@/types/ai';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
 import type { WeeklyCoachSummary } from '@/types/coaching';
+import type { WorkoutChangeRequest, WorkoutFocusArea } from '@/types/workout';
 
 export interface AiProvider {
   estimateMealFromText(description: string): Promise<AiMealEstimate>;
@@ -19,5 +21,11 @@ export interface AiProvider {
     libraryExerciseIds: string[];
     swapReason: ExerciseSwapReason;
   }): Promise<AiExerciseSubstitution>;
+  suggestWorkoutChange(context: WorkoutChangeRequest & {
+    availableMinuteOptions: number[];
+    availableFocusAreas: WorkoutFocusArea[];
+    todayMovementCount: number;
+    todayEstimatedMinutes: number;
+  }): Promise<AiWorkoutChangeSuggestion>;
   assessPhysique(context: PhysiqueAssessmentRequest): Promise<AiPhysiqueAssessment>;
 }

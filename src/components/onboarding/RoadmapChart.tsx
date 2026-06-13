@@ -12,7 +12,7 @@ import Svg, {
 
 import { Text } from '@/components/ui/Text';
 import type { RoadmapPoint } from '@/types/calculations';
-import { colors, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 import { displayWeight } from '@/utils/units';
 
 interface RoadmapChartProps {
@@ -83,9 +83,10 @@ export function RoadmapChart({
     const range = max - min || 1;
     const innerWidth = width - PADDING * 2;
     const baselineY = CHART_HEIGHT - PADDING;
+    const indexDenominator = Math.max(points.length - 1, 1);
 
     const coordinates = points.map((point, index) => {
-      const x = PADDING + (index / (points.length - 1)) * innerWidth;
+      const x = PADDING + (index / indexDenominator) * innerWidth;
       const y =
         CHART_HEIGHT -
         PADDING -
@@ -99,12 +100,11 @@ export function RoadmapChart({
       CHART_HEIGHT -
       PADDING -
       ((goalWeightKg - min) / range) * (CHART_HEIGHT - PADDING * 2);
-    const active = coordinates[activeWeek] ?? coordinates[coordinates.length - 1];
-
-    return { coordinates, linePath, areaPath, goalY, active, min, max };
-  }, [activeWeek, goalWeightKg, points, width]);
+    return { coordinates, linePath, areaPath, goalY, min, max };
+  }, [goalWeightKg, points, width]);
 
   const formatWeight = (kg: number) => displayWeight(kg, weightUnit);
+  const active = chart ? chart.coordinates[activeWeek] ?? chart.coordinates[chart.coordinates.length - 1] : null;
 
   return (
     <View style={styles.wrap} onLayout={onLayout}>
@@ -130,10 +130,10 @@ export function RoadmapChart({
           <>
             <View style={styles.tooltip}>
               <Text variant="label" style={styles.tooltipLabel}>
-                Week {chart.active.week} milestone
+                Week {active?.week ?? 0} milestone
               </Text>
               <Text variant="h2" style={styles.tooltipValue}>
-                {formatWeight(chart.active.weight)}
+                {active ? formatWeight(active.weight) : ''}
               </Text>
             </View>
             <Svg width={width} height={CHART_HEIGHT}>
@@ -171,7 +171,7 @@ export function RoadmapChart({
                   />
                 );
               })}
-              <Circle cx={chart.active.x} cy={chart.active.y} r={7} fill={colors.brandPrimary} />
+              {active ? <Circle cx={active.x} cy={active.y} r={7} fill={colors.brandPrimary} /> : null}
               <SvgText
                 x={width - PADDING}
                 y={chart.goalY - 8}
@@ -191,6 +191,8 @@ export function RoadmapChart({
           <Pressable
             key={week}
             accessibilityRole="button"
+            accessibilityLabel={`Show week ${week} roadmap milestone`}
+            accessibilityHint="Updates the highlighted milestone value above the chart"
             accessibilityState={{ selected: activeWeek === week }}
             onPress={() => setActiveWeek(week)}
             style={[styles.weekChip, activeWeek === week && styles.weekChipActive]}
@@ -253,8 +255,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceCanvas,
     borderWidth: 1,
     borderColor: colors.borderLight,
-    minHeight: 44,
+    minHeight: metrics.touchTargetMin,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   weekChipActive: {
     backgroundColor: colors.surfaceRose,

@@ -69,11 +69,12 @@ export default function Step17Paywall() {
   return (
     <OnboardingShell
       step={step}
-      title={PAYWALL_TITLE}
-      subtitle="Start your 7-day free trial to unlock Tune."
+      title="You&apos;re almost there"
+      subtitle="Start your 7-day free trial to unlock your personalized Tune plan."
       onBack={goBack}
       hideFooter
       showBack
+      scrollEnabled={false}
     >
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <PremiumGate
@@ -86,8 +87,8 @@ export default function Step17Paywall() {
 
         <View style={styles.trialNote}>
           <Text variant="bodyMuted">
-            7-day free trial, then subscription required. Payment processing ships with RevenueCat in a
-            later phase — this build unlocks locally for development.
+            7-day free trial, then subscription required. Cancel anytime in your App Store
+            subscription settings before renewal.
           </Text>
         </View>
 
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
   },
   error: {
-    color: colors.brandPrimary,
+    color: colors.destructive,
     textAlign: 'center',
   },
 });

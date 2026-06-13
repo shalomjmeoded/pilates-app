@@ -35,12 +35,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   inactive: {
-    backgroundColor: '#FFF4EC',
+    backgroundColor: colors.warningSurface,
     borderWidth: 1,
-    borderColor: colors.accentWarm,
+    borderColor: colors.borderStrong,
   },
   trial: {
-    backgroundColor: '#F2EDE8',
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
     borderColor: colors.brandPrimary,
   },

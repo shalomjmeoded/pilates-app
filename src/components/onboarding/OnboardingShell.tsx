@@ -18,6 +18,7 @@ interface OnboardingShellProps {
   onBack?: () => void;
   nextLabel?: string;
   nextDisabled?: boolean;
+  nextDisabledReason?: string;
   showBack?: boolean;
   hideFooter?: boolean;
   hideStepIndicator?: boolean;
@@ -34,6 +35,7 @@ export function OnboardingShell({
   onBack,
   nextLabel = 'Continue',
   nextDisabled = false,
+  nextDisabledReason,
   showBack = true,
   hideFooter = false,
   hideStepIndicator = false,
@@ -51,7 +53,12 @@ export function OnboardingShell({
           <Text variant="label">
             {step} / {ONBOARDING_TOTAL_STEPS}
           </Text>
-          <View style={styles.progressTrack}>
+          <View
+            accessibilityRole="progressbar"
+            accessibilityLabel="Onboarding progress"
+            accessibilityValue={{ min: 0, max: ONBOARDING_TOTAL_STEPS, now: step }}
+            style={styles.progressTrack}
+          >
             <View style={[styles.progressFill, { width: `${(step / ONBOARDING_TOTAL_STEPS) * 100}%` }]} />
           </View>
         </View>
@@ -93,10 +100,23 @@ export function OnboardingShell({
       {!hideFooter ? (
         <SafeAreaView edges={['bottom']} style={styles.footerSafe}>
           <View style={styles.footer}>
-            <View style={styles.backSpacer} />
             {onNext ? (
               <View style={styles.nextWrap}>
-                <Button label={nextLabel} onPress={onNext} disabled={nextDisabled} />
+                <Button
+                  label={nextLabel}
+                  onPress={onNext}
+                  disabled={nextDisabled}
+                  accessibilityHint={
+                    nextDisabled
+                      ? nextDisabledReason ?? 'Complete this step before continuing.'
+                      : undefined
+                  }
+                />
+                {nextDisabled && nextDisabledReason ? (
+                  <Text variant="bodyMuted" style={styles.nextDisabledReason}>
+                    {nextDisabledReason}
+                  </Text>
+                ) : null}
               </View>
             ) : null}
           </View>
@@ -162,20 +182,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.xs,
     paddingBottom: spacing.sm,
-    gap: spacing.sm,
     borderTopWidth: 1,
     borderTopColor: colors.borderLight,
     backgroundColor: colors.backgroundPrimary,
   },
-  backSpacer: {
-    width: 64,
-  },
   nextWrap: {
-    flex: 1,
+    width: '100%',
+    gap: spacing.xs,
+  },
+  nextDisabledReason: {
+    textAlign: 'center',
   },
 });

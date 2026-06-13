@@ -61,6 +61,13 @@ export const aiExerciseSubstitutionSchema = z.object({
   coachingNote: z.string().min(1),
 });
 
+export const aiWorkoutChangeSuggestionSchema = z.object({
+  focusArea: z.enum(['core', 'glutes', 'posture', 'mobility', 'full_body']),
+  targetMinutes: z.number().int().min(12).max(60),
+  intensity: z.enum(['lighter', 'balanced', 'challenging']),
+  coachRationale: z.string().min(1),
+});
+
 const physiqueCategorySchema = z.enum(['lean', 'average', 'athletic', 'higher_body_fat']);
 
 const physiqueConfidenceSchema = z.enum(['low', 'medium', 'high']);
@@ -85,3 +92,4 @@ export const aiPhysiqueAssessmentSchema = z.object({
 export type AiMealEstimatePayload = z.infer<typeof aiMealEstimateSchema>;
 export type AiWorkoutAdaptationPayload = z.infer<typeof aiWorkoutAdaptationSchema>;
 export type AiCoachingTipPayload = z.infer<typeof aiCoachingTipSchema>;
+export type AiWorkoutChangeSuggestionPayload = z.infer<typeof aiWorkoutChangeSuggestionSchema>;

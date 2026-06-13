@@ -26,10 +26,10 @@ export function CalorieSafetyBanner({ threshold }: CalorieSafetyBannerProps) {
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: '#FCE8EC',
+    backgroundColor: colors.warningSurface,
     borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.brandPrimary,
+    borderColor: colors.borderStrong,
     padding: spacing.sm,
     gap: spacing.xs,
   },

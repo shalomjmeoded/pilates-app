@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { useSaveReviewedAiMeal } from '@/hooks/useSaveReviewedAiMeal';
 import { useAiMealReviewStore } from '@/stores/aiMealReviewStore';
-import { colors, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 
 export default function ReviewAiMealScreen() {
   const router = useRouter();
@@ -153,6 +153,8 @@ export default function ReviewAiMealScreen() {
 
         <Pressable
           accessibilityRole="checkbox"
+          accessibilityLabel="Save this meal to saved meals"
+          accessibilityHint="Adds the reviewed meal for quick reuse later"
           accessibilityState={{ checked: saveToLibrary }}
           onPress={() => setSaveToLibrary((value) => !value)}
           style={styles.checkboxRow}
@@ -209,6 +211,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
+    minHeight: metrics.touchTargetMin,
   },
   checkbox: {
     width: 22,
@@ -223,10 +226,10 @@ const styles = StyleSheet.create({
     borderColor: colors.brandPrimary,
   },
   errorBox: {
-    backgroundColor: '#FFF4EC',
+    backgroundColor: colors.warningSurface,
     borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.accentWarm,
+    borderColor: colors.borderStrong,
     padding: spacing.sm,
     gap: 4,
   },

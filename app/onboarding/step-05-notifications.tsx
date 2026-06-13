@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 
 import { OptionCard, OnboardingShell } from '@/components/onboarding';
 import { VisualAsset } from '@/components/media';
@@ -19,16 +19,20 @@ export default function Step05Notifications() {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   const supportMessage = getNotificationsSupportMessage();
+  const setAnnouncedStatus = (message: string) => {
+    setStatusMessage(message);
+    AccessibilityInfo.announceForAccessibility(message);
+  };
 
   const requestPermission = async () => {
     if (supportMessage) {
-      setStatusMessage(supportMessage);
+      setAnnouncedStatus(supportMessage);
       return;
     }
 
     const granted = await requestNotificationPermissions();
     patchDraft({ notificationsEnabled: granted });
-    setStatusMessage(
+    setAnnouncedStatus(
       granted
         ? 'Reminders enabled. You can fine-tune times in Settings.'
         : 'No problem — Tune works fully without notifications.',
@@ -62,11 +66,12 @@ export default function Step05Notifications() {
         label="Enable local reminders"
         description="Breakfast, lunch, dinner, workouts, and coaching tips."
         selected={notificationsEnabled}
+        accessibilityLabel="Enable local reminders for meals, workouts, and coaching tips"
         onPress={() => void requestPermission()}
       />
 
       {statusMessage ? (
-        <Text variant="bodyMuted" style={styles.status}>
+        <Text variant="bodyMuted" style={styles.status} accessibilityLiveRegion="polite">
           {statusMessage}
         </Text>
       ) : null}

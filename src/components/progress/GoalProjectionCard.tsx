@@ -41,5 +41,12 @@ const styles = StyleSheet.create({
   date: {
     color: colors.brandPrimary,
     fontSize: 18,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 6,
+    alignSelf: 'flex-start',
   },
 });

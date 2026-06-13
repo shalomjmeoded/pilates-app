@@ -96,7 +96,7 @@ export default function Step15Loading() {
             Building your plan
           </Text>
           <Text variant="bodyMuted" style={styles.subtitle}>
-            Personalizing nutrition, movement, and milestones on your device.
+            Creating your daily rhythm for movement, nutrition, and milestones.
           </Text>
         </View>
       </SafeAreaView>
@@ -112,10 +112,10 @@ export default function Step15Loading() {
           </Text>
         </Animated.View>
         <Text variant="h1" style={styles.title}>
-          Building Your Plan
+          Building your plan
         </Text>
         <Text variant="bodyMuted" style={styles.subtitle}>
-          Sustainable progress takes intention — we&apos;re shaping yours now.
+          Personalizing your plan with calm, sustainable targets.
         </Text>
         <OnboardingPlanProgress onComplete={handleComplete} />
       </View>

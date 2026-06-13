@@ -1,7 +1,8 @@
 import { Pressable, PressableProps, StyleSheet, ViewStyle } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
+import { fontFamily } from '@/theme/typography';
 
 type ButtonVariant = 'primary' | 'secondary' | 'square';
 
@@ -41,18 +42,20 @@ const styles = StyleSheet.create({
   base: {
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 48,
+    minHeight: 52,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
   },
   pressed: {
-    opacity: 0.88,
+    opacity: 0.9,
+    transform: [{ scale: 0.985 }],
   },
   disabled: {
     opacity: 0.5,
   },
   label: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
+    fontFamily: fontFamily.semibold,
+    letterSpacing: 0.2,
   },
   primaryLabel: {
     color: colors.warmWhite,
@@ -66,15 +69,20 @@ const variantStyles = StyleSheet.create({
   primary: {
     backgroundColor: colors.brandPrimary,
     borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.plum,
+    ...shadows.card,
   },
   secondary: {
-    backgroundColor: colors.surfaceCanvas,
+    backgroundColor: colors.surfaceRose,
     borderRadius: radius.pill,
     borderWidth: 1,
-    borderColor: colors.brandPrimary,
+    borderColor: colors.borderStrong,
   },
   square: {
     backgroundColor: colors.brandPrimary,
     borderRadius: radius.square,
+    borderWidth: 1,
+    borderColor: colors.plum,
   },
 });

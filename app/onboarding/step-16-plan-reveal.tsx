@@ -1,4 +1,5 @@
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 
 import { OnboardingShell, PlanRevealHero } from '@/components/onboarding';
 import { Text } from '@/components/ui/Text';
@@ -14,15 +15,40 @@ import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { colors, radius, spacing } from '@/theme';
+import { successNotificationHaptic } from '@/utils/haptics';
 
 export default function Step16PlanReveal() {
   const { step, goNext, goToStep } = useOnboardingNavigation(15);
   const draft = useOnboardingStore((state) => state.draft);
   const baselinePlan = draft.baselinePlan;
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
+  const hasPlayedSuccess = useRef(false);
+
+  useEffect(() => {
+    if (baselinePlan && !hasPlayedSuccess.current) {
+      hasPlayedSuccess.current = true;
+      successNotificationHaptic();
+      AccessibilityInfo.announceForAccessibility('Your personalized plan is ready.');
+    }
+  }, [baselinePlan]);
 
   if (!baselinePlan) {
-    return null;
+    return (
+      <OnboardingShell
+        step={step}
+        title="Your plan is almost ready"
+        subtitle="We need one more pass through your plan details."
+        onBack={() => goToStep(14)}
+        onNext={() => goToStep(14)}
+        nextLabel="Review plan setup"
+      >
+        <View style={styles.disclaimer}>
+          <Text variant="bodyMuted" style={styles.disclaimerText}>
+            Reopen the previous step to finalize your personalized plan.
+          </Text>
+        </View>
+      </OnboardingShell>
+    );
   }
 
   const { macros, goalCalories, safetyWarning } = baselinePlan;
@@ -43,7 +69,7 @@ export default function Step16PlanReveal() {
     <OnboardingShell
       step={step}
       title="Your plan is ready"
-      subtitle="Built for sustainable progress — stronger every week."
+      subtitle="Built for calm, sustainable progress that fits your lifestyle."
       onBack={() => goToStep(14)}
       onNext={goNext}
       nextLabel="Start with Tune"
@@ -60,7 +86,10 @@ export default function Step16PlanReveal() {
       />
 
       {safetyWarning.triggered ? (
-        <View style={styles.warning}>
+        <View style={styles.warning} accessibilityRole="alert">
+          <Text variant="label" style={styles.warningTitle}>
+            Safety note
+          </Text>
           <Text variant="body" style={styles.warningText}>
             {SAFETY_WARNING_MESSAGE}
           </Text>
@@ -78,14 +107,18 @@ export default function Step16PlanReveal() {
 
 const styles = StyleSheet.create({
   warning: {
-    backgroundColor: colors.surfacePeach,
+    backgroundColor: colors.warningSurface,
     borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.accentWarm,
+    borderColor: colors.borderStrong,
     padding: spacing.sm,
   },
   warningText: {
     color: colors.textDark,
+  },
+  warningTitle: {
+    color: colors.textStrong,
+    marginBottom: spacing.xs,
   },
   disclaimer: {
     backgroundColor: colors.surfaceCanvas,

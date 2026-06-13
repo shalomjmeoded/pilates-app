@@ -7,11 +7,11 @@ import {
 } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
 import { cmToInches } from '@/utils/units';
 
-const TICK_HEIGHT = 10;
+const TICK_HEIGHT = 12;
 const MIN_CM = 120;
 const MAX_CM = 230;
 const VIEWPORT_HEIGHT = 260;
@@ -154,11 +154,21 @@ export function VerticalMeasurementRuler({
       </View>
 
       <View style={styles.nudgeRow}>
-        <Pressable accessibilityRole="button" onPress={() => adjustByStep(-1)} style={styles.nudge}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Decrease height by ${unit === 'cm' ? '1 centimeter' : '0.4 inch'}`}
+          onPress={() => adjustByStep(-1)}
+          style={styles.nudge}
+        >
           <Text variant="body">−</Text>
         </Pressable>
         <Text variant="bodyMuted">Scroll or tap to fine-tune</Text>
-        <Pressable accessibilityRole="button" onPress={() => adjustByStep(1)} style={styles.nudge}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Increase height by ${unit === 'cm' ? '1 centimeter' : '0.4 inch'}`}
+          onPress={() => adjustByStep(1)}
+          style={styles.nudge}
+        >
           <Text variant="body">+</Text>
         </Pressable>
       </View>
@@ -187,7 +197,7 @@ const styles = StyleSheet.create({
   },
   segment: {
     flex: 1,
-    minHeight: 40,
+    minHeight: metrics.touchTargetMin,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radius.pill,
@@ -246,6 +256,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: spacing.md,
+    paddingRight: spacing.md,
     gap: spacing.sm,
   },
   tick: {
@@ -260,7 +271,12 @@ const styles = StyleSheet.create({
   },
   tickLabel: {
     color: colors.textMuted,
-    minWidth: 36,
+    minWidth: 48,
+    textAlign: 'right',
+    fontSize: 11,
+    lineHeight: 12,
+    letterSpacing: 0,
+    textTransform: 'none',
   },
   nudgeRow: {
     flexDirection: 'row',

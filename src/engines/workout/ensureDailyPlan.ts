@@ -6,15 +6,18 @@ import { getProfile } from '@/db/repositories/profileRepository';
 import { getLatestPhysiqueAssessment } from '@/db/repositories/physiqueAssessmentRepository';
 import {
   deleteWorkoutPlanByDate,
+  getLatestWorkoutChangeFeedback,
   getLatestCompletedSessionFeedback,
   getRecentSkipCounts,
+  getWorkoutChangeFeedbackForWeek,
   getWorkoutPlanByDate,
   saveWorkoutPlan,
 } from '@/db/repositories/workoutRepository';
 import type { Exercise } from '@/types/exercise';
 import type { Profile } from '@/types/profile';
-import { PlanGenerationError, type WorkoutPlan } from '@/types/workout';
+import { PlanGenerationError, type WorkoutGenerationOverrides, type WorkoutPlan } from '@/types/workout';
 
+import { getWeekStartDate } from '@/engines/coaching/weekStart';
 import { generateWorkoutPlan, validatePlanExerciseIds } from './planGenerator';
 import { applyFeedbackProgression, getDeprioritizedExerciseIds } from './progression';
 
@@ -42,6 +45,10 @@ export function isDateReadOnly(planDate: string, today: Date = new Date()): bool
   return planDate < formatPlanDate(today) || isDateInFuture(planDate, today);
 }
 
+interface EnsureWorkoutPlanOptions {
+  allowFutureGeneration?: boolean;
+}
+
 async function buildAdaptationContext(library: Exercise[], beforeDate: string) {
   const skipCounts = await getRecentSkipCounts(14);
   const skippedFrequentIds = getDeprioritizedExerciseIds(skipCounts);
@@ -55,17 +62,60 @@ async function buildAdaptationContext(library: Exercise[], beforeDate: string) {
   };
 }
 
-export async function ensureWorkoutPlanForDate(planDate: string): Promise<WorkoutPlan> {
-  const existing = await getWorkoutPlanByDate(planDate);
-  if (existing) {
-    const library = await getAllExercises();
-    if (validatePlanExerciseIds(existing.exercises, library)) {
-      return existing;
-    }
-    await deleteWorkoutPlanByDate(planDate);
+function toDateFromPlanDate(planDate: string): Date {
+  return parseISO(`${planDate}T00:00:00.000Z`);
+}
+
+async function resolveGenerationOverrides(
+  planDate: string,
+  explicitOverrides?: WorkoutGenerationOverrides,
+): Promise<WorkoutGenerationOverrides | undefined> {
+  if (explicitOverrides) {
+    return explicitOverrides;
   }
 
-  if (isDateInFuture(planDate)) {
+  const weekStart = getWeekStartDate(toDateFromPlanDate(planDate));
+  const thisWeekFeedback = await getWorkoutChangeFeedbackForWeek(weekStart);
+  if (thisWeekFeedback) {
+    return {
+      focusArea: thisWeekFeedback.focusArea,
+      targetMinutes: thisWeekFeedback.targetMinutes,
+      intensity: thisWeekFeedback.intensity,
+    };
+  }
+
+  const priorFeedback = await getLatestWorkoutChangeFeedback(weekStart);
+  if (!priorFeedback) {
+    return undefined;
+  }
+
+  return {
+    focusArea: priorFeedback.focusArea,
+    targetMinutes: priorFeedback.targetMinutes,
+    intensity: priorFeedback.intensity,
+  };
+}
+
+export async function ensureWorkoutPlanForDate(
+  planDate: string,
+  overrides?: WorkoutGenerationOverrides,
+  options?: EnsureWorkoutPlanOptions,
+): Promise<WorkoutPlan> {
+  const resolvedOverrides = await resolveGenerationOverrides(planDate, overrides);
+  const existing = await getWorkoutPlanByDate(planDate);
+  if (existing) {
+    if (overrides) {
+      await deleteWorkoutPlanByDate(planDate);
+    } else {
+      const library = await getAllExercises();
+      if (validatePlanExerciseIds(existing.exercises, library)) {
+        return existing;
+      }
+      await deleteWorkoutPlanByDate(planDate);
+    }
+  }
+
+  if (isDateInFuture(planDate) && !options?.allowFutureGeneration) {
     throw new PlanGenerationError('UNKNOWN', 'Future workout plans are not generated yet.');
   }
 
@@ -98,6 +148,7 @@ export async function ensureWorkoutPlanForDate(planDate: string): Promise<Workou
     createId(),
     adaptation,
     physiqueContext,
+    resolvedOverrides,
   );
 
   if (adaptation.lastSessionFeedback.length > 0) {

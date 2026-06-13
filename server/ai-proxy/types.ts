@@ -3,6 +3,7 @@ export type AiFeature =
   | 'meal_photo_estimate'
   | 'weekly_coach'
   | 'exercise_substitution'
+  | 'workout_change_suggestion'
   | 'physique_assessment';
 
 export interface AiRouteRequest {

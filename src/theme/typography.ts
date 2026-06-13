@@ -10,6 +10,20 @@ export const fontFamily = {
 } as const;
 
 export const typography = {
+  hero: {
+    fontFamily: fontFamily.bold,
+    fontSize: 38,
+    lineHeight: 44,
+    letterSpacing: -1,
+    color: colors.textStrong,
+  } satisfies TextStyle,
+  section: {
+    fontFamily: fontFamily.semibold,
+    fontSize: 24,
+    lineHeight: 32,
+    letterSpacing: -0.4,
+    color: colors.textDark,
+  } satisfies TextStyle,
   h1: {
     fontFamily: fontFamily.bold,
     fontSize: 30,
@@ -50,5 +64,12 @@ export const typography = {
     lineHeight: 42,
     letterSpacing: -1,
     color: colors.textDark,
+  } satisfies TextStyle,
+  caption: {
+    fontFamily: fontFamily.medium,
+    fontSize: 13,
+    lineHeight: 18,
+    letterSpacing: 0.2,
+    color: colors.textMuted,
   } satisfies TextStyle,
 } as const;

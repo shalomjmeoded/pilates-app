@@ -7,16 +7,30 @@ interface OptionCardProps {
   label: string;
   description?: string;
   selected?: boolean;
+  accessibilityLabel?: string;
+  selectionMode?: 'single' | 'multiple';
   onPress: () => void;
 }
 
-export function OptionCard({ label, description, selected = false, onPress }: OptionCardProps) {
+export function OptionCard({
+  label,
+  description,
+  selected = false,
+  accessibilityLabel,
+  selectionMode = 'single',
+  onPress,
+}: OptionCardProps) {
+  const accessibilityRole = selectionMode === 'multiple' ? 'checkbox' : 'radio';
+  const accessibilityState =
+    selectionMode === 'multiple' ? { checked: selected } : { selected };
+
   return (
     <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityRole={accessibilityRole}
+      accessibilityLabel={accessibilityLabel ?? label}
+      accessibilityState={accessibilityState}
       onPress={onPress}
-      style={[styles.card, selected && styles.cardSelected]}
+      style={({ pressed }) => [styles.card, selected && styles.cardSelected, pressed && styles.cardPressed]}
     >
       <View style={styles.content}>
         <Text variant="body" style={selected ? styles.labelSelected : undefined}>
@@ -28,7 +42,13 @@ export function OptionCard({ label, description, selected = false, onPress }: Op
           </Text>
         ) : null}
       </View>
-      <View style={[styles.indicator, selected && styles.indicatorSelected]} />
+      <View
+        style={[
+          styles.indicator,
+          selectionMode === 'multiple' && styles.indicatorMultiple,
+          selected && styles.indicatorSelected,
+        ]}
+      />
     </Pressable>
   );
 }
@@ -38,7 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: 64,
+    minHeight: 72,
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
@@ -50,6 +70,9 @@ const styles = StyleSheet.create({
   cardSelected: {
     borderColor: colors.brandPrimary,
     backgroundColor: colors.surfaceRose,
+  },
+  cardPressed: {
+    opacity: 0.9,
   },
   content: {
     flex: 1,
@@ -67,6 +90,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: colors.borderLight,
+  },
+  indicatorMultiple: {
+    borderRadius: radius.square,
   },
   indicatorSelected: {
     borderColor: colors.brandPrimary,

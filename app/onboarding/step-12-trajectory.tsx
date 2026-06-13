@@ -12,9 +12,11 @@ export default function Step12Trajectory() {
     <OnboardingShell
       step={step}
       title="Weight trajectory"
+      subtitle="Choose the pace style that best matches your lifestyle."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!weightTrajectory}
+      nextDisabledReason="Choose a trajectory option to continue."
     >
       {TRAJECTORY_OPTIONS.map((option) => (
         <OptionCard

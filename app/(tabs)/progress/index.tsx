@@ -1,6 +1,6 @@
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useCallback, useMemo } from 'react';
+import { FlatList, ListRenderItemInfo, StyleSheet, View } from 'react-native';
 
 import {
   AdherenceCard,
@@ -32,6 +32,24 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 import { useProgressStore } from '@/stores/progressStore';
 import { spacing } from '@/theme';
 
+type ProgressSectionKey =
+  | 'workoutStreak'
+  | 'weeklyCoach'
+  | 'weightEmpty'
+  | 'weightJourney'
+  | 'weightChart'
+  | 'weightTrend'
+  | 'weightStreak'
+  | 'goalProjection'
+  | 'coachingTip'
+  | 'weightHistory'
+  | 'adherence'
+  | 'consistency'
+  | 'bmiTdee'
+  | 'milestones'
+  | 'physique'
+  | 'logWeightAction';
+
 export default function ProgressScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ focus?: string }>();
@@ -55,6 +73,31 @@ export default function ProgressScreen() {
       void physiqueAssessment.load();
     }, [reload, weeklyCoach.load, physiqueAssessment.load]),
   );
+
+  const hasWeightLogs = Boolean(data?.weightLogs.length);
+  const sectionKeys = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+
+    const sections: ProgressSectionKey[] = ['workoutStreak', 'weeklyCoach'];
+
+    if (!hasWeightLogs) {
+      sections.push('weightEmpty');
+    } else {
+      if (data.journey) {
+        sections.push('weightJourney');
+      }
+      sections.push('weightChart', 'weightTrend', 'weightStreak', 'goalProjection');
+    }
+
+    sections.push('coachingTip', 'weightHistory', 'adherence', 'consistency');
+    if (data.bmi && data.tdee) {
+      sections.push('bmiTdee');
+    }
+    sections.push('milestones', 'physique', 'logWeightAction');
+    return sections;
+  }, [data, hasWeightLogs]);
 
   if (isLoading) {
     return (
@@ -84,91 +127,117 @@ export default function ProgressScreen() {
     );
   }
 
-  const hasWeightLogs = data.weightLogs.length > 0;
-
-  return (
-    <Screen title="Progress" subtitle="Reflect on your rhythm and momentum.">
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        <WorkoutStreakCard stats={data.workoutStreak} />
-
-        <WeeklyCoachInsightCard
-          insight={weeklyCoach.insight}
-          isLoading={weeklyCoach.isLoading}
-          error={weeklyCoach.error}
-          highlighted={highlightWeeklyCoach}
-          locked={!hasAccess}
-          onUnlock={openPaywall}
-          onGenerate={() => requirePremium('weekly_coach', () => void weeklyCoach.generate())}
-        />
-
-        {!hasWeightLogs ? (
-          <ProgressEmptyState onLogWeight={openLogWeight} />
-        ) : (
-          <>
-            {data.journey ? (
-              <WeightJourneyHeroCard journey={data.journey} weightUnit={weightUnit} />
-            ) : null}
-            <WeightChart
-              logs={data.weightLogs}
-              goalWeightKg={data.goalWeightKg}
-              range={chartRange}
-              onRangeChange={setChartRange}
-              weightUnit={weightUnit}
-            />
-            <WeightTrendSummary trends={data.weightTrends} weightUnit={weightUnit} />
-            <WeightStreakCard stats={data.weightStreak} />
-            <GoalProjectionCard projection={data.goalProjection} />
-          </>
-        )}
-
-        <CoachingTipCard tip={data.coachingTip} />
-
-        <SettingsRow
-          label="Weight history"
-          value="Edit, search, delete"
-          onPress={() => router.push('/(tabs)/progress/weight-history')}
-        />
-
-        <View style={styles.adherenceRow}>
-          <AdherenceCard metric={data.adherence.calories} />
-          <AdherenceCard metric={data.adherence.protein} />
-          <AdherenceCard metric={data.adherence.fiber} />
-        </View>
-        <ConsistencyScoreRing consistency={data.consistency} />
-
-        {data.bmi && data.tdee ? (
+  const renderSection = ({ item }: ListRenderItemInfo<ProgressSectionKey>) => {
+    switch (item) {
+      case 'workoutStreak':
+        return <WorkoutStreakCard stats={data.workoutStreak} />;
+      case 'weeklyCoach':
+        return (
+          <WeeklyCoachInsightCard
+            insight={weeklyCoach.insight}
+            isLoading={weeklyCoach.isLoading}
+            error={weeklyCoach.error}
+            highlighted={highlightWeeklyCoach}
+            locked={!hasAccess}
+            onUnlock={openPaywall}
+            onGenerate={() => requirePremium('weekly_coach', () => void weeklyCoach.generate())}
+          />
+        );
+      case 'weightEmpty':
+        return <ProgressEmptyState onLogWeight={openLogWeight} />;
+      case 'weightJourney':
+        return data.journey ? <WeightJourneyHeroCard journey={data.journey} weightUnit={weightUnit} /> : null;
+      case 'weightChart':
+        return (
+          <WeightChart
+            logs={data.weightLogs}
+            goalWeightKg={data.goalWeightKg}
+            range={chartRange}
+            onRangeChange={setChartRange}
+            weightUnit={weightUnit}
+          />
+        );
+      case 'weightTrend':
+        return <WeightTrendSummary trends={data.weightTrends} weightUnit={weightUnit} />;
+      case 'weightStreak':
+        return <WeightStreakCard stats={data.weightStreak} />;
+      case 'goalProjection':
+        return <GoalProjectionCard projection={data.goalProjection} />;
+      case 'coachingTip':
+        return <CoachingTipCard tip={data.coachingTip} />;
+      case 'weightHistory':
+        return (
+          <SettingsRow
+            label="Weight history"
+            value="Edit, search, delete"
+            onPress={() => router.push('/(tabs)/progress/weight-history')}
+          />
+        );
+      case 'adherence':
+        return (
+          <View style={styles.adherenceRow}>
+            <AdherenceCard metric={data.adherence.calories} />
+            <AdherenceCard metric={data.adherence.protein} />
+            <AdherenceCard metric={data.adherence.fiber} />
+          </View>
+        );
+      case 'consistency':
+        return <ConsistencyScoreRing consistency={data.consistency} />;
+      case 'bmiTdee':
+        return data.bmi && data.tdee ? (
           <BmiTdeeCards
             bmi={data.bmi}
             tdee={data.tdee}
             bodyFatAssumption={data.bodyFatAssumption}
           />
-        ) : null}
+        ) : null;
+      case 'milestones':
+        return <MilestoneGrid milestones={data.milestones} />;
+      case 'physique':
+        return (
+          <PhysiqueAssessmentCard
+            latest={physiqueAssessment.latest}
+            isLoading={physiqueAssessment.isLoading}
+            error={physiqueAssessment.error}
+            onOpen={() => router.push('/(tabs)/progress/physique-assessment')}
+            onRetry={() => void physiqueAssessment.load()}
+            onDelete={
+              physiqueAssessment.latest
+                ? () => void physiqueAssessment.deleteAssessment(physiqueAssessment.latest!.id)
+                : undefined
+            }
+          />
+        );
+      case 'logWeightAction':
+        return <Button label="Log Weight" onPress={openLogWeight} style={styles.logButton} />;
+      default:
+        return null;
+    }
+  };
 
-        <MilestoneGrid milestones={data.milestones} />
-
-        <PhysiqueAssessmentCard
-          latest={physiqueAssessment.latest}
-          isLoading={physiqueAssessment.isLoading}
-          error={physiqueAssessment.error}
-          onOpen={() => router.push('/(tabs)/progress/physique-assessment')}
-          onRetry={() => void physiqueAssessment.load()}
-          onDelete={
-            physiqueAssessment.latest
-              ? () => void physiqueAssessment.deleteAssessment(physiqueAssessment.latest!.id)
-              : undefined
-          }
-        />
-
-        <Button label="Log Weight" onPress={openLogWeight} style={styles.logButton} />
-      </ScrollView>
+  return (
+    <Screen title="Progress" subtitle="Reflect on your rhythm and momentum.">
+      <FlatList
+        data={sectionKeys}
+        keyExtractor={(item) => item}
+        renderItem={renderSection}
+        style={styles.list}
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+        removeClippedSubviews
+        scrollEventThrottle={16}
+        initialNumToRender={6}
+        maxToRenderPerBatch={5}
+        windowSize={7}
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  list: {
+    flex: 1,
+  },
   scroll: {
     gap: spacing.md,
     paddingBottom: spacing.xl,

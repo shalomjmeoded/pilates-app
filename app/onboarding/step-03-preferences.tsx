@@ -24,11 +24,13 @@ export default function Step03Preferences() {
       onBack={goBack}
       onNext={goNext}
       nextDisabled={exercisePreferences.length === 0}
+      nextDisabledReason="Select at least one movement style to continue."
     >
       {PREFERENCE_OPTIONS.map((option) => (
         <OptionCard
           key={option.value}
           label={option.label}
+          selectionMode="multiple"
           selected={exercisePreferences.includes(option.value)}
           onPress={() => togglePreference(option.value)}
         />

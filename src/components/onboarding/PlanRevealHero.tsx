@@ -50,7 +50,7 @@ export function PlanRevealHero({
       </View>
 
       <View style={styles.macroRow}>
-        <Text variant="bodyMuted">C {carbsG}g · F {fatG}g · Fi {fiberG}g</Text>
+        <Text variant="bodyMuted">Carbs {carbsG}g · Fat {fatG}g · Fiber {fiberG}g</Text>
       </View>
 
       <View style={styles.milestoneCard}>

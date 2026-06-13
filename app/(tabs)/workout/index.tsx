@@ -1,8 +1,9 @@
 import { useRouter } from 'expo-router';
-import { useMemo } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import { Alert, FlatList, StyleSheet, View } from 'react-native';
 
 import {
+  ChangeWorkoutSheet,
   ExerciseGridCard,
   ResumeWorkoutBanner,
   WeekCalendarStrip,
@@ -20,7 +21,8 @@ import { useWorkoutDay } from '@/hooks/useWorkoutDay';
 import { usePremium } from '@/hooks/usePremium';
 import { useWorkoutStreak } from '@/hooks/useWorkoutStreak';
 import { useWorkoutStore } from '@/stores/workoutStore';
-import type { WorkoutPlanExerciseDetail } from '@/types/workout';
+import type { WorkoutChangeRequest, WorkoutPlanExerciseDetail } from '@/types/workout';
+import { applyWorkoutChangeRequest } from '@/services/workout/applyWorkoutChangeRequest';
 import { spacing } from '@/theme';
 
 function titleCase(value: string): string {
@@ -42,6 +44,13 @@ function estimateMinutes(exerciseCount: number): number {
   return Math.max(12, Math.round(exerciseCount * 2.2));
 }
 
+const DEFAULT_CHANGE_REQUEST: WorkoutChangeRequest = {
+  focusArea: 'core',
+  targetMinutes: 25,
+  intensity: 'balanced',
+  coachNote: '',
+};
+
 export default function WorkoutScreen() {
   const router = useRouter();
   const selectedDate = useWorkoutStore((state) => state.selectedDate);
@@ -52,6 +61,10 @@ export default function WorkoutScreen() {
   const { completedDates, reload: reloadCalendar } = useWorkoutCalendarCompletion(calendarDates);
   const { stats: streakStats, reload: reloadStreak } = useWorkoutStreak();
   const { requirePremium } = usePremium();
+  const [changeVisible, setChangeVisible] = useState(false);
+  const [changeRequest, setChangeRequest] = useState<WorkoutChangeRequest>(DEFAULT_CHANGE_REQUEST);
+  const [isApplyingChange, setIsApplyingChange] = useState(false);
+  const [changeError, setChangeError] = useState<string | null>(null);
 
   const canStartWorkout =
     data?.isToday &&
@@ -84,6 +97,78 @@ export default function WorkoutScreen() {
     });
   };
 
+  const openChangeSheet = () => {
+    setChangeError(null);
+    setChangeVisible(true);
+  };
+
+  const confirmDiscardAndApplyChange = async () => {
+    setIsApplyingChange(true);
+    setChangeError(null);
+
+    try {
+      const result = await applyWorkoutChangeRequest({
+        planDate: selectedDate,
+        request: changeRequest,
+        todayMovementCount: data?.exercises.length ?? 0,
+        todayEstimatedMinutes: estimateMinutes(data?.exercises.length ?? 0),
+      });
+      await reload();
+      await reloadCalendar();
+      await reloadStreak();
+      setChangeVisible(false);
+      const remainingMessage =
+        result.remainingChangesToday === 1
+          ? '\n\nYou can change today’s workout 1 more time.'
+          : result.remainingChangesToday === 0
+            ? '\n\nYou have reached today’s workout change limit.'
+            : '';
+      Alert.alert('Workout updated', `${result.coachingRationale}${remainingMessage}`);
+    } catch (error) {
+      setChangeError(error instanceof Error ? error.message : 'Could not update workout.');
+    } finally {
+      setIsApplyingChange(false);
+    }
+  };
+
+  const applyChange = async () => {
+    if (!data?.isToday) {
+      setChangeError('Workout changes are available only for today.');
+      return;
+    }
+
+    const runApply = () => {
+      requirePremium('start_workout', () => void confirmDiscardAndApplyChange());
+    };
+
+    if (data.session?.status === 'in_progress') {
+      Alert.alert(
+        'Discard current session?',
+        'To rebuild today’s workout, discard the in-progress session first.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Discard and rebuild',
+            style: 'destructive',
+            onPress: () => {
+              const hasPremium = requirePremium('start_workout', () => {});
+              if (!hasPremium) {
+                return;
+              }
+              void (async () => {
+                await discardWorkoutSession(data.session!.id);
+                await confirmDiscardAndApplyChange();
+              })();
+            },
+          },
+        ],
+      );
+      return;
+    }
+
+    runApply();
+  };
+
   const listHeader = (
     <View style={styles.headerStack}>
       <WeekCalendarStrip
@@ -106,6 +191,7 @@ export default function WorkoutScreen() {
           estimatedMinutes={estimateMinutes(data.exercises.length)}
           streak={streakStats}
           canStart={Boolean(canStartWorkout)}
+          onChangeWorkout={data.isToday && !data.isReadOnly ? openChangeSheet : undefined}
           onStart={() => {
             requirePremium('start_workout', () => void handleStartWorkout());
           }}
@@ -182,6 +268,16 @@ export default function WorkoutScreen() {
           message="We couldn’t find exercises for this day. Pull to refresh or try again."
         />
       ) : null}
+
+      <ChangeWorkoutSheet
+        visible={changeVisible}
+        value={changeRequest}
+        isApplying={isApplyingChange}
+        applyError={changeError}
+        onChange={setChangeRequest}
+        onApply={() => void applyChange()}
+        onClose={() => setChangeVisible(false)}
+      />
     </Screen>
   );
 }

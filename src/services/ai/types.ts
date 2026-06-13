@@ -3,6 +3,7 @@ export type AiFeature =
   | 'meal_photo_estimate'
   | 'weekly_coach'
   | 'exercise_substitution'
+  | 'workout_change_suggestion'
   | 'physique_assessment';
 
 export type AiQuotaPeriod = 'day' | 'week' | 'month';
@@ -16,6 +17,7 @@ export const PREMIUM_AI_QUOTAS: Record<AiFeature, AiQuotaConfig> = {
   meal_text_estimate: { limit: 20, period: 'day' },
   meal_photo_estimate: { limit: 10, period: 'day' },
   exercise_substitution: { limit: 10, period: 'day' },
+  workout_change_suggestion: { limit: 10, period: 'day' },
   weekly_coach: { limit: 2, period: 'week' },
   physique_assessment: { limit: 2, period: 'month' },
 };

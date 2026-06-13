@@ -1,16 +1,17 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
+  FlatList,
+  ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
-  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { Text } from '@/components/ui/Text';
-import { MOTION, colors, radius, spacing } from '@/theme';
+import { MOTION, colors, metrics, radius, spacing } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
 import { kgToLb } from '@/utils/units';
 
@@ -27,6 +28,11 @@ interface HorizontalMeasurementRulerProps {
   unit: 'kg' | 'lb';
   onChangeKg: (kg: number) => void;
   onToggleUnit: () => void;
+}
+
+interface TickItem {
+  key: string;
+  major: boolean;
 }
 
 function stepsCount(stepKg: number): number {
@@ -57,7 +63,7 @@ export function HorizontalMeasurementRuler({
   onChangeKg,
   onToggleUnit,
 }: HorizontalMeasurementRulerProps) {
-  const scrollRef = useRef<ScrollView>(null);
+  const listRef = useRef<FlatList<TickItem>>(null);
   const lastKg = useRef(valueKg);
   const hasMounted = useRef(false);
   const isInteracting = useRef(false);
@@ -65,10 +71,25 @@ export function HorizontalMeasurementRuler({
   const padding = VIEWPORT_WIDTH / 2;
   const stepKg = unit === 'kg' ? KG_STEP : LB_STEP / LB_PER_KG;
   const steps = stepsCount(stepKg);
+  const tickData = useMemo(() => {
+    return Array.from({ length: steps + 1 }, (_, index) => {
+      const kg = MIN_KG + index * stepKg;
+      const displayMagnitude = unit === 'kg' ? kg : kgToLb(kg);
+      const major =
+        unit === 'kg'
+          ? Math.round(displayMagnitude * 10) % 10 === 0
+          : Math.round(displayMagnitude * 10) % 50 === 0;
+
+      return {
+        key: `${kg.toFixed(2)}-${index}`,
+        major,
+      };
+    });
+  }, [stepKg, steps, unit]);
 
   const scrollToKg = useCallback((kg: number, animated = false) => {
     const offset = ((kg - MIN_KG) / stepKg) * TICK_WIDTH;
-    scrollRef.current?.scrollTo({ x: offset, animated });
+    listRef.current?.scrollToOffset({ offset, animated });
   }, [stepKg]);
 
   useEffect(() => {
@@ -124,13 +145,24 @@ export function HorizontalMeasurementRuler({
     scrollToKg(next, true);
   };
 
+  const renderTick = ({ item }: ListRenderItemInfo<TickItem>) => (
+    <View style={[styles.tickCol, { width: TICK_WIDTH }]}>
+      <View style={[styles.tick, item.major && styles.tickMajor]} />
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.valueWrap, animatedValueStyle]}>
         <Text variant="h1" style={styles.value}>
           {displayValue(valueKg, unit)}
         </Text>
-        <Pressable accessibilityRole="button" onPress={onToggleUnit} style={styles.unitPill}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Switch to ${unit === 'kg' ? 'pounds' : 'kilograms'}`}
+          onPress={onToggleUnit}
+          style={styles.unitPill}
+        >
           <Text variant="label" style={styles.unitLabel}>
             {unit.toUpperCase()}
           </Text>
@@ -144,13 +176,25 @@ export function HorizontalMeasurementRuler({
         style={styles.rulerShell}
       >
         <View style={styles.centerNeedle} pointerEvents="none" />
-        <ScrollView
-          ref={scrollRef}
+        <FlatList
+          ref={listRef}
+          data={tickData}
+          keyExtractor={(item) => item.key}
+          renderItem={renderTick}
           horizontal
           directionalLockEnabled
           alwaysBounceHorizontal={false}
           showsHorizontalScrollIndicator={false}
           snapToInterval={TICK_WIDTH}
+          getItemLayout={(_, index) => ({
+            length: TICK_WIDTH,
+            offset: TICK_WIDTH * index,
+            index,
+          })}
+          initialNumToRender={140}
+          maxToRenderPerBatch={120}
+          windowSize={7}
+          removeClippedSubviews
           decelerationRate="normal"
           scrollEventThrottle={16}
           onScroll={handleScroll}
@@ -159,21 +203,7 @@ export function HorizontalMeasurementRuler({
           onScrollEndDrag={handleScrollEnd}
           onMomentumScrollEnd={handleScrollEnd}
           contentContainerStyle={{ paddingHorizontal: padding }}
-        >
-          {Array.from({ length: steps + 1 }, (_, index) => {
-            const kg = MIN_KG + index * stepKg;
-            const displayMagnitude = unit === 'kg' ? kg : kgToLb(kg);
-            const major =
-              unit === 'kg'
-                ? Math.round(displayMagnitude * 10) % 10 === 0
-                : Math.round(displayMagnitude * 10) % 50 === 0;
-            return (
-              <View key={`${kg}-${index}`} style={[styles.tickCol, { width: TICK_WIDTH }]}>
-                <View style={[styles.tick, major && styles.tickMajor]} />
-              </View>
-            );
-          })}
-        </ScrollView>
+        />
       </View>
 
       <View style={styles.nudgeRow}>
@@ -277,9 +307,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   nudge: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: metrics.touchTargetMin,
+    height: metrics.touchTargetMin,
+    borderRadius: metrics.touchTargetMin / 2,
     backgroundColor: colors.surfaceCanvas,
     borderWidth: 1,
     borderColor: colors.borderLight,

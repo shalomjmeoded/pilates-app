@@ -12,9 +12,16 @@ interface AdherenceCardProps {
 export function AdherenceCard({ metric }: AdherenceCardProps) {
   return (
     <Card style={styles.card}>
-      <Text variant="label" style={styles.label}>
-        {metric.label}
-      </Text>
+      <View style={styles.header}>
+        <Text variant="label" style={styles.label}>
+          {metric.label}
+        </Text>
+        <View style={styles.badge}>
+          <Text variant="caption" style={styles.badgeText}>
+            7D
+          </Text>
+        </View>
+      </View>
       <Text variant="h1" style={styles.value}>
         {metric.adherencePercent}%
       </Text>
@@ -33,10 +40,27 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     minWidth: 100,
-    gap: 2,
+    gap: 4,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   label: {
     color: colors.textMuted,
+  },
+  badge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+  },
+  badgeText: {
+    color: colors.textMuted,
+    textTransform: 'uppercase',
   },
   value: {
     fontSize: 28,
@@ -51,7 +75,7 @@ const styles = StyleSheet.create({
   },
   fill: {
     height: '100%',
-    backgroundColor: colors.accentWarm,
+    backgroundColor: colors.brandSecondary,
     borderRadius: radius.pill,
   },
   sub: {

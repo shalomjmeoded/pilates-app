@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { ExerciseMediaView } from '@/components/workout/ExerciseMediaView';
 import { Text } from '@/components/ui/Text';
 import type { WorkoutPlanExerciseDetail } from '@/types/workout';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
 
 interface ExerciseGridCardProps {
   item: WorkoutPlanExerciseDetail;
@@ -31,7 +31,7 @@ export function ExerciseGridCard({ item, onPress, disabled = false }: ExerciseGr
       accessibilityRole="button"
       disabled={disabled}
       onPress={onPress}
-      style={[styles.card, disabled && styles.disabled]}
+      style={({ pressed }) => [styles.card, disabled && styles.disabled, pressed && styles.pressed]}
     >
       <ExerciseMediaView exercise={item.exercise} variant="thumbnail" size={96} />
       <View style={styles.badgeRow}>
@@ -62,13 +62,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.borderStrong,
     padding: spacing.xs,
     gap: spacing.xs,
     minHeight: 196,
+    ...shadows.card,
   },
   disabled: {
     opacity: 0.72,
+  },
+  pressed: {
+    opacity: 0.92,
+    transform: [{ scale: 0.992 }],
   },
   badgeRow: {
     flexDirection: 'row',
@@ -81,18 +86,21 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     paddingHorizontal: 8,
     paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
   },
   difficultyText: {
     color: colors.brandPrimary,
-    fontSize: 10,
+    fontSize: 11,
   },
   duration: {
     color: colors.textMuted,
-    fontSize: 10,
+    fontSize: 11,
   },
   copy: {
     gap: 2,
     paddingHorizontal: 4,
+    paddingBottom: 2,
   },
   title: {
     color: colors.textDark,

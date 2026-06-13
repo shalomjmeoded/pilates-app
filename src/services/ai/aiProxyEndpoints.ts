@@ -4,6 +4,7 @@ export const AI_PROXY_ENDPOINTS: Record<AiFeature, string> = {
   meal_text_estimate: '/ai/meal-text',
   meal_photo_estimate: '/ai/meal-photo',
   exercise_substitution: '/ai/exercise-swap',
+  workout_change_suggestion: '/ai/workout-change',
   weekly_coach: '/ai/weekly-coach',
   physique_assessment: '/ai/physique-assessment',
 };

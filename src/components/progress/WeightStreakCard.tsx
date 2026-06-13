@@ -44,5 +44,11 @@ const styles = StyleSheet.create({
   },
   stat: {
     gap: 4,
+    flex: 1,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    padding: spacing.xs,
   },
 });

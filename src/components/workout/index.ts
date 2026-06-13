@@ -1,4 +1,5 @@
 export { ExerciseCard } from './ExerciseCard';
+export { ChangeWorkoutSheet } from './ChangeWorkoutSheet';
 export { ExerciseGridCard } from './ExerciseGridCard';
 export { ExerciseFrameAnimation } from './ExerciseFrameAnimation';
 export { ExerciseMediaView } from './ExerciseMediaView';

@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   card: {
     gap: spacing.sm,
-    backgroundColor: '#F7F3F2',
+    backgroundColor: colors.surfaceMuted,
   },
   bullets: {
     gap: 4,

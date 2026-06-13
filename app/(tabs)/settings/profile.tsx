@@ -16,7 +16,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 import type { ExercisePreference, Profile } from '@/types/profile';
 import { colors, spacing } from '@/theme';
 import { kgToLb, lbToKg, cmToInches, inchesToCm } from '@/utils/units';
-import { parsePositiveNumber } from '@/onboarding/helpers';
+import { getBirthYearBounds, parsePositiveNumber } from '@/onboarding/helpers';
 
 export default function ProfileSettingsScreen() {
   const { profile, isLoading, isSaving, error, saveAndRecalibrate } = useSettingsProfile();
@@ -24,6 +24,7 @@ export default function ProfileSettingsScreen() {
   const setUnits = usePreferencesStore((state) => state.setUnits);
   const [draft, setDraft] = useState<Profile | null>(null);
   const [birthYear, setBirthYear] = useState('');
+  const { minYear: minBirthYear, maxYear: maxBirthYear } = getBirthYearBounds();
 
   useEffect(() => {
     if (profile) {
@@ -63,7 +64,7 @@ export default function ProfileSettingsScreen() {
 
   const handleSave = () => {
     const year = Number(birthYear);
-    if (!Number.isFinite(year) || year < 1920 || year > new Date().getFullYear()) {
+    if (!Number.isFinite(year) || year < minBirthYear || year > maxBirthYear) {
       return;
     }
     void saveAndRecalibrate({ ...draft, birthYear: year });
@@ -136,6 +137,7 @@ export default function ProfileSettingsScreen() {
         <OptionCard
           key={option.value}
           label={option.label}
+          selectionMode="multiple"
           selected={draft.exercisePreferences.includes(option.value)}
           onPress={() => togglePreference(option.value)}
         />

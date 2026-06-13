@@ -2,13 +2,22 @@ import { Text as RNText, TextProps as RNTextProps, StyleSheet } from 'react-nati
 
 import { typography } from '@/theme/typography';
 
-type TextVariant = 'display' | 'h1' | 'h2' | 'body' | 'bodyMuted' | 'label';
+type TextVariant =
+  | 'hero'
+  | 'section'
+  | 'display'
+  | 'h1'
+  | 'h2'
+  | 'body'
+  | 'bodyMuted'
+  | 'label'
+  | 'caption';
 
 interface TextProps extends RNTextProps {
   variant?: TextVariant;
 }
 
-const MAX_FONT_SCALE = 1.3;
+const MAX_FONT_SCALE = 1.6;
 
 export function Text({ variant = 'body', style, ...props }: TextProps) {
   return (

@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
@@ -10,7 +10,8 @@ import { Text } from '@/components/ui/Text';
 import { saveMeal } from '@/db/repositories/nutritionRepository';
 import { parseMealNumber, validateMealInput } from '@/engines/nutrition';
 import { MEAL_PRESETS, type MealPreset, type MealSource } from '@/types/nutrition';
-import { colors, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
+import { successNotificationHaptic } from '@/utils/haptics';
 
 export default function AddManualMealScreen() {
   const router = useRouter();
@@ -55,6 +56,8 @@ export default function AddManualMealScreen() {
 
     try {
       await saveMeal(input);
+      successNotificationHaptic();
+      AccessibilityInfo.announceForAccessibility('Meal logged successfully.');
       router.back();
     } catch (saveError) {
       setErrors([
@@ -172,19 +175,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceCanvas,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
+    minHeight: metrics.touchTargetMin,
+    justifyContent: 'center',
   },
   presetChipSelected: {
     borderColor: colors.brandPrimary,
-    backgroundColor: '#FFF8F7',
+    backgroundColor: colors.surfaceSelected,
   },
   presetTextSelected: {
     color: colors.brandPrimary,
   },
   errorBox: {
-    backgroundColor: '#FFF4EC',
+    backgroundColor: colors.warningSurface,
     borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.accentWarm,
+    borderColor: colors.borderStrong,
     padding: spacing.sm,
     gap: 4,
   },

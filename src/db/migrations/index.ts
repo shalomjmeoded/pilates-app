@@ -9,6 +9,8 @@ import { MIGRATION_008 } from './008_free_exercise_db_library';
 import { MIGRATION_009 } from './009_exercise_session_role';
 import { MIGRATION_010 } from './010_ai_usage';
 import { MIGRATION_011 } from './011_physique_assessments';
+import { MIGRATION_012 } from './012_workout_change_feedback';
+import { MIGRATION_013 } from './013_workout_change_events';
 
 export const MIGRATIONS: Array<{ version: number; sql: string }> = [
   { version: 1, sql: MIGRATION_001 },
@@ -22,4 +24,6 @@ export const MIGRATIONS: Array<{ version: number; sql: string }> = [
   { version: 9, sql: MIGRATION_009 },
   { version: 10, sql: MIGRATION_010 },
   { version: 11, sql: MIGRATION_011 },
+  { version: 12, sql: MIGRATION_012 },
+  { version: 13, sql: MIGRATION_013 },
 ];

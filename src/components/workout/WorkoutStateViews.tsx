@@ -75,10 +75,10 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   banner: {
-    backgroundColor: '#F6F1EF',
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.borderStrong,
     padding: spacing.sm,
   },
   bannerText: {

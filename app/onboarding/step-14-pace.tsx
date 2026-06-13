@@ -6,7 +6,7 @@ import type { Pace } from '@/types/profile';
 const DEFAULT_PACE: Pace = 0.5;
 
 export default function Step14Pace() {
-  const { step, goNext, goBack } = useOnboardingNavigation(13);
+  const { step, goNext, goBack } = useOnboardingNavigation(12);
   const paceKgPerWeek = useOnboardingStore((state) => state.draft.paceKgPerWeek);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const buildPlanFromDraft = useOnboardingStore((state) => state.buildPlanFromDraft);
@@ -22,8 +22,8 @@ export default function Step14Pace() {
   return (
     <OnboardingShell
       step={step}
-      title="Choose your pace intensity"
-      subtitle="Dial it up or down — you can always adjust later."
+      title="Choose your pace"
+      subtitle="We use this to build your roadmap curve on the next screen."
       onBack={goBack}
       onNext={handleNext}
     >

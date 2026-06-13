@@ -51,6 +51,19 @@ Respect swapReason (too_hard, too_easy, knee_discomfort, no_equipment, dislike_m
 Never invent an exercise id.
 Context: ${JSON.stringify(payload)}`;
 
+    case 'workout_change_suggestion':
+      return `You are a premium Pilates coach. Return ONLY JSON:
+{
+  "focusArea": "core" | "glutes" | "posture" | "mobility" | "full_body",
+  "targetMinutes": number,
+  "intensity": "lighter" | "balanced" | "challenging",
+  "coachRationale": string
+}
+Use requested focus/time/intensity as primary input.
+Keep targetMinutes within availableMinuteOptions when provided.
+coachRationale must be concise and supportive.
+Context: ${JSON.stringify(payload)}`;
+
     case 'physique_assessment':
       return buildPhysiqueAssessmentPrompt({
         notes: typeof payload.notes === 'string' ? payload.notes : undefined,

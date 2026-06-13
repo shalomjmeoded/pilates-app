@@ -12,9 +12,11 @@ export default function Step04Media() {
     <OnboardingShell
       step={step}
       title="How should workouts show movement?"
+      subtitle="You can change this anytime in Settings."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!mediaPreference}
+      nextDisabledReason="Choose one movement display style to continue."
     >
       {MEDIA_OPTIONS.map((option) => (
         <OptionCard
