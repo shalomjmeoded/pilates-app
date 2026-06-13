@@ -11,8 +11,8 @@ export default function Step04Media() {
   return (
     <OnboardingShell
       step={step}
-      title="How should workouts show movement?"
-      subtitle="You can change this anytime in Settings."
+      title="How do you like to follow along?"
+      subtitle="Pick what feels comfortable — you can change this anytime in Settings."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!mediaPreference}

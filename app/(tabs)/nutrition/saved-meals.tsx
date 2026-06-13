@@ -57,7 +57,7 @@ export default function SavedMealsScreen() {
     return (
       <SafeAreaView style={styles.safeArea}>
         <SubscreenTopBar />
-        <PremiumGate description="Save meals you eat often and log them with one tap." />
+        <PremiumGate compact />
       </SafeAreaView>
     );
   }

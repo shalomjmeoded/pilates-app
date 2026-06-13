@@ -47,8 +47,8 @@ export default function Step09BirthYear() {
   return (
     <OnboardingShell
       step={step}
-      title="Birth year"
-      subtitle={`Used only on-device for age-based calculations (${MIN_SUPPORTED_AGE}–${MAX_SUPPORTED_AGE} years).`}
+      title="When were you born?"
+      subtitle={`Used only on-device for safe metabolic estimates (${MIN_SUPPORTED_AGE}–${MAX_SUPPORTED_AGE} years).`}
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!isValidBirthYear}

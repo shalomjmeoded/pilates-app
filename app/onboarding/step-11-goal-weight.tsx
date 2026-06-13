@@ -50,8 +50,8 @@ export default function Step11GoalWeight() {
   return (
     <OnboardingShell
       step={step}
-      title="Goal weight"
-      subtitle="Used to estimate your timeline and weekly milestones."
+      title="Where would you like to land?"
+      subtitle="A clear destination makes milestones feel achievable, not overwhelming."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!goalWeightKg || goalWeightKg < MIN_GOAL_WEIGHT_KG || goalWeightKg > MAX_GOAL_WEIGHT_KG}

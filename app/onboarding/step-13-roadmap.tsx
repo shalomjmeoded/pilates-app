@@ -33,8 +33,8 @@ export default function Step13Roadmap() {
   return (
     <OnboardingShell
       step={step}
-      title="Your wellness roadmap"
-      subtitle="This projection now reflects the pace you just selected."
+      title="See your journey unfold"
+      subtitle="This projection reflects the pace you chose — a guide, not a deadline."
       onBack={goBack}
       onNext={goNext}
     >

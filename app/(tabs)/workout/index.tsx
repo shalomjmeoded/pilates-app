@@ -7,6 +7,7 @@ import {
   ExerciseGridCard,
   ResumeWorkoutBanner,
   WeekCalendarStrip,
+  WorkoutCompletedBanner,
   WorkoutEmptyState,
   WorkoutErrorState,
   WorkoutHeroCard,
@@ -16,33 +17,19 @@ import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { discardWorkoutSession, startWorkoutSession } from '@/db/repositories/workoutRepository';
 import { getCalendarDates } from '@/engines/workout';
+import {
+  deriveWhyThisWorkout,
+  deriveWorkoutFocusTitle,
+  estimateWorkoutMinutes,
+} from '@/engines/workout/workoutPresentation';
 import { useWorkoutCalendarCompletion } from '@/hooks/useWorkoutCalendarCompletion';
 import { useWorkoutDay } from '@/hooks/useWorkoutDay';
 import { usePremium } from '@/hooks/usePremium';
 import { useWorkoutStreak } from '@/hooks/useWorkoutStreak';
 import { useWorkoutStore } from '@/stores/workoutStore';
-import type { WorkoutChangeRequest, WorkoutPlanExerciseDetail } from '@/types/workout';
+import type { WorkoutChangeRequest } from '@/types/workout';
 import { applyWorkoutChangeRequest } from '@/services/workout/applyWorkoutChangeRequest';
 import { spacing } from '@/theme';
-
-function titleCase(value: string): string {
-  return value.replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
-function deriveFocusTitle(exercises: WorkoutPlanExerciseDetail[]): string {
-  const groups = [...new Set(exercises.slice(0, 6).map((item) => item.exercise.muscleGroup))];
-  if (groups.length === 0) {
-    return 'Full Body Flow';
-  }
-  return groups
-    .slice(0, 2)
-    .map((group) => titleCase(group))
-    .join(' + ');
-}
-
-function estimateMinutes(exerciseCount: number): number {
-  return Math.max(12, Math.round(exerciseCount * 2.2));
-}
 
 const DEFAULT_CHANGE_REQUEST: WorkoutChangeRequest = {
   focusArea: 'core',
@@ -111,7 +98,7 @@ export default function WorkoutScreen() {
         planDate: selectedDate,
         request: changeRequest,
         todayMovementCount: data?.exercises.length ?? 0,
-        todayEstimatedMinutes: estimateMinutes(data?.exercises.length ?? 0),
+        todayEstimatedMinutes: estimateWorkoutMinutes(data?.exercises.length ?? 0),
       });
       await reload();
       await reloadCalendar();
@@ -185,17 +172,27 @@ export default function WorkoutScreen() {
       ) : null}
 
       {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
-        <WorkoutHeroCard
-          focusTitle={deriveFocusTitle(data.exercises)}
-          movementCount={data.exercises.length}
-          estimatedMinutes={estimateMinutes(data.exercises.length)}
-          streak={streakStats}
-          canStart={Boolean(canStartWorkout)}
-          onChangeWorkout={data.isToday && !data.isReadOnly ? openChangeSheet : undefined}
-          onStart={() => {
-            requirePremium('start_workout', () => void handleStartWorkout());
-          }}
-        />
+        <>
+          {data.session?.status === 'completed' && data.isToday ? (
+            <WorkoutCompletedBanner
+              movementCount={data.exercises.length}
+              streakDays={streakStats?.currentStreak}
+            />
+          ) : (
+            <WorkoutHeroCard
+              focusTitle={deriveWorkoutFocusTitle(data.exercises)}
+              whyThisWorkout={deriveWhyThisWorkout(data.exercises)}
+              movementCount={data.exercises.length}
+              estimatedMinutes={estimateWorkoutMinutes(data.exercises.length)}
+              streak={streakStats}
+              canStart={Boolean(canStartWorkout)}
+              onChangeWorkout={data.isToday && !data.isReadOnly ? openChangeSheet : undefined}
+              onStart={() => {
+                requirePremium('start_workout', () => void handleStartWorkout());
+              }}
+            />
+          )}
+        </>
       ) : null}
 
       {!errorMessage && data?.isFuture ? (
@@ -224,7 +221,7 @@ export default function WorkoutScreen() {
   );
 
   return (
-    <Screen title="Workout" isLoading={isLoading} loadingLabel="Loading your plan...">
+    <Screen title="Workout" subtitle="Your daily movement, guided." isLoading={isLoading} loadingLabel="Loading your plan...">
       {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
         <FlatList
           data={data.exercises}

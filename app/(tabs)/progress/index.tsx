@@ -18,7 +18,7 @@ import {
   WeightTrendSummary,
 } from '@/components/progress';
 import { WorkoutStreakCard } from '@/components/workout';
-import { PremiumGate } from '@/components/premium';
+import { ProgressPreviewGate } from '@/components/premium';
 import { Button } from '@/components/ui/Button';
 import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { SettingsRow } from '@/components/settings';
@@ -121,8 +121,8 @@ export default function ProgressScreen() {
 
   if (!hasAccess) {
     return (
-      <Screen title="Progress" subtitle="Your analytics at a glance.">
-        <PremiumGate description="Track weight, adherence, consistency, and milestones with Tune Premium." />
+      <Screen title="Progress" subtitle="Proof that your rhythm is working.">
+        <ProgressPreviewGate />
       </Screen>
     );
   }

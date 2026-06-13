@@ -15,6 +15,8 @@ export const colors = {
   surfaceMuted: '#F5F0EB',
   warningSurface: '#F8EDEA',
   illustrationBg: '#EDE4DF',
+  surfaceHero: '#F3EAE6',
+  surfaceLuxury: '#EFE6E1',
 
   brandPrimary: '#4A3048',
   brandSecondary: '#B8898E',
@@ -52,6 +54,13 @@ export const shadows = {
     shadowOpacity: 0.06,
     shadowRadius: 16,
     elevation: 3,
+  },
+  hero: {
+    shadowColor: '#4A3048',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 24,
+    elevation: 5,
   },
 } as const;
 

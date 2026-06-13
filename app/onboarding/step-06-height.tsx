@@ -29,8 +29,8 @@ export default function Step06Height() {
   return (
     <OnboardingShell
       step={step}
-      title="Your height"
-      subtitle="Choose your unit style, then scroll the ruler to match you."
+      title="Let's measure your height"
+      subtitle="Scroll the ruler to match you — smooth, precise, and private on your device."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueCm < 120 || valueCm > 230}

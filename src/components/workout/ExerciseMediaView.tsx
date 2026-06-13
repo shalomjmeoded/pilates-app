@@ -11,6 +11,7 @@ interface ExerciseMediaViewProps {
   variant?: 'thumbnail' | 'gif';
   size?: number;
   fillWidth?: boolean;
+  fillHeight?: number;
 }
 
 export function ExerciseMediaView({
@@ -18,10 +19,12 @@ export function ExerciseMediaView({
   variant = 'thumbnail',
   size = 120,
   fillWidth = false,
+  fillHeight,
 }: ExerciseMediaViewProps) {
   const thumbnail = getExerciseThumbnailSource(exercise.id);
   const gif = getExerciseGifSource(exercise.id);
   const animateDemo = variant === 'gif' && hasAnimatedExerciseDemo(exercise.id);
+  const resolvedFillHeight = fillHeight ?? (variant === 'gif' ? 260 : 112);
 
   return (
     <VisualAsset
@@ -33,7 +36,7 @@ export function ExerciseMediaView({
       fallback="icon"
       size={size}
       fillWidth={fillWidth}
-      fillHeight={variant === 'gif' ? 260 : 240}
+      fillHeight={resolvedFillHeight}
       accessibilityLabel={`${exercise.name} ${
         variant === 'gif'
           ? animateDemo

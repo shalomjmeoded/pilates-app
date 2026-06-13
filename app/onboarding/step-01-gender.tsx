@@ -11,8 +11,8 @@ export default function Step01Gender() {
   return (
     <OnboardingShell
       step={step}
-      title="Let's build your personal wellness journey."
-      subtitle="Tune is inclusive. A few details help personalize your energy and movement plan."
+      title="Welcome — let's find your rhythm"
+      subtitle="Tune is inclusive and body-positive. A few gentle questions help us shape movement and nourishment around you."
       onBack={goBack}
       showBack={false}
       onNext={goNext}

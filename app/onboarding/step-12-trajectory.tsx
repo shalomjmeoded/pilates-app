@@ -11,8 +11,8 @@ export default function Step12Trajectory() {
   return (
     <OnboardingShell
       step={step}
-      title="Weight trajectory"
-      subtitle="Choose the pace style that best matches your lifestyle."
+      title="Which path feels sustainable?"
+      subtitle="Choose the direction that honors your lifestyle — change is allowed anytime."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!weightTrajectory}

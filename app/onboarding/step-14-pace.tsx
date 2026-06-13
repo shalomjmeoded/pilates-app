@@ -22,8 +22,8 @@ export default function Step14Pace() {
   return (
     <OnboardingShell
       step={step}
-      title="Choose your pace"
-      subtitle="We use this to build your roadmap curve on the next screen."
+      title="Choose a pace that honors your life"
+      subtitle="Gentle or steady — you stay in control of how quickly things shift."
       onBack={goBack}
       onNext={handleNext}
     >

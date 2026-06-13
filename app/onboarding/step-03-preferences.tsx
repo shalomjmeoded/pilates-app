@@ -19,8 +19,8 @@ export default function Step03Preferences() {
   return (
     <OnboardingShell
       step={step}
-      title="What do you enjoy?"
-      subtitle="Choose one or more. Your plan will prioritize these styles."
+      title="What movement speaks to you?"
+      subtitle="Choose what you enjoy. Your plan will lean into these styles."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={exercisePreferences.length === 0}

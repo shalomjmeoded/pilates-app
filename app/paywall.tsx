@@ -3,9 +3,8 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
-import { PremiumGate } from '@/components/premium';
+import { PaywallHero } from '@/components/premium';
 import { Text } from '@/components/ui/Text';
-import { PAYWALL_BENEFITS, PAYWALL_SUBTITLE, PAYWALL_TITLE } from '@/constants/premiumBenefits';
 import { useFinishOnboarding } from '@/hooks/useFinishOnboarding';
 import { usePremium } from '@/hooks/usePremium';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
@@ -35,7 +34,7 @@ export default function PaywallScreen() {
       }
     } catch (accessError) {
       setActionError(
-        accessError instanceof Error ? accessError.message : 'Could not unlock Tune Premium.',
+        accessError instanceof Error ? accessError.message : 'Could not unlock your plan.',
       );
     }
   };
@@ -49,8 +48,8 @@ export default function PaywallScreen() {
       <SafeAreaView style={styles.safeArea}>
         <SubscreenTopBar />
         <View style={styles.centered}>
-          <Text variant="h1">You&apos;re subscribed</Text>
-          <Text variant="bodyMuted">Your Tune plan is unlocked.</Text>
+          <Text variant="h1">Your plan is unlocked</Text>
+          <Text variant="bodyMuted">Welcome back to your personalized Tune rhythm.</Text>
         </View>
       </SafeAreaView>
     );
@@ -59,11 +58,8 @@ export default function PaywallScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar />
-      <ScrollView contentContainerStyle={styles.container}>
-        <PremiumGate
-          title={PAYWALL_TITLE}
-          description={PAYWALL_SUBTITLE}
-          bullets={[...PAYWALL_BENEFITS]}
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <PaywallHero
           onStartTrial={() => void completeAccess(beginFreeTrial)}
           onRestore={() => void completeAccess(restore)}
         />
@@ -96,7 +92,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   error: {
-    color: colors.brandPrimary,
+    color: colors.destructive,
     textAlign: 'center',
   },
 });

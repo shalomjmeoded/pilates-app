@@ -11,8 +11,8 @@ export default function Step02Frequency() {
   return (
     <OnboardingShell
       step={step}
-      title="How often do you train?"
-      subtitle="We use this for your daily energy target."
+      title="How often do you move?"
+      subtitle="No judgment — we use this to build a rhythm that fits your real life."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!trainingFrequency}

@@ -11,8 +11,8 @@ export default function Step10FitnessGoal() {
   return (
     <OnboardingShell
       step={step}
-      title="Your fitness goal"
-      subtitle="This shapes your workout focus and daily calorie targets."
+      title="What feels right for your body?"
+      subtitle="Your goal shapes workout focus and daily nourishment — without aggressive targets."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!fitnessGoal}
