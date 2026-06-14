@@ -16,6 +16,10 @@ export default function Step03Preferences() {
     patchDraft({ exercisePreferences: next });
   };
 
+  const clearPreferences = () => {
+    patchDraft({ exercisePreferences: [] });
+  };
+
   return (
     <OnboardingShell
       step={step}
@@ -23,9 +27,13 @@ export default function Step03Preferences() {
       subtitle="Choose what you enjoy. Your plan will lean into these styles."
       onBack={goBack}
       onNext={goNext}
-      nextDisabled={exercisePreferences.length === 0}
-      nextDisabledReason="Select at least one movement style to continue."
     >
+      <OptionCard
+        label="No preference"
+        description="Build me a balanced plan."
+        selected={exercisePreferences.length === 0}
+        onPress={clearPreferences}
+      />
       {PREFERENCE_OPTIONS.map((option) => (
         <OptionCard
           key={option.value}

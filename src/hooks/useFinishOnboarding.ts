@@ -17,7 +17,7 @@ export function useFinishOnboarding() {
   const toProfile = useOnboardingStore((state) => state.toProfile);
   const setOnboardingCompleted = usePreferencesStore((state) => state.setOnboardingCompleted);
   const setComparison = useRecalibrationStore((state) => state.setComparison);
-  const { replaceToTabs } = useOnboardingNavigation(16);
+  const { replaceToTabs } = useOnboardingNavigation(15);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

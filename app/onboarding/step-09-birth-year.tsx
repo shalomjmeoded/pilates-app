@@ -17,7 +17,7 @@ import { fontFamily } from '@/theme/typography';
 const { minYear: MIN_BIRTH_YEAR, maxYear: MAX_BIRTH_YEAR } = getBirthYearBounds();
 
 export default function Step09BirthYear() {
-  const { step, goNext, goBack } = useOnboardingNavigation(8);
+  const { step, goNext, goBack } = useOnboardingNavigation(7);
   const birthYear = useOnboardingStore((state) => state.draft.birthYear);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const [birthYearInput, setBirthYearInput] = useState('');

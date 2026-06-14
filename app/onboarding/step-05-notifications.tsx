@@ -13,7 +13,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { colors, radius, spacing } from '@/theme';
 
 export default function Step05Notifications() {
-  const { step, goNext, goBack } = useOnboardingNavigation(5);
+  const { step, goNext, goBack } = useOnboardingNavigation(4);
   const notificationsEnabled = useOnboardingStore((state) => state.draft.notificationsEnabled);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);

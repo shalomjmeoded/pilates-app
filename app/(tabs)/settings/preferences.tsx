@@ -5,7 +5,7 @@ import { SettingsScreenShell } from '@/components/settings';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { getProfile, saveProfile } from '@/db/repositories/profileRepository';
-import { MEDIA_OPTIONS, PREFERENCE_OPTIONS } from '@/onboarding/constants';
+import { PREFERENCE_OPTIONS } from '@/onboarding/constants';
 import type { ExercisePreference, Profile } from '@/types/profile';
 import { spacing } from '@/theme';
 
@@ -49,21 +49,16 @@ export default function PreferencesSettingsScreen() {
   return (
     <SettingsScreenShell
       title="Preferences"
-      subtitle="Media and exercise style preferences."
+      subtitle="Exercise style preferences."
       hasUnsavedChanges={hasUnsavedChanges}
     >
-      <Text variant="label" style={{ marginTop: spacing.xs }}>Media preference</Text>
-      {MEDIA_OPTIONS.map((option) => (
-        <OptionCard
-          key={option.value}
-          label={option.label}
-          description={option.description}
-          selected={profile.mediaPreference === option.value}
-          onPress={() => setProfile({ ...profile, mediaPreference: option.value })}
-        />
-      ))}
-
       <Text variant="label" style={{ marginTop: spacing.xs }}>Exercise preferences</Text>
+      <OptionCard
+        label="No preference"
+        description="Keep my workouts balanced."
+        selected={profile.exercisePreferences.length === 0}
+        onPress={() => setProfile({ ...profile, exercisePreferences: [] })}
+      />
       {PREFERENCE_OPTIONS.map((option) => (
         <OptionCard
           key={option.value}
@@ -73,7 +68,7 @@ export default function PreferencesSettingsScreen() {
         />
       ))}
 
-      <Button label={isSaving ? 'Saving...' : 'Save preferences'} onPress={() => void handleSave()} disabled={isSaving || profile.exercisePreferences.length === 0} />
+      <Button label={isSaving ? 'Saving...' : 'Save preferences'} onPress={() => void handleSave()} disabled={isSaving} />
     </SettingsScreenShell>
   );
 }

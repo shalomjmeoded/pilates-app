@@ -11,7 +11,7 @@ const MIN_GOAL_WEIGHT_KG = 35;
 const MAX_GOAL_WEIGHT_KG = 250;
 
 export default function Step11GoalWeight() {
-  const { step, goNext, goBack } = useOnboardingNavigation(10);
+  const { step, goNext, goBack } = useOnboardingNavigation(9);
   const goalWeightKg = useOnboardingStore((state) => state.draft.goalWeightKg);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const units = usePreferencesStore((state) => state.preferences.units);

@@ -1,4 +1,4 @@
-import type { ExercisePreference, FitnessGoal, GenderIdentity, MediaPreference, Pace, TrainingFrequency, WeightTrajectory } from '@/types/profile';
+import type { ExercisePreference, FitnessGoal, GenderIdentity, Pace, TrainingFrequency, WeightTrajectory } from '@/types/profile';
 
 export const ONBOARDING_SPRING = {
   mass: 1,
@@ -6,13 +6,12 @@ export const ONBOARDING_SPRING = {
   stiffness: 120,
 } as const;
 
-export const ONBOARDING_TOTAL_STEPS = 16;
+export const ONBOARDING_TOTAL_STEPS = 15;
 
 export const ONBOARDING_ROUTES = [
   'step-01-gender',
   'step-02-frequency',
   'step-03-preferences',
-  'step-04-media',
   'step-05-notifications',
   'step-06-height',
   'step-07-weight',
@@ -49,19 +48,6 @@ export const PREFERENCE_OPTIONS: Array<{ value: ExercisePreference; label: strin
   { value: 'cardio_burn', label: 'Cardio Burn' },
   { value: 'core_focus', label: 'Core Focus' },
   { value: 'flexibility_length', label: 'Flexibility & Length' },
-];
-
-export const MEDIA_OPTIONS: Array<{ value: MediaPreference; label: string; description: string }> = [
-  {
-    value: 'video_streaming',
-    label: 'Allow video streaming',
-    description: 'Open guided video references during workouts.',
-  },
-  {
-    value: 'static_only',
-    label: 'Static images / GIFs only',
-    description: 'Keep workouts lightweight with on-device visuals.',
-  },
 ];
 
 export const FITNESS_GOAL_OPTIONS: Array<{ value: FitnessGoal; label: string }> = [

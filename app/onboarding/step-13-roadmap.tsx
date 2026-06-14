@@ -12,7 +12,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 
 export default function Step13Roadmap() {
-  const { step, goNext, goBack } = useOnboardingNavigation(13);
+  const { step, goNext, goBack } = useOnboardingNavigation(12);
   const draft = useOnboardingStore((state) => state.draft);
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
 

@@ -8,7 +8,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 const DEFAULT_HEIGHT_CM = 168;
 
 export default function Step06Height() {
-  const { step, goNext, goBack } = useOnboardingNavigation(6);
+  const { step, goNext, goBack } = useOnboardingNavigation(5);
   const heightCm = useOnboardingStore((state) => state.draft.heightCm);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const units = usePreferencesStore((state) => state.preferences.units);
@@ -34,7 +34,7 @@ export default function Step06Height() {
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueCm < 120 || valueCm > 230}
-      scrollEnabled={false}
+      titleLines={2}
     >
       <VerticalMeasurementRuler
         valueCm={valueCm}

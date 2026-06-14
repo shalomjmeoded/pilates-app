@@ -8,7 +8,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 const DEFAULT_WEIGHT_KG = 68;
 
 export default function Step07Weight() {
-  const { step, goNext, goBack } = useOnboardingNavigation(7);
+  const { step, goNext, goBack } = useOnboardingNavigation(6);
   const currentWeightKg = useOnboardingStore((state) => state.draft.currentWeightKg);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const units = usePreferencesStore((state) => state.preferences.units);

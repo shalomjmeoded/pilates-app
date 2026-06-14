@@ -36,7 +36,7 @@ const INITIAL_DRAFT: OnboardingDraft = {
   genderIdentity: null,
   trainingFrequency: null,
   exercisePreferences: [],
-  mediaPreference: null,
+  mediaPreference: 'static_only',
   notificationsEnabled: false,
   heightCm: null,
   currentWeightKg: null,
@@ -63,7 +63,6 @@ interface OnboardingState {
 type CompleteOnboardingDraft = OnboardingDraft & {
   genderIdentity: GenderIdentity;
   trainingFrequency: TrainingFrequency;
-  mediaPreference: MediaPreference;
   heightCm: number;
   currentWeightKg: number;
   nutritionMode: NutritionMode;
@@ -79,8 +78,6 @@ function isCompleteDraft(draft: OnboardingDraft): draft is CompleteOnboardingDra
   return (
     draft.genderIdentity !== null &&
     draft.trainingFrequency !== null &&
-    draft.exercisePreferences.length > 0 &&
-    draft.mediaPreference !== null &&
     draft.heightCm !== null &&
     draft.currentWeightKg !== null &&
     draft.birthYear !== null &&
@@ -115,7 +112,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
         genderIdentity: profile.genderIdentity,
         trainingFrequency: profile.trainingFrequency,
         exercisePreferences: profile.exercisePreferences,
-        mediaPreference: profile.mediaPreference,
+        mediaPreference: 'static_only',
         heightCm: profile.heightCm,
         currentWeightKg: profile.currentWeightKg,
         nutritionMode: 'full_tracking',
@@ -165,7 +162,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       trainingFrequency: draft.trainingFrequency,
       fitnessGoal: draft.fitnessGoal,
       exercisePreferences: draft.exercisePreferences,
-      mediaPreference: draft.mediaPreference,
+      mediaPreference: 'static_only',
       nutritionMode: 'full_tracking',
       weightTrajectory: draft.weightTrajectory,
       paceKgPerWeek: draft.paceKgPerWeek,

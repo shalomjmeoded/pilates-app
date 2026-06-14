@@ -19,7 +19,7 @@ import { colors, radius, spacing } from '@/theme';
 import { successNotificationHaptic } from '@/utils/haptics';
 
 export default function Step16PlanReveal() {
-  const { step, goNext, goToStep } = useOnboardingNavigation(15);
+  const { step, goNext, goToStep } = useOnboardingNavigation(14);
   const draft = useOnboardingStore((state) => state.draft);
   const baselinePlan = draft.baselinePlan;
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
@@ -39,8 +39,8 @@ export default function Step16PlanReveal() {
         step={step}
         title="Almost there"
         subtitle="One more moment while we finalize your plan."
-        onBack={() => goToStep(14)}
-        onNext={() => goToStep(14)}
+        onBack={() => goToStep(13)}
+        onNext={() => goToStep(13)}
         nextLabel="Review plan setup"
         phaseLabel="Creating your plan"
         reasonWhy={null}
@@ -73,7 +73,7 @@ export default function Step16PlanReveal() {
       step={step}
       title="This is your Tune plan"
       subtitle="Movement, nourishment, and milestones — woven together for calm, sustainable progress."
-      onBack={() => goToStep(14)}
+      onBack={() => goToStep(13)}
       onNext={goNext}
       nextLabel="Unlock my plan"
       phaseLabel="Your reveal"

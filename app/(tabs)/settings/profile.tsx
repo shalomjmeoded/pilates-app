@@ -133,6 +133,12 @@ export default function ProfileSettingsScreen() {
       ))}
 
       <Text variant="label" style={styles.section}>Exercise preferences</Text>
+      <OptionCard
+        label="No preference"
+        description="Keep my workouts balanced."
+        selected={draft.exercisePreferences.length === 0}
+        onPress={() => patch({ exercisePreferences: [] })}
+      />
       {PREFERENCE_OPTIONS.map((option) => (
         <OptionCard
           key={option.value}
@@ -144,7 +150,7 @@ export default function ProfileSettingsScreen() {
       ))}
 
       {error ? <Text variant="body" style={styles.error}>{error}</Text> : null}
-      <Button label={isSaving ? 'Saving...' : 'Save & update plan'} onPress={handleSave} disabled={isSaving || draft.exercisePreferences.length === 0} />
+      <Button label={isSaving ? 'Saving...' : 'Save & update plan'} onPress={handleSave} disabled={isSaving} />
     </SettingsScreenShell>
   );
 }
