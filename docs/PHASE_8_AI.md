@@ -1,4 +1,4 @@
-# Phase 8 — Tune AI Premium
+# Phase 8 — BetterMe AI Premium
 
 Final deliverable for Phase 8.8. RevenueCat integration is intentionally out of scope.
 

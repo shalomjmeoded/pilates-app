@@ -77,7 +77,7 @@ export function useMealPhotoEstimate(mealDate: string) {
       try {
         const premium = await getPremiumStatus();
         if (!premium.isPremium) {
-          setError('AI photo estimates require Tune Premium.');
+          setError('AI photo estimates require BetterMe Premium.');
           return;
         }
 
@@ -106,7 +106,7 @@ export function useMealPhotoEstimate(mealDate: string) {
         }
 
         if (estimateError instanceof AiProxyError && estimateError.code === 'UNAUTHORIZED') {
-          setError('AI photo estimates require Tune Premium.');
+          setError('AI photo estimates require BetterMe Premium.');
           return;
         }
 

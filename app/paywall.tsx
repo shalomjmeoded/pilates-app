@@ -49,7 +49,7 @@ export default function PaywallScreen() {
         <SubscreenTopBar />
         <View style={styles.centered}>
           <Text variant="h1">Your plan is unlocked</Text>
-          <Text variant="bodyMuted">Welcome back to your personalized Tune rhythm.</Text>
+          <Text variant="bodyMuted">Welcome back to your personalized BetterMe rhythm.</Text>
         </View>
       </SafeAreaView>
     );

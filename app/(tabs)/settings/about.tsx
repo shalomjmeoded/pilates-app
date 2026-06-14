@@ -7,9 +7,9 @@ import { spacing } from '@/theme';
 
 export default function AboutSettingsScreen() {
   return (
-    <SettingsScreenShell title="About" subtitle="Tune — movement, nutrition, reflection.">
+    <SettingsScreenShell title="About" subtitle="BetterMe — movement, nutrition, reflection.">
       <Card style={styles.card}>
-        <Text variant="h2">Tune</Text>
+        <Text variant="h2">BetterMe</Text>
         <Text variant="bodyMuted">Version 1.0.0</Text>
         <Text variant="bodyMuted" style={styles.copy}>
           A local-first wellness app for Pilates-inspired movement, thoughtful nutrition, and calm progress tracking.

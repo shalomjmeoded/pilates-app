@@ -1,4 +1,4 @@
-# Tune — Developer Notes
+# BetterMe — Developer Notes
 
 ## Running locally
 
@@ -21,7 +21,7 @@ npx expo start
 ### Practical guidance
 
 - **Expo Go** is fine for Phase 2 onboarding QA on a physical device or simulator.
-- If MMKV fails to initialize, Tune falls back to **in-memory preferences**. Onboarding completion will not survive app restarts until MMKV/native storage works.
+- If MMKV fails to initialize, BetterMe falls back to **in-memory preferences**. Onboarding completion will not survive app restarts until MMKV/native storage works.
 - For production-like testing of notifications and MMKV persistence, use a **development build**:
 
 ```bash

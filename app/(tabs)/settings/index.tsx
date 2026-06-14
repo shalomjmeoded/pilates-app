@@ -58,7 +58,7 @@ export default function SettingsScreen() {
         </SettingsSection>
 
         <SettingsSection title="About">
-          <SettingsRow label="About Tune" onPress={() => router.push('/(tabs)/settings/about')} />
+          <SettingsRow label="About BetterMe" onPress={() => router.push('/(tabs)/settings/about')} />
           {__DEV__ ? (
             <SettingsRow label="Developer audit" onPress={() => router.push('/(tabs)/settings/dev-audit')} />
           ) : null}

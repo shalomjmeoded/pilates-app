@@ -7,7 +7,7 @@ import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
-import { TuneBootLoader } from '@/components/ui/TuneBootLoader';
+import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
 import { getSessionFeedback } from '@/db/repositories/workoutRepository';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
 import type { ExerciseFeedback } from '@/types/exercise';
@@ -28,7 +28,7 @@ export default function WorkoutFeedbackScreen() {
   }, [session]);
 
   if (isLoading) {
-    return <TuneBootLoader message="Saving your session..." />;
+    return <BetterMeBootLoader message="Saving your session..." />;
   }
 
   if (error || !session || !planDate) {

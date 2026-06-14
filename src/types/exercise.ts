@@ -45,7 +45,7 @@ export const EXERCISE_CATEGORIES = [
 
 export type ExerciseCategory = (typeof EXERCISE_CATEGORIES)[number];
 
-export const EXERCISE_SOURCES = ['free_exercise_db', 'generated_tune'] as const;
+export const EXERCISE_SOURCES = ['free_exercise_db', 'generated_betterme'] as const;
 
 export type ExerciseSource = (typeof EXERCISE_SOURCES)[number];
 

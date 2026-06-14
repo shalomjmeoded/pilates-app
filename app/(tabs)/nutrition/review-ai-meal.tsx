@@ -106,7 +106,7 @@ export default function ReviewAiMealScreen() {
       >
         <Text variant="h1">Review Estimate</Text>
         <Text variant="bodyMuted">
-          AI estimate — adjust if needed. Tune never auto-saves AI results.
+          AI estimate — adjust if needed. BetterMe never auto-saves AI results.
         </Text>
 
         <Card style={styles.card}>

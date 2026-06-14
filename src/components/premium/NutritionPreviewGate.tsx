@@ -72,7 +72,7 @@ export function NutritionPreviewGate({ onStartTrial, onRestore }: NutritionPrevi
       <View style={styles.intro}>
         <Text variant="section">Nourishment tailored to you</Text>
         <Text variant="bodyMuted">
-          Your macro targets are already calculated. Unlock Tune to log meals and see your day unfold.
+          Your macro targets are already calculated. Unlock BetterMe to log meals and see your day unfold.
         </Text>
       </View>
 
@@ -98,7 +98,7 @@ export function NutritionPreviewGate({ onStartTrial, onRestore }: NutritionPrevi
             <View style={styles.aiCopy}>
               <Text variant="h2">AI meal logging</Text>
               <Text variant="bodyMuted">
-                Describe or photograph a meal — Tune estimates calories and macros in seconds.
+                Describe or photograph a meal — BetterMe estimates calories and macros in seconds.
               </Text>
             </View>
           </View>

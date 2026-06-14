@@ -22,7 +22,7 @@ export async function startFreeTrial(): Promise<PremiumStatus> {
     isPremium: true,
     trialUsed: true,
     source: 'mock',
-    productId: 'tune_trial_mock',
+    productId: 'betterme_trial_mock',
     expiresAt,
   };
 

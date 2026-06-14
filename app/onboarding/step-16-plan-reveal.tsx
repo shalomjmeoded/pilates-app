@@ -71,7 +71,7 @@ export default function Step16PlanReveal() {
   return (
     <OnboardingShell
       step={step}
-      title="This is your Tune plan"
+      title="This is your BetterMe plan"
       subtitle="Movement, nourishment, and milestones — woven together for calm, sustainable progress."
       onBack={() => goToStep(13)}
       onNext={goNext}

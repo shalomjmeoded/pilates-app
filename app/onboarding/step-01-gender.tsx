@@ -12,7 +12,7 @@ export default function Step01Gender() {
     <OnboardingShell
       step={step}
       title="Welcome — let's find your rhythm"
-      subtitle="Tune is inclusive and body-positive. A few gentle questions help us shape movement and nourishment around you."
+      subtitle="BetterMe is inclusive and body-positive. A few gentle questions help us shape movement and nourishment around you."
       onBack={goBack}
       showBack={false}
       onNext={goNext}

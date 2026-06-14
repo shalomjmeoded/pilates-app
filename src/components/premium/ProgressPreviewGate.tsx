@@ -70,7 +70,7 @@ export function ProgressPreviewGate({ onStartTrial, onRestore }: ProgressPreview
       <View style={styles.intro}>
         <Text variant="section">Proof you&apos;re building momentum</Text>
         <Text variant="bodyMuted">
-          Tune turns your workouts, meals, and weigh-ins into calm, encouraging insights — never
+          BetterMe turns your workouts, meals, and weigh-ins into calm, encouraging insights — never
           shame.
         </Text>
       </View>

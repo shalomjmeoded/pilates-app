@@ -19,7 +19,7 @@ export const MILESTONE_DEFINITIONS: MilestoneDefinition[] = [
   {
     key: 'first_week_completed',
     title: 'First week',
-    description: 'You stayed with Tune for seven days.',
+    description: 'You stayed with BetterMe for seven days.',
   },
 ];
 

@@ -35,7 +35,7 @@ export function ChangeWorkoutSheet({
         <Pressable style={styles.sheet} onPress={(event) => event.stopPropagation()}>
           <Text variant="h2">Change today&apos;s workout</Text>
           <Text variant="bodyMuted">
-            Tell Tune what you want to focus on and we&apos;ll rebuild this week around it.
+            Tell BetterMe what you want to focus on and we&apos;ll rebuild this week around it.
           </Text>
 
           <View style={styles.section}>

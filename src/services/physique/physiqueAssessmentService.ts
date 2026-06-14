@@ -20,7 +20,7 @@ export async function runPhysiqueAssessment(
 ): Promise<AiPhysiqueAssessment> {
   const premium = await getPremiumStatus();
   if (!premium.isPremium) {
-    throw new Error('Visual physique assessment requires Tune Premium.');
+    throw new Error('Visual physique assessment requires BetterMe Premium.');
   }
 
   const profile = await getProfile();

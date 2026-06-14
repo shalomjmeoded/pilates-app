@@ -30,7 +30,7 @@ export default function PrivacySettingsScreen() {
       <Card style={styles.card}>
         <Text variant="h2">AI explanation</Text>
         <Text variant="bodyMuted" style={styles.copy}>
-          AI is optional and premium-gated. You review every AI meal estimate before saving. Tune stores local audit
+          AI is optional and premium-gated. You review every AI meal estimate before saving. BetterMe stores local audit
           rows in ai_outputs (feature, request summary, validation result) and quota counters in ai_usage — never full
           meal photos. AI is never used for ads.
         </Text>
@@ -46,7 +46,7 @@ export default function PrivacySettingsScreen() {
       <Card style={styles.card}>
         <Text variant="h2">No ads. No analytics.</Text>
         <Text variant="bodyMuted" style={styles.copy}>
-          Tune does not include ad SDKs or third-party analytics trackers.
+          BetterMe does not include ad SDKs or third-party analytics trackers.
         </Text>
       </Card>
 

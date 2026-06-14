@@ -113,7 +113,7 @@ export default function NotificationsSettingsScreen() {
 
       {permissionDenied ? (
         <Text variant="bodyMuted" style={styles.denied}>
-          You can keep using Tune without notifications.
+          You can keep using BetterMe without notifications.
         </Text>
       ) : null}
     </SettingsScreenShell>

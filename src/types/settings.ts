@@ -16,7 +16,7 @@ export interface RecalibrationComparison {
   next: MacroTotals;
 }
 
-export interface TuneExportPayload {
+export interface BetterMeExportPayload {
   version: 1;
   exportedAt: string;
   profile: Profile | null;

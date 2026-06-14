@@ -47,7 +47,7 @@ function ensureHandler(): boolean {
 }
 
 function reminderIdentifier(type: ReminderType): string {
-  return `tune_reminder_${type}`;
+  return `betterme_reminder_${type}`;
 }
 
 export async function getNotificationPermissionStatus(): Promise<NotificationPermissionStatus> {
@@ -183,7 +183,7 @@ export function registerNotificationLifecycle(): () => void {
   };
 }
 
-const WEEKLY_COACH_NOTIFICATION_ID = 'tune_weekly_coach_ready';
+const WEEKLY_COACH_NOTIFICATION_ID = 'betterme_weekly_coach_ready';
 
 export async function notifyWeeklyCoachReady(summary: string): Promise<void> {
   const Notifications = getNotificationsModule();

@@ -1,4 +1,4 @@
-# Tune — QA Checklist
+# BetterMe — QA Checklist
 
 ## Phase 6 — Settings
 
@@ -77,7 +77,7 @@
 
 ## Phase 2 — Onboarding
 
-- [ ] Branded Tune loader shows during boot (not blank screen)
+- [ ] Branded BetterMe loader shows during boot (not blank screen)
 - [ ] Fresh install routes to onboarding step 1
 - [ ] All 17 steps navigable forward/back (except loading step blocks Android back)
 - [ ] Height/weight use numeric inputs with cm/kg internal storage

@@ -58,11 +58,11 @@ function createStorage(): { storage: KeyValueStorage; backend: StorageBackend } 
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { MMKV } = require('react-native-mmkv') as typeof import('react-native-mmkv');
     return {
-      storage: new MMKV({ id: 'tune-preferences' }),
+      storage: new MMKV({ id: 'betterme-preferences' }),
       backend: 'mmkv',
     };
   } catch (error) {
-    console.warn('[Tune] MMKV unavailable, using in-memory preferences fallback.', error);
+    console.warn('[BetterMe] MMKV unavailable, using in-memory preferences fallback.', error);
     return {
       storage: new MemoryStorage(),
       backend: 'memory',
@@ -90,7 +90,7 @@ function mirrorToSqlite(key: string, value: boolean | string | number): void {
 
   const serialized = typeof value === 'string' ? value : JSON.stringify(value);
   void setSqlitePreference(key, serialized).catch((error) => {
-    console.warn(`[Tune] Failed to mirror preference "${key}" to SQLite.`, error);
+    console.warn(`[BetterMe] Failed to mirror preference "${key}" to SQLite.`, error);
   });
 }
 
@@ -115,7 +115,7 @@ function safeSet(key: string, value: boolean | string | number): void {
     storage.set(key, value);
     mirrorToSqlite(key, value);
   } catch (error) {
-    console.warn(`[Tune] Failed to persist preference "${key}".`, error);
+    console.warn(`[BetterMe] Failed to persist preference "${key}".`, error);
   }
 }
 
@@ -188,7 +188,7 @@ export const preferencesStorage = {
     try {
       storage.clearAll();
     } catch (error) {
-      console.warn('[Tune] Failed to clear preferences storage.', error);
+      console.warn('[BetterMe] Failed to clear preferences storage.', error);
     }
   },
 };

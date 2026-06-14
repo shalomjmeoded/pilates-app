@@ -4,7 +4,7 @@
 
 - **7-day free trial** → subscription required
 - No forever-free path after onboarding paywall
-- Entire personalized Tune experience is premium; AI is a headline benefit, not the only gate
+- Entire personalized BetterMe experience is premium; AI is a headline benefit, not the only gate
 
 ## Onboarding flow
 

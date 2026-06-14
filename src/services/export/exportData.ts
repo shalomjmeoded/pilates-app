@@ -6,9 +6,9 @@ import { getAllNutritionTargets } from '@/db/repositories/nutritionRepository';
 import { getProfile } from '@/db/repositories/profileRepository';
 import { getReminders } from '@/db/repositories/remindersRepository';
 import { getAllWeightLogs } from '@/db/repositories/weightLogRepository';
-import type { TuneExportPayload } from '@/types/settings';
+import type { BetterMeExportPayload } from '@/types/settings';
 
-export async function buildExportPayload(): Promise<TuneExportPayload> {
+export async function buildExportPayload(): Promise<BetterMeExportPayload> {
   const db = await getDatabase();
 
   const meals = await db.getAllAsync('SELECT * FROM meals ORDER BY logged_at ASC');
@@ -37,7 +37,7 @@ export async function exportDataViaShareSheet(): Promise<void> {
   const json = JSON.stringify(payload, null, 2);
 
   await Share.share({
-    title: 'Tune Data Export',
+    title: 'BetterMe Data Export',
     message: json,
   });
 }

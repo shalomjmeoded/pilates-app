@@ -89,7 +89,7 @@ export default function Step15Loading() {
         <View style={styles.container}>
           <Animated.View style={[styles.mark, glowStyle]}>
             <Text variant="display" style={styles.logo}>
-              Tune
+              BetterMe
             </Text>
           </Animated.View>
           <Text variant="h1" style={styles.title}>
@@ -108,7 +108,7 @@ export default function Step15Loading() {
       <View style={styles.container}>
         <Animated.View style={[styles.mark, glowStyle]}>
           <Text variant="display" style={styles.logo}>
-            Tune
+            BetterMe
           </Text>
         </Animated.View>
         <Text variant="h1" style={styles.title}>

@@ -3,7 +3,7 @@ import { openDatabaseAsync, type SQLiteDatabase } from 'expo-sqlite';
 import { ensureAiSchema } from '@/db/ensureAiSchema';
 import { MIGRATIONS } from './migrations';
 
-const DATABASE_NAME = 'tune.db';
+const DATABASE_NAME = 'betterme.db';
 
 let databaseInstance: SQLiteDatabase | null = null;
 let databaseInitPromise: Promise<SQLiteDatabase> | null = null;

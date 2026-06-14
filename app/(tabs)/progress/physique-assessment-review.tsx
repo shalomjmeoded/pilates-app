@@ -44,7 +44,7 @@ export default function PhysiqueAssessmentReviewScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <Text variant="h1">Review Assessment</Text>
         <Text variant="bodyMuted">
-          Review before saving. Tune never auto-saves AI results or changes your plan.
+          Review before saving. BetterMe never auto-saves AI results or changes your plan.
         </Text>
 
         <Card style={styles.card}>

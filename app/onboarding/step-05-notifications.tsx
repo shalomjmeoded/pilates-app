@@ -36,7 +36,7 @@ export default function Step05Notifications() {
     setAnnouncedStatus(
       granted
         ? 'Reminders enabled. You can fine-tune times in Settings.'
-        : 'No problem — Tune works fully without notifications.',
+        : 'No problem — BetterMe works fully without notifications.',
     );
   };
 

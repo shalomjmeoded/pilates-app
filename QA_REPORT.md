@@ -1,4 +1,4 @@
-# Tune — Phase 7 QA Report
+# BetterMe — Phase 7 QA Report
 
 Generated after product hardening, retention, and QA pass.
 
@@ -23,7 +23,7 @@ Generated after product hardening, retention, and QA pass.
 
 ### Fresh install
 
-- [ ] App boots with `TuneBootLoader`
+- [ ] App boots with `BetterMeBootLoader`
 - [ ] Migrations apply through v5
 - [ ] Exercise seed loads (120 exercises)
 - [ ] Default reminders seeded

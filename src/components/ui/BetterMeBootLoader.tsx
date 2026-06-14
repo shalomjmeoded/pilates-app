@@ -14,11 +14,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '@/components/ui/Text';
 import { colors, radius, shadows, spacing } from '@/theme';
 
-interface TuneBootLoaderProps {
+interface BetterMeBootLoaderProps {
   message?: string;
 }
 
-export function TuneBootLoader({ message = 'Preparing your rhythm...' }: TuneBootLoaderProps) {
+export function BetterMeBootLoader({ message = 'Preparing your rhythm...' }: BetterMeBootLoaderProps) {
   const outerScale = useSharedValue(1);
   const innerOpacity = useSharedValue(0.5);
   const fadeIn = useSharedValue(0);
@@ -69,7 +69,7 @@ export function TuneBootLoader({ message = 'Preparing your rhythm...' }: TuneBoo
           <Animated.View style={[styles.innerRing, innerRingStyle]} />
           <View style={[styles.core, shadows.hero]}>
             <Text variant="hero" style={styles.logo}>
-              Tune
+              BetterMe
             </Text>
           </View>
         </View>

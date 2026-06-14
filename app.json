@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "Tune",
-    "slug": "tune",
+    "name": "BetterMe",
+    "slug": "betterme",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "tune",
+    "scheme": "betterme",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.renatovanerven.tune"
+      "bundleIdentifier": "com.renatovanerven.betterme"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +19,7 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "package": "com.renatovanerven.tune",
+      "package": "com.renatovanerven.betterme",
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -48,8 +48,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Tune uses selected photos for meal nutrition estimates and optional physique wellness assessments.",
-          "cameraPermission": "Tune uses your camera for meal nutrition estimates and optional physique wellness assessments."
+          "photosPermission": "BetterMe uses selected photos for meal nutrition estimates and optional physique wellness assessments.",
+          "cameraPermission": "BetterMe uses your camera for meal nutrition estimates and optional physique wellness assessments."
         }
       ]
     ]

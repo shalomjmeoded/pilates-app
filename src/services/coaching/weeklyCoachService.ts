@@ -87,7 +87,7 @@ export async function generateWeeklyCoachInsight(options?: {
   const premium = await getPremiumStatus();
 
   if (!hasPremiumAccess(premium)) {
-    throw new Error('Weekly AI coach requires Tune Premium.');
+    throw new Error('Weekly AI coach requires BetterMe Premium.');
   }
 
   let insight: WeeklyCoachInsightContent;

@@ -7,7 +7,7 @@ import { SubscreenTopBar } from '@/components/navigation';
 import { ExerciseMediaView, ExerciseSwapReasonSheet, WorkoutExitSheet } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
-import { TuneBootLoader } from '@/components/ui/TuneBootLoader';
+import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
 import {
   completeWorkoutSession,
   discardWorkoutSession,
@@ -108,7 +108,7 @@ export default function WorkoutPlayerScreen() {
   }, [session, currentIndex, elapsedSeconds]);
 
   if (isLoading) {
-    return <TuneBootLoader message="Opening your session..." />;
+    return <BetterMeBootLoader message="Opening your session..." />;
   }
 
   if (error || !session || exercises.length === 0) {

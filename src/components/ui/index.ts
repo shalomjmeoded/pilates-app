@@ -3,4 +3,4 @@ export { Card } from './Card';
 export { LoadErrorState } from './LoadErrorState';
 export { Screen } from './Screen';
 export { Text } from './Text';
-export { TuneBootLoader } from './TuneBootLoader';
+export { BetterMeBootLoader } from './BetterMeBootLoader';

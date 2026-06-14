@@ -1,7 +1,7 @@
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 
-import { TuneBootLoader } from '@/components/ui/TuneBootLoader';
+import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
 import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { usePreferencesStore } from '@/stores/preferencesStore';
@@ -24,7 +24,7 @@ export default function Index() {
   }, []);
 
   if (!premiumChecked) {
-    return <TuneBootLoader />;
+    return <BetterMeBootLoader />;
   }
 
   if (!onboardingCompleted) {

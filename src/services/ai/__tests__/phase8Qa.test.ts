@@ -165,7 +165,7 @@ describe('Phase 8.8 AI QA — client', () => {
     (getPremiumStatus as jest.Mock).mockResolvedValue({ isPremium: false });
     mockFetchResponse(403, {
       ok: false,
-      error: 'AI features require Tune Premium.',
+      error: 'AI features require BetterMe Premium.',
       code: 'UNAUTHORIZED',
     });
 

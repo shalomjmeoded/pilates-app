@@ -23,7 +23,7 @@ function loadNotificationsModule(): ExpoNotificationsModule | null {
     cachedModule = require('expo-notifications') as ExpoNotificationsModule;
     return cachedModule;
   } catch (error) {
-    console.warn('[Tune] expo-notifications unavailable.', error);
+    console.warn('[BetterMe] expo-notifications unavailable.', error);
     cachedModule = null;
     return null;
   }

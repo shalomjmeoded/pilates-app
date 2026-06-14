@@ -1,4 +1,4 @@
-// AUTO-GENERATED for the curated Tune exercise catalog — do not edit manually.
+// AUTO-GENERATED for the curated BetterMe exercise catalog — do not edit manually.
 import type { ImageSourcePropType } from 'react-native';
 
 export const EXERCISE_THUMBNAIL_MANIFEST: Record<string, ImageSourcePropType> = {

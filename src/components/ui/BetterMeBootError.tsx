@@ -5,17 +5,17 @@ import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { colors, spacing } from '@/theme';
 
-interface TuneBootErrorProps {
+interface BetterMeBootErrorProps {
   message: string;
   onRetry: () => void;
 }
 
-export function TuneBootError({ message, onRetry }: TuneBootErrorProps) {
+export function BetterMeBootError({ message, onRetry }: BetterMeBootErrorProps) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text variant="h2" style={styles.title}>
-          Couldn&apos;t start Tune
+          Couldn&apos;t start BetterMe
         </Text>
         <Text variant="bodyMuted" style={styles.message}>
           {message}

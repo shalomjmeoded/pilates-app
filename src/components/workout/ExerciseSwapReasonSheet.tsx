@@ -26,7 +26,7 @@ export function ExerciseSwapReasonSheet({
             Why swap this exercise?
           </Text>
           <Text variant="bodyMuted" style={styles.copy}>
-            Choose a reason so Tune can suggest a better fit from your local library.
+            Choose a reason so BetterMe can suggest a better fit from your local library.
           </Text>
 
           <View style={styles.reasonList}>

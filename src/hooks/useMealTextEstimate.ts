@@ -41,7 +41,7 @@ export function useMealTextEstimate(mealDate: string) {
     try {
       const premium = await getPremiumStatus();
       if (!premium.isPremium) {
-        setError('AI meal estimates require Tune Premium.');
+        setError('AI meal estimates require BetterMe Premium.');
         return;
       }
 
@@ -58,7 +58,7 @@ export function useMealTextEstimate(mealDate: string) {
       });
     } catch (estimateError) {
       if (estimateError instanceof AiProxyError && estimateError.code === 'UNAUTHORIZED') {
-        setError('AI meal estimates require Tune Premium.');
+        setError('AI meal estimates require BetterMe Premium.');
         return;
       }
 

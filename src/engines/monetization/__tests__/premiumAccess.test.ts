@@ -19,7 +19,7 @@ describe('premiumAccess', () => {
       deriveSubscriptionStatus({
         isPremium: true,
         trialUsed: true,
-        productId: 'tune_trial_mock',
+        productId: 'betterme_trial_mock',
         expiresAt: '2099-01-01T00:00:00.000Z',
       }),
     ).toBe('trial');
@@ -31,7 +31,7 @@ describe('premiumAccess', () => {
       isPremium: true,
       trialUsed: true,
       source: 'mock' as const,
-      productId: 'tune_trial_mock',
+      productId: 'betterme_trial_mock',
       expiresAt: '2020-01-01T00:00:00.000Z',
     };
 

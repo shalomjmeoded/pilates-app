@@ -111,7 +111,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 10,
     "holdSeconds": null,
     "caloriesFactor": 0.034
@@ -262,7 +262,7 @@
       "posture"
     ],
     "sessionRole": "warmup",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
     "caloriesFactor": 0.02
@@ -1065,7 +1065,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 50,
     "holdSeconds": null,
     "caloriesFactor": 0.045
@@ -1106,7 +1106,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
     "caloriesFactor": 0.04
@@ -1145,7 +1145,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 10,
     "holdSeconds": null,
     "caloriesFactor": 0.036
@@ -1185,7 +1185,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
     "caloriesFactor": 0.032
@@ -1225,7 +1225,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 20,
     "holdSeconds": null,
     "caloriesFactor": 0.042
@@ -1263,7 +1263,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 6,
     "holdSeconds": null,
     "caloriesFactor": 0.052
@@ -1535,7 +1535,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
     "caloriesFactor": 0.035
@@ -1763,7 +1763,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
     "caloriesFactor": 0.055
@@ -1800,7 +1800,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 10,
     "holdSeconds": null,
     "caloriesFactor": 0.055
@@ -1838,7 +1838,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
     "caloriesFactor": 0.055
@@ -1877,7 +1877,7 @@
       "posture"
     ],
     "sessionRole": "cooldown",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
     "caloriesFactor": 0.035
@@ -1918,7 +1918,7 @@
       "posture"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 10,
     "holdSeconds": null,
     "caloriesFactor": 0.04
@@ -1957,7 +1957,7 @@
       "posture"
     ],
     "sessionRole": "cooldown",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 6,
     "holdSeconds": null,
     "caloriesFactor": 0.03
@@ -1995,7 +1995,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
     "caloriesFactor": 0.05
@@ -2031,7 +2031,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 14,
     "holdSeconds": null,
     "caloriesFactor": 0.045
@@ -2068,7 +2068,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
     "caloriesFactor": 0.05
@@ -2105,7 +2105,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
     "caloriesFactor": 0.05
@@ -2142,7 +2142,7 @@
       "bodyweight"
     ],
     "sessionRole": "warmup",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
     "caloriesFactor": 0.04
@@ -2179,7 +2179,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": null,
     "holdSeconds": 25,
     "caloriesFactor": 0.055
@@ -2218,7 +2218,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": null,
     "holdSeconds": 25,
     "caloriesFactor": 0.06
@@ -2257,7 +2257,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
     "caloriesFactor": 0.06
@@ -2294,7 +2294,7 @@
       "bodyweight"
     ],
     "sessionRole": "main",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
     "caloriesFactor": 0.06
@@ -2332,7 +2332,7 @@
       "flexibility"
     ],
     "sessionRole": "cooldown",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": null,
     "holdSeconds": 30,
     "caloriesFactor": 0.025
@@ -2371,7 +2371,7 @@
       "posture"
     ],
     "sessionRole": "cooldown",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 6,
     "holdSeconds": null,
     "caloriesFactor": 0.03
@@ -2411,7 +2411,7 @@
       "core"
     ],
     "sessionRole": "cooldown",
-    "source": "generated_tune",
+    "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
     "caloriesFactor": 0.035

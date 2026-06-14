@@ -10,8 +10,8 @@ import { useEffect, useState } from 'react';
 import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
 import { GlobalUpsellModal } from '@/components/premium';
-import { TuneBootError } from '@/components/ui/TuneBootError';
-import { TuneBootLoader } from '@/components/ui/TuneBootLoader';
+import { BetterMeBootError } from '@/components/ui/BetterMeBootError';
+import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
 import { useDatabase } from '@/hooks/useDatabase';
 import { useNotificationDeepLinks } from '@/hooks/useNotificationDeepLinks';
 import { usePreferencesStore } from '@/stores/preferencesStore';
@@ -37,11 +37,11 @@ export default function RootLayout() {
   let content;
 
   if (!fontsLoaded) {
-    content = <TuneBootLoader />;
+    content = <BetterMeBootLoader />;
   } else if (error) {
-    content = <TuneBootError message={error} onRetry={() => setBootAttempt((attempt) => attempt + 1)} />;
+    content = <BetterMeBootError message={error} onRetry={() => setBootAttempt((attempt) => attempt + 1)} />;
   } else if (!isReady) {
-    content = <TuneBootLoader />;
+    content = <BetterMeBootLoader />;
   } else {
     content = (
       <>

@@ -34,7 +34,7 @@ export async function logAiAudit(input: AiAuditInput): Promise<void> {
       success: input.success,
     });
   } catch (error) {
-    console.warn('[Tune] Failed to write ai_outputs audit row.', error);
+    console.warn('[BetterMe] Failed to write ai_outputs audit row.', error);
   }
 
   if (!input.success) {
@@ -44,6 +44,6 @@ export async function logAiAudit(input: AiAuditInput): Promise<void> {
   try {
     await recordAiUsage(input.feature, requestHash);
   } catch (error) {
-    console.warn('[Tune] Failed to write ai_usage row.', error);
+    console.warn('[BetterMe] Failed to write ai_usage row.', error);
   }
 }
