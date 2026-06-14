@@ -40,17 +40,15 @@ export default function Step17Paywall() {
     return (
       <OnboardingShell
         step={step}
-        title="Your rhythm, refreshed"
-        subtitle="Your history stays intact. We will update your plan targets from your new answers."
+        title="Plan refreshed"
+        subtitle="Your history stays intact."
         onBack={goBack}
         hideFooter
         hideStepIndicator
       >
         <Card>
           <Text variant="h2">Update my plan</Text>
-          <Text variant="bodyMuted" style={styles.copy}>
-            Profile and nutrition targets will be replaced using your new onboarding answers.
-          </Text>
+          <Text variant="bodyMuted" style={styles.copy}>Targets refresh from your new answers.</Text>
         </Card>
         <Button
           label={isSubmitting ? 'Updating...' : 'Update my plan'}
@@ -69,8 +67,8 @@ export default function Step17Paywall() {
   return (
     <OnboardingShell
       step={step}
-      title="Your plan is ready to begin"
-      subtitle="Start your free trial to unlock movement, nourishment, and coaching — shaped entirely around you."
+      title="Unlock your BetterMe plan"
+      subtitle="Start your free trial anytime."
       onBack={goBack}
       hideFooter
       showBack
@@ -80,6 +78,17 @@ export default function Step17Paywall() {
       reasonWhy={null}
     >
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.proofRow}>
+          <View style={styles.proofChip}>
+            <Text variant="caption">Calm coaching loved</Text>
+          </View>
+          <View style={styles.proofChip}>
+            <Text variant="caption">Personal daily plans</Text>
+          </View>
+          <View style={styles.proofChip}>
+            <Text variant="caption">Built for consistency</Text>
+          </View>
+        </View>
         <PaywallHero
           onStartTrial={() => void unlockPlan(beginFreeTrial)}
           onRestore={() => void unlockPlan(restore)}
@@ -100,6 +109,20 @@ const styles = StyleSheet.create({
   container: {
     gap: spacing.sm,
     paddingBottom: spacing.lg,
+  },
+  proofRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+    justifyContent: 'center',
+  },
+  proofChip: {
+    backgroundColor: colors.surfaceCanvas,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   copy: {
     marginTop: 2,

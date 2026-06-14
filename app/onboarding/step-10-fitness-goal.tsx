@@ -7,20 +7,29 @@ export default function Step10FitnessGoal() {
   const { step, goNext, goBack } = useOnboardingNavigation(8);
   const fitnessGoal = useOnboardingStore((state) => state.draft.fitnessGoal);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
+  const goalInsight = fitnessGoal
+    ? fitnessGoal === 'get_toned'
+      ? 'Tone-focused plan selected.'
+      : fitnessGoal === 'maintain'
+        ? 'Maintenance plan selected.'
+        : 'Strength-focused plan selected.'
+    : undefined;
 
   return (
     <OnboardingShell
       step={step}
-      title="What feels right for your body?"
-      subtitle="Your goal shapes workout focus and daily nourishment — without aggressive targets."
+      title="Your main goal"
+      subtitle="This shapes your daily plan."
+      insightText={goalInsight}
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!fitnessGoal}
       nextDisabledReason="Pick your primary goal to continue."
     >
-      {FITNESS_GOAL_OPTIONS.map((option) => (
+      {FITNESS_GOAL_OPTIONS.map((option, index) => (
         <OptionCard
           key={option.value}
+          index={index}
           label={option.label}
           selected={fitnessGoal === option.value}
           onPress={() => patchDraft({ fitnessGoal: option.value })}

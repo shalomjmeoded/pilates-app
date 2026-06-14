@@ -160,7 +160,10 @@ export function HorizontalMeasurementRuler({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Switch to ${unit === 'kg' ? 'pounds' : 'kilograms'}`}
-          onPress={onToggleUnit}
+          onPress={() => {
+            selectionHaptic();
+            onToggleUnit();
+          }}
           style={styles.unitPill}
         >
           <Text variant="label" style={styles.unitLabel}>

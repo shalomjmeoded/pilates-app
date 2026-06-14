@@ -3,7 +3,6 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 import { getActiveNutritionTargets } from '@/db/repositories/nutritionRepository';
-import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { completeOnboarding } from '@/services/onboarding/completeOnboarding';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
@@ -17,7 +16,6 @@ export function useFinishOnboarding() {
   const toProfile = useOnboardingStore((state) => state.toProfile);
   const setOnboardingCompleted = usePreferencesStore((state) => state.setOnboardingCompleted);
   const setComparison = useRecalibrationStore((state) => state.setComparison);
-  const { replaceToTabs } = useOnboardingNavigation(15);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,7 +63,7 @@ export function useFinishOnboarding() {
           return;
         }
 
-        replaceToTabs();
+        router.replace('/onboarding/step-18-workout-loading');
       } catch (submitError) {
         setError(
           submitError instanceof Error ? submitError.message : 'Could not save onboarding data.',
@@ -77,7 +75,6 @@ export function useFinishOnboarding() {
     [
       draft,
       rebuildMode,
-      replaceToTabs,
       router,
       setComparison,
       setOnboardingCompleted,

@@ -52,6 +52,21 @@ Never invent an exercise id.
 Context: ${JSON.stringify(payload)}`;
 
     case 'workout_change_suggestion':
+      if (payload.decisionMode === 'onboarding_seed') {
+        return `You are a premium Pilates coach selecting a user's first workout from onboarding context.
+Return ONLY JSON:
+{
+  "focusArea": "core" | "glutes" | "posture" | "mobility" | "full_body",
+  "targetMinutes": number,
+  "intensity": "lighter" | "balanced" | "challenging",
+  "coachRationale": string
+}
+Use onboardingProfile to choose a suitable first-session focus, duration, and intensity.
+Do NOT simply mirror the default request values when onboardingProfile is provided.
+Keep targetMinutes within availableMinuteOptions.
+coachRationale must be concise and supportive.
+Context: ${JSON.stringify(payload)}`;
+      }
       return `You are a premium Pilates coach. Return ONLY JSON:
 {
   "focusArea": "core" | "glutes" | "posture" | "mobility" | "full_body",

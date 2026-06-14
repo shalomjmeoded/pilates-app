@@ -425,6 +425,14 @@ export async function countCompletedWorkouts(): Promise<number> {
   return row?.count ?? 0;
 }
 
+export async function countWorkoutPlans(): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ count: number }>(
+    `SELECT COUNT(*) as count FROM workout_plans`,
+  );
+  return row?.count ?? 0;
+}
+
 export async function countCompletedWorkoutsInLastDays(days: number): Promise<number> {
   const db = await getDatabase();
   const row = await db.getFirstAsync<{ count: number }>(

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, StyleSheet, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { OnboardingShell, PlanRevealHero } from '@/components/onboarding';
 import { Text } from '@/components/ui/Text';
@@ -38,7 +37,7 @@ export default function Step16PlanReveal() {
       <OnboardingShell
         step={step}
         title="Almost there"
-        subtitle="One more moment while we finalize your plan."
+        subtitle="Finalizing your targets."
         onBack={() => goToStep(13)}
         onNext={() => goToStep(13)}
         nextLabel="Review plan setup"
@@ -71,22 +70,16 @@ export default function Step16PlanReveal() {
   return (
     <OnboardingShell
       step={step}
-      title="This is your BetterMe plan"
-      subtitle="Movement, nourishment, and milestones — woven together for calm, sustainable progress."
+      title="Your plan is ready"
+      subtitle="Here are your key targets."
+      insightText="Built from your answers."
       onBack={() => goToStep(13)}
       onNext={goNext}
-      nextLabel="Unlock my plan"
+      nextLabel="Continue"
       phaseLabel="Your reveal"
       reasonWhy={null}
       hideStepIndicator={false}
     >
-      <Animated.View entering={FadeIn.duration(400)}>
-        <Text variant="bodyMuted" style={styles.revealLead}>
-          Everything you shared shaped these targets. They&apos;re yours — private, personal, and
-          ready when you are.
-        </Text>
-      </Animated.View>
-
       <PlanRevealHero
         calories={goalCalories}
         proteinG={macros.proteinG}
@@ -119,11 +112,6 @@ export default function Step16PlanReveal() {
 }
 
 const styles = StyleSheet.create({
-  revealLead: {
-    lineHeight: 24,
-    textAlign: 'center',
-    marginBottom: spacing.xs,
-  },
   warning: {
     backgroundColor: colors.warningSurface,
     borderRadius: radius.card,

@@ -125,6 +125,14 @@ export class MockAiProvider implements AiProvider {
     availableFocusAreas: WorkoutFocusArea[];
     todayMovementCount: number;
     todayEstimatedMinutes: number;
+    decisionMode?: 'standard' | 'onboarding_seed';
+    onboardingProfile?: {
+      fitnessGoal: string;
+      trainingFrequency: string;
+      exercisePreferences: string[];
+      paceKgPerWeek: number;
+      weightTrajectory: string;
+    };
   }): Promise<AiWorkoutChangeSuggestion> {
     const minuteOption =
       context.availableMinuteOptions.find((value) => value === context.targetMinutes) ??

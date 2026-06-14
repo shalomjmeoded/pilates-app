@@ -1,14 +1,27 @@
-import { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
-import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ReactNode, useEffect } from 'react';
+import { Image, ImageSourcePropType, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import Animated, {
+  Easing,
+  FadeInDown,
+  FadeInRight,
+  FadeInUp,
+  FadeOutLeft,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { ONBOARDING_TOTAL_STEPS } from '@/onboarding/constants';
-import { getOnboardingPhase, getOnboardingReason } from '@/onboarding/stepCopy';
+import { getOnboardingPhase, getOnboardingPhaseIndex } from '@/onboarding/stepCopy';
 import { colors, radius, spacing } from '@/theme';
+import { lightImpactHaptic } from '@/utils/haptics';
 
 interface OnboardingShellProps {
   step: number;
@@ -27,7 +40,18 @@ interface OnboardingShellProps {
   scrollEnabled?: boolean;
   phaseLabel?: string;
   reasonWhy?: string | null;
+  heroImageSource?: ImageSourcePropType;
+  heroLoopSource?: ImageSourcePropType;
+  heroAccessibilityLabel?: string;
+  insightText?: string;
 }
+
+const PHASE_HERO_IMAGES: Record<number, ImageSourcePropType> = {
+  1: require('../../../assets/onboarding/hero-rhythm.png'),
+  2: require('../../../assets/onboarding/hero-body.png'),
+  3: require('../../../assets/onboarding/hero-goals.png'),
+  4: require('../../../assets/onboarding/hero-plan.png'),
+};
 
 export function OnboardingShell({
   step,
@@ -45,24 +69,68 @@ export function OnboardingShell({
   titleLines = 3,
   scrollEnabled = true,
   phaseLabel,
-  reasonWhy,
+  reasonWhy: _reasonWhy,
+  heroImageSource,
+  heroLoopSource,
+  heroAccessibilityLabel,
+  insightText,
 }: OnboardingShellProps) {
   const { height } = useWindowDimensions();
   const isCompact = height < 760;
   const phase = phaseLabel ?? getOnboardingPhase(step);
-  const reason = reasonWhy === null ? undefined : (reasonWhy ?? getOnboardingReason(step));
+  const phaseIndex = getOnboardingPhaseIndex(step);
+  const progress = useSharedValue(0);
+  const mediaScale = useSharedValue(1.02);
+  const mediaX = useSharedValue(-4);
+  const resolvedHeroSource = heroLoopSource ?? heroImageSource ?? PHASE_HERO_IMAGES[phaseIndex];
+
+  useEffect(() => {
+    progress.value = withTiming(step / ONBOARDING_TOTAL_STEPS, { duration: 360 });
+  }, [progress, step]);
+
+  useEffect(() => {
+    mediaScale.value = withRepeat(
+      withSequence(
+        withTiming(1.09, { duration: 6800, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.02, { duration: 6800, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
+    mediaX.value = withRepeat(
+      withSequence(
+        withTiming(4, { duration: 6400, easing: Easing.inOut(Easing.ease) }),
+        withTiming(-4, { duration: 6400, easing: Easing.inOut(Easing.ease) }),
+      ),
+      -1,
+      false,
+    );
+  }, [mediaScale, mediaX, phaseIndex]);
+
+  const progressFillStyle = useAnimatedStyle(() => ({
+    width: `${Math.max(0, Math.min(1, progress.value)) * 100}%`,
+  }));
+
+  const mediaStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: mediaScale.value }, { translateX: mediaX.value }],
+  }));
+
+  const handleNextPress = () => {
+    lightImpactHaptic();
+    onNext?.();
+  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       {showBack && onBack ? <SubscreenTopBar onPress={onBack} /> : null}
       {!hideStepIndicator ? (
         <View style={styles.header}>
-          <Text variant="label" style={styles.phase}>
-            {phase}
-          </Text>
           <View style={styles.stepRow}>
+            <Text variant="label" style={styles.phase}>
+              Phase {phaseIndex}: {phase}
+            </Text>
             <Text variant="caption">
-              Step {step} of {ONBOARDING_TOTAL_STEPS}
+              Phase {phaseIndex} of 4
             </Text>
           </View>
           <View
@@ -71,7 +139,7 @@ export function OnboardingShell({
             accessibilityValue={{ min: 0, max: ONBOARDING_TOTAL_STEPS, now: step }}
             style={styles.progressTrack}
           >
-            <View style={[styles.progressFill, { width: `${(step / ONBOARDING_TOTAL_STEPS) * 100}%` }]} />
+            <Animated.View style={[styles.progressFill, progressFillStyle]} />
           </View>
         </View>
       ) : null}
@@ -90,29 +158,52 @@ export function OnboardingShell({
           style={[styles.page, isCompact && styles.pageCompact]}
         >
           <View style={styles.intro}>
-            <Text
-              variant="hero"
-              style={styles.title}
-              numberOfLines={titleLines}
-              adjustsFontSizeToFit
-              minimumFontScale={0.82}
-            >
-              {title}
-            </Text>
-            {subtitle ? (
-              <Text variant="bodyMuted" style={styles.subtitle}>
-                {subtitle}
+            <Animated.View entering={FadeInDown.duration(320)} style={styles.visualArea}>
+              {resolvedHeroSource ? (
+                <Animated.View sharedTransitionTag="onboardingHeroMedia" style={styles.heroMediaWrap}>
+                  <Animated.Image
+                    source={resolvedHeroSource}
+                    style={[styles.heroMedia, mediaStyle]}
+                    resizeMode="cover"
+                    accessibilityLabel={heroAccessibilityLabel ?? 'Onboarding hero media'}
+                  />
+                  <View style={styles.heroMediaOverlay} pointerEvents="none" />
+                </Animated.View>
+              ) : (
+                <Animated.View sharedTransitionTag="onboardingHeroOrb" style={styles.visualOrb}>
+                  <MaterialCommunityIcons
+                    name={phaseIndex === 1 ? 'leaf' : phaseIndex === 2 ? 'ruler' : phaseIndex === 3 ? 'bullseye-arrow' : 'star-four-points'}
+                    size={30}
+                    color={colors.brandPrimary}
+                  />
+                </Animated.View>
+              )}
+            </Animated.View>
+            <Animated.View entering={FadeInDown.delay(60).duration(280)}>
+              <Text
+                variant="hero"
+                style={styles.title}
+                numberOfLines={titleLines}
+                adjustsFontSizeToFit
+                minimumFontScale={0.82}
+              >
+                {title}
               </Text>
+            </Animated.View>
+            {subtitle ? (
+              <Animated.View entering={FadeInUp.delay(100).duration(260)}>
+                <Text variant="bodyMuted" style={styles.subtitle}>
+                  {subtitle}
+                </Text>
+              </Animated.View>
             ) : null}
-            {reason ? (
-              <View style={styles.reasonCard}>
-                <Text variant="caption" style={styles.reasonLabel}>
-                  Why we ask
+            {insightText ? (
+              <Animated.View entering={FadeInUp.delay(140).duration(240)} style={styles.insightPill}>
+                <MaterialCommunityIcons name="star-four-points" size={14} color={colors.brandPrimary} />
+                <Text variant="caption" style={styles.insightText}>
+                  {insightText}
                 </Text>
-                <Text variant="body" style={styles.reasonText}>
-                  {reason}
-                </Text>
-              </View>
+              </Animated.View>
             ) : null}
           </View>
           <View style={styles.body}>{children}</View>
@@ -126,7 +217,7 @@ export function OnboardingShell({
               <View style={styles.nextWrap}>
                 <Button
                   label={nextLabel}
-                  onPress={onNext}
+                  onPress={handleNextPress}
                   disabled={nextDisabled}
                   accessibilityHint={
                     nextDisabled
@@ -201,29 +292,63 @@ const styles = StyleSheet.create({
   title: {
     flexShrink: 1,
     paddingRight: spacing.xs,
-    fontSize: 32,
-    lineHeight: 38,
+    fontSize: 30,
+    lineHeight: 36,
   },
   subtitle: {
-    maxWidth: 560,
-    lineHeight: 24,
+    maxWidth: 520,
+    lineHeight: 22,
   },
-  reasonCard: {
+  insightPill: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     backgroundColor: colors.surfaceRose,
-    borderRadius: radius.card,
+    borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.borderLight,
-    padding: spacing.sm,
-    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
   },
-  reasonLabel: {
+  insightText: {
     color: colors.brandPrimary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
   },
-  reasonText: {
-    lineHeight: 22,
-    color: colors.textDark,
+  visualArea: {
+    alignItems: 'center',
+  },
+  visualOrb: {
+    width: 74,
+    height: 74,
+    borderRadius: 37,
+    backgroundColor: colors.surfaceHero,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.brandPrimary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 3,
+  },
+  heroMediaWrap: {
+    width: '100%',
+    maxWidth: 360,
+    height: 136,
+    borderRadius: radius.hero,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceHero,
+  },
+  heroMedia: {
+    width: '100%',
+    height: '100%',
+  },
+  heroMediaOverlay: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(31, 28, 26, 0.08)',
   },
   body: {
     gap: spacing.sm,
