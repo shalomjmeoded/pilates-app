@@ -87,7 +87,10 @@ export function VerticalMeasurementRuler({
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ selected: selectedSystem === 'metric' }}
-          onPress={() => onSelectSystem(true)}
+          onPress={() => {
+            selectionHaptic();
+            onSelectSystem(true);
+          }}
           style={[
             styles.segment,
             selectedSystem === 'metric' && styles.segmentSelected,
@@ -103,7 +106,10 @@ export function VerticalMeasurementRuler({
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ selected: selectedSystem === 'imperial' }}
-          onPress={() => onSelectSystem(false)}
+          onPress={() => {
+            selectionHaptic();
+            onSelectSystem(false);
+          }}
           style={[
             styles.segment,
             selectedSystem === 'imperial' && styles.segmentSelected,

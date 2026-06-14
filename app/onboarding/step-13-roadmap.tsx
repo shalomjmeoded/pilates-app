@@ -29,12 +29,17 @@ export default function Step13Roadmap() {
   const weeksToGoal = estimateWeeksToGoal(currentWeight, goalWeight, trajectory, pace);
   const targetDateLabel = formatRoadmapTargetDate(weeksToGoal);
   const confidenceLabel = roadmapConfidenceLabel(trajectory, pace);
+  const roadmapInsight =
+    weeksToGoal === null ? 'Consistency-first path ready.' : `Milestone in ~${weeksToGoal} weeks.`;
 
   return (
     <OnboardingShell
       step={step}
-      title="See your journey unfold"
-      subtitle="This projection reflects the pace you chose — a guide, not a deadline."
+      title="Your roadmap"
+      subtitle="Preview your milestone journey."
+      heroImageSource={require('../../assets/onboarding/hero-goals.png')}
+      heroAccessibilityLabel="Pilates roll up pose"
+      insightText={roadmapInsight}
       onBack={goBack}
       onNext={goNext}
     >

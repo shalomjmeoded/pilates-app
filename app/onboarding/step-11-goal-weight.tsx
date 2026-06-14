@@ -47,11 +47,17 @@ export default function Step11GoalWeight() {
     }
   };
 
+  const goalInsight =
+    goalWeightKg && goalWeightKg >= MIN_GOAL_WEIGHT_KG && goalWeightKg <= MAX_GOAL_WEIGHT_KG
+      ? `Goal saved: ${units.weight === 'kg' ? goalWeightKg : kgToLb(goalWeightKg)} ${units.weight}`
+      : undefined;
+
   return (
     <OnboardingShell
       step={step}
-      title="Where would you like to land?"
-      subtitle="A clear destination makes milestones feel achievable, not overwhelming."
+      title="Your goal weight"
+      subtitle="This maps your milestones."
+      insightText={goalInsight}
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!goalWeightKg || goalWeightKg < MIN_GOAL_WEIGHT_KG || goalWeightKg > MAX_GOAL_WEIGHT_KG}

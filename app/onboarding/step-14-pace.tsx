@@ -19,11 +19,20 @@ export default function Step14Pace() {
     goNext();
   };
 
+  const paceInsight = paceKgPerWeek
+    ? paceKgPerWeek === 0.25
+      ? 'Relaxed pace selected.'
+      : paceKgPerWeek === 0.5
+        ? 'Moderate pace selected.'
+        : 'Fast pace selected.'
+    : 'Moderate pace selected.';
+
   return (
     <OnboardingShell
       step={step}
-      title="Choose a pace that honors your life"
-      subtitle="Gentle or steady — you stay in control of how quickly things shift."
+      title="Your pace"
+      subtitle="Gentle, moderate, or strong."
+      insightText={paceInsight}
       onBack={goBack}
       onNext={handleNext}
     >

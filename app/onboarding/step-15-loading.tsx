@@ -96,8 +96,9 @@ export default function Step15Loading() {
             Creating your plan
           </Text>
           <Text variant="bodyMuted" style={styles.subtitle}>
-            Building your rhythm — movement, nourishment, and milestones woven together.
+            This takes a moment.
           </Text>
+          <OnboardingPlanProgress onComplete={() => {}} />
         </View>
       </SafeAreaView>
     );
@@ -115,7 +116,7 @@ export default function Step15Loading() {
           Creating your plan
         </Text>
         <Text variant="bodyMuted" style={styles.subtitle}>
-          Personalizing movement, nourishment, and milestones — just for you.
+          Almost ready.
         </Text>
         <OnboardingPlanProgress onComplete={handleComplete} />
       </View>
@@ -136,9 +137,9 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   mark: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
     backgroundColor: colors.surfaceCanvas,
     borderWidth: 1,
     borderColor: colors.borderLight,

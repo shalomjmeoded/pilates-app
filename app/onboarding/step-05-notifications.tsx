@@ -36,7 +36,7 @@ export default function Step05Notifications() {
     setAnnouncedStatus(
       granted
         ? 'Reminders enabled. You can fine-tune times in Settings.'
-        : 'No problem — BetterMe works fully without notifications.',
+        : 'No problem — BetterMe works fully without reminders.',
     );
   };
 
@@ -50,29 +50,24 @@ export default function Step05Notifications() {
   return (
     <OnboardingShell
       step={step}
-      title="Stay gently on track"
-      titleLines={2}
-      subtitle="Local reminders for meals, workouts, and coaching moments. No ads or marketing pushes."
+      title="Gentle reminders?"
+      subtitle="Optional nudges for meals and workouts."
+      insightText={notificationsEnabled ? 'Great. We will remind softly.' : 'No problem. You can add later.'}
       onBack={goBack}
       onNext={() => void handleNext()}
       nextLabel="Continue"
     >
-      <View style={styles.iconRow}>
-        <VisualAsset icon="bell-ring-outline" fallback="icon" size={72} accessibilityLabel="Reminders" />
-        <Text variant="bodyMuted" style={styles.iconCopy}>
-          Gentle nudges for meals and movement, on your schedule.
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Text variant="body">
-          You can change or turn reminders off anytime in Settings.
+      <View style={styles.visualCard}>
+        <VisualAsset icon="bell-ring-outline" fallback="icon" size={56} accessibilityLabel="Reminders" />
+        <Text variant="caption" style={styles.visualCaption}>
+          Quiet, local reminders only.
         </Text>
       </View>
 
       <OptionCard
         label="Use gentle reminders"
         description="Breakfast, lunch, dinner, workouts, and coaching tips."
+        index={0}
         selected={notificationsEnabled}
         accessibilityLabel="Enable local reminders for meals, workouts, and coaching tips"
         onPress={() => patchDraft({ notificationsEnabled: true })}
@@ -81,6 +76,7 @@ export default function Step05Notifications() {
       <OptionCard
         label="Not now"
         description="Set up reminders later in Settings."
+        index={1}
         selected={!notificationsEnabled}
         accessibilityLabel="Do not enable local reminders during onboarding"
         onPress={() => patchDraft({ notificationsEnabled: false })}
@@ -96,21 +92,19 @@ export default function Step05Notifications() {
 }
 
 const styles = StyleSheet.create({
-  iconRow: {
-    flexDirection: 'row',
+  visualCard: {
     alignItems: 'center',
+    justifyContent: 'center',
     gap: spacing.sm,
-  },
-  iconCopy: {
-    flex: 1,
-    lineHeight: 22,
-  },
-  card: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.borderLight,
     padding: spacing.sm,
+    minHeight: 118,
+  },
+  visualCaption: {
+    textAlign: 'center',
   },
   status: {
     marginTop: spacing.xs,

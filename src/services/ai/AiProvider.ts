@@ -26,6 +26,14 @@ export interface AiProvider {
     availableFocusAreas: WorkoutFocusArea[];
     todayMovementCount: number;
     todayEstimatedMinutes: number;
+    decisionMode?: 'standard' | 'onboarding_seed';
+    onboardingProfile?: {
+      fitnessGoal: string;
+      trainingFrequency: string;
+      exercisePreferences: string[];
+      paceKgPerWeek: number;
+      weightTrajectory: string;
+    };
   }): Promise<AiWorkoutChangeSuggestion>;
   assessPhysique(context: PhysiqueAssessmentRequest): Promise<AiPhysiqueAssessment>;
 }

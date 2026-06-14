@@ -7,22 +7,30 @@ export default function Step12Trajectory() {
   const { step, goNext, goBack } = useOnboardingNavigation(10);
   const weightTrajectory = useOnboardingStore((state) => state.draft.weightTrajectory);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
+  const trajectoryInsight = weightTrajectory
+    ? weightTrajectory === 'weight_loss'
+      ? 'Gentle cut path selected.'
+      : weightTrajectory === 'lean_mass'
+        ? 'Lean gain path selected.'
+        : 'Steady path selected.'
+    : undefined;
 
   return (
     <OnboardingShell
       step={step}
-      title="Which path feels sustainable?"
-      subtitle="Choose the direction that honors your lifestyle — change is allowed anytime."
+      title="Your direction"
+      subtitle="Choose the path you prefer."
+      insightText={trajectoryInsight}
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!weightTrajectory}
       nextDisabledReason="Choose a trajectory option to continue."
     >
-      {TRAJECTORY_OPTIONS.map((option) => (
+      {TRAJECTORY_OPTIONS.map((option, index) => (
         <OptionCard
           key={option.value}
+          index={index}
           label={option.label}
-          description={option.description}
           selected={weightTrajectory === option.value}
           onPress={() => patchDraft({ weightTrajectory: option.value })}
         />

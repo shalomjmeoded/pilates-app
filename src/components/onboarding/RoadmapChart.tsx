@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import Svg, {
   Circle,
   Defs,
@@ -14,6 +15,7 @@ import { Text } from '@/components/ui/Text';
 import type { RoadmapPoint } from '@/types/calculations';
 import { colors, metrics, radius, spacing } from '@/theme';
 import { displayWeight } from '@/utils/units';
+import { selectionHaptic } from '@/utils/haptics';
 
 interface RoadmapChartProps {
   points: RoadmapPoint[];
@@ -108,29 +110,49 @@ export function RoadmapChart({
 
   return (
     <View style={styles.wrap} onLayout={onLayout}>
-      <View style={styles.metaRow}>
+      <Animated.View entering={FadeInUp.duration(260)} style={styles.metaRow}>
         {targetDateLabel ? (
           <View style={styles.metaBadge}>
-            <Text variant="label">Target</Text>
-            <Text variant="body">{targetDateLabel}</Text>
+            <Text variant="caption">{targetDateLabel}</Text>
           </View>
         ) : null}
         {confidenceLabel ? (
           <View style={[styles.metaBadge, styles.confidenceBadge]}>
-            <Text variant="label">Confidence</Text>
-            <Text variant="bodyMuted" numberOfLines={2}>
+            <Text variant="caption" numberOfLines={1}>
               {confidenceLabel}
             </Text>
           </View>
         ) : null}
+      </Animated.View>
+
+      <View style={styles.journeyRow}>
+        <View style={styles.journeyNodeWrap}>
+          <View style={[styles.journeyNode, styles.journeyNodeActive]} />
+          <Text variant="caption">Now</Text>
+        </View>
+        <View style={styles.journeyLine} />
+        <View style={styles.journeyNodeWrap}>
+          <View style={styles.journeyNode} />
+          <Text variant="caption">6w</Text>
+        </View>
+        <View style={styles.journeyLine} />
+        <View style={styles.journeyNodeWrap}>
+          <View style={styles.journeyNode} />
+          <Text variant="caption">12w</Text>
+        </View>
+        <View style={styles.journeyLine} />
+        <View style={styles.journeyNodeWrap}>
+          <View style={[styles.journeyNode, styles.journeyNodeGoal]} />
+          <Text variant="caption">Goal</Text>
+        </View>
       </View>
 
-      <View style={styles.card}>
+      <Animated.View entering={FadeInUp.delay(70).duration(280)} style={styles.card}>
         {chart ? (
           <>
             <View style={styles.tooltip}>
               <Text variant="label" style={styles.tooltipLabel}>
-                Week {active?.week ?? 0} milestone
+                Week {active?.week ?? 0}
               </Text>
               <Text variant="h2" style={styles.tooltipValue}>
                 {active ? formatWeight(active.weight) : ''}
@@ -184,9 +206,9 @@ export function RoadmapChart({
             </Svg>
           </>
         ) : null}
-      </View>
+      </Animated.View>
 
-      <View style={styles.weekRow}>
+      <Animated.View entering={FadeInUp.delay(120).duration(260)} style={styles.weekRow}>
         {MILESTONE_WEEKS.map((week) => (
           <Pressable
             key={week}
@@ -194,7 +216,10 @@ export function RoadmapChart({
             accessibilityLabel={`Show week ${week} roadmap milestone`}
             accessibilityHint="Updates the highlighted milestone value above the chart"
             accessibilityState={{ selected: activeWeek === week }}
-            onPress={() => setActiveWeek(week)}
+            onPress={() => {
+              selectionHaptic();
+              setActiveWeek(week);
+            }}
             style={[styles.weekChip, activeWeek === week && styles.weekChipActive]}
           >
             <Text variant="label" style={activeWeek === week ? styles.weekChipTextActive : undefined}>
@@ -202,7 +227,7 @@ export function RoadmapChart({
             </Text>
           </Pressable>
         ))}
-      </View>
+      </Animated.View>
     </View>
   );
 }
@@ -224,6 +249,38 @@ const styles = StyleSheet.create({
   },
   confidenceBadge: {
     backgroundColor: colors.surfaceRose,
+  },
+  journeyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: -4,
+  },
+  journeyNodeWrap: {
+    alignItems: 'center',
+    gap: 6,
+  },
+  journeyLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.borderLight,
+    marginHorizontal: 6,
+  },
+  journeyNode: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceCanvas,
+  },
+  journeyNodeActive: {
+    borderColor: colors.brandPrimary,
+    backgroundColor: colors.brandPrimary,
+  },
+  journeyNodeGoal: {
+    borderColor: colors.accentWarm,
+    backgroundColor: colors.accentWarm,
   },
   card: {
     backgroundColor: colors.surfaceCanvas,

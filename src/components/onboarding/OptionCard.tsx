@@ -1,7 +1,9 @@
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { Text } from '@/components/ui/Text';
 import { colors, radius, spacing } from '@/theme';
+import { selectionHaptic } from '@/utils/haptics';
 
 interface OptionCardProps {
   label: string;
@@ -9,6 +11,7 @@ interface OptionCardProps {
   selected?: boolean;
   accessibilityLabel?: string;
   selectionMode?: 'single' | 'multiple';
+  index?: number;
   onPress: () => void;
 }
 
@@ -18,38 +21,50 @@ export function OptionCard({
   selected = false,
   accessibilityLabel,
   selectionMode = 'single',
+  index = 0,
   onPress,
 }: OptionCardProps) {
   const accessibilityRole = selectionMode === 'multiple' ? 'checkbox' : 'radio';
   const accessibilityState =
     selectionMode === 'multiple' ? { checked: selected } : { selected };
 
+  const handlePress = () => {
+    selectionHaptic();
+    onPress();
+  };
+
   return (
-    <Pressable
-      accessibilityRole={accessibilityRole}
-      accessibilityLabel={accessibilityLabel ?? label}
-      accessibilityState={accessibilityState}
-      onPress={onPress}
-      style={({ pressed }) => [styles.card, selected && styles.cardSelected, pressed && styles.cardPressed]}
-    >
-      <View style={styles.content}>
-        <Text variant="body" style={selected ? styles.labelSelected : undefined}>
-          {label}
-        </Text>
-        {description ? (
-          <Text variant="bodyMuted" style={styles.description}>
-            {description}
-          </Text>
-        ) : null}
-      </View>
-      <View
-        style={[
-          styles.indicator,
-          selectionMode === 'multiple' && styles.indicatorMultiple,
-          selected && styles.indicatorSelected,
+    <Animated.View entering={FadeInUp.delay(index * 45).duration(260)}>
+      <Pressable
+        accessibilityRole={accessibilityRole}
+        accessibilityLabel={accessibilityLabel ?? label}
+        accessibilityState={accessibilityState}
+        onPress={handlePress}
+        style={({ pressed }) => [
+          styles.card,
+          selected && styles.cardSelected,
+          pressed && styles.cardPressed,
         ]}
-      />
-    </Pressable>
+      >
+        <View style={styles.content}>
+          <Text variant="body" style={selected ? styles.labelSelected : undefined}>
+            {label}
+          </Text>
+          {description ? (
+            <Text variant="bodyMuted" style={styles.description}>
+              {description}
+            </Text>
+          ) : null}
+        </View>
+        <View
+          style={[
+            styles.indicator,
+            selectionMode === 'multiple' && styles.indicatorMultiple,
+            selected && styles.indicatorSelected,
+          ]}
+        />
+      </Pressable>
+    </Animated.View>
   );
 }
 
@@ -70,9 +85,16 @@ const styles = StyleSheet.create({
   cardSelected: {
     borderColor: colors.brandPrimary,
     backgroundColor: colors.surfaceRose,
+    shadowColor: colors.brandPrimary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 4,
+    transform: [{ scale: 1.01 }],
   },
   cardPressed: {
-    opacity: 0.9,
+    opacity: 0.92,
+    transform: [{ scale: 0.995 }],
   },
   content: {
     flex: 1,

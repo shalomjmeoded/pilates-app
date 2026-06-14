@@ -5,6 +5,7 @@ import { getAllExercises } from '@/db/repositories/exerciseRepository';
 import { getProfile } from '@/db/repositories/profileRepository';
 import { getLatestPhysiqueAssessment } from '@/db/repositories/physiqueAssessmentRepository';
 import {
+  countWorkoutPlans,
   deleteWorkoutPlanByDate,
   getLatestWorkoutChangeFeedback,
   getLatestCompletedSessionFeedback,
@@ -13,15 +14,25 @@ import {
   getWorkoutPlanByDate,
   saveWorkoutPlan,
 } from '@/db/repositories/workoutRepository';
+import { aiFacade } from '@/services/ai';
 import type { Exercise } from '@/types/exercise';
 import type { Profile } from '@/types/profile';
-import { PlanGenerationError, type WorkoutGenerationOverrides, type WorkoutPlan } from '@/types/workout';
+import {
+  PlanGenerationError,
+  type WorkoutFocusArea,
+  type WorkoutGenerationOverrides,
+  type WorkoutIntensity,
+  type WorkoutPlan,
+} from '@/types/workout';
 
 import { getWeekStartDate } from '@/engines/coaching/weekStart';
 import { generateWorkoutPlan, validatePlanExerciseIds } from './planGenerator';
 import { applyFeedbackProgression, getDeprioritizedExerciseIds } from './progression';
 
 const TARGET_MIN = 9;
+const ONBOARDING_FOCUS_AREAS: WorkoutFocusArea[] = ['core', 'glutes', 'posture', 'mobility', 'full_body'];
+const ONBOARDING_MINUTE_OPTIONS = [15, 25, 35] as const;
+const ONBOARDING_INTENSITY_OPTIONS: WorkoutIntensity[] = ['lighter', 'balanced', 'challenging'];
 
 export function formatPlanDate(date: Date): string {
   return format(date, 'yyyy-MM-dd');
@@ -67,6 +78,7 @@ function toDateFromPlanDate(planDate: string): Date {
 }
 
 async function resolveGenerationOverrides(
+  profile: Profile,
   planDate: string,
   explicitOverrides?: WorkoutGenerationOverrides,
 ): Promise<WorkoutGenerationOverrides | undefined> {
@@ -86,6 +98,10 @@ async function resolveGenerationOverrides(
 
   const priorFeedback = await getLatestWorkoutChangeFeedback(weekStart);
   if (!priorFeedback) {
+    const workoutPlanCount = await countWorkoutPlans();
+    if (workoutPlanCount === 0) {
+      return resolveOnboardingSeedOverrides(profile);
+    }
     return undefined;
   }
 
@@ -96,12 +112,84 @@ async function resolveGenerationOverrides(
   };
 }
 
+function defaultOnboardingRequest(profile: Profile): {
+  focusArea: WorkoutFocusArea;
+  targetMinutes: number;
+  intensity: WorkoutIntensity;
+} {
+  const focusArea: WorkoutFocusArea =
+    profile.fitnessGoal === 'build_muscle'
+      ? 'glutes'
+      : profile.fitnessGoal === 'maintain'
+        ? 'mobility'
+        : 'full_body';
+  const targetMinutes =
+    profile.trainingFrequency === 'none' ? 15 : profile.trainingFrequency === '1_2' ? 25 : 35;
+  const intensity: WorkoutIntensity =
+    profile.trainingFrequency === 'none' ? 'lighter' : profile.paceKgPerWeek >= 1 ? 'challenging' : 'balanced';
+
+  return { focusArea, targetMinutes, intensity };
+}
+
+function normalizeOnboardingSuggestion(
+  suggestion: {
+    focusArea: WorkoutFocusArea;
+    targetMinutes: number;
+    intensity: WorkoutIntensity;
+  },
+): WorkoutGenerationOverrides {
+  const focusArea = ONBOARDING_FOCUS_AREAS.includes(suggestion.focusArea)
+    ? suggestion.focusArea
+    : 'full_body';
+  const targetMinutes = [...ONBOARDING_MINUTE_OPTIONS].sort(
+    (a, b) => Math.abs(a - suggestion.targetMinutes) - Math.abs(b - suggestion.targetMinutes),
+  )[0];
+  const intensity = ONBOARDING_INTENSITY_OPTIONS.includes(suggestion.intensity)
+    ? suggestion.intensity
+    : 'balanced';
+
+  return { focusArea, targetMinutes, intensity };
+}
+
+async function resolveOnboardingSeedOverrides(
+  profile: Profile,
+): Promise<WorkoutGenerationOverrides | undefined> {
+  const request = defaultOnboardingRequest(profile);
+
+  try {
+    const suggestion = await aiFacade.suggestWorkoutChange({
+      ...request,
+      decisionMode: 'onboarding_seed',
+      onboardingProfile: {
+        fitnessGoal: profile.fitnessGoal,
+        trainingFrequency: profile.trainingFrequency,
+        exercisePreferences: profile.exercisePreferences,
+        paceKgPerWeek: profile.paceKgPerWeek,
+        weightTrajectory: profile.weightTrajectory,
+      },
+      availableMinuteOptions: [...ONBOARDING_MINUTE_OPTIONS],
+      availableFocusAreas: [...ONBOARDING_FOCUS_AREAS],
+      todayMovementCount: 0,
+      todayEstimatedMinutes: 0,
+    });
+
+    return normalizeOnboardingSuggestion(suggestion);
+  } catch {
+    return normalizeOnboardingSuggestion(request);
+  }
+}
+
 export async function ensureWorkoutPlanForDate(
   planDate: string,
   overrides?: WorkoutGenerationOverrides,
   options?: EnsureWorkoutPlanOptions,
 ): Promise<WorkoutPlan> {
-  const resolvedOverrides = await resolveGenerationOverrides(planDate, overrides);
+  const profile = await getProfile();
+  if (!profile) {
+    throw new PlanGenerationError('NO_PROFILE', 'Complete onboarding to generate workouts.');
+  }
+
+  const resolvedOverrides = await resolveGenerationOverrides(profile, planDate, overrides);
   const existing = await getWorkoutPlanByDate(planDate);
   if (existing) {
     if (overrides) {
@@ -117,11 +205,6 @@ export async function ensureWorkoutPlanForDate(
 
   if (isDateInFuture(planDate) && !options?.allowFutureGeneration) {
     throw new PlanGenerationError('UNKNOWN', 'Future workout plans are not generated yet.');
-  }
-
-  const profile = await getProfile();
-  if (!profile) {
-    throw new PlanGenerationError('NO_PROFILE', 'Complete onboarding to generate workouts.');
   }
 
   const library = await getAllExercises();
