@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ComponentProps } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {
   Image,
+  type ImageResizeMode,
   ImageSourcePropType,
   StyleSheet,
   View,
@@ -26,6 +27,7 @@ export interface VisualAssetProps {
   size?: number;
   fillWidth?: boolean;
   fillHeight?: number;
+  resizeMode?: ImageResizeMode;
   accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
 }
@@ -40,6 +42,7 @@ export function VisualAsset({
   size = 120,
   fillWidth = false,
   fillHeight = 240,
+  resizeMode = 'cover',
   accessibilityLabel,
   style,
 }: VisualAssetProps) {
@@ -77,7 +80,7 @@ export function VisualAsset({
           key={frames ? frameIndex : undefined}
           source={source}
           style={fillWidth ? styles.fillImage : { width: size, height: size }}
-          resizeMode="cover"
+          resizeMode={resizeMode}
           accessibilityLabel={accessibilityLabel}
         />
       </View>

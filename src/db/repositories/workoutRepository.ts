@@ -301,6 +301,24 @@ export async function saveSessionFeedback(
   }
 }
 
+export async function saveSessionExerciseFeedback(
+  sessionId: string,
+  sortOrder: number,
+  feedback: ExerciseFeedback,
+  completedAt: string = new Date().toISOString(),
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `UPDATE workout_session_exercises
+     SET feedback = ?, completed_at = ?
+     WHERE session_id = ? AND sort_order = ?`,
+    feedback,
+    completedAt,
+    sessionId,
+    sortOrder,
+  );
+}
+
 export async function completeWorkoutSession(sessionId: string): Promise<void> {
   const db = await getDatabase();
   await db.runAsync(
@@ -389,9 +407,10 @@ export async function swapPlanExercise(
   if (session?.status === 'in_progress') {
     await db.runAsync(
       `UPDATE workout_session_exercises
-       SET exercise_id = ?
+       SET exercise_id = ?, feedback = 'modified', completed_at = ?
        WHERE session_id = ? AND sort_order = ?`,
       newExerciseId,
+      new Date().toISOString(),
       session.id,
       sortOrder,
     );

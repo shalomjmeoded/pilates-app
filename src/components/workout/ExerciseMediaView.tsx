@@ -37,6 +37,7 @@ export function ExerciseMediaView({
       size={size}
       fillWidth={fillWidth}
       fillHeight={resolvedFillHeight}
+      resizeMode={variant === 'gif' ? 'contain' : 'cover'}
       accessibilityLabel={`${exercise.name} ${
         variant === 'gif'
           ? animateDemo

@@ -1,29 +1,48 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, AppState, Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, AppState, Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
-import { ExerciseMediaView, WorkoutExitSheet } from '@/components/workout';
+import { ExerciseMediaView, ExerciseSwapReasonSheet, WorkoutExitSheet } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { TuneBootLoader } from '@/components/ui/TuneBootLoader';
-import { hasAnimatedExerciseDemo } from '@/constants/exerciseMedia';
-import { discardWorkoutSession, updateSessionProgress } from '@/db/repositories/workoutRepository';
+import {
+  completeWorkoutSession,
+  discardWorkoutSession,
+  getSessionFeedback,
+  saveSessionExerciseFeedback,
+  updateSessionProgress,
+} from '@/db/repositories/workoutRepository';
+import { ensureNextDayPlanAdapted } from '@/engines/workout';
+import { useExerciseSubstitution } from '@/hooks/useExerciseSubstitution';
+import { usePremium } from '@/hooks/usePremium';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
-import { colors, spacing } from '@/theme';
+import type { ExerciseFeedback } from '@/types/exercise';
+import type { ExerciseSwapReason } from '@/types/exerciseSwap';
+import { colors, radius, shadows, spacing } from '@/theme';
 import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
 import { successNotificationHaptic } from '@/utils/haptics';
 
 export default function WorkoutPlayerScreen() {
   const router = useRouter();
   const { sessionId } = useLocalSearchParams<{ sessionId: string }>();
-  const { session, exercises, isLoading, error } = useWorkoutSession(sessionId);
+  const { session, planDate, exercises, isLoading, error, reload } = useWorkoutSession(sessionId);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [exitVisible, setExitVisible] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [swapSheetVisible, setSwapSheetVisible] = useState(false);
+  const [swapMessage, setSwapMessage] = useState<string | null>(null);
+  const [feedbackBySortOrder, setFeedbackBySortOrder] = useState<Record<number, ExerciseFeedback>>(
+    {},
+  );
   const initialized = useRef(false);
+  const { substitute, isSwapping, error: swapError, clearError: clearSwapError } = useExerciseSubstitution(
+    planDate ?? '',
+  );
+  const { requirePremium } = usePremium();
 
   useEffect(() => {
     if (!session || initialized.current) {
@@ -32,6 +51,29 @@ export default function WorkoutPlayerScreen() {
     setCurrentIndex(session.currentExerciseIndex ?? 0);
     setElapsedSeconds(session.elapsedSeconds ?? 0);
     initialized.current = true;
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) {
+      return;
+    }
+
+    let mounted = true;
+    const loadFeedback = async () => {
+      const feedback = await getSessionFeedback(session.id);
+      if (!mounted) {
+        return;
+      }
+      setFeedbackBySortOrder(
+        Object.fromEntries(feedback.map((item) => [item.sortOrder, item.feedback])),
+      );
+    };
+
+    void loadFeedback();
+
+    return () => {
+      mounted = false;
+    };
   }, [session]);
 
   useEffect(() => {
@@ -89,11 +131,26 @@ export default function WorkoutPlayerScreen() {
   const prescription = current.holdSeconds
     ? `${current.sets} sets · ${current.holdSeconds}s hold`
     : `${current.sets} sets · ${current.reps ?? '—'} reps`;
-  const hasAnimatedDemo = hasAnimatedExerciseDemo(current.exercise.id);
 
   const persistIndex = async (nextIndex: number) => {
     setCurrentIndex(nextIndex);
     await updateSessionProgress(session.id, nextIndex, elapsedSeconds);
+  };
+
+  const markCurrentExercise = async (
+    feedback: ExerciseFeedback,
+    options: { preserveModified?: boolean } = {},
+  ) => {
+    const existing = feedbackBySortOrder[current.sortOrder];
+    if (options.preserveModified && existing === 'modified') {
+      return;
+    }
+
+    setFeedbackBySortOrder((value) => ({
+      ...value,
+      [current.sortOrder]: feedback,
+    }));
+    await saveSessionExerciseFeedback(session.id, current.sortOrder, feedback);
   };
 
   const handlePrevious = () => {
@@ -103,15 +160,58 @@ export default function WorkoutPlayerScreen() {
     void persistIndex(currentIndex - 1);
   };
 
+  const finishWorkout = async () => {
+    await updateSessionProgress(session.id, currentIndex, elapsedSeconds);
+    await completeWorkoutSession(session.id);
+    if (planDate) {
+      await ensureNextDayPlanAdapted(planDate);
+    }
+    successNotificationHaptic();
+    AccessibilityInfo.announceForAccessibility('Workout completed.');
+    router.replace(`/(tabs)/workout/feedback/${session.id}`);
+  };
+
   const handleNext = async () => {
+    await markCurrentExercise('completed', { preserveModified: true });
     if (isLast) {
-      await updateSessionProgress(session.id, currentIndex, elapsedSeconds);
-      successNotificationHaptic();
-      AccessibilityInfo.announceForAccessibility('Workout completed.');
-      router.replace(`/(tabs)/workout/feedback/${session.id}`);
+      await finishWorkout();
       return;
     }
     await persistIndex(currentIndex + 1);
+  };
+
+  const handleSkip = async () => {
+    await markCurrentExercise('skipped');
+    if (isLast) {
+      await finishWorkout();
+      return;
+    }
+    await persistIndex(currentIndex + 1);
+  };
+
+  const handleSelectSwapReason = async (reason: ExerciseSwapReason) => {
+    if (!session) {
+      return;
+    }
+
+    clearSwapError();
+    setSwapMessage(null);
+
+    const result = await substitute({
+      exercise: current.exercise,
+      planId: session.planId,
+      planExercise: current,
+      reason,
+    });
+
+    if (!result) {
+      return;
+    }
+
+    await markCurrentExercise('modified');
+    setSwapMessage(`Switched to ${result.exerciseName}.`);
+    setSwapSheetVisible(false);
+    await reload();
   };
 
   const handleResumeLater = async () => {
@@ -128,6 +228,7 @@ export default function WorkoutPlayerScreen() {
 
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;
+  const elapsedLabel = `${minutes}:${seconds.toString().padStart(2, '0')}`;
   const completionProgress = ((currentIndex + 1) / exercises.length) * 100;
 
   return (
@@ -137,9 +238,19 @@ export default function WorkoutPlayerScreen() {
           onPress={() => setExitVisible(true)}
           accessibilityLabel="Exit workout"
         />
-        <Text variant="label" style={styles.progressLabel}>
-          {currentIndex + 1} / {exercises.length} · {minutes}:{seconds.toString().padStart(2, '0')}
-        </Text>
+        <View
+          style={[styles.timerPanel, shadows.card]}
+          accessibilityRole="timer"
+          accessibilityLabel={`Workout timer, ${minutes} minutes and ${seconds} seconds elapsed`}
+        >
+          <Text variant="label" style={styles.timerEyebrow}>
+            Workout Time
+          </Text>
+          <Text style={styles.timerValue}>{elapsedLabel}</Text>
+          <Text variant="caption" style={styles.exerciseProgress}>
+            Exercise {currentIndex + 1} of {exercises.length}
+          </Text>
+        </View>
         <View style={styles.progressTrack}>
           <View style={[styles.progressFill, { width: `${completionProgress}%` }]} />
         </View>
@@ -150,11 +261,6 @@ export default function WorkoutPlayerScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ExerciseMediaView exercise={current.exercise} variant="gif" fillWidth />
-        {!hasAnimatedDemo ? (
-          <Text variant="caption" style={styles.mediaHint}>
-            Static movement preview available for this exercise.
-          </Text>
-        ) : null}
 
         <Text variant="h1" style={styles.title}>
           {current.exercise.name}
@@ -179,29 +285,51 @@ export default function WorkoutPlayerScreen() {
           variant="secondary"
           onPress={() => void Linking.openURL(buildExerciseYouTubeSearchUrl(current.exercise))}
         />
+
+        {swapMessage ? <Text variant="bodyMuted">{swapMessage}</Text> : null}
+        {swapError ? <Text variant="body" style={styles.errorText}>{swapError}</Text> : null}
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button
-          label={isPaused ? 'Resume' : 'Pause'}
-          variant="secondary"
-          onPress={() => setIsPaused((value) => !value)}
-          accessibilityLabel={isPaused ? 'Resume workout' : 'Pause workout'}
-        />
-        <View style={styles.footerRow}>
+        <View style={styles.utilityRow}>
+          <Button
+            label={isPaused ? 'Resume' : 'Pause'}
+            variant="secondary"
+            onPress={() => setIsPaused((value) => !value)}
+            style={styles.compactButton}
+            accessibilityLabel={isPaused ? 'Resume workout' : 'Pause workout'}
+          />
+          <Button
+            label={isSwapping ? 'Finding...' : 'Switch'}
+            variant="secondary"
+            onPress={() => requirePremium('exercise_swap', () => setSwapSheetVisible(true))}
+            disabled={isPaused || isSwapping}
+            style={styles.compactButton}
+            accessibilityLabel="Switch this exercise"
+          />
+        </View>
+        <View style={styles.navigationRow}>
           <Button
             label="Previous"
             variant="secondary"
             onPress={handlePrevious}
             disabled={isFirst || isPaused}
-            style={styles.footerButton}
+            style={styles.navigationButton}
             accessibilityLabel="Go to previous exercise"
+          />
+          <Button
+            label="Skip"
+            variant="secondary"
+            onPress={() => void handleSkip()}
+            disabled={isPaused}
+            style={styles.navigationButton}
+            accessibilityLabel="Skip this exercise"
           />
           <Button
             label={isLast ? 'Complete' : 'Next'}
             onPress={() => void handleNext()}
             disabled={isPaused}
-            style={styles.footerButton}
+            style={styles.navigationButton}
             accessibilityLabel={isLast ? 'Complete workout' : 'Go to next exercise'}
           />
         </View>
@@ -212,6 +340,13 @@ export default function WorkoutPlayerScreen() {
         onResumeLater={() => void handleResumeLater()}
         onDiscard={() => void handleDiscard()}
         onContinue={() => setExitVisible(false)}
+      />
+
+      <ExerciseSwapReasonSheet
+        visible={swapSheetVisible}
+        isLoading={isSwapping}
+        onSelectReason={(reason) => void handleSelectSwapReason(reason)}
+        onClose={() => setSwapSheetVisible(false)}
       />
     </SafeAreaView>
   );
@@ -230,9 +365,29 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     paddingTop: spacing.xs,
   },
-  progressLabel: {
-    textAlign: 'center',
+  timerPanel: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    minWidth: 176,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    borderRadius: radius.card,
+    backgroundColor: colors.surfaceCanvas,
     paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  timerEyebrow: {
+    color: colors.brandSecondary,
+  },
+  timerValue: {
+    color: colors.brandPrimary,
+    fontSize: 46,
+    fontWeight: '700',
+    lineHeight: 52,
+    letterSpacing: 0,
+  },
+  exerciseProgress: {
+    color: colors.textMuted,
   },
   progressTrack: {
     marginHorizontal: spacing.sm,
@@ -264,11 +419,11 @@ const styles = StyleSheet.create({
   title: {
     marginTop: spacing.xs,
   },
-  mediaHint: {
-    textAlign: 'center',
-  },
   prescription: {
     color: colors.brandPrimary,
+  },
+  errorText: {
+    color: colors.destructive,
   },
   instructions: {
     gap: spacing.xs,
@@ -279,11 +434,22 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.sm,
     gap: spacing.xs,
   },
-  footerRow: {
+  utilityRow: {
     flexDirection: 'row',
     gap: spacing.xs,
   },
-  footerButton: {
+  navigationRow: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  compactButton: {
     flex: 1,
+    minHeight: 48,
+    paddingHorizontal: spacing.xs,
+  },
+  navigationButton: {
+    flex: 1,
+    minHeight: 50,
+    paddingHorizontal: 8,
   },
 });
