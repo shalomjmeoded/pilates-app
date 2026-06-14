@@ -53,26 +53,17 @@ describe('pilatesExerciseCatalog', () => {
     expect(isPilatesAlignedExercise(squat!)).toBe(false);
   });
 
-  it('excludes equipment-heavy movements from Pilates workouts', () => {
-    const ballBridge = library.find((exercise) => exercise.name === 'Physioball Hip Bridge');
-    const benchLegRaise = library.find((exercise) => exercise.name === 'Flat Bench Lying Leg Raise');
-    const suspendedCrunch = library.find(
-      (exercise) => exercise.name === 'Suspended Reverse Crunch',
-    );
-    const declineCrunch = library.find((exercise) => exercise.name === 'Decline Crunch');
+  it('removes equipment-heavy gym-photo movements from the curated library', () => {
+    const removedNames = [
+      'Physioball Hip Bridge',
+      'Suspended Reverse Crunch',
+      'Hammer Curls',
+      'Kettlebell Windmill',
+    ];
 
-    expect(ballBridge).toBeTruthy();
-    expect(benchLegRaise).toBeTruthy();
-    expect(suspendedCrunch).toBeTruthy();
-    expect(declineCrunch).toBeTruthy();
-    expect(isHardExcludedExercise(ballBridge!)).toBe(true);
-    expect(isHardExcludedExercise(benchLegRaise!)).toBe(true);
-    expect(isHardExcludedExercise(suspendedCrunch!)).toBe(true);
-    expect(isHardExcludedExercise(declineCrunch!)).toBe(true);
-    expect(isPilatesAlignedExercise(ballBridge!)).toBe(false);
-    expect(isPilatesAlignedExercise(benchLegRaise!)).toBe(false);
-    expect(isPilatesAlignedExercise(suspendedCrunch!)).toBe(false);
-    expect(isPilatesAlignedExercise(declineCrunch!)).toBe(false);
+    for (const name of removedNames) {
+      expect(library.find((exercise) => exercise.name === name)).toBeUndefined();
+    }
   });
 
   it('keeps classical mat movements in the Pilates pool', () => {
@@ -84,7 +75,7 @@ describe('pilatesExerciseCatalog', () => {
 
   it('builds a Pilates-focused candidate pool from the seed library', () => {
     const pool = selectPilatesCandidatePool(library);
-    expect(pool.length).toBeGreaterThanOrEqual(15);
+    expect(pool.length).toBeGreaterThanOrEqual(30);
     expect(pool.some((exercise) => /squat/i.test(exercise.name))).toBe(false);
   });
 });

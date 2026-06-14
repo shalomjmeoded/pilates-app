@@ -38,8 +38,6 @@ export function AdherenceCard({ metric }: AdherenceCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
-    minWidth: 100,
     gap: 4,
   },
   header: {
@@ -49,6 +47,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: colors.textMuted,
+    flexShrink: 1,
   },
   badge: {
     paddingHorizontal: 8,

@@ -29,7 +29,7 @@ function TabIcon({
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   const segments = useSegments();
-  const bottomInset = Math.max(insets.bottom, 6);
+  const tabBarBottomPadding = Math.max(insets.bottom - 10, 6);
   const hideTabBar = segments.length > 2;
 
   return (
@@ -43,15 +43,15 @@ export default function TabsLayout() {
           : {
               backgroundColor: colors.surfaceCanvas,
               borderTopWidth: 0,
-              height: 62 + bottomInset,
-              paddingTop: 8,
-              paddingBottom: bottomInset,
+              height: 58 + tabBarBottomPadding,
+              paddingTop: 6,
+              paddingBottom: tabBarBottomPadding,
               paddingHorizontal: 8,
               ...shadows.card,
             },
         tabBarActiveBackgroundColor: colors.surfaceRose,
         tabBarItemStyle: {
-          minHeight: 44,
+          minHeight: 42,
           justifyContent: 'center',
           borderRadius: radius.card,
           marginHorizontal: 4,

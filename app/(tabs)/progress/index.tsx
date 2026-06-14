@@ -175,10 +175,16 @@ export default function ProgressScreen() {
         );
       case 'adherence':
         return (
-          <View style={styles.adherenceRow}>
-            <AdherenceCard metric={data.adherence.calories} />
-            <AdherenceCard metric={data.adherence.protein} />
-            <AdherenceCard metric={data.adherence.fiber} />
+          <View style={styles.adherenceGrid}>
+            <View style={styles.adherenceGridItem}>
+              <AdherenceCard metric={data.adherence.calories} />
+            </View>
+            <View style={styles.adherenceGridItem}>
+              <AdherenceCard metric={data.adherence.protein} />
+            </View>
+            <View style={styles.adherenceGridItemWide}>
+              <AdherenceCard metric={data.adherence.fiber} />
+            </View>
           </View>
         );
       case 'consistency':
@@ -242,9 +248,17 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     paddingBottom: spacing.xl,
   },
-  adherenceRow: {
+  adherenceGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing.sm,
+  },
+  adherenceGridItem: {
+    flexBasis: '48%',
+    flexGrow: 1,
+  },
+  adherenceGridItemWide: {
+    flexBasis: '100%',
   },
   logButton: {
     marginTop: spacing.xs,

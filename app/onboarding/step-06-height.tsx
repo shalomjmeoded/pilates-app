@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useWindowDimensions } from 'react-native';
 
 import { OnboardingShell, VerticalMeasurementRuler } from '@/components/onboarding';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
@@ -9,6 +10,7 @@ const DEFAULT_HEIGHT_CM = 168;
 
 export default function Step06Height() {
   const { step, goNext, goBack } = useOnboardingNavigation(5);
+  const { height } = useWindowDimensions();
   const heightCm = useOnboardingStore((state) => state.draft.heightCm);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const units = usePreferencesStore((state) => state.preferences.units);
@@ -22,6 +24,7 @@ export default function Step06Height() {
 
   const valueCm = heightCm ?? DEFAULT_HEIGHT_CM;
   const isMetric = units.height === 'cm' && units.weight === 'kg';
+  const rulerHeight = height < 700 ? 176 : height < 760 ? 204 : 232;
   const applyUnitSystem = (metric: boolean) => {
     setUnits(metric ? { height: 'cm', weight: 'kg' } : { height: 'in', weight: 'lb' });
   };
@@ -30,11 +33,13 @@ export default function Step06Height() {
     <OnboardingShell
       step={step}
       title="Let's measure your height"
-      subtitle="Scroll the ruler to match you — smooth, precise, and private on your device."
+      subtitle="Drag the ruler or use the buttons to fine-tune."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueCm < 120 || valueCm > 230}
       titleLines={2}
+      scrollEnabled={false}
+      reasonWhy={null}
     >
       <VerticalMeasurementRuler
         valueCm={valueCm}
@@ -42,6 +47,7 @@ export default function Step06Height() {
         onChangeCm={(cm) => patchDraft({ heightCm: cm })}
         selectedSystem={isMetric ? 'metric' : 'imperial'}
         onSelectSystem={applyUnitSystem}
+        viewportHeight={rulerHeight}
       />
     </OnboardingShell>
   );

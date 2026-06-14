@@ -19,8 +19,8 @@ const exercises = JSON.parse(raw) as Exercise[];
 
 const VALID_DIFFICULTIES = new Set<Difficulty>(['beginner', 'intermediate', 'advanced']);
 
-if (exercises.length < 120) {
-  throw new Error(`Expected at least 120 exercises, found ${exercises.length}`);
+if (exercises.length < 60) {
+  throw new Error(`Expected at least 60 curated exercises, found ${exercises.length}`);
 }
 
 const ids = new Set<string>();

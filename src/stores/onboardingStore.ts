@@ -37,7 +37,7 @@ const INITIAL_DRAFT: OnboardingDraft = {
   trainingFrequency: null,
   exercisePreferences: [],
   mediaPreference: 'static_only',
-  notificationsEnabled: false,
+  notificationsEnabled: true,
   heightCm: null,
   currentWeightKg: null,
   nutritionMode: 'full_tracking',

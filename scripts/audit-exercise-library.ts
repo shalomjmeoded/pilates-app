@@ -134,9 +134,9 @@ console.log('By category:', byCategory);
 console.log('\nMedia coverage:');
 console.log(`  Thumbnails: ${thumbsOk}/${exercises.length} (${thumbPct}%)`);
 console.log(`  Detail frames (gifUri): ${detailOk}/${exercises.length} (${detailPct}%)`);
-console.log(`  Static thumbnail/gif duplicates: ${staticMediaPairs.length}`);
+console.log(`  Static single-pose thumbnail/detail pairs: ${staticMediaPairs.length}`);
 if (staticMediaPairs.length > 0) {
-  console.log(`  Duplicate IDs: ${staticMediaPairs.slice(0, 12).join(', ')}`);
+  console.log(`  Static IDs: ${staticMediaPairs.slice(0, 12).join(', ')}`);
 }
 
 const examples = exercises.filter((e) =>
@@ -163,8 +163,8 @@ if (issues.length > 0) {
   }
 }
 
-if (exercises.length < 120) {
-  console.error(`\nFAIL: minimum 120 exercises required, found ${exercises.length}`);
+if (exercises.length < 60) {
+  console.error(`\nFAIL: minimum 60 curated exercises required, found ${exercises.length}`);
   process.exit(1);
 }
 

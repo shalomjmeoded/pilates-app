@@ -33,4 +33,8 @@ describe('onboarding flow', () => {
     expect(profile?.exercisePreferences).toEqual([]);
     expect(profile?.mediaPreference).toBe('static_only');
   });
+
+  it('keeps notification reminders selected by default', () => {
+    expect(useOnboardingStore.getState().draft.notificationsEnabled).toBe(true);
+  });
 });

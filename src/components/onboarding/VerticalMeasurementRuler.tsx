@@ -14,7 +14,7 @@ import { cmToInches } from '@/utils/units';
 const TICK_HEIGHT = 12;
 const MIN_CM = 120;
 const MAX_CM = 230;
-const VIEWPORT_HEIGHT = 260;
+const DEFAULT_VIEWPORT_HEIGHT = 240;
 
 interface VerticalMeasurementRulerProps {
   valueCm: number;
@@ -22,6 +22,7 @@ interface VerticalMeasurementRulerProps {
   onChangeCm: (cm: number) => void;
   selectedSystem: 'metric' | 'imperial';
   onSelectSystem: (metric: boolean) => void;
+  viewportHeight?: number;
 }
 
 function displayValue(cm: number, unit: 'cm' | 'in'): string {
@@ -42,10 +43,11 @@ export function VerticalMeasurementRuler({
   onChangeCm,
   selectedSystem,
   onSelectSystem,
+  viewportHeight = DEFAULT_VIEWPORT_HEIGHT,
 }: VerticalMeasurementRulerProps) {
   const lastCm = useRef(valueCm);
   const gestureStartCm = useRef(valueCm);
-  const padding = (VIEWPORT_HEIGHT - TICK_HEIGHT) / 2;
+  const padding = (viewportHeight - TICK_HEIGHT) / 2;
   const steps = MAX_CM - MIN_CM;
 
   useEffect(() => {
@@ -131,7 +133,7 @@ export function VerticalMeasurementRuler({
         accessibilityRole="adjustable"
         accessibilityLabel="Height ruler"
         accessibilityValue={{ min: MIN_CM, max: MAX_CM, now: valueCm, text: displayValue(valueCm, unit) }}
-        style={[styles.rulerShell, { height: VIEWPORT_HEIGHT }]}
+        style={[styles.rulerShell, { height: viewportHeight }]}
         {...panResponder.panHandlers}
       >
         <View style={styles.centerIndicator} pointerEvents="none" />
@@ -162,7 +164,7 @@ export function VerticalMeasurementRuler({
         >
           <Text variant="body">−</Text>
         </Pressable>
-        <Text variant="bodyMuted">Scroll or tap to fine-tune</Text>
+        <Text variant="bodyMuted">Drag or tap to fine-tune</Text>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Increase height by ${unit === 'cm' ? '1 centimeter' : '0.4 inch'}`}

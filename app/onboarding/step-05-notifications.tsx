@@ -27,6 +27,7 @@ export default function Step05Notifications() {
   const requestPermission = async () => {
     if (supportMessage) {
       setAnnouncedStatus(supportMessage);
+      patchDraft({ notificationsEnabled: false });
       return;
     }
 
@@ -39,15 +40,22 @@ export default function Step05Notifications() {
     );
   };
 
+  const handleNext = async () => {
+    if (notificationsEnabled) {
+      await requestPermission();
+    }
+    goNext();
+  };
+
   return (
     <OnboardingShell
       step={step}
       title="Stay gently on track"
       titleLines={2}
-      subtitle="Local reminders only — never ads or marketing pushes."
+      subtitle="Local reminders for meals, workouts, and coaching moments. No ads or marketing pushes."
       onBack={goBack}
-      onNext={goNext}
-      nextLabel={notificationsEnabled ? 'Continue' : 'Continue without reminders'}
+      onNext={() => void handleNext()}
+      nextLabel="Continue"
     >
       <View style={styles.iconRow}>
         <VisualAsset icon="bell-ring-outline" fallback="icon" size={72} accessibilityLabel="Reminders" />
@@ -63,11 +71,19 @@ export default function Step05Notifications() {
       </View>
 
       <OptionCard
-        label="Enable local reminders"
+        label="Use gentle reminders"
         description="Breakfast, lunch, dinner, workouts, and coaching tips."
         selected={notificationsEnabled}
         accessibilityLabel="Enable local reminders for meals, workouts, and coaching tips"
-        onPress={() => void requestPermission()}
+        onPress={() => patchDraft({ notificationsEnabled: true })}
+      />
+
+      <OptionCard
+        label="Not now"
+        description="Set up reminders later in Settings."
+        selected={!notificationsEnabled}
+        accessibilityLabel="Do not enable local reminders during onboarding"
+        onPress={() => patchDraft({ notificationsEnabled: false })}
       />
 
       {statusMessage ? (
