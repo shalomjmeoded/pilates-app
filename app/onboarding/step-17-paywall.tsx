@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { OnboardingShell } from '@/components/onboarding';
 import { PaywallHero } from '@/components/premium';
@@ -72,12 +72,12 @@ export default function Step17Paywall() {
       onBack={goBack}
       hideFooter
       showBack
-      scrollEnabled
+      scrollEnabled={false}
       hideStepIndicator
       phaseLabel="Unlock your plan"
       reasonWhy={null}
     >
-      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
         <PaywallHero
           compact
           onStartTrial={(plan) => void unlockPlan(() => beginFreeTrial(plan))}
@@ -91,15 +91,14 @@ export default function Step17Paywall() {
             {actionError ?? error}
           </Text>
         ) : null}
-      </ScrollView>
+      </View>
     </OnboardingShell>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    gap: spacing.sm,
-    paddingBottom: spacing.md,
+    gap: spacing.xs,
   },
   copy: {
     marginTop: 2,

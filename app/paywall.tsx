@@ -60,6 +60,7 @@ export default function PaywallScreen() {
       <SubscreenTopBar />
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <PaywallHero
+          compact
           onStartTrial={(plan) => void completeAccess(() => beginFreeTrial(plan))}
           onContinueWithTrial={__DEV__ ? () => void completeAccess(beginMockTrial) : undefined}
           onRestore={() => void completeAccess(restore)}

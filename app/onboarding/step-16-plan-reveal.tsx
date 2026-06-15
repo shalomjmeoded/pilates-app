@@ -52,13 +52,15 @@ export default function Step16PlanReveal() {
     <OnboardingShell
       step={step}
       title="Your plan is ready"
-      subtitle="You can adjust it anytime in Settings."
+      subtitle="Adjust anytime in Settings."
       onBack={() => goToStep(12)}
       onNext={goNext}
       nextLabel="Continue"
       phaseLabel="Your reveal"
       reasonWhy={null}
       hideStepIndicator={false}
+      scrollEnabled={false}
+      titleLines={1}
     >
       <PlanRevealHero
         calories={goalCalories}
@@ -87,17 +89,20 @@ export default function Step16PlanReveal() {
 const styles = StyleSheet.create({
   warning: {
     backgroundColor: colors.warningSurface,
-    borderRadius: radius.card,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.borderStrong,
-    padding: spacing.sm,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 8,
   },
   warningText: {
     color: colors.textDark,
+    fontSize: 13,
+    lineHeight: 17,
   },
   warningTitle: {
     color: colors.textStrong,
-    marginBottom: spacing.xs,
+    marginBottom: 4,
   },
   disclaimer: {
     backgroundColor: colors.surfaceCanvas,
