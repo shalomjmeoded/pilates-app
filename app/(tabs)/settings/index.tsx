@@ -19,7 +19,7 @@ export default function SettingsScreen() {
         <SettingsSection title="Profile">
           <SettingsRow label="Profile" value="Body & activity" onPress={() => router.push('/(tabs)/settings/profile')} />
           <SettingsRow label="Goals" value="Weight & pace" onPress={() => router.push('/(tabs)/settings/goals')} />
-          <SettingsRow label="Preferences" value="Media & exercises" onPress={() => router.push('/(tabs)/settings/preferences')} />
+          <SettingsRow label="Preferences" value="Exercise styles" onPress={() => router.push('/(tabs)/settings/preferences')} />
           <SettingsRow label="Plan assumptions" onPress={() => router.push('/(tabs)/settings/plan-assumptions')} />
         </SettingsSection>
 
