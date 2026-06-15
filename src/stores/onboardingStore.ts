@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { buildBaselinePlan } from '@/engines/calculations';
+import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
 import { isBirthYearWithinSupportedAge } from '@/onboarding/helpers';
 import type { BaselinePlanResult } from '@/types/calculations';
 import type {
@@ -69,7 +70,6 @@ type CompleteOnboardingDraft = OnboardingDraft & {
   birthYear: number;
   fitnessGoal: FitnessGoal;
   goalWeightKg: number;
-  weightTrajectory: WeightTrajectory;
   paceKgPerWeek: Pace;
   exercisePreferences: ExercisePreference[];
 };
@@ -84,7 +84,6 @@ function isCompleteDraft(draft: OnboardingDraft): draft is CompleteOnboardingDra
     isBirthYearWithinSupportedAge(draft.birthYear) &&
     draft.fitnessGoal !== null &&
     draft.goalWeightKg !== null &&
-    draft.weightTrajectory !== null &&
     draft.paceKgPerWeek !== null
   );
 }
@@ -152,6 +151,11 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     if (!isCompleteDraft(draft)) {
       return null;
     }
+    const weightTrajectory = deriveWeightTrajectory(
+      draft.fitnessGoal,
+      draft.currentWeightKg,
+      draft.goalWeightKg,
+    );
 
     return {
       genderIdentity: draft.genderIdentity,
@@ -164,7 +168,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       exercisePreferences: draft.exercisePreferences,
       mediaPreference: 'static_only',
       nutritionMode: 'full_tracking',
-      weightTrajectory: draft.weightTrajectory,
+      weightTrajectory,
       paceKgPerWeek: draft.paceKgPerWeek,
     };
   },

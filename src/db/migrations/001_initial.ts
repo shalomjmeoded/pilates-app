@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS profile (
   goal_weight_kg REAL NOT NULL,
   training_frequency TEXT NOT NULL,
   fitness_goal TEXT NOT NULL CHECK (fitness_goal IN (
-    'get_toned', 'maintain', 'build_muscle'
+    'lose_weight', 'get_toned', 'maintain', 'build_muscle'
   )),
   exercise_preferences TEXT NOT NULL,
   media_preference TEXT NOT NULL CHECK (media_preference IN (

@@ -37,6 +37,15 @@ interface PlanControls {
 }
 
 const GOAL_WEEKLY_FOCUS: Record<Profile['fitnessGoal'], WorkoutFocus[]> = {
+  lose_weight: [
+    'full_body_control',
+    'core_control',
+    'posterior_chain',
+    'full_body_control',
+    'mobility_recovery',
+    'core_control',
+    'full_body_control',
+  ],
   get_toned: [
     'full_body_control',
     'posterior_chain',

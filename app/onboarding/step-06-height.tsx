@@ -24,7 +24,7 @@ export default function Step06Height() {
 
   const valueCm = heightCm ?? DEFAULT_HEIGHT_CM;
   const isMetric = units.height === 'cm' && units.weight === 'kg';
-  const rulerHeight = height < 700 ? 176 : height < 760 ? 204 : 232;
+  const rulerHeight = height < 700 ? 148 : height < 760 ? 172 : 200;
   const applyUnitSystem = (metric: boolean) => {
     setUnits(metric ? { height: 'cm', weight: 'kg' } : { height: 'in', weight: 'lb' });
   };
@@ -33,7 +33,7 @@ export default function Step06Height() {
     <OnboardingShell
       step={step}
       title="Let's measure your height"
-      subtitle="Drag the ruler or use the buttons to fine-tune."
+      subtitle="Drag the ruler or tap +/-."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueCm < 120 || valueCm > 230}

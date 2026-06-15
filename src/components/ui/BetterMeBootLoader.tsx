@@ -12,7 +12,7 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, shadows, spacing } from '@/theme';
 
 interface BetterMeBootLoaderProps {
   message?: string;
@@ -68,7 +68,13 @@ export function BetterMeBootLoader({ message = 'Preparing your rhythm...' }: Bet
           <Animated.View style={[styles.outerRing, outerRingStyle]} />
           <Animated.View style={[styles.innerRing, innerRingStyle]} />
           <View style={[styles.core, shadows.hero]}>
-            <Text variant="hero" style={styles.logo}>
+            <Text
+              variant="hero"
+              style={styles.logo}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.74}
+            >
               BetterMe
             </Text>
           </View>
@@ -97,32 +103,32 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   markWrap: {
-    width: 168,
-    height: 168,
+    width: 220,
+    height: 156,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.xs,
   },
   outerRing: {
     position: 'absolute',
-    width: 168,
-    height: 168,
-    borderRadius: 84,
+    width: 208,
+    height: 140,
+    borderRadius: 70,
     borderWidth: 1.5,
     borderColor: colors.accentWarm,
   },
   innerRing: {
     position: 'absolute',
-    width: 136,
-    height: 136,
-    borderRadius: 68,
+    width: 176,
+    height: 112,
+    borderRadius: 56,
     borderWidth: 1,
     borderColor: colors.brandSecondary,
   },
   core: {
-    width: 116,
-    height: 116,
-    borderRadius: 58,
+    width: 156,
+    height: 88,
+    borderRadius: 44,
     backgroundColor: colors.surfaceHero,
     borderWidth: 1,
     borderColor: colors.borderStrong,
@@ -130,9 +136,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
+    width: '100%',
     color: colors.brandPrimary,
-    fontSize: 32,
-    lineHeight: 38,
+    fontSize: 30,
+    lineHeight: 36,
+    letterSpacing: 0,
+    textAlign: 'center',
   },
   tagline: {
     textAlign: 'center',

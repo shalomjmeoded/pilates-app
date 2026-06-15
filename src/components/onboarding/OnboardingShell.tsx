@@ -74,7 +74,7 @@ export function OnboardingShell({
   heroImageSource,
   heroLoopSource,
   heroAccessibilityLabel,
-  showHero = true,
+  showHero = false,
   insightText,
 }: OnboardingShellProps) {
   const { height } = useWindowDimensions();
@@ -132,7 +132,7 @@ export function OnboardingShell({
               Phase {phaseIndex}: {phase}
             </Text>
             <Text variant="caption">
-              Phase {phaseIndex} of 4
+              {step}/{ONBOARDING_TOTAL_STEPS}
             </Text>
           </View>
           <View
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: spacing.sm,
-    paddingTop: spacing.sm,
+    paddingTop: spacing.xs,
     paddingBottom: spacing.xs,
     gap: 6,
   },
@@ -278,13 +278,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: spacing.sm,
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.sm,
     flexGrow: 1,
   },
   page: {
     flexGrow: 1,
-    paddingTop: spacing.sm,
-    gap: spacing.md,
+    paddingTop: spacing.xs,
+    gap: spacing.sm,
   },
   pageCompact: {
     paddingTop: spacing.xs,
@@ -296,12 +296,12 @@ const styles = StyleSheet.create({
   title: {
     flexShrink: 1,
     paddingRight: spacing.xs,
-    fontSize: 30,
-    lineHeight: 36,
+    fontSize: 32,
+    lineHeight: 38,
   },
   subtitle: {
     maxWidth: 520,
-    lineHeight: 22,
+    lineHeight: 21,
   },
   insightPill: {
     alignSelf: 'flex-start',

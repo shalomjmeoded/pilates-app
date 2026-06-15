@@ -40,9 +40,11 @@ export function PaywallHero({
         <Text variant={compact ? 'section' : 'hero'} style={styles.heroTitle}>
           {title}
         </Text>
-        <Text variant="bodyMuted" style={styles.heroDescription}>
-          {description}
-        </Text>
+        {!compact ? (
+          <Text variant="bodyMuted" style={styles.heroDescription}>
+            {description}
+          </Text>
+        ) : null}
       </View>
 
       <View style={styles.benefits}>
@@ -59,9 +61,11 @@ export function PaywallHero({
               <Text variant="body" style={styles.benefitTitle}>
                 {benefit.title}
               </Text>
-              <Text variant="bodyMuted" style={styles.benefitDescription}>
-                {benefit.description}
-              </Text>
+              {!compact ? (
+                <Text variant="bodyMuted" style={styles.benefitDescription}>
+                  {benefit.description}
+                </Text>
+              ) : null}
             </View>
           </View>
         ))}
@@ -71,8 +75,7 @@ export function PaywallHero({
         <Button label="Start Free Trial" onPress={onStartTrial} />
         <Button label="Restore Purchase" variant="secondary" onPress={onRestore} />
         <Text variant="caption" style={styles.trialNote}>
-          7-day free trial, then subscription. Cancel anytime in your App Store settings before
-          renewal.
+          Free trial, then subscription. Cancel anytime.
         </Text>
       </View>
     </View>
@@ -81,14 +84,14 @@ export function PaywallHero({
 
 const styles = StyleSheet.create({
   container: {
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   heroBand: {
     backgroundColor: colors.surfaceHero,
     borderRadius: radius.hero,
     borderWidth: 1,
     borderColor: colors.borderStrong,
-    padding: spacing.md,
+    padding: spacing.sm,
     gap: spacing.xs,
     overflow: 'hidden',
   },
@@ -118,18 +121,19 @@ const styles = StyleSheet.create({
   },
   benefitRow: {
     flexDirection: 'row',
-    gap: spacing.sm,
-    alignItems: 'flex-start',
+    gap: spacing.xs,
+    alignItems: 'center',
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.borderLight,
-    padding: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 10,
   },
   iconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     backgroundColor: colors.surfaceRose,
     alignItems: 'center',
     justifyContent: 'center',

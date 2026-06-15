@@ -71,7 +71,7 @@ export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProp
           {getPaceLabel(value)}
         </Text>
         <Text variant="bodyMuted" style={styles.hint}>
-          Slide the intensity to match how quickly you want to move toward your goal.
+          Choose how quickly to move toward your goal.
         </Text>
       </View>
 

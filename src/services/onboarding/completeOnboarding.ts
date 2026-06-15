@@ -26,6 +26,7 @@ export async function completeOnboarding({
   await saveOnboardingAnswers(
     JSON.stringify({
       ...draft,
+      weightTrajectory: profile.weightTrajectory,
       completedAt: new Date().toISOString(),
     }),
   );

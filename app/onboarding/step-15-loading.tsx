@@ -19,7 +19,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import { colors, spacing } from '@/theme';
 
 export default function Step15Loading() {
-  const { replaceNext, goToStep } = useOnboardingNavigation(13);
+  const { replaceNext, goToStep } = useOnboardingNavigation(12);
   const baselinePlan = useOnboardingStore((state) => state.draft.baselinePlan);
   const buildPlanFromDraft = useOnboardingStore((state) => state.buildPlanFromDraft);
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export default function Step15Loading() {
           <Text variant="bodyMuted" style={styles.subtitle}>
             {error}
           </Text>
-          <Button label="Go back" onPress={() => goToStep(12)} />
+          <Button label="Go back" onPress={() => goToStep(11)} />
         </View>
       </SafeAreaView>
     );

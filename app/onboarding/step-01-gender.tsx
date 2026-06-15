@@ -13,8 +13,6 @@ export default function Step01Gender() {
       step={step}
       title="Let&apos;s personalize BetterMe"
       subtitle="A few details help us build your plan."
-      heroImageSource={require('../../assets/onboarding/hero-rhythm.png')}
-      heroAccessibilityLabel="Pilates lifestyle hero"
       showBack={false}
       onNext={goNext}
       nextDisabled={!genderIdentity}

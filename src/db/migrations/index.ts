@@ -11,6 +11,7 @@ import { MIGRATION_010 } from './010_ai_usage';
 import { MIGRATION_011 } from './011_physique_assessments';
 import { MIGRATION_012 } from './012_workout_change_feedback';
 import { MIGRATION_013 } from './013_workout_change_events';
+import { MIGRATION_014 } from './014_fitness_goal_lose_weight';
 
 export const MIGRATIONS: Array<{ version: number; sql: string }> = [
   { version: 1, sql: MIGRATION_001 },
@@ -26,4 +27,5 @@ export const MIGRATIONS: Array<{ version: number; sql: string }> = [
   { version: 11, sql: MIGRATION_011 },
   { version: 12, sql: MIGRATION_012 },
   { version: 13, sql: MIGRATION_013 },
+  { version: 14, sql: MIGRATION_014 },
 ];

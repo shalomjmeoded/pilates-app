@@ -44,7 +44,7 @@ export const aiWorkoutAdaptationSchema = z.object({
 
 export const aiCoachingTipSchema = z.object({
   tip: z.string().min(1),
-  relatedGoal: z.enum(['get_toned', 'maintain', 'build_muscle']).optional(),
+  relatedGoal: z.enum(['lose_weight', 'get_toned', 'maintain', 'build_muscle']).optional(),
 });
 
 export const aiWeeklyCoachSchema = z.object({

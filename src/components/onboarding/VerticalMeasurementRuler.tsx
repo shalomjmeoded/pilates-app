@@ -9,7 +9,7 @@ import {
 import { Text } from '@/components/ui/Text';
 import { colors, metrics, radius, spacing } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
-import { cmToInches } from '@/utils/units';
+import { cmToInches, formatFeetInches } from '@/utils/units';
 
 const TICK_HEIGHT = 12;
 const MIN_CM = 120;
@@ -29,7 +29,11 @@ function displayValue(cm: number, unit: 'cm' | 'in'): string {
   if (unit === 'cm') {
     return String(Math.round(cm));
   }
-  return String(Math.round(cmToInches(cm) * 10) / 10);
+  return formatFeetInches(cmToInches(cm));
+}
+
+function displayTickValue(cm: number, unit: 'cm' | 'in'): string {
+  return unit === 'cm' ? String(cm) : formatFeetInches(cmToInches(cm), true);
 }
 
 function cmFromOffset(offsetY: number): number {
@@ -125,12 +129,18 @@ export function VerticalMeasurementRuler({
       </View>
 
       <View style={styles.valueRow}>
-        <Text variant="h1" style={styles.value}>
+        <Text
+          variant="h1"
+          style={[styles.value, unit === 'in' && styles.valueImperial]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.78}
+        >
           {displayValue(valueCm, unit)}
         </Text>
         <View style={styles.unitPill}>
           <Text variant="label" style={styles.unitLabel}>
-            {unit.toUpperCase()}
+            {unit === 'cm' ? 'CM' : 'FT/IN'}
           </Text>
         </View>
       </View>
@@ -152,7 +162,7 @@ export function VerticalMeasurementRuler({
                 <View style={[styles.tick, major && styles.tickMajor]} />
                 {major ? (
                   <Text variant="label" style={styles.tickLabel}>
-                    {unit === 'cm' ? cm : Math.round(cmToInches(cm))}
+                    {displayTickValue(cm, unit)}
                   </Text>
                 ) : null}
               </View>
@@ -164,16 +174,18 @@ export function VerticalMeasurementRuler({
       <View style={styles.nudgeRow}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Decrease height by ${unit === 'cm' ? '1 centimeter' : '0.4 inch'}`}
+          accessibilityLabel={`Decrease height by ${unit === 'cm' ? '1 centimeter' : 'a small step'}`}
           onPress={() => adjustByStep(-1)}
           style={styles.nudge}
         >
           <Text variant="body">−</Text>
         </Pressable>
-        <Text variant="bodyMuted">Drag or tap to fine-tune</Text>
+        <Text variant="bodyMuted" style={styles.nudgeHint}>
+          Drag or tap
+        </Text>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Increase height by ${unit === 'cm' ? '1 centimeter' : '0.4 inch'}`}
+          accessibilityLabel={`Increase height by ${unit === 'cm' ? '1 centimeter' : 'a small step'}`}
           onPress={() => adjustByStep(1)}
           style={styles.nudge}
         >
@@ -186,13 +198,13 @@ export function VerticalMeasurementRuler({
 
 const styles = StyleSheet.create({
   container: {
-    gap: spacing.sm,
+    gap: 12,
   },
   valueRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'center',
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
   segmentedControl: {
     flexDirection: 'row',
@@ -220,14 +232,18 @@ const styles = StyleSheet.create({
     color: colors.brandPrimary,
   },
   value: {
-    fontSize: 56,
-    lineHeight: 60,
+    fontSize: 48,
+    lineHeight: 52,
     color: colors.brandPrimary,
   },
+  valueImperial: {
+    fontSize: 38,
+    lineHeight: 44,
+  },
   unitPill: {
-    marginBottom: 10,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 8,
+    marginBottom: 7,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
     borderRadius: radius.pill,
     backgroundColor: colors.surfaceCanvas,
     borderWidth: 1,
@@ -290,6 +306,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: spacing.xs,
+  },
+  nudgeHint: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 14,
+    lineHeight: 18,
   },
   nudge: {
     width: 44,

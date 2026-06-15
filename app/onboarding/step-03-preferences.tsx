@@ -19,23 +19,17 @@ export default function Step03Preferences() {
   const clearPreferences = () => {
     patchDraft({ exercisePreferences: [] });
   };
-  const preferenceInsight =
-    exercisePreferences.length === 0
-      ? 'Balanced plan selected.'
-      : `${exercisePreferences.length} style${exercisePreferences.length > 1 ? 's' : ''} added.`;
 
   return (
     <OnboardingShell
       step={step}
       title="Movement styles you enjoy"
       subtitle="Pick one or more."
-      insightText={preferenceInsight}
       onBack={goBack}
       onNext={goNext}
     >
       <OptionCard
         label="No preference"
-        description="Build me a balanced plan."
         index={0}
         selected={exercisePreferences.length === 0}
         onPress={clearPreferences}

@@ -28,6 +28,9 @@ interface HorizontalMeasurementRulerProps {
   unit: 'kg' | 'lb';
   onChangeKg: (kg: number) => void;
   onToggleUnit: () => void;
+  minKg?: number;
+  maxKg?: number;
+  accessibilityLabel?: string;
 }
 
 interface TickItem {
@@ -35,18 +38,18 @@ interface TickItem {
   major: boolean;
 }
 
-function stepsCount(stepKg: number): number {
-  return Math.round((MAX_KG - MIN_KG) / stepKg);
+function stepsCount(minKg: number, maxKg: number, stepKg: number): number {
+  return Math.round((maxKg - minKg) / stepKg);
 }
 
-function kgFromOffset(offsetX: number, stepKg: number): number {
-  const raw = MIN_KG + (offsetX / TICK_WIDTH) * stepKg;
+function kgFromOffset(offsetX: number, stepKg: number, minKg: number, maxKg: number): number {
+  const raw = minKg + (offsetX / TICK_WIDTH) * stepKg;
   const snapped = Math.round(raw / stepKg) * stepKg;
-  return Math.min(MAX_KG, Math.max(MIN_KG, Math.round(snapped * 10) / 10));
+  return Math.min(maxKg, Math.max(minKg, Math.round(snapped * 10) / 10));
 }
 
-function clampKg(kg: number): number {
-  return Math.min(MAX_KG, Math.max(MIN_KG, kg));
+function clampKg(kg: number, minKg: number, maxKg: number): number {
+  return Math.min(maxKg, Math.max(minKg, kg));
 }
 
 function displayValue(kg: number, unit: 'kg' | 'lb'): string {
@@ -62,6 +65,9 @@ export function HorizontalMeasurementRuler({
   unit,
   onChangeKg,
   onToggleUnit,
+  minKg = MIN_KG,
+  maxKg = MAX_KG,
+  accessibilityLabel = 'Weight ruler',
 }: HorizontalMeasurementRulerProps) {
   const listRef = useRef<FlatList<TickItem>>(null);
   const lastKg = useRef(valueKg);
@@ -70,10 +76,11 @@ export function HorizontalMeasurementRuler({
   const scale = useSharedValue(1);
   const padding = VIEWPORT_WIDTH / 2;
   const stepKg = unit === 'kg' ? KG_STEP : LB_STEP / LB_PER_KG;
-  const steps = stepsCount(stepKg);
+  const clampedValueKg = clampKg(valueKg, minKg, maxKg);
+  const steps = stepsCount(minKg, maxKg, stepKg);
   const tickData = useMemo(() => {
     return Array.from({ length: steps + 1 }, (_, index) => {
-      const kg = MIN_KG + index * stepKg;
+      const kg = minKg + index * stepKg;
       const displayMagnitude = unit === 'kg' ? kg : kgToLb(kg);
       const major =
         unit === 'kg'
@@ -85,28 +92,28 @@ export function HorizontalMeasurementRuler({
         major,
       };
     });
-  }, [stepKg, steps, unit]);
+  }, [minKg, stepKg, steps, unit]);
 
   const scrollToKg = useCallback((kg: number, animated = false) => {
-    const offset = ((kg - MIN_KG) / stepKg) * TICK_WIDTH;
+    const offset = ((clampKg(kg, minKg, maxKg) - minKg) / stepKg) * TICK_WIDTH;
     listRef.current?.scrollToOffset({ offset, animated });
-  }, [stepKg]);
+  }, [maxKg, minKg, stepKg]);
 
   useEffect(() => {
     if (!hasMounted.current) {
       hasMounted.current = true;
-      lastKg.current = valueKg;
-      scrollToKg(valueKg, false);
+      lastKg.current = clampedValueKg;
+      scrollToKg(clampedValueKg, false);
       return;
     }
 
-    if (isInteracting.current || valueKg === lastKg.current) {
+    if (isInteracting.current || clampedValueKg === lastKg.current) {
       return;
     }
 
-    lastKg.current = valueKg;
-    scrollToKg(valueKg, false);
-  }, [scrollToKg, valueKg]);
+    lastKg.current = clampedValueKg;
+    scrollToKg(clampedValueKg, false);
+  }, [clampedValueKg, scrollToKg]);
 
   const animatedValueStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -119,7 +126,7 @@ export function HorizontalMeasurementRuler({
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const kg = kgFromOffset(event.nativeEvent.contentOffset.x, stepKg);
+    const kg = kgFromOffset(event.nativeEvent.contentOffset.x, stepKg, minKg, maxKg);
     if (kg !== lastKg.current) {
       selectionHaptic();
       lastKg.current = kg;
@@ -137,7 +144,7 @@ export function HorizontalMeasurementRuler({
   };
 
   const adjustByStep = (direction: 1 | -1) => {
-    const next = clampKg(valueKg + direction * stepKg);
+    const next = clampKg(clampedValueKg + direction * stepKg, minKg, maxKg);
     selectionHaptic();
     lastKg.current = next;
     pulseValue();
@@ -155,7 +162,7 @@ export function HorizontalMeasurementRuler({
     <View style={styles.container}>
       <Animated.View style={[styles.valueWrap, animatedValueStyle]}>
         <Text variant="h1" style={styles.value}>
-          {displayValue(valueKg, unit)}
+          {displayValue(clampedValueKg, unit)}
         </Text>
         <Pressable
           accessibilityRole="button"
@@ -174,8 +181,8 @@ export function HorizontalMeasurementRuler({
 
       <View
         accessibilityRole="adjustable"
-        accessibilityLabel="Weight ruler"
-        accessibilityValue={{ min: MIN_KG, max: MAX_KG, now: valueKg, text: displayValue(valueKg, unit) }}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityValue={{ min: minKg, max: maxKg, now: clampedValueKg, text: displayValue(clampedValueKg, unit) }}
         style={styles.rulerShell}
       >
         <View style={styles.centerNeedle} pointerEvents="none" />
@@ -230,10 +237,6 @@ export function HorizontalMeasurementRuler({
           <Text variant="body">+</Text>
         </Pressable>
       </View>
-
-      <Text variant="bodyMuted" style={styles.hint}>
-        Drag the ruler for broad changes, then tap to fine-tune.
-      </Text>
     </View>
   );
 }
@@ -322,9 +325,5 @@ const styles = StyleSheet.create({
   nudgeHint: {
     flex: 1,
     textAlign: 'center',
-  },
-  hint: {
-    textAlign: 'center',
-    paddingHorizontal: spacing.sm,
   },
 });

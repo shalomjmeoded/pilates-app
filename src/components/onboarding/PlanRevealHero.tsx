@@ -1,10 +1,7 @@
 import { StyleSheet, View } from 'react-native';
-import Animated, {
-  FadeInDown,
-} from 'react-native-reanimated';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface PlanRevealHeroProps {
   calories: number;
@@ -13,8 +10,6 @@ interface PlanRevealHeroProps {
   carbsG: number;
   fatG: number;
   fiberG: number;
-  timelineLabel: string;
-  firstMilestone: string;
 }
 
 export function PlanRevealHero({
@@ -24,107 +19,132 @@ export function PlanRevealHero({
   carbsG,
   fatG,
   fiberG,
-  timelineLabel,
-  firstMilestone,
 }: PlanRevealHeroProps) {
   return (
-    <View style={[styles.hero, shadows.hero]}>
-      <View style={styles.shimmer} />
-      <Text variant="label" style={styles.eyebrow}>
-        Your plan reveal
-      </Text>
-      <Text variant="bodyMuted" style={styles.subtitle}>
-        Built from your answers.
-      </Text>
-      <View style={styles.cardStack}>
-        <Animated.View entering={FadeInDown.delay(80).duration(320)} style={styles.revealCard}>
-          <Text variant="label">Daily calories</Text>
-          <Text variant="section" style={styles.value}>
-            {calories}
-          </Text>
-        </Animated.View>
-        <Animated.View entering={FadeInDown.delay(170).duration(320)} style={styles.revealCard}>
-          <Text variant="label">Protein target</Text>
-          <Text variant="section" style={styles.value}>
-            {proteinG}g
-          </Text>
-          <Text variant="caption">
-            Carbs {carbsG}g · Fat {fatG}g · Fiber {fiberG}g
-          </Text>
-        </Animated.View>
-        <Animated.View entering={FadeInDown.delay(260).duration(320)} style={styles.revealCard}>
-          <Text variant="label">Weekly workouts</Text>
-          <Text variant="section" style={styles.value}>
+    <View style={styles.wrap}>
+      <View style={styles.section}>
+        <Text variant="h2" style={styles.sectionTitle}>
+          Your workout plan
+        </Text>
+        <View style={styles.workoutRow}>
+          <Text variant="display" style={styles.workoutCount}>
             {workoutsPerWeek}
           </Text>
-        </Animated.View>
-        <Animated.View entering={FadeInDown.delay(350).duration(320)} style={styles.revealCard}>
-          <Text variant="label">First milestone</Text>
-          <Text variant="body" style={styles.timeline}>
-            {firstMilestone}
-          </Text>
-          <Text variant="caption">{timelineLabel}</Text>
-        </Animated.View>
+          <View style={styles.workoutCopy}>
+            <Text variant="label" style={styles.eyebrow}>
+              workouts / week
+            </Text>
+            <Text variant="bodyMuted" numberOfLines={2}>
+              Adaptive Pilates sessions built around your goals.
+            </Text>
+          </View>
+        </View>
       </View>
-      <View style={styles.footerRow}>
-        <Text variant="caption" style={styles.footerText}>
-          Personalized targets only.
+
+      <View style={styles.section}>
+        <Text variant="h2" style={styles.sectionTitle}>
+          Your nutrition plan
         </Text>
+        <View style={styles.nutritionGrid}>
+          <View style={styles.calorieBlock}>
+            <Text variant="label" style={styles.eyebrow}>
+              Calories
+            </Text>
+            <Text variant="display" style={styles.calories}>
+              {calories}
+            </Text>
+          </View>
+          <View style={styles.macroGrid}>
+            <View style={styles.macroPill}>
+              <Text variant="h2" style={styles.macroValue}>
+                {proteinG}g
+              </Text>
+              <Text variant="caption">Protein</Text>
+            </View>
+            <View style={styles.macroPill}>
+              <Text variant="h2" style={styles.macroValue}>
+                {carbsG}g
+              </Text>
+              <Text variant="caption">Carbs</Text>
+            </View>
+            <View style={styles.macroPill}>
+              <Text variant="h2" style={styles.macroValue}>
+                {fatG}g
+              </Text>
+              <Text variant="caption">Fat</Text>
+            </View>
+            <View style={styles.macroPill}>
+              <Text variant="h2" style={styles.macroValue}>
+                {fiberG}g
+              </Text>
+              <Text variant="caption">Fiber</Text>
+            </View>
+          </View>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: {
-    backgroundColor: colors.surfaceHero,
-    borderRadius: radius.hero,
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-    padding: spacing.md,
-    gap: spacing.xs,
-    overflow: 'hidden',
+  wrap: {
+    gap: spacing.md,
   },
-  shimmer: {
-    position: 'absolute',
-    top: -30,
-    right: -20,
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: colors.surfaceRose,
-    opacity: 0.4,
+  section: {
+    gap: spacing.sm,
+  },
+  sectionTitle: {
+    color: colors.brandPrimary,
+  },
+  workoutRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  workoutCount: {
+    color: colors.brandPrimary,
+    minWidth: 72,
+    textAlign: 'center',
+  },
+  workoutCopy: {
+    flex: 1,
+    gap: 2,
   },
   eyebrow: {
     color: colors.brandSecondary,
   },
-  subtitle: {
-    marginBottom: spacing.xs,
+  nutritionGrid: {
+    flexDirection: 'row',
+    gap: spacing.sm,
   },
-  cardStack: {
-    gap: spacing.xs,
-  },
-  revealCard: {
+  calorieBlock: {
+    flex: 1.2,
+    minHeight: 172,
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    gap: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
   },
-  value: {
+  calories: {
     color: colors.brandPrimary,
   },
-  timeline: {
-    fontFamily: 'PlusJakartaSans_600SemiBold',
-    color: colors.textDark,
+  macroGrid: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
   },
-  footerRow: {
-    marginTop: 2,
+  macroPill: {
+    width: '48%',
+    backgroundColor: colors.surfaceCanvas,
+    borderRadius: radius.card,
+    paddingVertical: 12,
     alignItems: 'center',
+    gap: 2,
   },
-  footerText: {
-    color: colors.brandSecondary,
+  macroValue: {
+    color: colors.textStrong,
   },
 });

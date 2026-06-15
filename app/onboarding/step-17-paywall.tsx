@@ -13,7 +13,7 @@ import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
 import { colors, spacing } from '@/theme';
 
 export default function Step17Paywall() {
-  const { step, goBack } = useOnboardingNavigation(15);
+  const { step, goBack } = useOnboardingNavigation(14);
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
   const { beginFreeTrial, restore } = usePremium();
   const [actionError, setActionError] = useState<string | null>(null);
@@ -67,8 +67,8 @@ export default function Step17Paywall() {
   return (
     <OnboardingShell
       step={step}
-      title="Unlock your BetterMe plan"
-      subtitle="Start your free trial anytime."
+      title="Unlock BetterMe"
+      subtitle="Start your free trial."
       onBack={goBack}
       hideFooter
       showBack
@@ -78,18 +78,8 @@ export default function Step17Paywall() {
       reasonWhy={null}
     >
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        <View style={styles.proofRow}>
-          <View style={styles.proofChip}>
-            <Text variant="caption">Calm coaching loved</Text>
-          </View>
-          <View style={styles.proofChip}>
-            <Text variant="caption">Personal daily plans</Text>
-          </View>
-          <View style={styles.proofChip}>
-            <Text variant="caption">Built for consistency</Text>
-          </View>
-        </View>
         <PaywallHero
+          compact
           onStartTrial={() => void unlockPlan(beginFreeTrial)}
           onRestore={() => void unlockPlan(restore)}
         />
@@ -108,21 +98,7 @@ export default function Step17Paywall() {
 const styles = StyleSheet.create({
   container: {
     gap: spacing.sm,
-    paddingBottom: spacing.lg,
-  },
-  proofRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-    justifyContent: 'center',
-  },
-  proofChip: {
-    backgroundColor: colors.surfaceCanvas,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingBottom: spacing.md,
   },
   copy: {
     marginTop: 2,

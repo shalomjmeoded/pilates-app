@@ -25,8 +25,8 @@ interface RoadmapChartProps {
   goalWeek?: number | null;
 }
 
-const CHART_HEIGHT = 220;
-const PADDING = 28;
+const CHART_HEIGHT = 190;
+const PADDING = 24;
 
 function buildMilestoneWeeks(totalWeeks: number, hasGoal: boolean): number[] {
   if (totalWeeks <= 0) {
@@ -142,14 +142,6 @@ export function RoadmapChart({
 
   return (
     <View style={styles.wrap} onLayout={onLayout}>
-      <Animated.View entering={FadeInUp.duration(260)} style={styles.metaRow}>
-        {targetDateLabel ? (
-          <View style={styles.metaBadge}>
-            <Text variant="caption">{targetDateLabel}</Text>
-          </View>
-        ) : null}
-      </Animated.View>
-
       <View style={styles.journeyRow}>
         {milestoneWeeks.map((week, index) => (
           <View key={week} style={styles.journeySegment}>
@@ -162,22 +154,31 @@ export function RoadmapChart({
                   hasGoal && week === totalWeeks && styles.journeyNodeGoal,
                 ]}
               />
-              <Text variant="caption">{formatMilestoneLabel(week, totalWeeks, hasGoal)}</Text>
+              <Text variant="caption" style={styles.journeyLabel}>
+                {formatMilestoneLabel(week, totalWeeks, hasGoal)}
+              </Text>
             </View>
           </View>
         ))}
       </View>
 
-      <Animated.View entering={FadeInUp.delay(70).duration(280)} style={styles.card}>
+      <Animated.View entering={FadeInUp.duration(280)} style={styles.card}>
         {chart ? (
           <>
             <View style={styles.tooltip}>
-              <Text variant="label" style={styles.tooltipLabel}>
-                Week {active?.week ?? 0}
-              </Text>
-              <Text variant="h2" style={styles.tooltipValue}>
-                {active ? formatWeight(active.weight) : ''}
-              </Text>
+              <View>
+                <Text variant="label" style={styles.tooltipLabel}>
+                  Week {active?.week ?? 0}
+                </Text>
+                <Text variant="h2" style={styles.tooltipValue}>
+                  {active ? formatWeight(active.weight) : ''}
+                </Text>
+              </View>
+              {targetDateLabel ? (
+                <Text variant="caption" style={styles.targetDate}>
+                  {targetDateLabel}
+                </Text>
+              ) : null}
             </View>
             <Svg width={width} height={CHART_HEIGHT}>
               <Defs>
@@ -233,7 +234,7 @@ export function RoadmapChart({
         ) : null}
       </Animated.View>
 
-      <Animated.View entering={FadeInUp.delay(120).duration(260)} style={styles.weekRow}>
+      <Animated.View entering={FadeInUp.delay(80).duration(260)} style={styles.weekRow}>
         {milestoneWeeks.map((week) => (
           <Pressable
             key={week}
@@ -259,24 +260,12 @@ export function RoadmapChart({
 
 const styles = StyleSheet.create({
   wrap: {
-    gap: spacing.md,
-  },
-  metaRow: {
     gap: spacing.sm,
-  },
-  metaBadge: {
-    backgroundColor: colors.surfaceCanvas,
-    borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    padding: spacing.sm,
-    gap: 4,
   },
   journeyRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: -4,
   },
   journeySegment: {
     flex: 1,
@@ -285,17 +274,17 @@ const styles = StyleSheet.create({
   },
   journeyNodeWrap: {
     alignItems: 'center',
-    gap: 6,
+    gap: 4,
   },
   journeyLine: {
     flex: 1,
     height: 1,
     backgroundColor: colors.borderLight,
-    marginHorizontal: 6,
+    marginHorizontal: 5,
   },
   journeyNode: {
-    width: 10,
-    height: 10,
+    width: 9,
+    height: 9,
     borderRadius: 5,
     borderWidth: 1.5,
     borderColor: colors.borderStrong,
@@ -309,16 +298,23 @@ const styles = StyleSheet.create({
     borderColor: colors.accentWarm,
     backgroundColor: colors.accentWarm,
   },
+  journeyLabel: {
+    color: colors.textMuted,
+  },
   card: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.hero,
     borderWidth: 1,
     borderColor: colors.borderLight,
     overflow: 'hidden',
-    paddingTop: spacing.sm,
+    paddingTop: 14,
   },
   tooltip: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     paddingHorizontal: spacing.sm,
+    paddingBottom: 4,
     gap: 2,
   },
   tooltipLabel: {
@@ -327,14 +323,19 @@ const styles = StyleSheet.create({
   tooltipValue: {
     color: colors.brandPrimary,
   },
+  targetDate: {
+    color: colors.textMuted,
+    maxWidth: 150,
+    textAlign: 'right',
+  },
   weekRow: {
     flexDirection: 'row',
-    gap: spacing.xs,
-    flexWrap: 'wrap',
+    gap: 6,
   },
   weekChip: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 10,
+    flex: 1,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
     borderRadius: radius.pill,
     backgroundColor: colors.surfaceCanvas,
     borderWidth: 1,

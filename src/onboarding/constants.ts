@@ -6,7 +6,7 @@ export const ONBOARDING_SPRING = {
   stiffness: 120,
 } as const;
 
-export const ONBOARDING_TOTAL_STEPS = 15;
+export const ONBOARDING_TOTAL_STEPS = 14;
 
 export const ONBOARDING_ROUTES = [
   'step-01-gender',
@@ -18,7 +18,6 @@ export const ONBOARDING_ROUTES = [
   'step-09-birth-year',
   'step-10-fitness-goal',
   'step-11-goal-weight',
-  'step-12-trajectory',
   'step-14-pace',
   'step-13-roadmap',
   'step-15-loading',
@@ -44,13 +43,13 @@ export const FREQUENCY_OPTIONS: Array<{ value: TrainingFrequency; label: string 
 
 export const PREFERENCE_OPTIONS: Array<{ value: ExercisePreference; label: string }> = [
   { value: 'mat_pilates', label: 'Mat Pilates' },
-  { value: 'reformer_pilates', label: 'Reformer Pilates' },
   { value: 'cardio_burn', label: 'Cardio Burn' },
   { value: 'core_focus', label: 'Core Focus' },
   { value: 'flexibility_length', label: 'Flexibility & Length' },
 ];
 
 export const FITNESS_GOAL_OPTIONS: Array<{ value: FitnessGoal; label: string }> = [
+  { value: 'lose_weight', label: 'Lose Weight' },
   { value: 'get_toned', label: 'Get Toned' },
   { value: 'maintain', label: 'Maintain' },
   { value: 'build_muscle', label: 'Build Muscle' },

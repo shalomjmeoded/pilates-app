@@ -2,7 +2,7 @@ export type GenderIdentity = 'female' | 'male' | 'non_binary' | 'prefer_not_to_s
 
 export type TrainingFrequency = 'none' | '1_2' | '3_4' | '5_plus';
 
-export type FitnessGoal = 'get_toned' | 'maintain' | 'build_muscle';
+export type FitnessGoal = 'lose_weight' | 'get_toned' | 'maintain' | 'build_muscle';
 
 export type MediaPreference = 'video_streaming' | 'static_only';
 

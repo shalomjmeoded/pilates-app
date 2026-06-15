@@ -3,6 +3,7 @@ import type { MacroPlan } from '@/types/calculations';
 import type { FitnessGoal } from '@/types/profile';
 
 const PROTEIN_PER_KG: Record<FitnessGoal, number> = {
+  lose_weight: 2.0,
   get_toned: 2.0,
   maintain: 1.8,
   build_muscle: 2.2,

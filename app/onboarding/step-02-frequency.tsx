@@ -7,14 +7,12 @@ export default function Step02Frequency() {
   const { step, goNext, goBack } = useOnboardingNavigation(2);
   const trainingFrequency = useOnboardingStore((state) => state.draft.trainingFrequency);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
-  const frequencyInsight = trainingFrequency ? 'Nice. Your schedule is now tuned.' : undefined;
 
   return (
     <OnboardingShell
       step={step}
       title="Your weekly rhythm"
       subtitle="Choose what feels realistic for you."
-      insightText={frequencyInsight}
       onBack={goBack}
       onNext={goNext}
       nextDisabled={!trainingFrequency}
