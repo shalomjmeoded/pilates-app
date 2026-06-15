@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useWindowDimensions } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { OnboardingShell, VerticalMeasurementRuler } from '@/components/onboarding';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
@@ -33,28 +32,24 @@ export default function Step06Height() {
   return (
     <OnboardingShell
       step={step}
-      title="Your height"
-      subtitle="Set it with the ruler."
-      heroImageSource={require('../../assets/onboarding/hero-body.png')}
-      heroAccessibilityLabel="Pilates bridge pose"
-      insightText={`${Math.round(valueCm)} ${units.height}`}
+      title="Let's measure your height"
+      subtitle="Drag the ruler or use the buttons to fine-tune."
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueCm < 120 || valueCm > 230}
       titleLines={2}
       scrollEnabled={false}
       reasonWhy={null}
+      showHero={false}
     >
-      <Animated.View entering={FadeInUp.delay(80).duration(280)}>
-        <VerticalMeasurementRuler
-          valueCm={valueCm}
-          unit={units.height}
-          onChangeCm={(cm) => patchDraft({ heightCm: cm })}
-          selectedSystem={isMetric ? 'metric' : 'imperial'}
-          onSelectSystem={applyUnitSystem}
-          viewportHeight={rulerHeight}
-        />
-      </Animated.View>
+      <VerticalMeasurementRuler
+        valueCm={valueCm}
+        unit={units.height}
+        onChangeCm={(cm) => patchDraft({ heightCm: cm })}
+        selectedSystem={isMetric ? 'metric' : 'imperial'}
+        onSelectSystem={applyUnitSystem}
+        viewportHeight={rulerHeight}
+      />
     </OnboardingShell>
   );
 }

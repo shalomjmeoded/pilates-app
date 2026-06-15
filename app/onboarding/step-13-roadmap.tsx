@@ -5,7 +5,6 @@ import {
   buildRoadmapProjection,
   estimateWeeksToGoal,
   formatRoadmapTargetDate,
-  roadmapConfidenceLabel,
 } from '@/engines/calculations';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
@@ -21,14 +20,14 @@ export default function Step13Roadmap() {
   const pace = draft.paceKgPerWeek ?? 0.5;
   const goalWeight = draft.goalWeightKg ?? currentWeight;
 
+  const weeksToGoal = estimateWeeksToGoal(currentWeight, goalWeight, trajectory, pace);
+  const chartWeeks = weeksToGoal === null || weeksToGoal === 0 ? 24 : weeksToGoal;
   const points = useMemo(
-    () => buildRoadmapProjection(currentWeight, trajectory, pace),
-    [currentWeight, pace, trajectory],
+    () => buildRoadmapProjection(currentWeight, trajectory, pace, chartWeeks),
+    [chartWeeks, currentWeight, pace, trajectory],
   );
 
-  const weeksToGoal = estimateWeeksToGoal(currentWeight, goalWeight, trajectory, pace);
   const targetDateLabel = formatRoadmapTargetDate(weeksToGoal);
-  const confidenceLabel = roadmapConfidenceLabel(trajectory, pace);
   const roadmapInsight =
     weeksToGoal === null ? 'Consistency-first path ready.' : `Milestone in ~${weeksToGoal} weeks.`;
 
@@ -48,7 +47,7 @@ export default function Step13Roadmap() {
         goalWeightKg={goalWeight}
         weightUnit={weightUnit}
         targetDateLabel={targetDateLabel}
-        confidenceLabel={confidenceLabel}
+        goalWeek={weeksToGoal}
       />
     </OnboardingShell>
   );

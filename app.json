@@ -1,16 +1,16 @@
 {
   "expo": {
     "name": "BetterMe",
-    "slug": "betterme",
+    "slug": "tune",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "betterme",
+    "scheme": "tune",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.renatovanerven.betterme"
+      "bundleIdentifier": "com.renatovanerven.tune"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +19,7 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "package": "com.renatovanerven.betterme",
+      "package": "com.renatovanerven.tune",
       "predictiveBackGestureEnabled": false
     },
     "web": {

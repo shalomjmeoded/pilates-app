@@ -7,7 +7,6 @@ export default function Step01Gender() {
   const { step, goNext } = useOnboardingNavigation(1);
   const genderIdentity = useOnboardingStore((state) => state.draft.genderIdentity);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
-  const selectionInsight = genderIdentity ? 'Great choice. We tailor gently.' : undefined;
 
   return (
     <OnboardingShell
@@ -16,7 +15,6 @@ export default function Step01Gender() {
       subtitle="A few details help us build your plan."
       heroImageSource={require('../../assets/onboarding/hero-rhythm.png')}
       heroAccessibilityLabel="Pilates lifestyle hero"
-      insightText={selectionInsight}
       showBack={false}
       onNext={goNext}
       nextDisabled={!genderIdentity}

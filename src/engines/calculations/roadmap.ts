@@ -55,19 +55,6 @@ export function formatRoadmapTargetDate(weeks: number | null): string {
   return format(addWeeks(new Date(), weeks), 'MMM d, yyyy');
 }
 
-export function roadmapConfidenceLabel(trajectory: WeightTrajectory, paceKgPerWeek: number): string {
-  if (trajectory === 'steady_state') {
-    return 'High confidence — habit-first approach';
-  }
-  if (paceKgPerWeek <= 0.35) {
-    return 'High confidence — sustainable pace';
-  }
-  if (paceKgPerWeek <= 0.6) {
-    return 'Moderate confidence — steady progress';
-  }
-  return 'Guided pace — we will monitor closely';
-}
-
 export function formatFirstMilestone(
   currentWeightKg: number,
   trajectory: WeightTrajectory,

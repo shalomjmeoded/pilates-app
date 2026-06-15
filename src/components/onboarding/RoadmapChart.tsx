@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import Svg, {
@@ -22,12 +22,32 @@ interface RoadmapChartProps {
   goalWeightKg: number;
   weightUnit?: 'kg' | 'lb';
   targetDateLabel?: string;
-  confidenceLabel?: string;
+  goalWeek?: number | null;
 }
 
 const CHART_HEIGHT = 220;
 const PADDING = 28;
-const MILESTONE_WEEKS = [0, 6, 12, 18, 24];
+
+function buildMilestoneWeeks(totalWeeks: number, hasGoal: boolean): number[] {
+  if (totalWeeks <= 0) {
+    return [0];
+  }
+
+  const fractions = totalWeeks <= 8 ? [0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1];
+  return Array.from(
+    new Set(fractions.map((fraction) => Math.round(totalWeeks * fraction))),
+  ).filter((week) => week >= 0 && (hasGoal || week <= totalWeeks));
+}
+
+function formatMilestoneLabel(week: number, totalWeeks: number, hasGoal: boolean): string {
+  if (week === 0) {
+    return 'Now';
+  }
+  if (hasGoal && week === totalWeeks) {
+    return 'Goal';
+  }
+  return `${week}w`;
+}
 
 function buildSmoothPath(coordinates: Array<{ x: number; y: number }>): string {
   if (coordinates.length === 0) {
@@ -65,10 +85,22 @@ export function RoadmapChart({
   goalWeightKg,
   weightUnit = 'kg',
   targetDateLabel,
-  confidenceLabel,
+  goalWeek,
 }: RoadmapChartProps) {
   const [width, setWidth] = useState(0);
-  const [activeWeek, setActiveWeek] = useState(12);
+  const totalWeeks = Math.max(points[points.length - 1]?.week ?? 0, 0);
+  const hasGoal = goalWeek !== null && goalWeek !== undefined && goalWeek > 0;
+  const milestoneWeeks = useMemo(
+    () => buildMilestoneWeeks(totalWeeks, hasGoal),
+    [hasGoal, totalWeeks],
+  );
+  const [activeWeek, setActiveWeek] = useState(() => milestoneWeeks[Math.floor(milestoneWeeks.length / 2)] ?? 0);
+
+  useEffect(() => {
+    if (!milestoneWeeks.includes(activeWeek)) {
+      setActiveWeek(milestoneWeeks[Math.floor(milestoneWeeks.length / 2)] ?? 0);
+    }
+  }, [activeWeek, milestoneWeeks]);
 
   const onLayout = (event: LayoutChangeEvent) => {
     setWidth(event.nativeEvent.layout.width);
@@ -116,35 +148,24 @@ export function RoadmapChart({
             <Text variant="caption">{targetDateLabel}</Text>
           </View>
         ) : null}
-        {confidenceLabel ? (
-          <View style={[styles.metaBadge, styles.confidenceBadge]}>
-            <Text variant="caption" numberOfLines={1}>
-              {confidenceLabel}
-            </Text>
-          </View>
-        ) : null}
       </Animated.View>
 
       <View style={styles.journeyRow}>
-        <View style={styles.journeyNodeWrap}>
-          <View style={[styles.journeyNode, styles.journeyNodeActive]} />
-          <Text variant="caption">Now</Text>
-        </View>
-        <View style={styles.journeyLine} />
-        <View style={styles.journeyNodeWrap}>
-          <View style={styles.journeyNode} />
-          <Text variant="caption">6w</Text>
-        </View>
-        <View style={styles.journeyLine} />
-        <View style={styles.journeyNodeWrap}>
-          <View style={styles.journeyNode} />
-          <Text variant="caption">12w</Text>
-        </View>
-        <View style={styles.journeyLine} />
-        <View style={styles.journeyNodeWrap}>
-          <View style={[styles.journeyNode, styles.journeyNodeGoal]} />
-          <Text variant="caption">Goal</Text>
-        </View>
+        {milestoneWeeks.map((week, index) => (
+          <View key={week} style={styles.journeySegment}>
+            {index > 0 ? <View style={styles.journeyLine} /> : null}
+            <View style={styles.journeyNodeWrap}>
+              <View
+                style={[
+                  styles.journeyNode,
+                  week === 0 && styles.journeyNodeActive,
+                  hasGoal && week === totalWeeks && styles.journeyNodeGoal,
+                ]}
+              />
+              <Text variant="caption">{formatMilestoneLabel(week, totalWeeks, hasGoal)}</Text>
+            </View>
+          </View>
+        ))}
       </View>
 
       <Animated.View entering={FadeInUp.delay(70).duration(280)} style={styles.card}>
@@ -165,18 +186,20 @@ export function RoadmapChart({
                   <Stop offset="100%" stopColor={colors.brandSecondary} stopOpacity="0.02" />
                 </LinearGradient>
               </Defs>
-              <Line
-                x1={PADDING}
-                x2={width - PADDING}
-                y1={chart.goalY}
-                y2={chart.goalY}
-                stroke={colors.accentWarm}
-                strokeWidth={1.5}
-                strokeDasharray="5 4"
-              />
+              {hasGoal ? (
+                <Line
+                  x1={PADDING}
+                  x2={width - PADDING}
+                  y1={chart.goalY}
+                  y2={chart.goalY}
+                  stroke={colors.accentWarm}
+                  strokeWidth={1.5}
+                  strokeDasharray="5 4"
+                />
+              ) : null}
               <Path d={chart.areaPath} fill="url(#roadmapFill)" />
               <Path d={chart.linePath} fill="none" stroke={colors.brandPrimary} strokeWidth={3} />
-              {MILESTONE_WEEKS.map((week) => {
+              {milestoneWeeks.map((week) => {
                 const point = chart.coordinates[week];
                 if (!point) {
                   return null;
@@ -194,26 +217,28 @@ export function RoadmapChart({
                 );
               })}
               {active ? <Circle cx={active.x} cy={active.y} r={7} fill={colors.brandPrimary} /> : null}
-              <SvgText
-                x={width - PADDING}
-                y={chart.goalY - 8}
-                fill={colors.accentWarm}
-                fontSize="11"
-                textAnchor="end"
-              >
-                Goal {formatWeight(goalWeightKg)}
-              </SvgText>
+              {hasGoal ? (
+                <SvgText
+                  x={width - PADDING}
+                  y={chart.goalY - 8}
+                  fill={colors.accentWarm}
+                  fontSize="11"
+                  textAnchor="end"
+                >
+                  Goal {formatWeight(goalWeightKg)}
+                </SvgText>
+              ) : null}
             </Svg>
           </>
         ) : null}
       </Animated.View>
 
       <Animated.View entering={FadeInUp.delay(120).duration(260)} style={styles.weekRow}>
-        {MILESTONE_WEEKS.map((week) => (
+        {milestoneWeeks.map((week) => (
           <Pressable
             key={week}
             accessibilityRole="button"
-            accessibilityLabel={`Show week ${week} roadmap milestone`}
+            accessibilityLabel={`Show ${formatMilestoneLabel(week, totalWeeks, hasGoal).toLowerCase()} roadmap milestone`}
             accessibilityHint="Updates the highlighted milestone value above the chart"
             accessibilityState={{ selected: activeWeek === week }}
             onPress={() => {
@@ -223,7 +248,7 @@ export function RoadmapChart({
             style={[styles.weekChip, activeWeek === week && styles.weekChipActive]}
           >
             <Text variant="label" style={activeWeek === week ? styles.weekChipTextActive : undefined}>
-              Wk {week}
+              {week === 0 ? 'Now' : `Wk ${week}`}
             </Text>
           </Pressable>
         ))}
@@ -247,14 +272,16 @@ const styles = StyleSheet.create({
     padding: spacing.sm,
     gap: 4,
   },
-  confidenceBadge: {
-    backgroundColor: colors.surfaceRose,
-  },
   journeyRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: -4,
+  },
+  journeySegment: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   journeyNodeWrap: {
     alignItems: 'center',

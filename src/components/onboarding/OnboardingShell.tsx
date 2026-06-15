@@ -43,6 +43,7 @@ interface OnboardingShellProps {
   heroImageSource?: ImageSourcePropType;
   heroLoopSource?: ImageSourcePropType;
   heroAccessibilityLabel?: string;
+  showHero?: boolean;
   insightText?: string;
 }
 
@@ -73,6 +74,7 @@ export function OnboardingShell({
   heroImageSource,
   heroLoopSource,
   heroAccessibilityLabel,
+  showHero = true,
   insightText,
 }: OnboardingShellProps) {
   const { height } = useWindowDimensions();
@@ -158,27 +160,29 @@ export function OnboardingShell({
           style={[styles.page, isCompact && styles.pageCompact]}
         >
           <View style={styles.intro}>
-            <Animated.View entering={FadeInDown.duration(320)} style={styles.visualArea}>
-              {resolvedHeroSource ? (
-                <Animated.View sharedTransitionTag="onboardingHeroMedia" style={styles.heroMediaWrap}>
-                  <Animated.Image
-                    source={resolvedHeroSource}
-                    style={[styles.heroMedia, mediaStyle]}
-                    resizeMode="cover"
-                    accessibilityLabel={heroAccessibilityLabel ?? 'Onboarding hero media'}
-                  />
-                  <View style={styles.heroMediaOverlay} pointerEvents="none" />
-                </Animated.View>
-              ) : (
-                <Animated.View sharedTransitionTag="onboardingHeroOrb" style={styles.visualOrb}>
-                  <MaterialCommunityIcons
-                    name={phaseIndex === 1 ? 'leaf' : phaseIndex === 2 ? 'ruler' : phaseIndex === 3 ? 'bullseye-arrow' : 'star-four-points'}
-                    size={30}
-                    color={colors.brandPrimary}
-                  />
-                </Animated.View>
-              )}
-            </Animated.View>
+            {showHero ? (
+              <Animated.View entering={FadeInDown.duration(320)} style={styles.visualArea}>
+                {resolvedHeroSource ? (
+                  <Animated.View sharedTransitionTag="onboardingHeroMedia" style={styles.heroMediaWrap}>
+                    <Animated.Image
+                      source={resolvedHeroSource}
+                      style={[styles.heroMedia, mediaStyle]}
+                      resizeMode="cover"
+                      accessibilityLabel={heroAccessibilityLabel ?? 'Onboarding hero media'}
+                    />
+                    <View style={styles.heroMediaOverlay} pointerEvents="none" />
+                  </Animated.View>
+                ) : (
+                  <Animated.View sharedTransitionTag="onboardingHeroOrb" style={styles.visualOrb}>
+                    <MaterialCommunityIcons
+                      name={phaseIndex === 1 ? 'leaf' : phaseIndex === 2 ? 'ruler' : phaseIndex === 3 ? 'bullseye-arrow' : 'star-four-points'}
+                      size={30}
+                      color={colors.brandPrimary}
+                    />
+                  </Animated.View>
+                )}
+              </Animated.View>
+            ) : null}
             <Animated.View entering={FadeInDown.delay(60).duration(280)}>
               <Text
                 variant="hero"

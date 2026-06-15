@@ -23,7 +23,6 @@ export {
   estimateWeeksToGoal,
   formatFirstMilestone,
   formatRoadmapTargetDate,
-  roadmapConfidenceLabel,
 } from './roadmap';
 
 export function buildBaselinePlan(input: CalculationInput): BaselinePlanResult {
