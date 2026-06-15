@@ -16,7 +16,7 @@ export default function PaywallScreen() {
     (state) => state.preferences.onboardingCompleted,
   );
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
-  const { beginFreeTrial, restore, hasAccess, hydrate } = usePremium();
+  const { beginFreeTrial, beginMockTrial, restore, hasAccess, hydrate } = usePremium();
   const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -60,7 +60,8 @@ export default function PaywallScreen() {
       <SubscreenTopBar />
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <PaywallHero
-          onStartTrial={() => void completeAccess(beginFreeTrial)}
+          onStartTrial={(plan) => void completeAccess(() => beginFreeTrial(plan))}
+          onContinueWithTrial={__DEV__ ? () => void completeAccess(beginMockTrial) : undefined}
           onRestore={() => void completeAccess(restore)}
         />
         {isSubmitting ? <Text variant="bodyMuted">Unlocking your plan...</Text> : null}

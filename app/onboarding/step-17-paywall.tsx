@@ -15,7 +15,7 @@ import { colors, spacing } from '@/theme';
 export default function Step17Paywall() {
   const { step, goBack } = useOnboardingNavigation(14);
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
-  const { beginFreeTrial, restore } = usePremium();
+  const { beginFreeTrial, beginMockTrial, restore } = usePremium();
   const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -80,7 +80,8 @@ export default function Step17Paywall() {
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <PaywallHero
           compact
-          onStartTrial={() => void unlockPlan(beginFreeTrial)}
+          onStartTrial={(plan) => void unlockPlan(() => beginFreeTrial(plan))}
+          onContinueWithTrial={__DEV__ ? () => void unlockPlan(beginMockTrial) : undefined}
           onRestore={() => void unlockPlan(restore)}
         />
 

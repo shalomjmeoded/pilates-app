@@ -6,10 +6,14 @@ import {
 } from '@/db/repositories/premiumRepository';
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
-import type { PremiumStatus } from '@/types/premium';
+import {
+  purchaseRevenueCatCurrentOffering,
+  restoreRevenueCatPurchases,
+} from '@/services/monetization/revenueCatService';
+import type { PremiumPlanId, PremiumStatus } from '@/types/premium';
 import { TRIAL_LENGTH_DAYS } from '@/types/premium';
 
-export async function startFreeTrial(): Promise<PremiumStatus> {
+export async function startMockTrial(): Promise<PremiumStatus> {
   const current = await getPremiumStatus();
 
   if (current.trialUsed && !hasPremiumAccess(current)) {
@@ -32,7 +36,15 @@ export async function startFreeTrial(): Promise<PremiumStatus> {
   return status;
 }
 
+export async function startFreeTrial(plan: PremiumPlanId = 'yearly'): Promise<PremiumStatus> {
+  return purchaseRevenueCatCurrentOffering(plan);
+}
+
 export async function restorePurchases(): Promise<PremiumStatus> {
+  return restoreRevenueCatPurchases();
+}
+
+export async function restoreMockPurchases(): Promise<PremiumStatus> {
   trackPremiumEvent('restore_purchase_tapped');
 
   const current = await getPremiumStatus();

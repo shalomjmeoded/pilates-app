@@ -31,6 +31,12 @@ export const usePremiumStore = create<PremiumState>((set, get) => ({
   hydrate: async () => {
     set({ isLoading: true });
     try {
+      const { refreshRevenueCatPremiumStatus } = await import(
+        '@/services/monetization/revenueCatService'
+      );
+      const status = (await refreshRevenueCatPremiumStatus()) ?? (await getPremiumStatus());
+      set({ status });
+    } catch {
       const status = await getPremiumStatus();
       set({ status });
     } finally {

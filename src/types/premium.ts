@@ -1,6 +1,7 @@
 export type SubscriptionStatus = 'inactive' | 'trial' | 'active';
+export type PremiumPlanId = 'monthly' | 'yearly';
 
-export const TRIAL_LENGTH_DAYS = 7;
+export const TRIAL_LENGTH_DAYS = 3;
 
 export interface PremiumStatus {
   subscriptionStatus: SubscriptionStatus;

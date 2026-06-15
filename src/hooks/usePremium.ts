@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
 import {
   restorePurchases,
+  startMockTrial,
   startFreeTrial,
 } from '@/services/monetization/subscriptionService';
 import {
@@ -12,6 +13,7 @@ import {
   usePremiumStore,
 } from '@/stores/premiumStore';
 import type { PremiumFeatureKey } from '@/types/premium';
+import type { PremiumPlanId } from '@/types/premium';
 
 export function usePremium() {
   const router = useRouter();
@@ -46,8 +48,14 @@ export function usePremium() {
     [hasAccess, openUpsell],
   );
 
-  const beginFreeTrial = useCallback(async () => {
-    const nextStatus = await startFreeTrial();
+  const beginFreeTrial = useCallback(async (plan: PremiumPlanId = 'yearly') => {
+    const nextStatus = await startFreeTrial(plan);
+    setStatus(nextStatus);
+    return nextStatus;
+  }, [setStatus]);
+
+  const beginMockTrial = useCallback(async () => {
+    const nextStatus = await startMockTrial();
     setStatus(nextStatus);
     return nextStatus;
   }, [setStatus]);
@@ -72,6 +80,7 @@ export function usePremium() {
     hydrate,
     requirePremium,
     beginFreeTrial,
+    beginMockTrial,
     restore,
     openPaywall,
     openUpsell,

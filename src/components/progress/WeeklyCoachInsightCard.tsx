@@ -1,4 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -26,6 +28,14 @@ export function WeeklyCoachInsightCard({
   locked = false,
   onUnlock,
 }: WeeklyCoachInsightCardProps) {
+  const [expanded, setExpanded] = useState(true);
+
+  useEffect(() => {
+    if (insight) {
+      setExpanded(true);
+    }
+  }, [insight]);
+
   if (locked) {
     return (
       <Card style={[styles.card, highlighted && styles.highlighted]}>
@@ -52,14 +62,36 @@ export function WeeklyCoachInsightCard({
 
   return (
     <Card style={[styles.card, highlighted && styles.highlighted]}>
-      <Text variant="label">Weekly AI coach</Text>
-      <Text variant="bodyMuted">
-        Summary-only insights from your week — never your full meal or workout history.
-      </Text>
-
       {insight ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={expanded ? 'Collapse weekly AI coach' : 'Expand weekly AI coach'}
+          onPress={() => setExpanded((current) => !current)}
+          style={({ pressed }) => [styles.summaryHeader, pressed && styles.pressed]}
+        >
+          <View style={styles.summaryHeaderCopy}>
+            <Text variant="label">Weekly AI coach</Text>
+            <Text variant="body" numberOfLines={expanded ? undefined : 1}>
+              {insight.summary}
+            </Text>
+          </View>
+          <MaterialCommunityIcons
+            name={expanded ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color={colors.textMuted}
+          />
+        </Pressable>
+      ) : (
+        <>
+          <Text variant="label">Weekly AI coach</Text>
+          <Text variant="bodyMuted">
+            Summary-only insights from your week — never your full meal or workout history.
+          </Text>
+        </>
+      )}
+
+      {insight && expanded ? (
         <View style={styles.section}>
-          <Text variant="h2">{insight.summary}</Text>
           {insight.wins.map((win) => (
             <Text key={win} variant="body">
               • {win}
@@ -108,6 +140,20 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: spacing.xs,
+  },
+  summaryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.xs,
+    borderRadius: 14,
+  },
+  summaryHeaderCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  pressed: {
+    opacity: 0.82,
   },
   lockedPreview: {
     overflow: 'hidden',

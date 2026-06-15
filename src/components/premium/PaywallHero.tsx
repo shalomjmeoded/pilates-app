@@ -1,5 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import {
   PAYWALL_OUTCOME_BENEFITS,
@@ -10,12 +11,14 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { colors, radius, shadows, spacing } from '@/theme';
+import type { PremiumPlanId } from '@/types/premium';
 
 interface PaywallHeroProps {
   title?: string;
   description?: string;
   benefits?: PaywallOutcomeBenefit[];
-  onStartTrial: () => void;
+  onStartTrial: (plan: PremiumPlanId) => void;
+  onContinueWithTrial?: () => void;
   onRestore: () => void;
   compact?: boolean;
 }
@@ -25,10 +28,14 @@ export function PaywallHero({
   description = PAYWALL_SUBTITLE,
   benefits = PAYWALL_OUTCOME_BENEFITS,
   onStartTrial,
+  onContinueWithTrial,
   onRestore,
   compact = false,
 }: PaywallHeroProps) {
+  const [selectedPlan, setSelectedPlan] = useState<PremiumPlanId>('yearly');
   const visibleBenefits = compact ? benefits.slice(0, 4) : benefits;
+  const ctaLabel =
+    selectedPlan === 'yearly' ? 'Start 3-Day Free Trial' : 'Continue Monthly';
 
   return (
     <View style={styles.container}>
@@ -71,14 +78,85 @@ export function PaywallHero({
         ))}
       </View>
 
+      <View style={styles.plans}>
+        <PlanOption
+          title="Yearly"
+          price="$29.99/year"
+          detail="3 days free, then $29.99/year"
+          badge="Best value"
+          selected={selectedPlan === 'yearly'}
+          onPress={() => setSelectedPlan('yearly')}
+        />
+        <PlanOption
+          title="Monthly"
+          price="$9.99/month"
+          detail="Billed monthly"
+          selected={selectedPlan === 'monthly'}
+          onPress={() => setSelectedPlan('monthly')}
+        />
+      </View>
+
       <View style={styles.actions}>
-        <Button label="Start Free Trial" onPress={onStartTrial} />
+        <Button label={ctaLabel} onPress={() => onStartTrial(selectedPlan)} />
+        {onContinueWithTrial ? (
+          <Button label="Continue with trial" variant="secondary" onPress={onContinueWithTrial} />
+        ) : null}
         <Button label="Restore Purchase" variant="secondary" onPress={onRestore} />
         <Text variant="caption" style={styles.trialNote}>
           Free trial, then subscription. Cancel anytime.
         </Text>
       </View>
     </View>
+  );
+}
+
+interface PlanOptionProps {
+  title: string;
+  price: string;
+  detail: string;
+  badge?: string;
+  selected: boolean;
+  onPress: () => void;
+}
+
+function PlanOption({ title, price, detail, badge, selected, onPress }: PlanOptionProps) {
+  return (
+    <Pressable
+      accessibilityRole="radio"
+      accessibilityState={{ selected }}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.planOption,
+        selected && styles.planOptionSelected,
+        pressed && styles.pressed,
+      ]}
+    >
+      <View style={styles.planCopy}>
+        <View style={styles.planTitleRow}>
+          <Text variant="body" style={styles.planTitle}>
+            {title}
+          </Text>
+          {badge ? (
+            <View style={styles.badge}>
+              <Text variant="caption" style={styles.badgeText}>
+                {badge}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+        <Text variant="bodyMuted">{detail}</Text>
+      </View>
+      <View style={styles.planRight}>
+        <Text variant="body" style={styles.planPrice}>
+          {price}
+        </Text>
+        <MaterialCommunityIcons
+          name={selected ? 'radiobox-marked' : 'radiobox-blank'}
+          size={24}
+          color={selected ? colors.brandPrimary : colors.textMuted}
+        />
+      </View>
+    </Pressable>
   );
 }
 
@@ -153,6 +231,59 @@ const styles = StyleSheet.create({
   },
   actions: {
     gap: spacing.xs,
+  },
+  plans: {
+    gap: spacing.xs,
+  },
+  planOption: {
+    minHeight: 78,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.xs,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceCanvas,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 10,
+  },
+  planOptionSelected: {
+    borderColor: colors.brandPrimary,
+    backgroundColor: colors.surfaceRose,
+  },
+  pressed: {
+    opacity: 0.86,
+  },
+  planCopy: {
+    flex: 1,
+    gap: 4,
+  },
+  planTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    flexWrap: 'wrap',
+  },
+  planTitle: {
+    fontFamily: 'PlusJakartaSans_700Bold',
+  },
+  badge: {
+    borderRadius: radius.pill,
+    backgroundColor: colors.brandPrimary,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  badgeText: {
+    color: colors.warmWhite,
+    fontFamily: 'PlusJakartaSans_700Bold',
+  },
+  planRight: {
+    alignItems: 'flex-end',
+    gap: 6,
+  },
+  planPrice: {
+    fontFamily: 'PlusJakartaSans_700Bold',
   },
   trialNote: {
     textAlign: 'center',

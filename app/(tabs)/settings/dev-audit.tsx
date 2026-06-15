@@ -8,7 +8,9 @@ import { Text } from '@/components/ui/Text';
 import { getDatabase, resetDatabaseForDev } from '@/db/connection';
 import { MIGRATIONS } from '@/db/migrations';
 import { getSchemaDiagnostics, type SchemaDiagnostics } from '@/db/schemaDiagnostics';
+import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
+import { usePremiumStore } from '@/stores/premiumStore';
 import { spacing } from '@/theme';
 
 interface AuditRow {
@@ -20,6 +22,9 @@ interface AuditRow {
 
 export default function DevAuditScreen() {
   const storageBackend = usePreferencesStore((state) => state.preferences.storageBackend);
+  const resetPreferencesForDev = usePreferencesStore((state) => state.resetForDev);
+  const resetOnboardingDraft = useOnboardingStore((state) => state.resetDraft);
+  const setPremiumStatus = usePremiumStore((state) => state.setStatus);
   const [rows, setRows] = useState<AuditRow[]>([]);
   const [schema, setSchema] = useState<SchemaDiagnostics | null>(null);
   const [isResetting, setIsResetting] = useState(false);
@@ -43,6 +48,24 @@ export default function DevAuditScreen() {
   const handleResetDatabase = async () => {
     setIsResetting(true);
     try {
+      await resetDatabaseForDev();
+      DevSettings.reload();
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  const handleRestartOnboarding = async () => {
+    setIsResetting(true);
+    try {
+      resetPreferencesForDev();
+      resetOnboardingDraft();
+      setPremiumStatus({
+        subscriptionStatus: 'inactive',
+        isPremium: false,
+        trialUsed: false,
+        source: 'mock',
+      });
       await resetDatabaseForDev();
       DevSettings.reload();
     } finally {
@@ -81,6 +104,12 @@ export default function DevAuditScreen() {
           label={isResetting ? 'Resetting...' : 'Reset local database'}
           variant="secondary"
           onPress={() => void handleResetDatabase()}
+          disabled={isResetting}
+        />
+        <Button
+          label={isResetting ? 'Resetting...' : 'Restart onboarding'}
+          variant="secondary"
+          onPress={() => void handleRestartOnboarding()}
           disabled={isResetting}
         />
       </Card>

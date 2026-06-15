@@ -8,6 +8,7 @@ interface PreferencesState {
   hydrate: () => void;
   setOnboardingCompleted: (value: boolean) => void;
   setUnits: (units: UnitPreferences) => void;
+  resetForDev: () => void;
 }
 
 export const usePreferencesStore = create<PreferencesState>((set) => ({
@@ -24,6 +25,11 @@ export const usePreferencesStore = create<PreferencesState>((set) => ({
 
   setUnits(units) {
     preferencesStorage.setUnits(units);
+    set({ preferences: preferencesStorage.getAll() });
+  },
+
+  resetForDev() {
+    preferencesStorage.clear();
     set({ preferences: preferencesStorage.getAll() });
   },
 }));
