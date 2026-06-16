@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "ai-proxy": "tsx server/ai-proxy/dev-server.ts",
+    "start:ai-proxy": "tsx server/ai-proxy/dev-server.ts",
     "import-exercises": "tsx scripts/import-free-exercise-db.ts",
     "validate-seed": "tsx scripts/validate-exercise-seed.ts",
     "audit-exercises": "tsx scripts/audit-exercise-library.ts",

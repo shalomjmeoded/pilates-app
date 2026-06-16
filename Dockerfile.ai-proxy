@@ -1,0 +1,17 @@
+FROM node:20-slim
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
+
+COPY tsconfig.json ./
+COPY server ./server
+COPY src/services/ai/physiqueAssessmentPrompt.ts ./src/services/ai/physiqueAssessmentPrompt.ts
+COPY src/types/profile.ts ./src/types/profile.ts
+
+ENV NODE_ENV=production
+
+EXPOSE 8787
+
+CMD ["npm", "run", "start:ai-proxy"]

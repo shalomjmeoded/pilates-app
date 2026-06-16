@@ -1,0 +1,11 @@
+node_modules
+.expo
+dist
+.git
+.env
+.env.*
+*.md
+app
+assets
+scripts
+coverage
