@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import { handleAiRoute, resolveAiRoute } from './handler';
 import { AI_ROUTES } from './routes';
 
-const PORT = Number(process.env.AI_PROXY_PORT ?? 8787);
+const PORT = Number(process.env.PORT ?? process.env.AI_PROXY_PORT ?? 8787);
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -19,6 +19,13 @@ const server = createServer(async (req, res) => {
   }
 
   const pathname = req.url?.split('?')[0] ?? '';
+
+  if (req.method === 'GET' && pathname === '/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json', ...CORS_HEADERS });
+    res.end(JSON.stringify({ ok: true, service: 'betterme-ai-proxy' }));
+    return;
+  }
+
   const route = resolveAiRoute(pathname);
 
   if (req.method !== 'POST' || !route) {
