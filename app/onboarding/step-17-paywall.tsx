@@ -2,21 +2,91 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { OnboardingShell } from '@/components/onboarding';
-import { PaywallHero } from '@/components/premium';
+import { PaywallHero, type PaywallOutcomeSummary } from '@/components/premium';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
+import { estimateWeeksToGoal, formatRoadmapTargetDate } from '@/engines/calculations';
 import { useFinishOnboarding } from '@/hooks/useFinishOnboarding';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { usePremium } from '@/hooks/usePremium';
+import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
 import { colors, spacing } from '@/theme';
+import { useOnboardingStore } from '@/stores/onboardingStore';
+import { usePreferencesStore } from '@/stores/preferencesStore';
+import { displayWeight } from '@/utils/units';
+
+const PAYWALL_HEADER_IMAGES = [
+  require('../../assets/exercises/thumbnails/Pilates_Hundred.jpg'),
+  require('../../assets/exercises/thumbnails/Pilates_Roll_Up.jpg'),
+  require('../../assets/exercises/thumbnails/Single_Leg_Stretch.jpg'),
+];
+
+function compactDateLabel(label: string): string {
+  return label.replace(/, \d{4}$/, '');
+}
+
+function buildPaywallOutcome(
+  draft: ReturnType<typeof useOnboardingStore.getState>['draft'],
+  weightUnit: 'kg' | 'lb',
+): PaywallOutcomeSummary | undefined {
+  if (
+    draft.currentWeightKg === null ||
+    draft.goalWeightKg === null ||
+    draft.fitnessGoal === null ||
+    draft.paceKgPerWeek === null
+  ) {
+    return undefined;
+  }
+
+  const trajectory = deriveWeightTrajectory(
+    draft.fitnessGoal,
+    draft.currentWeightKg,
+    draft.goalWeightKg,
+  );
+  const diffKg = Math.abs(draft.currentWeightKg - draft.goalWeightKg);
+
+  if (trajectory === 'steady_state' || diffKg < 0.1) {
+    return {
+      title: 'Stay consistent',
+      caption: 'Your weekly rhythm is ready.',
+    };
+  }
+
+  const weeksToGoal = estimateWeeksToGoal(
+    draft.currentWeightKg,
+    draft.goalWeightKg,
+    trajectory,
+    draft.paceKgPerWeek,
+  );
+  const targetDate = compactDateLabel(formatRoadmapTargetDate(weeksToGoal));
+
+  if (trajectory === 'weight_loss') {
+    return {
+      title: 'Lose',
+      highlightedValue: displayWeight(diffKg, weightUnit),
+      suffix: `by ${targetDate}`,
+      caption: 'Your plan adapts as you log progress.',
+    };
+  }
+
+  return {
+    title: 'Build toward',
+    highlightedValue: `+${displayWeight(diffKg, weightUnit)}`,
+    suffix: `by ${targetDate}`,
+    caption: 'Lean, steady progress without guesswork.',
+  };
+}
 
 export default function Step17Paywall() {
-  const { step, goBack } = useOnboardingNavigation(14);
+  const { step, goBack } = useOnboardingNavigation(15);
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
-  const { beginFreeTrial, beginMockTrial, restore } = usePremium();
+  const { beginFreeTrial, restore } = usePremium();
+  const draft = useOnboardingStore((state) => state.draft);
+  const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
   const [actionError, setActionError] = useState<string | null>(null);
+  const outcome = buildPaywallOutcome(draft, weightUnit);
 
   useEffect(() => {
     if (!rebuildMode) {
@@ -74,14 +144,19 @@ export default function Step17Paywall() {
       showBack
       scrollEnabled={false}
       hideStepIndicator
+      titleLines={1}
       phaseLabel="Unlock your plan"
       reasonWhy={null}
+      headerAccessorySources={PAYWALL_HEADER_IMAGES}
+      headerAccessoryAccessibilityLabel="Pilates movement previews"
+      headerAccessoryPlacement="background"
+      titleTreatment="softContrast"
     >
       <View style={styles.container}>
         <PaywallHero
           compact
+          outcome={outcome}
           onStartTrial={(plan) => void unlockPlan(() => beginFreeTrial(plan))}
-          onContinueWithTrial={__DEV__ ? () => void unlockPlan(beginMockTrial) : undefined}
           onRestore={() => void unlockPlan(restore)}
         />
 

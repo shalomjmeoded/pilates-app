@@ -38,8 +38,11 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
 
     if (!isValid) {
       if (isToday) {
-        plan = await refreshWorkoutPlanForDate(planDate);
-        planRefreshed = true;
+        const session = await getSessionForPlan(plan.id);
+        if (!session || session.status === 'abandoned') {
+          plan = await refreshWorkoutPlanForDate(planDate);
+          planRefreshed = true;
+        }
       }
     }
   }
@@ -64,6 +67,22 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
     partialLibraryMatch = hydrated.partialLibraryMatch;
 
     if (isToday && exercises.length === 0) {
+      const session = await getSessionForPlan(plan.id);
+      if (session && session.status !== 'abandoned') {
+        const sessionFeedback = await getSessionFeedback(session.id);
+        return {
+          planDate,
+          plan,
+          exercises,
+          session,
+          sessionFeedback,
+          isReadOnly,
+          isToday,
+          isFuture,
+          planRefreshed,
+          partialLibraryMatch: true,
+        };
+      }
       plan = await refreshWorkoutPlanForDate(planDate);
       planRefreshed = true;
       const retry = await hydratePlanExercises(plan);

@@ -53,7 +53,7 @@ export async function seedDatabaseIfNeeded(): Promise<{ exerciseCount: number; s
   const todaysPlan = await getWorkoutPlanByDate(today);
   if (todaysPlan) {
     const session = await getSessionForPlan(todaysPlan.id);
-    if (session?.status !== 'in_progress') {
+    if (!session || session.status === 'abandoned') {
       await refreshWorkoutPlanForDate(today);
     }
   }

@@ -78,7 +78,7 @@ export function WeeklyCoachInsightCard({
           <MaterialCommunityIcons
             name={expanded ? 'chevron-up' : 'chevron-down'}
             size={24}
-            color={colors.textMuted}
+            color={colors.textStrong}
           />
         </Pressable>
       ) : (

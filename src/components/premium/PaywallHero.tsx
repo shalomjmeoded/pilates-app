@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import {
   PAYWALL_OUTCOME_BENEFITS,
@@ -13,12 +13,22 @@ import { Text } from '@/components/ui/Text';
 import { colors, radius, shadows, spacing } from '@/theme';
 import type { PremiumPlanId } from '@/types/premium';
 
+const PRIVACY_POLICY_URL = 'https://clearday-seven.vercel.app/betterme';
+const TERMS_OF_USE_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+
+export interface PaywallOutcomeSummary {
+  title: string;
+  highlightedValue?: string;
+  suffix?: string;
+  caption: string;
+}
+
 interface PaywallHeroProps {
   title?: string;
   description?: string;
   benefits?: PaywallOutcomeBenefit[];
+  outcome?: PaywallOutcomeSummary;
   onStartTrial: (plan: PremiumPlanId) => void;
-  onContinueWithTrial?: () => void;
   onRestore: () => void;
   compact?: boolean;
 }
@@ -27,40 +37,49 @@ export function PaywallHero({
   title = PAYWALL_TITLE,
   description = PAYWALL_SUBTITLE,
   benefits = PAYWALL_OUTCOME_BENEFITS,
+  outcome,
   onStartTrial,
-  onContinueWithTrial,
   onRestore,
   compact = false,
 }: PaywallHeroProps) {
   const [selectedPlan, setSelectedPlan] = useState<PremiumPlanId>('yearly');
-  const visibleBenefits = benefits.slice(0, compact ? 3 : 4);
-  const ctaLabel =
-    selectedPlan === 'yearly' ? 'Start 3-Day Free Trial' : 'Continue Monthly';
+  const visibleBenefits = benefits.slice(0, compact ? (outcome ? 2 : 3) : 4);
+  const ctaLabel = selectedPlan === 'yearly' ? 'Start Free Trial' : 'Continue Monthly';
+  const disclosure =
+    selectedPlan === 'yearly'
+      ? '3 days free, then $29.99/year. Auto-renews unless canceled.'
+      : '$9.99/month. Auto-renews unless canceled.';
 
   return (
     <View style={[styles.container, compact && styles.containerCompact]}>
-      <View style={[styles.heroBand, compact && styles.heroBandCompact, !compact && shadows.hero]}>
-        <View style={styles.heroAccent} />
-        {!compact ? (
-          <Text variant="label" style={styles.heroEyebrow}>
-            Built from your answers
+      {outcome ? (
+        <OutcomeBanner outcome={outcome} />
+      ) : (
+        <View style={[styles.heroBand, compact && styles.heroBandCompact, !compact && shadows.hero]}>
+          <View style={styles.heroAccent} />
+          {!compact ? (
+            <Text variant="label" style={styles.heroEyebrow}>
+              Built from your answers
+            </Text>
+          ) : null}
+          <Text
+            variant={compact ? 'h1' : 'hero'}
+            style={[styles.heroTitle, compact && styles.heroTitleCompact]}
+            numberOfLines={compact ? 2 : undefined}
+            adjustsFontSizeToFit={compact}
+            minimumFontScale={0.84}
+          >
+            {title}
           </Text>
-        ) : null}
-        <Text
-          variant={compact ? 'h1' : 'hero'}
-          style={[styles.heroTitle, compact && styles.heroTitleCompact]}
-          numberOfLines={compact ? 2 : undefined}
-          adjustsFontSizeToFit={compact}
-          minimumFontScale={0.84}
-        >
-          {title}
-        </Text>
-        {!compact ? (
-          <Text variant="bodyMuted" style={styles.heroDescription}>
-            {description}
-          </Text>
-        ) : null}
-      </View>
+          {!compact ? (
+            <Text variant="bodyMuted" style={styles.heroDescription}>
+              {description}
+            </Text>
+          ) : null}
+        </View>
+      )}
+
+      <TrustChipRow selectedPlan={selectedPlan} />
 
       <View style={[styles.benefits, compact && styles.benefitsCompact]}>
         {visibleBenefits.map((benefit, index) => (
@@ -112,6 +131,11 @@ export function PaywallHero({
         />
       </View>
 
+      <TrialCueRow
+        selectedPlan={selectedPlan}
+        onSelectYearly={() => setSelectedPlan('yearly')}
+      />
+
       <View style={[styles.actions, compact && styles.actionsCompact]}>
         <Button
           label={ctaLabel}
@@ -119,9 +143,10 @@ export function PaywallHero({
           style={styles.ctaButton}
         />
         <Text variant="caption" style={styles.trialNote}>
-          {selectedPlan === 'yearly'
-            ? '3 days free, then $29.99/year. Cancel anytime.'
-            : '$9.99/month. Cancel anytime.'}
+          {disclosure}
+        </Text>
+        <Text variant="caption" style={styles.cancelNote}>
+          Manage or cancel in your App Store account settings.
         </Text>
         <View style={styles.linkActions}>
           <Pressable accessibilityRole="button" onPress={onRestore} hitSlop={10}>
@@ -129,15 +154,114 @@ export function PaywallHero({
               Restore purchase
             </Text>
           </Pressable>
-          {onContinueWithTrial ? (
-            <Pressable accessibilityRole="button" onPress={onContinueWithTrial} hitSlop={10}>
-              <Text variant="caption" style={styles.linkActionText}>
-                Dev trial
-              </Text>
-            </Pressable>
-          ) : null}
+        </View>
+        <View style={styles.legalLinks}>
+          <Pressable
+            accessibilityRole="link"
+            onPress={() => void Linking.openURL(PRIVACY_POLICY_URL)}
+            hitSlop={10}
+          >
+            <Text variant="caption" style={styles.legalLinkText}>
+              Privacy Policy
+            </Text>
+          </Pressable>
+          <Text variant="caption" style={styles.legalSeparator}>
+            •
+          </Text>
+          <Pressable
+            accessibilityRole="link"
+            onPress={() => void Linking.openURL(TERMS_OF_USE_URL)}
+            hitSlop={10}
+          >
+            <Text variant="caption" style={styles.legalLinkText}>
+              Terms of Use
+            </Text>
+          </Pressable>
         </View>
       </View>
+    </View>
+  );
+}
+
+function OutcomeBanner({ outcome }: { outcome: PaywallOutcomeSummary }) {
+  return (
+    <View style={styles.outcomeBanner}>
+      <View style={styles.outcomeIcon}>
+        <MaterialCommunityIcons name="bullseye-arrow" size={20} color="#D85F7A" />
+      </View>
+      <View style={styles.outcomeCopy}>
+        <Text variant="h1" style={styles.outcomeTitle} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.78}>
+          {outcome.title}
+        </Text>
+        {outcome.highlightedValue ? (
+          <View style={styles.outcomeLine}>
+            <Text variant="h1" style={styles.outcomeHighlight}>
+              {outcome.highlightedValue}
+            </Text>
+            {outcome.suffix ? (
+              <Text variant="h1" style={styles.outcomeSuffix} numberOfLines={1}>
+                {outcome.suffix}
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
+        <Text variant="bodyMuted" style={styles.outcomeCaption} numberOfLines={1}>
+          {outcome.caption}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function TrialCueRow({
+  selectedPlan,
+  onSelectYearly,
+}: {
+  selectedPlan: PremiumPlanId;
+  onSelectYearly: () => void;
+}) {
+  const yearlySelected = selectedPlan === 'yearly';
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected: yearlySelected }}
+      accessibilityLabel={yearlySelected ? 'Free trial enabled' : 'Select yearly to enable free trial'}
+      onPress={onSelectYearly}
+      style={({ pressed }) => [
+        styles.trialCue,
+        yearlySelected && styles.trialCueEnabled,
+        pressed && styles.pressed,
+      ]}
+    >
+      <View style={styles.trialCueCopy}>
+        <Text variant="body" style={styles.trialCueTitle}>
+          {yearlySelected ? 'Free trial enabled' : 'Free trial not enabled'}
+        </Text>
+      </View>
+      <View style={[styles.trialSwitch, yearlySelected && styles.trialSwitchOn]}>
+        <View style={[styles.trialSwitchKnob, yearlySelected && styles.trialSwitchKnobOn]} />
+      </View>
+    </Pressable>
+  );
+}
+
+function TrustChipRow({ selectedPlan }: { selectedPlan: PremiumPlanId }) {
+  const chips =
+    selectedPlan === 'yearly'
+      ? ['No payment today', 'Cancel anytime']
+      : ['Cancel anytime'];
+
+  return (
+    <View style={styles.trustChips}>
+      {chips.map((chip, index) => (
+        <View key={chip} style={[styles.trustChip, trustChipStyleList[index % trustChipStyleList.length]]}>
+          <MaterialCommunityIcons name="check-circle-outline" size={14} color={trustChipIconColors[index % trustChipIconColors.length]} />
+          <Text variant="caption" style={styles.trustChipText}>
+            {chip}
+          </Text>
+        </View>
+      ))}
     </View>
   );
 }
@@ -263,10 +387,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   benefitRowCompact: {
-    minHeight: 38,
+    minHeight: 34,
     borderRadius: 14,
     paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingVertical: 5,
   },
   iconWrap: {
     width: 34,
@@ -279,9 +403,9 @@ const styles = StyleSheet.create({
     borderColor: colors.borderLight,
   },
   iconWrapCompact: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
   },
   benefitCopy: {
     flex: 1,
@@ -294,17 +418,94 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
+  outcomeBanner: {
+    minHeight: 84,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    overflow: 'hidden',
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: '#E8A5B4',
+    backgroundColor: '#FFF0F4',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  outcomeIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFE0E8',
+    borderWidth: 1,
+    borderColor: '#E8A5B4',
+  },
+  outcomeCopy: {
+    flex: 1,
+    gap: 3,
+  },
+  outcomeTitle: {
+    color: colors.textStrong,
+    fontSize: 22,
+    lineHeight: 26,
+  },
+  outcomeLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 7,
+  },
+  outcomeHighlight: {
+    overflow: 'hidden',
+    borderRadius: 10,
+    backgroundColor: '#D85F7A',
+    color: colors.warmWhite,
+    fontSize: 26,
+    lineHeight: 32,
+    paddingHorizontal: 10,
+    paddingVertical: 1,
+  },
+  outcomeSuffix: {
+    color: colors.textStrong,
+    fontSize: 22,
+    lineHeight: 28,
+  },
+  outcomeCaption: {
+    fontSize: 13,
+    lineHeight: 16,
+  },
+  trustChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    justifyContent: 'center',
+  },
+  trustChip: {
+    minHeight: 26,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  trustChipText: {
+    color: colors.textStrong,
+    fontFamily: 'PlusJakartaSans_600SemiBold',
+  },
   actions: {
     gap: spacing.xs,
   },
   actionsCompact: {
-    gap: 6,
+    gap: 4,
   },
   plans: {
     gap: spacing.xs,
   },
   plansCompact: {
-    gap: 6,
+    gap: 5,
   },
   planOption: {
     minHeight: 78,
@@ -320,10 +521,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   planOptionCompact: {
-    minHeight: 62,
+    minHeight: 58,
     borderRadius: 16,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 7,
   },
   planOptionSelected: {
     borderColor: '#24A35A',
@@ -332,6 +533,50 @@ const styles = StyleSheet.create({
   yearlySelected: {
     borderColor: '#E1A700',
     backgroundColor: '#FFF7D7',
+  },
+  trialCue: {
+    minHeight: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.xs,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceCanvas,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+  trialCueEnabled: {
+    borderColor: '#BFE8CD',
+    backgroundColor: '#ECF9F1',
+  },
+  trialCueCopy: {
+    flex: 1,
+  },
+  trialCueTitle: {
+    color: colors.textStrong,
+    fontFamily: 'PlusJakartaSans_700Bold',
+  },
+  trialSwitch: {
+    width: 44,
+    height: 26,
+    borderRadius: 13,
+    justifyContent: 'center',
+    backgroundColor: colors.borderLight,
+    paddingHorizontal: 3,
+  },
+  trialSwitchOn: {
+    backgroundColor: '#24A35A',
+  },
+  trialSwitchKnob: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: colors.warmWhite,
+  },
+  trialSwitchKnobOn: {
+    alignSelf: 'flex-end',
   },
   pressed: {
     opacity: 0.86,
@@ -379,6 +624,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
     lineHeight: 18,
   },
+  cancelNote: {
+    textAlign: 'center',
+    color: colors.textMuted,
+    lineHeight: 16,
+  },
   linkActions: {
     minHeight: 20,
     flexDirection: 'row',
@@ -390,9 +640,24 @@ const styles = StyleSheet.create({
     color: '#2F6FDB',
     fontFamily: 'PlusJakartaSans_600SemiBold',
   },
+  legalLinks: {
+    minHeight: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  legalLinkText: {
+    color: colors.textMuted,
+    textDecorationLine: 'underline',
+  },
+  legalSeparator: {
+    color: colors.textMuted,
+  },
 });
 
 const benefitIconColors = ['#2F6FDB', '#24A35A', '#E1A700'];
+const trustChipIconColors = ['#24A35A', '#2F6FDB', '#E1A700'];
 
 const benefitAccentStyleMap = StyleSheet.create({
   blue: {
@@ -413,4 +678,25 @@ const benefitAccentStyleList = [
   benefitAccentStyleMap.blue,
   benefitAccentStyleMap.green,
   benefitAccentStyleMap.yellow,
+];
+
+const trustChipStyleMap = StyleSheet.create({
+  green: {
+    backgroundColor: '#ECF9F1',
+    borderColor: '#BFE8CD',
+  },
+  blue: {
+    backgroundColor: '#EAF2FF',
+    borderColor: '#BBD4FF',
+  },
+  yellow: {
+    backgroundColor: '#FFF7D7',
+    borderColor: '#F4DC7D',
+  },
+});
+
+const trustChipStyleList = [
+  trustChipStyleMap.green,
+  trustChipStyleMap.blue,
+  trustChipStyleMap.yellow,
 ];

@@ -17,6 +17,8 @@ import {
 import type { PremiumPlanId, PremiumStatus } from '@/types/premium';
 
 let configured = false;
+const REVENUECAT_NATIVE_UNAVAILABLE_MESSAGE =
+  'In-app purchases require a BetterMe development build or TestFlight build. Expo Go cannot open the Apple sandbox purchase sheet.';
 
 function isPurchasesError(error: unknown): error is PurchasesError {
   return (
@@ -25,6 +27,45 @@ function isPurchasesError(error: unknown): error is PurchasesError {
     'code' in error &&
     typeof (error as { code?: unknown }).code === 'string'
   );
+}
+
+function isRevenueCatNativeUnavailableError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return (
+    message.includes('setLogLevel') ||
+    message.includes('configure') ||
+    message.includes('getOfferings') ||
+    message.includes('purchasePackage') ||
+    message.includes('restorePurchases') ||
+    message.includes('getCustomerInfo') ||
+    message.includes('null is not an object') ||
+    message.includes('undefined is not an object')
+  );
+}
+
+function assertRevenueCatNativeAvailable(): void {
+  const purchasesModule = Purchases as unknown as
+    | {
+        setLogLevel?: unknown;
+        configure?: unknown;
+        getOfferings?: unknown;
+        purchasePackage?: unknown;
+        restorePurchases?: unknown;
+        getCustomerInfo?: unknown;
+      }
+    | null;
+
+  if (
+    !purchasesModule ||
+    typeof purchasesModule.setLogLevel !== 'function' ||
+    typeof purchasesModule.configure !== 'function' ||
+    typeof purchasesModule.getOfferings !== 'function' ||
+    typeof purchasesModule.purchasePackage !== 'function' ||
+    typeof purchasesModule.restorePurchases !== 'function' ||
+    typeof purchasesModule.getCustomerInfo !== 'function'
+  ) {
+    throw new Error(REVENUECAT_NATIVE_UNAVAILABLE_MESSAGE);
+  }
 }
 
 function getActiveEntitlement(customerInfo: CustomerInfo) {
@@ -86,6 +127,8 @@ export async function configureRevenueCat(): Promise<void> {
     return;
   }
 
+  assertRevenueCatNativeAvailable();
+
   if (Platform.OS !== 'ios') {
     throw new Error('RevenueCat is configured for iOS testing only right now.');
   }
@@ -95,19 +138,25 @@ export async function configureRevenueCat(): Promise<void> {
     throw new Error('RevenueCat Apple API key is missing.');
   }
 
-  if (__DEV__) {
-    await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+  try {
+    if (__DEV__) {
+      await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+    }
+    Purchases.configure({ apiKey });
+  } catch (error) {
+    if (isRevenueCatNativeUnavailableError(error)) {
+      throw new Error(REVENUECAT_NATIVE_UNAVAILABLE_MESSAGE);
+    }
+    throw error;
   }
-  Purchases.configure({ apiKey });
   configured = true;
 }
 
 export async function purchaseRevenueCatCurrentOffering(
   plan: PremiumPlanId = 'yearly',
 ): Promise<PremiumStatus> {
-  await configureRevenueCat();
-
   try {
+    await configureRevenueCat();
     const offerings = await Purchases.getOfferings();
     const currentPackage = offerings.current ? findPackageByPlan(offerings.current, plan) : null;
 
@@ -127,24 +176,34 @@ export async function purchaseRevenueCatCurrentOffering(
     ) {
       throw new Error('Purchase cancelled.');
     }
+    if (isRevenueCatNativeUnavailableError(error)) {
+      throw new Error(REVENUECAT_NATIVE_UNAVAILABLE_MESSAGE);
+    }
     throw error;
   }
 }
 
 export async function restoreRevenueCatPurchases(): Promise<PremiumStatus> {
   trackPremiumEvent('restore_purchase_tapped');
-  await configureRevenueCat();
+  try {
+    await configureRevenueCat();
 
-  const customerInfo = await Purchases.restorePurchases();
-  const status = mapCustomerInfoToPremiumStatus(customerInfo);
-  await setMockPremiumStatus(status);
+    const customerInfo = await Purchases.restorePurchases();
+    const status = mapCustomerInfoToPremiumStatus(customerInfo);
+    await setMockPremiumStatus(status);
 
-  if (!status.isPremium) {
-    throw new Error('No active purchase found for this Apple account.');
+    if (!status.isPremium) {
+      throw new Error('No active purchase found for this Apple account.');
+    }
+
+    trackPremiumEvent('restore_purchase_succeeded', { metadata: { source: 'revenuecat' } });
+    return status;
+  } catch (error) {
+    if (isRevenueCatNativeUnavailableError(error)) {
+      throw new Error(REVENUECAT_NATIVE_UNAVAILABLE_MESSAGE);
+    }
+    throw error;
   }
-
-  trackPremiumEvent('restore_purchase_succeeded', { metadata: { source: 'revenuecat' } });
-  return status;
 }
 
 export async function refreshRevenueCatPremiumStatus(): Promise<PremiumStatus | null> {
@@ -152,9 +211,16 @@ export async function refreshRevenueCatPremiumStatus(): Promise<PremiumStatus | 
     return null;
   }
 
-  await configureRevenueCat();
-  const customerInfo = await Purchases.getCustomerInfo();
-  const status = mapCustomerInfoToPremiumStatus(customerInfo);
-  await setMockPremiumStatus(status);
-  return status;
+  try {
+    await configureRevenueCat();
+    const customerInfo = await Purchases.getCustomerInfo();
+    const status = mapCustomerInfoToPremiumStatus(customerInfo);
+    await setMockPremiumStatus(status);
+    return status;
+  } catch (error) {
+    if (isRevenueCatNativeUnavailableError(error)) {
+      return null;
+    }
+    throw error;
+  }
 }

@@ -19,7 +19,7 @@ const REMINDER_PREVIEW = [
 ];
 
 export default function Step05Notifications() {
-  const { step, goNext, goBack } = useOnboardingNavigation(4);
+  const { step, goNext, goBack } = useOnboardingNavigation(5);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 

@@ -4,7 +4,6 @@ import { useCallback, useEffect } from 'react';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
 import {
   restorePurchases,
-  startMockTrial,
   startFreeTrial,
 } from '@/services/monetization/subscriptionService';
 import {
@@ -54,12 +53,6 @@ export function usePremium() {
     return nextStatus;
   }, [setStatus]);
 
-  const beginMockTrial = useCallback(async () => {
-    const nextStatus = await startMockTrial();
-    setStatus(nextStatus);
-    return nextStatus;
-  }, [setStatus]);
-
   const restore = useCallback(async () => {
     const nextStatus = await restorePurchases();
     setStatus(nextStatus);
@@ -80,7 +73,6 @@ export function usePremium() {
     hydrate,
     requirePremium,
     beginFreeTrial,
-    beginMockTrial,
     restore,
     openPaywall,
     openUpsell,

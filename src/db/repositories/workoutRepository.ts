@@ -321,12 +321,24 @@ export async function saveSessionExerciseFeedback(
 
 export async function completeWorkoutSession(sessionId: string): Promise<void> {
   const db = await getDatabase();
-  await db.runAsync(
-    `UPDATE workout_sessions
-     SET status = 'completed', ended_at = datetime('now')
-     WHERE id = ?`,
-    sessionId,
-  );
+  const completedAt = new Date().toISOString();
+  await db.withTransactionAsync(async () => {
+    await db.runAsync(
+      `UPDATE workout_session_exercises
+       SET feedback = COALESCE(feedback, 'completed'),
+           completed_at = COALESCE(completed_at, ?)
+       WHERE session_id = ?`,
+      completedAt,
+      sessionId,
+    );
+    await db.runAsync(
+      `UPDATE workout_sessions
+       SET status = 'completed', ended_at = ?
+       WHERE id = ?`,
+      completedAt,
+      sessionId,
+    );
+  });
 }
 
 export async function updateSessionProgress(

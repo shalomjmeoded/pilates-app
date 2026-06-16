@@ -9,7 +9,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 const DEFAULT_HEIGHT_CM = 168;
 
 export default function Step06Height() {
-  const { step, goNext, goBack } = useOnboardingNavigation(5);
+  const { step, goNext, goBack } = useOnboardingNavigation(6);
   const { height } = useWindowDimensions();
   const heightCm = useOnboardingStore((state) => state.draft.heightCm);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);

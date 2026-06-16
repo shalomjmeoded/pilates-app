@@ -11,7 +11,7 @@ import { colors, radius, spacing } from '@/theme';
 import { successNotificationHaptic } from '@/utils/haptics';
 
 export default function Step16PlanReveal() {
-  const { step, goNext, goToStep } = useOnboardingNavigation(13);
+  const { step, goNext, goToStep } = useOnboardingNavigation(14);
   const draft = useOnboardingStore((state) => state.draft);
   const baselinePlan = draft.baselinePlan;
   const hasPlayedSuccess = useRef(false);
@@ -30,8 +30,8 @@ export default function Step16PlanReveal() {
         step={step}
         title="Almost there"
         subtitle="Finalizing your targets."
-        onBack={() => goToStep(12)}
-        onNext={() => goToStep(12)}
+        onBack={() => goToStep(13)}
+        onNext={() => goToStep(13)}
         nextLabel="Review plan setup"
         phaseLabel="Creating your plan"
         reasonWhy={null}
@@ -52,13 +52,13 @@ export default function Step16PlanReveal() {
     <OnboardingShell
       step={step}
       title="Your plan is ready"
-      subtitle="Adjust anytime in Settings."
-      onBack={() => goToStep(12)}
+      subtitle="Your Pilates and nutrition program is ready."
+      onBack={() => goToStep(13)}
       onNext={goNext}
       nextLabel="Continue"
       phaseLabel="Your reveal"
       reasonWhy={null}
-      hideStepIndicator={false}
+      hideStepIndicator
       scrollEnabled={false}
       titleLines={1}
     >
@@ -69,6 +69,7 @@ export default function Step16PlanReveal() {
         carbsG={macros.carbsG}
         fatG={macros.fatG}
         fiberG={macros.fiberG}
+        statusMessage={safetyWarning.triggered ? undefined : 'Plan is achievable and built to adapt.'}
       />
 
       {safetyWarning.triggered ? (

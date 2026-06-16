@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -38,6 +39,7 @@ export default function NutritionScreen() {
   const { summary, meals, isLoading, isRefreshing, error, reload } = useNutritionDay(selectedDate);
   const { hasAccess, requirePremium } = usePremium();
   const [recentMeals, setRecentMeals] = useState<Meal[]>([]);
+  const [recentMealsExpanded, setRecentMealsExpanded] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -149,28 +151,54 @@ export default function NutritionScreen() {
 
       {recentMeals.length > 0 ? (
         <View style={styles.recentWrap}>
-          <Text variant="label">Recent meals</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.recentRow}>
-            {recentMeals.map((meal) => (
-              <Pressable
-                key={`recent-${meal.id}`}
-                accessibilityRole="button"
-                accessibilityLabel={`Add ${meal.title} again`}
-                onPress={() => void handleQuickAddRecent(meal.id)}
-                style={styles.recentChip}
-              >
-                <Text variant="body" numberOfLines={1}>
-                  {meal.title}
-                </Text>
-                <Text variant="bodyMuted">{Math.round(meal.calories)} kcal</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ expanded: recentMealsExpanded }}
+            accessibilityLabel={recentMealsExpanded ? 'Collapse recent meals' : 'Expand recent meals'}
+            onPress={() => setRecentMealsExpanded((current) => !current)}
+            style={({ pressed }) => [styles.recentHeader, pressed && styles.pressed]}
+          >
+            <View style={styles.recentHeaderCopy}>
+              <Text variant="label">Recent meals</Text>
+              <Text variant="bodyMuted">{recentMeals.length} quick add options</Text>
+            </View>
+            <View style={styles.recentHeaderAction}>
+              <Text variant="caption" style={styles.recentHeaderActionText}>
+                Tap to add
+              </Text>
+              <MaterialCommunityIcons
+                name={recentMealsExpanded ? 'chevron-up' : 'chevron-down'}
+                size={20}
+                color={colors.brandPrimary}
+              />
+            </View>
+          </Pressable>
+          {recentMealsExpanded ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.recentRow}>
+              {recentMeals.map((meal) => (
+                <Pressable
+                  key={`recent-${meal.id}`}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Add ${meal.title} again`}
+                  onPress={() => void handleQuickAddRecent(meal.id)}
+                  style={({ pressed }) => [styles.recentChip, pressed && styles.pressed]}
+                >
+                  <Text variant="body" numberOfLines={1}>
+                    {meal.title}
+                  </Text>
+                  <Text variant="bodyMuted">{Math.round(meal.calories)} kcal</Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+          ) : null}
         </View>
       ) : null}
 
       <View style={styles.sectionHeader}>
-        <Text variant="h2">Today&apos;s meals</Text>
+        <View style={styles.sectionTitleWrap}>
+          <View style={styles.sectionDot} />
+          <Text variant="h2">Today&apos;s meals</Text>
+        </View>
         <Pressable
           accessibilityRole="button"
           onPress={() =>
@@ -222,11 +250,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    gap: spacing.md,
+    gap: spacing.sm,
     paddingBottom: FAB_BOTTOM_PADDING,
   },
   header: {
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -237,17 +265,47 @@ const styles = StyleSheet.create({
   linkButton: {
     minHeight: 44,
     justifyContent: 'center',
-    paddingHorizontal: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceRose,
   },
   recentWrap: {
+    gap: 8,
+  },
+  recentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     gap: spacing.xs,
+    minHeight: 48,
+    borderRadius: radius.square,
+    borderWidth: 1,
+    borderColor: '#BBD4FF',
+    backgroundColor: '#EAF2FF',
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 8,
+  },
+  recentHeaderCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  recentHeaderAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  recentHeaderActionText: {
+    color: '#2F6FDB',
+    fontFamily: 'PlusJakartaSans_600SemiBold',
   },
   recentRow: {
     gap: spacing.xs,
   },
   recentChip: {
-    backgroundColor: colors.surfaceCanvas,
-    borderRadius: radius.card,
+    backgroundColor: colors.surfacePeach,
+    borderRadius: radius.square,
     borderWidth: 1,
     borderColor: colors.borderLight,
     paddingHorizontal: spacing.sm,
@@ -256,5 +314,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     maxWidth: 160,
     gap: 2,
+  },
+  sectionTitleWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  sectionDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.brandSecondary,
+  },
+  pressed: {
+    opacity: 0.86,
   },
 });

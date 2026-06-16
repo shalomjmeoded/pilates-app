@@ -55,7 +55,7 @@ function getDefaultGoalWeight(fitnessGoal: FitnessGoal | null, currentWeightKg: 
 }
 
 export default function Step11GoalWeight() {
-  const { step, goNext, goBack } = useOnboardingNavigation(9);
+  const { step, goNext, goBack } = useOnboardingNavigation(10);
   const currentWeightKg = useOnboardingStore((state) => state.draft.currentWeightKg);
   const fitnessGoal = useOnboardingStore((state) => state.draft.fitnessGoal);
   const goalWeightKg = useOnboardingStore((state) => state.draft.goalWeightKg);

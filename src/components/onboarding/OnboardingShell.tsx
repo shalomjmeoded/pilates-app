@@ -43,8 +43,15 @@ interface OnboardingShellProps {
   heroImageSource?: ImageSourcePropType;
   heroLoopSource?: ImageSourcePropType;
   heroAccessibilityLabel?: string;
+  headerAccessorySource?: ImageSourcePropType;
+  headerAccessorySources?: ImageSourcePropType[];
+  headerAccessoryAccessibilityLabel?: string;
+  headerAccessoryPlacement?: 'side' | 'background';
+  titleTreatment?: 'softContrast';
   showHero?: boolean;
   insightText?: string;
+  centerBody?: boolean;
+  centerIntro?: boolean;
 }
 
 const PHASE_HERO_IMAGES: Record<number, ImageSourcePropType> = {
@@ -74,8 +81,15 @@ export function OnboardingShell({
   heroImageSource,
   heroLoopSource,
   heroAccessibilityLabel,
+  headerAccessorySource,
+  headerAccessorySources,
+  headerAccessoryAccessibilityLabel,
+  headerAccessoryPlacement = 'side',
+  titleTreatment,
   showHero = false,
   insightText,
+  centerBody = false,
+  centerIntro = false,
 }: OnboardingShellProps) {
   const { height } = useWindowDimensions();
   const isCompact = height < 760;
@@ -116,6 +130,51 @@ export function OnboardingShell({
   const mediaStyle = useAnimatedStyle(() => ({
     transform: [{ scale: mediaScale.value }, { translateX: mediaX.value }],
   }));
+  const hasHeaderAccessory = Boolean(headerAccessorySource || headerAccessorySources?.length);
+  const hasHeaderAccessorySide = hasHeaderAccessory && headerAccessoryPlacement === 'side';
+  const hasHeaderAccessoryBackground = hasHeaderAccessory && headerAccessoryPlacement === 'background';
+
+  const renderHeaderAccessory = (background = false) => (
+    <Animated.View
+      entering={FadeInRight.delay(120).duration(260)}
+      pointerEvents={background ? 'none' : 'auto'}
+      style={[styles.headerAccessory, background && styles.headerAccessoryBackground]}
+    >
+      {headerAccessorySources?.length ? (
+        headerAccessorySources.slice(0, 3).map((source, index) => (
+          <Image
+            key={index}
+            source={source}
+            style={[
+              styles.headerAccessoryImageLayer,
+              background
+                ? headerAccessoryBackgroundLayerStyleList[index]
+                : headerAccessoryLayerStyleList[index],
+            ]}
+            resizeMode="cover"
+            accessibilityLabel={
+              !background && index === 0
+                ? headerAccessoryAccessibilityLabel ?? 'Pilates movement preview'
+                : undefined
+            }
+            accessible={!background && index === 0}
+          />
+        ))
+      ) : headerAccessorySource ? (
+        <Image
+          source={headerAccessorySource}
+          style={[styles.headerAccessoryImage, background && styles.headerAccessoryImageBackground]}
+          resizeMode="cover"
+          accessibilityLabel={
+            background
+              ? undefined
+              : headerAccessoryAccessibilityLabel ?? 'Pilates movement preview'
+          }
+          accessible={!background}
+        />
+      ) : null}
+    </Animated.View>
+  );
 
   const handleNextPress = () => {
     lightImpactHaptic();
@@ -159,7 +218,7 @@ export function OnboardingShell({
           exiting={FadeOutLeft.duration(220)}
           style={[styles.page, isCompact && styles.pageCompact]}
         >
-          <View style={styles.intro}>
+          <View style={[styles.intro, centerIntro && styles.introCentered]}>
             {showHero ? (
               <Animated.View entering={FadeInDown.duration(320)} style={styles.visualArea}>
                 {resolvedHeroSource ? (
@@ -183,34 +242,50 @@ export function OnboardingShell({
                 )}
               </Animated.View>
             ) : null}
-            <Animated.View entering={FadeInDown.delay(60).duration(280)}>
-              <Text
-                variant="hero"
-                style={styles.title}
-                numberOfLines={titleLines}
-                adjustsFontSizeToFit
-                minimumFontScale={0.82}
-              >
-                {title}
-              </Text>
-            </Animated.View>
-            {subtitle ? (
-              <Animated.View entering={FadeInUp.delay(100).duration(260)}>
-                <Text variant="bodyMuted" style={styles.subtitle}>
-                  {subtitle}
-                </Text>
-              </Animated.View>
-            ) : null}
-            {insightText ? (
-              <Animated.View entering={FadeInUp.delay(140).duration(240)} style={styles.insightPill}>
-                <MaterialCommunityIcons name="star-four-points" size={14} color={colors.brandPrimary} />
-                <Text variant="caption" style={styles.insightText}>
-                  {insightText}
-                </Text>
-              </Animated.View>
-            ) : null}
+            {hasHeaderAccessoryBackground ? renderHeaderAccessory(true) : null}
+            <View style={hasHeaderAccessorySide ? styles.introHeaderRow : styles.introHeaderContent}>
+              <View style={hasHeaderAccessorySide ? styles.introCopy : undefined}>
+                <Animated.View
+                  entering={FadeInDown.delay(60).duration(280)}
+                  style={[
+                    titleTreatment === 'softContrast' && styles.titleContrastWrap,
+                    centerIntro && titleTreatment === 'softContrast' && styles.titleContrastCentered,
+                  ]}
+                >
+                  <Text
+                    variant="hero"
+                    style={[
+                      styles.title,
+                      titleTreatment === 'softContrast' && styles.titleContrast,
+                      centerIntro && styles.titleCentered,
+                    ]}
+                    numberOfLines={titleLines}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.82}
+                  >
+                    {title}
+                  </Text>
+                </Animated.View>
+                {subtitle ? (
+                  <Animated.View entering={FadeInUp.delay(100).duration(260)}>
+                    <Text variant="bodyMuted" style={[styles.subtitle, centerIntro && styles.subtitleCentered]}>
+                      {subtitle}
+                    </Text>
+                  </Animated.View>
+                ) : null}
+                {insightText ? (
+                  <Animated.View entering={FadeInUp.delay(140).duration(240)} style={styles.insightPill}>
+                    <MaterialCommunityIcons name="star-four-points" size={14} color={colors.brandPrimary} />
+                    <Text variant="caption" style={styles.insightText}>
+                      {insightText}
+                    </Text>
+                  </Animated.View>
+                ) : null}
+              </View>
+              {hasHeaderAccessorySide ? renderHeaderAccessory(false) : null}
+            </View>
           </View>
-          <View style={styles.body}>{children}</View>
+          <View style={[styles.body, centerBody && styles.bodyCentered]}>{children}</View>
         </Animated.View>
       </ScrollView>
 
@@ -291,7 +366,57 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   intro: {
+    position: 'relative',
     gap: spacing.sm,
+  },
+  introCentered: {
+    alignItems: 'center',
+  },
+  introHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    zIndex: 1,
+  },
+  introHeaderContent: {
+    zIndex: 1,
+  },
+  introCopy: {
+    flex: 1,
+    minWidth: 0,
+    gap: spacing.xs,
+  },
+  headerAccessory: {
+    width: 104,
+    height: 60,
+    borderRadius: 18,
+    overflow: 'visible',
+  },
+  headerAccessoryBackground: {
+    position: 'absolute',
+    top: 14,
+    right: -12,
+    width: 136,
+    height: 72,
+    opacity: 0.18,
+    zIndex: 0,
+  },
+  headerAccessoryImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceHero,
+  },
+  headerAccessoryImageBackground: {
+    opacity: 0.55,
+  },
+  headerAccessoryImageLayer: {
+    position: 'absolute',
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceHero,
   },
   title: {
     flexShrink: 1,
@@ -299,9 +424,35 @@ const styles = StyleSheet.create({
     fontSize: 32,
     lineHeight: 38,
   },
+  titleContrastWrap: {
+    alignSelf: 'flex-start',
+    overflow: 'hidden',
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(205, 190, 178, 0.52)',
+    backgroundColor: 'rgba(253, 252, 250, 0.82)',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+  },
+  titleContrastCentered: {
+    alignSelf: 'center',
+  },
+  titleContrast: {
+    paddingRight: 0,
+    textShadowColor: 'rgba(253, 252, 250, 0.85)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+  },
+  titleCentered: {
+    paddingRight: 0,
+    textAlign: 'center',
+  },
   subtitle: {
     maxWidth: 520,
     lineHeight: 21,
+  },
+  subtitleCentered: {
+    textAlign: 'center',
   },
   insightPill: {
     alignSelf: 'flex-start',
@@ -357,6 +508,11 @@ const styles = StyleSheet.create({
   body: {
     gap: spacing.sm,
   },
+  bodyCentered: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingBottom: spacing.md,
+  },
   footerSafe: {
     backgroundColor: colors.backgroundPrimary,
   },
@@ -377,3 +533,79 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const headerAccessoryLayerStyles = StyleSheet.create({
+  front: {
+    width: 48,
+    height: 48,
+    right: 28,
+    top: 7,
+    borderRadius: 17,
+    opacity: 0.96,
+    zIndex: 3,
+  },
+  backLeft: {
+    width: 46,
+    height: 46,
+    right: 58,
+    top: 5,
+    borderRadius: 16,
+    opacity: 0.82,
+    transform: [{ rotate: '-10deg' }],
+    zIndex: 2,
+  },
+  backRight: {
+    width: 46,
+    height: 46,
+    right: 0,
+    top: 5,
+    borderRadius: 16,
+    opacity: 0.78,
+    transform: [{ rotate: '10deg' }],
+    zIndex: 1,
+  },
+});
+
+const headerAccessoryLayerStyleList = [
+  headerAccessoryLayerStyles.front,
+  headerAccessoryLayerStyles.backLeft,
+  headerAccessoryLayerStyles.backRight,
+];
+
+const headerAccessoryBackgroundLayerStyles = StyleSheet.create({
+  front: {
+    width: 58,
+    height: 58,
+    right: 38,
+    top: 6,
+    borderRadius: 19,
+    opacity: 0.82,
+    zIndex: 3,
+  },
+  backLeft: {
+    width: 52,
+    height: 52,
+    right: 78,
+    top: 9,
+    borderRadius: 17,
+    opacity: 0.7,
+    transform: [{ rotate: '-10deg' }],
+    zIndex: 2,
+  },
+  backRight: {
+    width: 52,
+    height: 52,
+    right: 4,
+    top: 9,
+    borderRadius: 17,
+    opacity: 0.66,
+    transform: [{ rotate: '10deg' }],
+    zIndex: 1,
+  },
+});
+
+const headerAccessoryBackgroundLayerStyleList = [
+  headerAccessoryBackgroundLayerStyles.front,
+  headerAccessoryBackgroundLayerStyles.backLeft,
+  headerAccessoryBackgroundLayerStyles.backRight,
+];

@@ -5,7 +5,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 import type { ExercisePreference } from '@/types/profile';
 
 export default function Step03Preferences() {
-  const { step, goNext, goBack } = useOnboardingNavigation(3);
+  const { step, goNext, goBack } = useOnboardingNavigation(4);
   const exercisePreferences = useOnboardingStore((state) => state.draft.exercisePreferences);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
 
@@ -27,6 +27,7 @@ export default function Step03Preferences() {
       subtitle="Pick one or more."
       onBack={goBack}
       onNext={goNext}
+      centerBody
     >
       <OptionCard
         label="No preference"

@@ -25,6 +25,7 @@ export function NutritionDayHeader({
 
   return (
     <View style={styles.card}>
+      <View style={styles.accentBar} />
       <View style={styles.topRow}>
         <View style={styles.dateBlock}>
           <Text variant="label">{today ? 'Today' : format(parseISO(mealDate), 'EEEE')}</Text>
@@ -36,7 +37,9 @@ export function NutritionDayHeader({
           <Text variant="h2" style={styles.mealCountValue}>
             {mealCount}
           </Text>
-          <Text variant="label">{mealLabel}</Text>
+          <Text variant="label" style={styles.mealCountLabel}>
+            {mealLabel}
+          </Text>
         </View>
       </View>
       <CompactMacroSummary consumed={consumed} targets={targets} />
@@ -52,11 +55,21 @@ const styles = StyleSheet.create({
     borderColor: colors.borderLight,
     padding: spacing.sm,
     gap: spacing.sm,
+    overflow: 'hidden',
+  },
+  accentBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 4,
+    backgroundColor: colors.accentCool,
   },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
   dateBlock: {
     gap: 2,
@@ -65,10 +78,22 @@ const styles = StyleSheet.create({
     color: colors.textDark,
   },
   mealCountBadge: {
-    alignItems: 'flex-end',
-    gap: 2,
+    minWidth: 84,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 1,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceSelected,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 8,
   },
   mealCountValue: {
     color: colors.brandPrimary,
+    lineHeight: 24,
+  },
+  mealCountLabel: {
+    color: colors.textMuted,
   },
 });

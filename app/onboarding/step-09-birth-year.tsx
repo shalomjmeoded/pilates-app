@@ -9,7 +9,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore';
 const { minYear: MIN_BIRTH_YEAR, maxYear: MAX_BIRTH_YEAR } = getBirthYearBounds();
 
 export default function Step09BirthYear() {
-  const { step, goNext, goBack } = useOnboardingNavigation(7);
+  const { step, goNext, goBack } = useOnboardingNavigation(8);
   const birthYear = useOnboardingStore((state) => state.draft.birthYear);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const birthYearIsValid = birthYear !== null && isBirthYearWithinSupportedAge(birthYear);

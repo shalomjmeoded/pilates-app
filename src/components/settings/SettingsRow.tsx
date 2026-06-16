@@ -10,6 +10,7 @@ interface SettingsRowProps {
   onPress?: () => void;
   showChevron?: boolean;
   destructive?: boolean;
+  accentColor?: string;
 }
 
 export function SettingsRow({
@@ -18,6 +19,7 @@ export function SettingsRow({
   onPress,
   showChevron = Boolean(onPress),
   destructive = false,
+  accentColor,
 }: SettingsRowProps) {
   return (
     <Pressable
@@ -26,6 +28,7 @@ export function SettingsRow({
       onPress={onPress}
       style={({ pressed }) => [styles.row, pressed && onPress ? styles.pressed : null]}
     >
+      {accentColor ? <View style={[styles.accent, { backgroundColor: accentColor }]} /> : null}
       <View style={styles.content}>
         <Text variant="body" style={destructive ? styles.destructive : undefined}>
           {label}
@@ -43,16 +46,24 @@ export function SettingsRow({
 
 const styles = StyleSheet.create({
   row: {
+    overflow: 'hidden',
     backgroundColor: colors.surfaceCanvas,
-    borderRadius: radius.card,
+    borderRadius: radius.square,
     borderWidth: 1,
-    borderColor: colors.borderStrong,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
+    borderColor: colors.borderLight,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     minHeight: 52,
+  },
+  accent: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
   },
   pressed: {
     opacity: 0.94,

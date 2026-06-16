@@ -10,13 +10,14 @@ interface MacroColumnProps {
   consumed: number;
   target: number;
   accentColor: string;
+  surfaceColor: string;
 }
 
-function MacroColumn({ label, consumed, target, accentColor }: MacroColumnProps) {
+function MacroColumn({ label, consumed, target, accentColor, surfaceColor }: MacroColumnProps) {
   const progress = macroProgress(consumed, target);
 
   return (
-    <View style={styles.column}>
+    <View style={[styles.column, { backgroundColor: surfaceColor }]}>
       <Text variant="label">{label}</Text>
       <Text variant="body" style={styles.values}>
         {Math.round(consumed)}
@@ -47,18 +48,21 @@ export function CompactMacroSummary({ consumed, targets }: CompactMacroSummaryPr
         consumed={consumed.proteinG}
         target={targets.proteinG}
         accentColor={colors.brandPrimary}
+        surfaceColor={colors.surfaceRose}
       />
       <MacroColumn
         label="Carbs"
         consumed={consumed.carbsG}
         target={targets.carbsG}
         accentColor={colors.accentWarm}
+        surfaceColor={colors.surfacePeach}
       />
       <MacroColumn
         label="Fat"
         consumed={consumed.fatG}
         target={targets.fatG}
         accentColor={colors.accentCool}
+        surfaceColor={colors.surfaceMuted}
       />
     </View>
   );
@@ -71,15 +75,20 @@ const styles = StyleSheet.create({
   },
   column: {
     flex: 1,
-    gap: 2,
+    gap: 3,
+    borderRadius: radius.square,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.xs,
   },
   values: {
     color: colors.textDark,
   },
   track: {
-    height: 4,
+    height: 5,
     borderRadius: radius.pill,
-    backgroundColor: colors.surfaceRose,
+    backgroundColor: colors.surfaceCanvas,
     overflow: 'hidden',
     marginTop: 2,
   },

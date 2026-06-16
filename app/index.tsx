@@ -28,7 +28,7 @@ export default function Index() {
   }
 
   if (!onboardingCompleted) {
-    return <Redirect href="/onboarding/step-01-gender" />;
+    return <Redirect href="/onboarding/step-00-welcome" />;
   }
 
   if (!hasAccess) {

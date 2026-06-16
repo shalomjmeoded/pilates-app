@@ -12,7 +12,7 @@ export interface PaywallOutcomeBenefit {
 export const PAYWALL_OUTCOME_BENEFITS: PaywallOutcomeBenefit[] = [
   {
     icon: 'yoga',
-    title: 'Personalized daily workouts',
+    title: 'AI-guided daily workouts',
     description: 'Pilates flows matched to your goals, pace, and preferences.',
   },
   {

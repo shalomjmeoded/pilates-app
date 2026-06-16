@@ -6,9 +6,10 @@ export const ONBOARDING_SPRING = {
   stiffness: 120,
 } as const;
 
-export const ONBOARDING_TOTAL_STEPS = 14;
+export const ONBOARDING_TOTAL_STEPS = 15;
 
 export const ONBOARDING_ROUTES = [
+  'step-00-welcome',
   'step-01-gender',
   'step-02-frequency',
   'step-03-preferences',
