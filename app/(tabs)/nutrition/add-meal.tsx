@@ -17,10 +17,17 @@ export default function AddMealHubScreen() {
   const { requirePremium } = usePremium();
   const insets = useSafeAreaInsets();
   const bottomPadding = insets.bottom + spacing.lg;
+  const closeToNutrition = () => {
+    router.dismissAll();
+    router.replace({
+      pathname: '/(tabs)/nutrition',
+      params: { mealDate },
+    });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <SubscreenTopBar />
+      <SubscreenTopBar onPress={closeToNutrition} />
       <ScrollView
         contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
         keyboardShouldPersistTaps="handled"

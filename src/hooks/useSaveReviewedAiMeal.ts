@@ -37,7 +37,8 @@ export function useSaveReviewedAiMeal(mealDate: string, estimate: AiMealEstimate
       try {
         await saveReviewedAiMeal({ meal: input, saveToLibrary });
         clear();
-        router.replace({
+        router.dismissAll();
+        router.navigate({
           pathname: '/(tabs)/nutrition',
           params: { mealDate },
         });

@@ -34,10 +34,7 @@ export default function ReviewAiMealScreen() {
   useEffect(() => {
     if (!estimate) {
       router.replace({
-        pathname:
-          source === 'ai_photo'
-            ? '/(tabs)/nutrition/add-photo-estimate'
-            : '/(tabs)/nutrition/add-text-estimate',
+        pathname: '/(tabs)/nutrition',
         params: { mealDate },
       });
       return;
@@ -60,7 +57,7 @@ export default function ReviewAiMealScreen() {
     setFiberG(snapshot.fiberG);
     setSaveToLibrary(false);
     setInitialSnapshot(JSON.stringify(snapshot));
-  }, [estimate, mealDate, router, source]);
+  }, [estimate, mealDate, router]);
 
   if (!estimate) {
     return null;
@@ -78,9 +75,17 @@ export default function ReviewAiMealScreen() {
   const hasUnsavedChanges =
     initialSnapshot !== null && currentSnapshot !== initialSnapshot;
 
-  const handleBack = () => {
+  const closeToNutrition = () => {
     clear();
-    router.back();
+    router.dismissAll();
+    router.navigate({
+      pathname: '/(tabs)/nutrition',
+      params: { mealDate },
+    });
+  };
+
+  const handleBack = () => {
+    closeToNutrition();
   };
 
   const handleSave = () => {
@@ -181,10 +186,7 @@ export default function ReviewAiMealScreen() {
         <Button
           label="Discard"
           variant="secondary"
-          onPress={() => {
-            clear();
-            router.back();
-          }}
+          onPress={closeToNutrition}
         />
       </ScrollView>
     </SafeAreaView>

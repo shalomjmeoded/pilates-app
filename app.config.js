@@ -1,10 +1,12 @@
 const { expo } = require('./app.json');
 
+const allowDirectGemini = process.env.EXPO_PUBLIC_ENABLE_DIRECT_GEMINI === 'true';
+
 module.exports = {
   expo: {
     ...expo,
     extra: {
-      geminiApiKey: process.env.GEMINI_API_KEY,
+      geminiApiKey: allowDirectGemini ? process.env.GEMINI_API_KEY : undefined,
       geminiModel: process.env.GEMINI_MODEL ?? 'gemini-2.5-flash',
       revenueCatAppleApiKey:
         process.env.REVENUECAT_APPLE_API_KEY ?? 'appl_KROjCpNxXXTwqfAyQhfebGiVhUy',

@@ -73,6 +73,11 @@ export default function TabsLayout() {
       />
       <Tabs.Screen
         name="nutrition"
+        listeners={{
+          tabPress: () => {
+            router.replace('/(tabs)/nutrition');
+          },
+        }}
         options={{
           title: 'Nutrition',
           tabBarIcon: ({ color, focused }) => (

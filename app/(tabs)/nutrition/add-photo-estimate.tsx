@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -11,6 +11,7 @@ import { useMealPhotoEstimate } from '@/hooks/useMealPhotoEstimate';
 import { colors, radius, spacing } from '@/theme';
 
 export default function AddPhotoEstimateScreen() {
+  const router = useRouter();
   const params = useLocalSearchParams<{ mealDate: string }>();
   const mealDate = params.mealDate ?? new Date().toISOString().slice(0, 10);
 
@@ -24,10 +25,17 @@ export default function AddPhotoEstimateScreen() {
   } = useMealPhotoEstimate(mealDate);
   const insets = useSafeAreaInsets();
   const bottomPadding = insets.bottom + spacing.lg;
+  const closeToNutrition = () => {
+    router.dismissAll();
+    router.replace({
+      pathname: '/(tabs)/nutrition',
+      params: { mealDate },
+    });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <SubscreenTopBar hasUnsavedChanges={previewUri !== null} />
+      <SubscreenTopBar hasUnsavedChanges={previewUri !== null} onPress={closeToNutrition} />
       <ScrollView
         contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
         keyboardShouldPersistTaps="handled"

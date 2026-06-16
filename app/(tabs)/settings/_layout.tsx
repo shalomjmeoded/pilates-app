@@ -24,7 +24,6 @@ export default function SettingsStackLayout() {
       <Stack.Screen name="rebuild-plan" />
       <Stack.Screen name="preferences" />
       <Stack.Screen name="plan-assumptions" />
-      <Stack.Screen name="dev-audit" />
     </Stack>
   );
 }

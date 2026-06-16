@@ -11,11 +11,11 @@ interface ReminderRow {
 }
 
 const DEFAULT_REMINDERS: Array<Omit<Reminder, 'id'>> = [
-  { type: 'breakfast', enabled: false, hour: 8, minute: 0 },
-  { type: 'lunch', enabled: false, hour: 12, minute: 30 },
-  { type: 'dinner', enabled: false, hour: 18, minute: 30 },
-  { type: 'workout', enabled: false, hour: 7, minute: 0 },
-  { type: 'coaching_tip', enabled: false, hour: 20, minute: 0 },
+  { type: 'breakfast', enabled: true, hour: 8, minute: 0 },
+  { type: 'lunch', enabled: true, hour: 12, minute: 30 },
+  { type: 'dinner', enabled: true, hour: 18, minute: 30 },
+  { type: 'workout', enabled: true, hour: 7, minute: 0 },
+  { type: 'coaching_tip', enabled: true, hour: 20, minute: 0 },
 ];
 
 function mapReminderRow(row: ReminderRow): Reminder {
@@ -62,6 +62,13 @@ export async function getReminders(): Promise<Reminder[]> {
       ELSE 5 END`,
   );
   return rows.map(mapReminderRow);
+}
+
+export async function enableAllReminders(): Promise<Reminder[]> {
+  await ensureDefaultReminders();
+  const db = await getDatabase();
+  await db.runAsync('UPDATE reminders SET enabled = 1');
+  return getReminders();
 }
 
 export async function updateReminder(

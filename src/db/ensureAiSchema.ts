@@ -19,7 +19,7 @@ export async function ensureAiSchema(db: SQLiteDatabase): Promise<void> {
   const missing = REPAIRABLE_TABLES.filter((name) => !tables.has(name));
   if (missing.length > 0) {
     throw new Error(
-      `Failed to initialize AI tables (${missing.join(', ')}). Reset the app database from Settings → Developer audit.`,
+      `Failed to initialize AI tables (${missing.join(', ')}). Restart the app and try again.`,
     );
   }
 }

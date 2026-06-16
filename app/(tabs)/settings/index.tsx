@@ -67,9 +67,6 @@ export default function SettingsScreen() {
 
         <SettingsSection title="About" accentColor={colors.textMuted}>
           <SettingsRow label="About BetterMe" onPress={() => router.push('/(tabs)/settings/about')} />
-          {__DEV__ ? (
-            <SettingsRow label="Developer audit" onPress={() => router.push('/(tabs)/settings/dev-audit')} />
-          ) : null}
         </SettingsSection>
       </ScrollView>
     </Screen>

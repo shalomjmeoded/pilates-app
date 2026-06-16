@@ -29,6 +29,14 @@ export default function AddManualMealScreen() {
   const insets = useSafeAreaInsets();
   const bottomPadding = insets.bottom + spacing.lg;
 
+  const closeToNutrition = () => {
+    router.dismissAll();
+    router.replace({
+      pathname: '/(tabs)/nutrition',
+      params: { mealDate },
+    });
+  };
+
   const applyPreset = (preset: MealPreset) => {
     setTitle(preset);
   };
@@ -58,7 +66,7 @@ export default function AddManualMealScreen() {
       await saveMeal(input);
       successNotificationHaptic();
       AccessibilityInfo.announceForAccessibility('Meal logged successfully.');
-      router.back();
+      closeToNutrition();
     } catch (saveError) {
       setErrors([
         saveError instanceof Error ? saveError.message : 'Could not save meal.',
@@ -78,7 +86,7 @@ export default function AddManualMealScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} />
+      <SubscreenTopBar hasUnsavedChanges={hasUnsavedChanges} onPress={closeToNutrition} />
       <ScrollView
         contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
         keyboardShouldPersistTaps="handled"

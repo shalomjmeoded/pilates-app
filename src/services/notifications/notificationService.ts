@@ -1,7 +1,8 @@
 import { AppState, type AppStateStatus } from 'react-native';
 
-import { getReminders } from '@/db/repositories/remindersRepository';
+import { enableAllReminders, getReminders } from '@/db/repositories/remindersRepository';
 import { logSettingChange } from '@/db/repositories/settingsAuditRepository';
+import { preferencesStorage } from '@/storage/mmkv';
 import type { Reminder, ReminderType } from '@/types/settings';
 import { REMINDER_LABELS, REMINDER_MESSAGES } from '@/types/settings';
 
@@ -18,6 +19,8 @@ const REMINDER_ROUTES: Record<ReminderType, string> = {
   workout: '/(tabs)/workout',
   coaching_tip: '/(tabs)/progress',
 };
+
+const REMINDER_DEFAULTS_APPLIED_FLAG = 'notification_reminder_defaults_applied_v1';
 
 let handlerConfigured = false;
 let appStateSubscription: { remove: () => void } | null = null;
@@ -50,6 +53,20 @@ function reminderIdentifier(type: ReminderType): string {
   return `betterme_reminder_${type}`;
 }
 
+async function enableDefaultRemindersAfterPermissionGranted(): Promise<void> {
+  const flags = preferencesStorage.getCachedFlags();
+  if (flags[REMINDER_DEFAULTS_APPLIED_FLAG] === true) {
+    return;
+  }
+
+  const reminders = await getReminders();
+  if (reminders.every((reminder) => !reminder.enabled)) {
+    await enableAllReminders();
+  }
+
+  preferencesStorage.setCachedFlag(REMINDER_DEFAULTS_APPLIED_FLAG, true);
+}
+
 export async function getNotificationPermissionStatus(): Promise<NotificationPermissionStatus> {
   const Notifications = getNotificationsModule();
   if (!Notifications || !ensureHandler()) {
@@ -69,11 +86,17 @@ export async function requestNotificationPermissions(): Promise<boolean> {
   const current = await Notifications.getPermissionsAsync();
 
   if (current.granted) {
+    await enableDefaultRemindersAfterPermissionGranted();
+    await syncAllReminders();
     return true;
   }
 
   const requested = await Notifications.requestPermissionsAsync();
   await logSettingChange('notification_permission', current.status, requested.status);
+  if (requested.granted) {
+    await enableDefaultRemindersAfterPermissionGranted();
+    await syncAllReminders();
+  }
   return requested.granted;
 }
 
@@ -133,7 +156,6 @@ export async function syncAllReminders(): Promise<void> {
     return;
   }
 
-  const reminders = await getReminders();
   const Notifications = getNotificationsModule();
   if (!Notifications) {
     return;
@@ -145,6 +167,9 @@ export async function syncAllReminders(): Promise<void> {
     await cancelAllScheduledReminders();
     return;
   }
+
+  await enableDefaultRemindersAfterPermissionGranted();
+  const reminders = await getReminders();
 
   await cancelAllScheduledReminders();
 

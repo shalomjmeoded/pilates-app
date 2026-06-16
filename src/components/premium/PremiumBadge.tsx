@@ -7,9 +7,11 @@ import { colors, radius, spacing } from '@/theme';
 export function PremiumBadge() {
   const { status, hasAccess } = usePremium();
 
+  const isTrial = hasAccess && status.subscriptionStatus === 'trial';
+  const isActive = hasAccess && !isTrial;
   const label = !hasAccess
     ? 'Subscription required'
-    : status.subscriptionStatus === 'trial'
+    : isTrial
       ? 'Trial active'
       : 'Premium active';
 
@@ -17,10 +19,24 @@ export function PremiumBadge() {
     <View
       style={[
         styles.badge,
-        !hasAccess ? styles.inactive : status.subscriptionStatus === 'trial' ? styles.trial : styles.active,
+        !hasAccess ? styles.inactive : isTrial ? styles.trial : styles.active,
       ]}
     >
-      <Text variant="label" style={styles.text}>
+      <View
+        style={[
+          styles.dot,
+          !hasAccess ? styles.dotInactive : isTrial ? styles.dotTrial : styles.dotActive,
+        ]}
+      />
+      <Text
+        variant="label"
+        numberOfLines={1}
+        style={[
+          styles.text,
+          isActive && styles.activeText,
+          isTrial && styles.trialText,
+        ]}
+      >
         {label}
       </Text>
     </View>
@@ -30,6 +46,10 @@ export function PremiumBadge() {
 const styles = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
+    minHeight: 34,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     borderRadius: radius.pill,
     paddingHorizontal: spacing.sm,
     paddingVertical: 6,
@@ -47,7 +67,27 @@ const styles = StyleSheet.create({
   active: {
     backgroundColor: colors.brandPrimary,
   },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  dotInactive: {
+    backgroundColor: colors.destructive,
+  },
+  dotTrial: {
+    backgroundColor: colors.brandPrimary,
+  },
+  dotActive: {
+    backgroundColor: colors.surfaceCanvas,
+  },
   text: {
     color: colors.textDark,
+  },
+  trialText: {
+    color: colors.brandPrimary,
+  },
+  activeText: {
+    color: colors.surfaceCanvas,
   },
 });

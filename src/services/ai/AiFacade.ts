@@ -7,7 +7,7 @@ import { MockAiProvider } from './providers/MockAiProvider';
 export class AiNotConfiguredError extends Error {
   constructor() {
     super(
-      'AI provider is not configured. Set GEMINI_API_KEY in .env, EXPO_PUBLIC_AI_PROXY_URL, or EXPO_PUBLIC_AI_MOCK=true.',
+      'AI provider is not configured. Set EXPO_PUBLIC_AI_PROXY_URL to your BetterMe AI proxy.',
     );
     this.name = 'AiNotConfiguredError';
   }

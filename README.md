@@ -6,7 +6,7 @@ Local-first Pilates and wellness app built with **Expo (React Native)**. Workout
 
 - **Node.js** 20+ and **npm**
 - **Expo Go** on your phone, or Android Studio / Xcode for emulators
-- (Optional) [Google Gemini API key](https://aistudio.google.com/apikey) for live AI features
+- (Optional) AI proxy URL for live AI features
 
 ## Quick start
 
@@ -27,21 +27,26 @@ npx expo start -c
 - Press **`i`** for iOS simulator  
 - Scan the QR code with **Expo Go** on a physical device  
 
-On a **physical device**, use your computer’s LAN IP instead of `localhost` if you use the optional AI proxy (not needed for direct Gemini mode).
+On a **physical device**, use your computer’s LAN IP instead of `localhost` for local proxy testing. TestFlight builds should use a deployed HTTPS proxy URL.
 
 ## Environment
 
 Copy `.env.example` to `.env`:
 
 ```bash
-# Direct Gemini from the app (recommended for local dev)
-GEMINI_API_KEY=your_key_here
-GEMINI_MODEL=gemini-2.5-flash
+# AI proxy used by the mobile app
+EXPO_PUBLIC_AI_PROXY_URL=https://your-ai-proxy.example.com
 EXPO_PUBLIC_AI_MOCK=false
 
-# Optional: run AI through a local proxy instead of the app
-# EXPO_PUBLIC_AI_PROXY_URL=http://localhost:8787
+# Server-side AI key, used by `npm run ai-proxy` or your deployed proxy
+GEMINI_API_KEY=your_key_here
+GEMINI_MODEL=gemini-2.5-flash
+
+# Optional: local proxy port
 # AI_PROXY_PORT=8787
+
+# Optional: direct Gemini from the app for local development only
+# EXPO_PUBLIC_ENABLE_DIRECT_GEMINI=true
 
 # Optional: fake AI responses (no API key)
 # EXPO_PUBLIC_AI_MOCK=true
@@ -49,10 +54,11 @@ EXPO_PUBLIC_AI_MOCK=false
 
 | Variable | Purpose |
 |----------|---------|
-| `GEMINI_API_KEY` | Gemini API key (loaded via `app.config.js`, not committed) |
+| `GEMINI_API_KEY` | Gemini API key for the AI proxy. Only bundled in-app if `EXPO_PUBLIC_ENABLE_DIRECT_GEMINI=true` |
 | `GEMINI_MODEL` | Model id, e.g. `gemini-2.5-flash` |
 | `EXPO_PUBLIC_AI_MOCK` | `true` = canned AI responses, no network |
-| `EXPO_PUBLIC_AI_PROXY_URL` | Optional backend proxy base URL |
+| `EXPO_PUBLIC_AI_PROXY_URL` | Backend proxy base URL used by the mobile app |
+| `EXPO_PUBLIC_ENABLE_DIRECT_GEMINI` | Local-development escape hatch for direct app-to-Gemini calls |
 
 After changing `.env`, restart Metro with cache clear:
 
@@ -75,9 +81,8 @@ npx expo start -c
 
 The app expects onboarding and an active trial or subscription for most features. Complete onboarding in the app, then start the free trial on the paywall.
 
-## Developer tools
+## App tools
 
-- **Settings → Developer audit** (dev builds only): schema diagnostics and reset local SQLite  
 - **Settings → Rebuild my plan**: regenerate today’s Pilates-focused workout  
 - **Settings → Plan assumptions**: view calories, macros, and body-fat assumptions  
 
@@ -98,7 +103,7 @@ scripts/       Exercise import and validation tooling
 - Expo SDK 56, Expo Router, TypeScript  
 - SQLite (`expo-sqlite`), MMKV preferences  
 - Zustand, Zod  
-- Gemini API (direct from app or optional `server/ai-proxy`)  
+- Gemini API through a backend proxy  
 
 ## License
 

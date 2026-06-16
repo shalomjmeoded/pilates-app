@@ -1,5 +1,6 @@
+import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -44,15 +45,7 @@ export default function PaywallScreen() {
   }
 
   if (hasAccess && onboardingCompleted) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <SubscreenTopBar />
-        <View style={styles.centered}>
-          <Text variant="h1">Your plan is unlocked</Text>
-          <Text variant="bodyMuted">Welcome back to your personalized BetterMe rhythm.</Text>
-        </View>
-      </SafeAreaView>
-    );
+    return <Redirect href="/(tabs)/workout" />;
   }
 
   return (
@@ -84,13 +77,6 @@ const styles = StyleSheet.create({
     padding: spacing.sm,
     gap: spacing.sm,
     paddingBottom: spacing.lg,
-  },
-  centered: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.sm,
-    gap: spacing.xs,
   },
   error: {
     color: colors.destructive,
