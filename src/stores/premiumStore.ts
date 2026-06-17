@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
-import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
+import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import type { PremiumFeatureKey, PremiumStatus } from '@/types/premium';
 
 interface PremiumState {
@@ -31,13 +31,7 @@ export const usePremiumStore = create<PremiumState>((set, get) => ({
   hydrate: async () => {
     set({ isLoading: true });
     try {
-      const { refreshRevenueCatPremiumStatus } = await import(
-        '@/services/monetization/revenueCatService'
-      );
-      const status = (await refreshRevenueCatPremiumStatus()) ?? (await getPremiumStatus());
-      set({ status });
-    } catch {
-      const status = await getPremiumStatus();
+      const status = await getCurrentPremiumStatus();
       set({ status });
     } finally {
       set({ isLoading: false });

@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Text } from '@/components/ui/Text';
 import type { WeeklyCoachInsightContent } from '@/types/coaching';
-import { colors, spacing } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface WeeklyCoachInsightCardProps {
   insight: WeeklyCoachInsightContent | null;
@@ -39,8 +39,15 @@ export function WeeklyCoachInsightCard({
   if (locked) {
     return (
       <Card style={[styles.card, highlighted && styles.highlighted]}>
-        <Text variant="label">Weekly AI Coach</Text>
-        <Text variant="bodyMuted">Your coaching report is ready.</Text>
+        <View style={styles.cardHeader}>
+          <View style={styles.iconBadge}>
+            <MaterialCommunityIcons name="star-four-points" size={17} color={colors.brandPrimary} />
+          </View>
+          <View style={styles.headerCopy}>
+            <Text variant="label" style={styles.headerLabel}>Weekly AI Coach</Text>
+            <Text variant="bodyMuted">Your coaching report is ready.</Text>
+          </View>
+        </View>
         <View style={styles.lockedPreview}>
           <Text variant="h2" style={styles.blurredText}>
             Strong week toward your goal
@@ -69,25 +76,35 @@ export function WeeklyCoachInsightCard({
           onPress={() => setExpanded((current) => !current)}
           style={({ pressed }) => [styles.summaryHeader, pressed && styles.pressed]}
         >
+          <View style={styles.iconBadge}>
+            <MaterialCommunityIcons name="star-four-points" size={17} color={colors.brandPrimary} />
+          </View>
           <View style={styles.summaryHeaderCopy}>
-            <Text variant="label">Weekly AI coach</Text>
-            <Text variant="body" numberOfLines={expanded ? undefined : 1}>
+            <Text variant="label" style={styles.headerLabel}>Weekly AI coach</Text>
+            <Text variant="body" style={styles.summaryText} numberOfLines={expanded ? undefined : 1}>
               {insight.summary}
             </Text>
           </View>
-          <MaterialCommunityIcons
-            name={expanded ? 'chevron-up' : 'chevron-down'}
-            size={24}
-            color={colors.textStrong}
-          />
+          <View style={styles.chevronBadge}>
+            <MaterialCommunityIcons
+              name={expanded ? 'chevron-up' : 'chevron-down'}
+              size={22}
+              color={colors.brandPrimary}
+            />
+          </View>
         </Pressable>
       ) : (
-        <>
-          <Text variant="label">Weekly AI coach</Text>
-          <Text variant="bodyMuted">
-            Summary-only insights from your week — never your full meal or workout history.
-          </Text>
-        </>
+        <View style={styles.cardHeader}>
+          <View style={styles.iconBadge}>
+            <MaterialCommunityIcons name="star-four-points" size={17} color={colors.brandPrimary} />
+          </View>
+          <View style={styles.headerCopy}>
+            <Text variant="label" style={styles.headerLabel}>Weekly AI coach</Text>
+            <Text variant="bodyMuted">
+              Summary-only insights from your week — never your full meal or workout history.
+            </Text>
+          </View>
+        </View>
       )}
 
       {insight && expanded ? (
@@ -132,7 +149,9 @@ export function WeeklyCoachInsightCard({
 const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
-    backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceCanvas,
   },
   highlighted: {
     borderColor: colors.brandPrimary,
@@ -140,17 +159,57 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: spacing.xs,
+    borderRadius: radius.square,
+    backgroundColor: colors.surfaceRose,
+    padding: spacing.sm,
   },
   summaryHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: spacing.xs,
-    borderRadius: 14,
+    borderRadius: radius.square,
+    backgroundColor: colors.surfacePeach,
+    padding: spacing.sm,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  headerCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  headerLabel: {
+    color: colors.brandPrimary,
+  },
+  iconBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surfacePeach,
+    borderWidth: 1,
+    borderColor: colors.accentWarm,
+  },
+  chevronBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surfaceCanvas,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
   },
   summaryHeaderCopy: {
     flex: 1,
     gap: 2,
+  },
+  summaryText: {
+    color: colors.textStrong,
   },
   pressed: {
     opacity: 0.82,
@@ -162,7 +221,7 @@ const styles = StyleSheet.create({
     borderColor: colors.borderLight,
     padding: spacing.sm,
     gap: spacing.xs,
-    backgroundColor: colors.surfaceCanvas,
+    backgroundColor: colors.surfaceRose,
   },
   blurredText: {
     opacity: 0.35,

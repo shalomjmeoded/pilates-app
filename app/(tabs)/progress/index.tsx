@@ -47,12 +47,7 @@ type ProgressSectionKey =
   | 'weeklyCoach'
   | 'weightEmpty'
   | 'weightJourney'
-  | 'weightChart'
-  | 'weightTrend'
-  | 'weightStreak'
-  | 'goalProjection'
   | 'coachingTip'
-  | 'weightHistory'
   | 'adherence'
   | 'consistency'
   | 'bmiTdee'
@@ -267,13 +262,10 @@ export default function ProgressScreen() {
     if (!hasWeightLogs) {
       sections.push('weightEmpty');
     } else {
-      if (data.journey) {
-        sections.push('weightJourney');
-      }
-      sections.push('weightChart', 'weightTrend', 'weightStreak', 'goalProjection');
+      sections.push('weightJourney');
     }
 
-    sections.push('coachingTip', 'weightHistory', 'adherence', 'consistency');
+    sections.push('coachingTip', 'adherence', 'consistency');
     if (data.bmi && data.tdee) {
       sections.push('bmiTdee');
     }
@@ -338,43 +330,36 @@ export default function ProgressScreen() {
             onUnlock={openPaywall}
             onGenerate={() => requirePremium('weekly_coach', () => void weeklyCoach.generate())}
           />,
+          { collapsible: true, initiallyExpanded: true },
         );
       case 'weightEmpty':
         return <ProgressEmptyState onLogWeight={openLogWeight} />;
       case 'weightJourney':
-        return data.journey
-          ? withSectionLabel(
-              'Weight journey',
-              colors.accentCool,
-              <WeightJourneyHeroCard journey={data.journey} weightUnit={weightUnit} />,
-            )
-          : null;
-      case 'weightChart':
-        return (
-          <WeightChart
-            logs={data.weightLogs}
-            goalWeightKg={data.goalWeightKg}
-            range={chartRange}
-            onRangeChange={setChartRange}
-            weightUnit={weightUnit}
-          />
+        return withSectionLabel(
+          'Weight journey',
+          colors.accentCool,
+          <View style={styles.sectionStack}>
+            {data.journey ? <WeightJourneyHeroCard journey={data.journey} weightUnit={weightUnit} /> : null}
+            <WeightChart
+              logs={data.weightLogs}
+              goalWeightKg={data.goalWeightKg}
+              range={chartRange}
+              onRangeChange={setChartRange}
+              weightUnit={weightUnit}
+            />
+            <WeightTrendSummary trends={data.weightTrends} weightUnit={weightUnit} />
+            <WeightStreakCard stats={data.weightStreak} />
+            <GoalProjectionCard projection={data.goalProjection} />
+            <SettingsRow
+              label="Weight history"
+              value="Edit, search, delete"
+              onPress={() => router.push('/(tabs)/progress/weight-history')}
+            />
+          </View>,
+          { collapsible: true, initiallyExpanded: true },
         );
-      case 'weightTrend':
-        return <WeightTrendSummary trends={data.weightTrends} weightUnit={weightUnit} />;
-      case 'weightStreak':
-        return <WeightStreakCard stats={data.weightStreak} />;
-      case 'goalProjection':
-        return <GoalProjectionCard projection={data.goalProjection} />;
       case 'coachingTip':
         return <CoachingTipCard tip={data.coachingTip} />;
-      case 'weightHistory':
-        return (
-          <SettingsRow
-            label="Weight history"
-            value="Edit, search, delete"
-            onPress={() => router.push('/(tabs)/progress/weight-history')}
-          />
-        );
       case 'adherence':
         return withSectionLabel(
           'Nutrition adherence',
@@ -390,16 +375,27 @@ export default function ProgressScreen() {
               <AdherenceCard metric={data.adherence.fiber} />
             </View>
           </View>,
+          { collapsible: true, initiallyExpanded: true },
         );
       case 'consistency':
-        return <ConsistencyScoreRing consistency={data.consistency} />;
+        return withSectionLabel(
+          'Consistency',
+          colors.success,
+          <ConsistencyScoreRing consistency={data.consistency} />,
+          { collapsible: true, initiallyExpanded: false },
+        );
       case 'bmiTdee':
         return data.bmi && data.tdee ? (
-          <BmiTdeeCards
-            bmi={data.bmi}
-            tdee={data.tdee}
-            bodyFatAssumption={data.bodyFatAssumption}
-          />
+          withSectionLabel(
+            'Body metrics',
+            colors.accentCool,
+            <BmiTdeeCards
+              bmi={data.bmi}
+              tdee={data.tdee}
+              bodyFatAssumption={data.bodyFatAssumption}
+            />,
+            { collapsible: true, initiallyExpanded: false },
+          )
         ) : null;
       case 'milestones':
         return withSectionLabel(
@@ -508,6 +504,9 @@ const styles = StyleSheet.create({
   },
   sectionBlock: {
     gap: spacing.xs,
+  },
+  sectionStack: {
+    gap: spacing.sm,
   },
   sectionLabel: {
     flexDirection: 'row',

@@ -11,7 +11,7 @@ import {
   PHYSIQUE_EXPERIMENTAL_NOTE,
 } from '@/engines/physique/physiqueAssessmentFlow';
 import type { StoredPhysiqueAssessment } from '@/types/physiqueAssessment';
-import { colors, spacing } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface PhysiqueAssessmentCardProps {
   latest: StoredPhysiqueAssessment | null;
@@ -32,12 +32,19 @@ export function PhysiqueAssessmentCard({
 }: PhysiqueAssessmentCardProps) {
   return (
     <Card style={styles.card}>
-      <Text variant="label">Visual physique assessment</Text>
-      <Text variant="bodyMuted">Experimental · Premium · One factor only</Text>
+      <View style={styles.header}>
+        <View style={styles.iconBadge}>
+          <Text variant="label" style={styles.iconText}>AI</Text>
+        </View>
+        <View style={styles.headerCopy}>
+          <Text variant="label" style={styles.headerLabel}>Visual physique assessment</Text>
+          <Text variant="bodyMuted">Experimental · Premium · One factor only</Text>
+        </View>
+      </View>
 
       {latest ? (
         <View style={styles.section}>
-          <Text variant="h2">{formatPhysiqueCategory(latest.physiqueCategory)}</Text>
+          <Text variant="h2" style={styles.category}>{formatPhysiqueCategory(latest.physiqueCategory)}</Text>
           <Text variant="body">
             Estimated range: {formatBodyFatRange(latest.estimatedBodyFatRange)}
           </Text>
@@ -75,9 +82,42 @@ export function PhysiqueAssessmentCard({
 const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
-    backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceCanvas,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  headerCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  headerLabel: {
+    color: colors.brandPrimary,
+  },
+  iconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surfaceRose,
+    borderWidth: 1,
+    borderColor: '#9B7BB8',
+  },
+  iconText: {
+    color: '#6C4F7D',
   },
   section: {
     gap: 4,
+    borderRadius: radius.square,
+    backgroundColor: colors.surfacePeach,
+    padding: spacing.sm,
+  },
+  category: {
+    color: colors.textStrong,
   },
 });

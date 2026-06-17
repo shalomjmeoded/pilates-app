@@ -1,5 +1,4 @@
 import { getRecentDailyTotals } from '@/db/repositories/nutritionRepository';
-import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { getProfile } from '@/db/repositories/profileRepository';
 import { getAllWeightLogs } from '@/db/repositories/weightLogRepository';
 import {
@@ -16,6 +15,7 @@ import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { buildWeeklyCoachSummary } from '@/engines/coaching/buildWeeklyCoachSummary';
 import { getWeekStartDate } from '@/engines/coaching/weekStart';
 import { aiFacade } from '@/services/ai';
+import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { notifyWeeklyCoachReady } from '@/services/notifications/notificationService';
 import type { WeeklyCoachInsightContent, WeeklyCoachSummary } from '@/types/coaching';
 
@@ -84,7 +84,7 @@ export async function generateWeeklyCoachInsight(options?: {
   }
 
   const summary = await loadWeeklyCoachSummary();
-  const premium = await getPremiumStatus();
+  const premium = await getCurrentPremiumStatus();
 
   if (!hasPremiumAccess(premium)) {
     throw new Error('Weekly AI coach requires BetterMe Premium.');

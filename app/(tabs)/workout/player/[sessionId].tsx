@@ -54,6 +54,10 @@ export default function WorkoutPlayerScreen() {
   }, [session]);
 
   useEffect(() => {
+    setSwapMessage(null);
+  }, [currentIndex]);
+
+  useEffect(() => {
     if (!session) {
       return;
     }
@@ -286,7 +290,12 @@ export default function WorkoutPlayerScreen() {
           onPress={() => void Linking.openURL(buildExerciseYouTubeSearchUrl(current.exercise))}
         />
 
-        {swapMessage ? <Text variant="bodyMuted">{swapMessage}</Text> : null}
+        {swapMessage ? (
+          <View style={styles.swapSuccess}>
+            <View style={styles.swapSuccessDot} />
+            <Text variant="body" style={styles.swapSuccessText}>{swapMessage}</Text>
+          </View>
+        ) : null}
         {swapError ? <Text variant="body" style={styles.errorText}>{swapError}</Text> : null}
       </ScrollView>
 
@@ -424,6 +433,27 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.destructive,
+  },
+  swapSuccess: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderRadius: radius.square,
+    borderWidth: 1,
+    borderColor: colors.accentCool,
+    backgroundColor: colors.surfaceCanvas,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  swapSuccessDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.success,
+  },
+  swapSuccessText: {
+    color: colors.textStrong,
+    flex: 1,
   },
   instructions: {
     gap: spacing.xs,

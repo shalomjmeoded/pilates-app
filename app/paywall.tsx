@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,6 +13,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 import { colors, spacing } from '@/theme';
 
 export default function PaywallScreen() {
+  const router = useRouter();
   const onboardingCompleted = usePreferencesStore(
     (state) => state.preferences.onboardingCompleted,
   );
@@ -50,7 +51,7 @@ export default function PaywallScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <SubscreenTopBar />
+      {router.canGoBack() ? <SubscreenTopBar /> : null}
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <PaywallHero
           compact

@@ -5,9 +5,9 @@ import {
   buildManualFallbackParams,
   shouldFallbackToManual,
 } from '@/engines/nutrition/mealTextEstimateFlow';
-import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { aiFacade } from '@/services/ai';
 import { AiProxyError } from '@/services/ai/aiProxyClient';
+import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { useAiMealReviewStore } from '@/stores/aiMealReviewStore';
 
 export function useMealTextEstimate(mealDate: string) {
@@ -39,7 +39,7 @@ export function useMealTextEstimate(mealDate: string) {
     setError(null);
 
     try {
-      const premium = await getPremiumStatus();
+      const premium = await getCurrentPremiumStatus();
       if (!premium.isPremium) {
         setError('AI meal estimates require BetterMe Premium.');
         return;

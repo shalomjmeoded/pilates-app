@@ -8,9 +8,9 @@ import {
   shouldFallbackToManual,
 } from '@/engines/nutrition/mealTextEstimateFlow';
 import { MealPhotoTooLargeError } from '@/engines/nutrition/mealPhotoCompression';
-import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { aiFacade } from '@/services/ai';
 import { AiProxyError } from '@/services/ai/aiProxyClient';
+import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { compressMealPhotoForUpload } from '@/services/nutrition/compressMealPhoto';
 import { useAiMealReviewStore } from '@/stores/aiMealReviewStore';
 import { confirmThirdPartyAiUse } from '@/utils/confirmThirdPartyAiUse';
@@ -75,7 +75,7 @@ export function useMealPhotoEstimate(mealDate: string) {
       setError(null);
 
       try {
-        const premium = await getPremiumStatus();
+        const premium = await getCurrentPremiumStatus();
         if (!premium.isPremium) {
           setError('AI photo estimates require BetterMe Premium.');
           return;

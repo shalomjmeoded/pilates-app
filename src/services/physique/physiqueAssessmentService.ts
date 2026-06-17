@@ -4,10 +4,10 @@ import {
   insertPhysiqueAssessment,
 } from '@/db/repositories/physiqueAssessmentRepository';
 import { applyPhysiqueAssessmentToPlans } from '@/services/physique/applyPhysiqueToPlan';
-import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { getProfile } from '@/db/repositories/profileRepository';
 import { buildStoredPhysiqueAssessment } from '@/engines/physique/physiqueAssessmentFlow';
 import { aiFacade } from '@/services/ai';
+import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import type { AiPhysiqueAssessment, PhysiqueAssessmentRequest } from '@/types/ai';
 import type { StoredPhysiqueAssessment } from '@/types/physiqueAssessment';
 
@@ -18,7 +18,7 @@ export async function loadLatestPhysiqueAssessment(): Promise<StoredPhysiqueAsse
 export async function runPhysiqueAssessment(
   request: PhysiqueAssessmentRequest,
 ): Promise<AiPhysiqueAssessment> {
-  const premium = await getPremiumStatus();
+  const premium = await getCurrentPremiumStatus();
   if (!premium.isPremium) {
     throw new Error('Visual physique assessment requires BetterMe Premium.');
   }

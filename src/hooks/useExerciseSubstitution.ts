@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 
 import { getAllExercises } from '@/db/repositories/exerciseRepository';
-import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { getWorkoutPlanByDate, swapPlanExercise } from '@/db/repositories/workoutRepository';
 import { resolveExerciseSubstitution } from '@/engines/workout/exerciseSubstitution';
 import { aiFacade } from '@/services/ai';
+import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import type { Exercise } from '@/types/exercise';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
 import type { WorkoutPlanExercise } from '@/types/workout';
@@ -34,7 +34,7 @@ export function useExerciseSubstitution(planDate: string) {
 
       try {
         const [premium, library, plan] = await Promise.all([
-          getPremiumStatus(),
+          getCurrentPremiumStatus(),
           getAllExercises(),
           getWorkoutPlanByDate(planDate),
         ]);
