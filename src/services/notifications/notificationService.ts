@@ -23,8 +23,26 @@ const REMINDER_ROUTES: Record<ReminderType, string> = {
 };
 
 const REMINDER_DEFAULTS_APPLIED_FLAG = 'notification_reminder_defaults_applied_v1';
-const ONBOARDING_PAYWALL_NUDGE_ID = 'betterme_onboarding_subscription_nudge';
-const ONBOARDING_PAYWALL_NUDGE_DELAY_SECONDS = 3 * 60 * 60;
+const ONBOARDING_PAYWALL_NUDGE_SEQUENCE = [
+  {
+    identifier: 'betterme_onboarding_subscription_nudge_1',
+    delaySeconds: 3 * 60 * 60,
+    title: 'Your BetterMe plan is ready',
+    body: "Unlock your AI-powered Pilates and nutrition coach when you're ready to begin.",
+  },
+  {
+    identifier: 'betterme_onboarding_subscription_nudge_2',
+    delaySeconds: 24 * 60 * 60,
+    title: 'Your first plan is waiting',
+    body: 'Start your personalized Pilates and nutrition rhythm with BetterMe.',
+  },
+  {
+    identifier: 'betterme_onboarding_subscription_nudge_3',
+    delaySeconds: 72 * 60 * 60,
+    title: 'Begin when it feels right',
+    body: 'Your BetterMe coach is ready to help you turn your plan into progress.',
+  },
+] as const;
 
 let handlerConfigured = false;
 let appStateSubscription: { remove: () => void } | null = null;
@@ -110,7 +128,9 @@ export async function cancelAllScheduledReminders(): Promise<void> {
     return;
   }
 
-  await Notifications.cancelAllScheduledNotificationsAsync();
+  for (const type of Object.keys(REMINDER_ROUTES) as ReminderType[]) {
+    await Notifications.cancelScheduledNotificationAsync(reminderIdentifier(type));
+  }
 }
 
 export async function scheduleReminder(reminder: Reminder): Promise<void> {
@@ -190,7 +210,9 @@ export async function cancelOnboardingPaywallNudge(): Promise<void> {
     return;
   }
 
-  await Notifications.cancelScheduledNotificationAsync(ONBOARDING_PAYWALL_NUDGE_ID);
+  for (const nudge of ONBOARDING_PAYWALL_NUDGE_SEQUENCE) {
+    await Notifications.cancelScheduledNotificationAsync(nudge.identifier);
+  }
 }
 
 export async function scheduleOnboardingPaywallNudge(): Promise<void> {
@@ -213,23 +235,27 @@ export async function scheduleOnboardingPaywallNudge(): Promise<void> {
     return;
   }
 
-  await Notifications.cancelScheduledNotificationAsync(ONBOARDING_PAYWALL_NUDGE_ID);
-  await Notifications.scheduleNotificationAsync({
-    identifier: ONBOARDING_PAYWALL_NUDGE_ID,
-    content: {
-      title: 'Your BetterMe plan is ready',
-      body: "Unlock your AI-powered Pilates and nutrition coach when you're ready to begin.",
-      sound: true,
-      data: {
-        route: '/onboarding/step-00-welcome',
-        source: 'onboarding_paywall_nudge',
+  await cancelOnboardingPaywallNudge();
+
+  for (const nudge of ONBOARDING_PAYWALL_NUDGE_SEQUENCE) {
+    await Notifications.scheduleNotificationAsync({
+      identifier: nudge.identifier,
+      content: {
+        title: nudge.title,
+        body: nudge.body,
+        sound: true,
+        data: {
+          route: '/onboarding/step-00-welcome',
+          source: 'onboarding_paywall_nudge',
+          sequenceId: nudge.identifier,
+        },
       },
-    },
-    trigger: {
-      type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-      seconds: ONBOARDING_PAYWALL_NUDGE_DELAY_SECONDS,
-    },
-  });
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: nudge.delaySeconds,
+      },
+    });
+  }
 }
 
 export function registerNotificationLifecycle(): () => void {

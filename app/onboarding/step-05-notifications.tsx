@@ -54,17 +54,17 @@ export default function Step05Notifications() {
     <OnboardingShell
       step={step}
       title="Gentle reminders?"
-      subtitle="Optional nudges for meals and workouts."
+      subtitle="Optional nudges for meals, workouts, coaching, and your plan."
       onBack={goBack}
       onNext={() => void handleNext()}
       nextLabel="Continue"
     >
       <OptionCard
         label="Use gentle reminders"
-        description="Meals, workouts, and coaching tips."
+        description="Meals, workouts, coaching tips, and a few plan reminders if you do not start today."
         index={0}
         selected
-        accessibilityLabel="Enable local reminders for meals, workouts, and coaching tips"
+        accessibilityLabel="Enable local reminders for meals, workouts, coaching tips, and plan reminders"
         onPress={() => patchDraft({ notificationsEnabled: true })}
       />
 
@@ -91,7 +91,7 @@ export default function Step05Notifications() {
           ))}
         </View>
         <Text variant="caption" style={styles.previewNote}>
-          Times can be changed later in Settings.
+          Reminder times can be changed later in Settings.
         </Text>
       </View>
 

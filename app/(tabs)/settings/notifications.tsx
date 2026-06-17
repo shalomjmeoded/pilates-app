@@ -75,7 +75,7 @@ export default function NotificationsSettingsScreen() {
   return (
     <SettingsScreenShell
       title="Notifications"
-      subtitle="Gentle local reminders — never ads or marketing."
+      subtitle="Gentle local reminders for meals, workouts, coaching, and plan follow-up."
     >
       {supportMessage ? (
         <Text variant="bodyMuted" style={styles.denied}>
@@ -92,8 +92,8 @@ export default function NotificationsSettingsScreen() {
         <>
           <Text variant="body">
             {permissionDenied
-              ? 'Notifications are denied. Open system settings to re-enable breakfast, meal, workout, and coaching reminders.'
-              : 'Enable notifications to receive breakfast, meal, workout, and coaching reminders.'}
+              ? 'Notifications are denied. Open system settings to re-enable breakfast, meal, workout, coaching, and plan reminders.'
+              : 'Enable notifications to receive breakfast, meal, workout, coaching, and plan reminders.'}
           </Text>
           <Button
             label={permissionDenied ? 'Open system settings' : 'Enable notifications'}
