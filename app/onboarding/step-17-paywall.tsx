@@ -12,6 +12,7 @@ import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { usePremium } from '@/hooks/usePremium';
 import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
+import { scheduleOnboardingPaywallNudge } from '@/services/notifications/notificationService';
 import { colors, spacing } from '@/theme';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
@@ -91,6 +92,7 @@ export default function Step17Paywall() {
   useEffect(() => {
     if (!rebuildMode) {
       trackPremiumEvent('paywall_viewed', { metadata: { source: 'onboarding' } });
+      void scheduleOnboardingPaywallNudge();
     }
   }, [rebuildMode]);
 

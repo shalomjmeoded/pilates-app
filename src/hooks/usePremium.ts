@@ -6,6 +6,7 @@ import {
   restorePurchases,
   startFreeTrial,
 } from '@/services/monetization/subscriptionService';
+import { cancelOnboardingPaywallNudge } from '@/services/notifications/notificationService';
 import {
   selectHasPremiumAccess,
   selectPremiumStatus,
@@ -50,12 +51,18 @@ export function usePremium() {
   const beginFreeTrial = useCallback(async (plan: PremiumPlanId = 'yearly') => {
     const nextStatus = await startFreeTrial(plan);
     setStatus(nextStatus);
+    if (nextStatus.isPremium) {
+      void cancelOnboardingPaywallNudge();
+    }
     return nextStatus;
   }, [setStatus]);
 
   const restore = useCallback(async () => {
     const nextStatus = await restorePurchases();
     setStatus(nextStatus);
+    if (nextStatus.isPremium) {
+      void cancelOnboardingPaywallNudge();
+    }
     return nextStatus;
   }, [setStatus]);
 

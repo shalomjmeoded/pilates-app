@@ -1,7 +1,9 @@
 import { AppState, type AppStateStatus } from 'react-native';
 
 import { enableAllReminders, getReminders } from '@/db/repositories/remindersRepository';
+import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { logSettingChange } from '@/db/repositories/settingsAuditRepository';
+import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { preferencesStorage } from '@/storage/mmkv';
 import type { Reminder, ReminderType } from '@/types/settings';
 import { REMINDER_LABELS, REMINDER_MESSAGES } from '@/types/settings';
@@ -21,6 +23,8 @@ const REMINDER_ROUTES: Record<ReminderType, string> = {
 };
 
 const REMINDER_DEFAULTS_APPLIED_FLAG = 'notification_reminder_defaults_applied_v1';
+const ONBOARDING_PAYWALL_NUDGE_ID = 'betterme_onboarding_subscription_nudge';
+const ONBOARDING_PAYWALL_NUDGE_DELAY_SECONDS = 3 * 60 * 60;
 
 let handlerConfigured = false;
 let appStateSubscription: { remove: () => void } | null = null;
@@ -178,6 +182,54 @@ export async function syncAllReminders(): Promise<void> {
       await scheduleReminder(reminder);
     }
   }
+}
+
+export async function cancelOnboardingPaywallNudge(): Promise<void> {
+  const Notifications = getNotificationsModule();
+  if (!Notifications || !ensureHandler()) {
+    return;
+  }
+
+  await Notifications.cancelScheduledNotificationAsync(ONBOARDING_PAYWALL_NUDGE_ID);
+}
+
+export async function scheduleOnboardingPaywallNudge(): Promise<void> {
+  const Notifications = getNotificationsModule();
+  if (!Notifications || !ensureHandler()) {
+    return;
+  }
+
+  const [permission, premium] = await Promise.all([
+    Notifications.getPermissionsAsync(),
+    getPremiumStatus(),
+  ]);
+
+  if (!permission.granted) {
+    return;
+  }
+
+  if (hasPremiumAccess(premium)) {
+    await cancelOnboardingPaywallNudge();
+    return;
+  }
+
+  await Notifications.cancelScheduledNotificationAsync(ONBOARDING_PAYWALL_NUDGE_ID);
+  await Notifications.scheduleNotificationAsync({
+    identifier: ONBOARDING_PAYWALL_NUDGE_ID,
+    content: {
+      title: 'Your BetterMe plan is ready',
+      body: "Unlock your AI-powered Pilates and nutrition coach when you're ready to begin.",
+      sound: true,
+      data: {
+        route: '/onboarding/step-00-welcome',
+        source: 'onboarding_paywall_nudge',
+      },
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+      seconds: ONBOARDING_PAYWALL_NUDGE_DELAY_SECONDS,
+    },
+  });
 }
 
 export function registerNotificationLifecycle(): () => void {
