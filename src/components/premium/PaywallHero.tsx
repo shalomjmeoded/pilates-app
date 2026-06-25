@@ -44,7 +44,7 @@ export function PaywallHero({
 }: PaywallHeroProps) {
   const [selectedPlan, setSelectedPlan] = useState<PremiumPlanId>('yearly');
   const visibleBenefits = benefits.slice(0, compact ? (outcome ? 2 : 3) : 4);
-  const ctaLabel = selectedPlan === 'yearly' ? 'Start Free Trial' : 'Continue Monthly';
+  const ctaLabel = selectedPlan === 'yearly' ? 'Start 3-Day Free Trial' : 'Continue Monthly';
   const disclosure =
     selectedPlan === 'yearly'
       ? '3 days free, then $29.99/year. Auto-renews unless canceled.'
@@ -116,7 +116,7 @@ export function PaywallHero({
           title="Yearly"
           price="$29.99/year"
           detail="3 days free, then $29.99/year"
-          badge="Best value"
+          badge="3-day free trial"
           selected={selectedPlan === 'yearly'}
           onPress={() => setSelectedPlan('yearly')}
           compact={compact}
@@ -124,17 +124,14 @@ export function PaywallHero({
         <PlanOption
           title="Monthly"
           price="$9.99/month"
-          detail="Billed monthly"
+          detail="$9.99/month"
           selected={selectedPlan === 'monthly'}
           onPress={() => setSelectedPlan('monthly')}
           compact={compact}
         />
       </View>
 
-      <TrialCueRow
-        selectedPlan={selectedPlan}
-        onSelectYearly={() => setSelectedPlan('yearly')}
-      />
+      <OfferNotice selectedPlan={selectedPlan} />
 
       <View style={[styles.actions, compact && styles.actionsCompact]}>
         <Button
@@ -213,36 +210,28 @@ function OutcomeBanner({ outcome }: { outcome: PaywallOutcomeSummary }) {
   );
 }
 
-function TrialCueRow({
-  selectedPlan,
-  onSelectYearly,
-}: {
-  selectedPlan: PremiumPlanId;
-  onSelectYearly: () => void;
-}) {
+function OfferNotice({ selectedPlan }: { selectedPlan: PremiumPlanId }) {
   const yearlySelected = selectedPlan === 'yearly';
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ selected: yearlySelected }}
-      accessibilityLabel={yearlySelected ? 'Free trial enabled' : 'Select yearly to enable free trial'}
-      onPress={onSelectYearly}
-      style={({ pressed }) => [
-        styles.trialCue,
-        yearlySelected && styles.trialCueEnabled,
-        pressed && styles.pressed,
+    <View
+      accessibilityRole="text"
+      style={[
+        styles.offerNotice,
+        yearlySelected ? styles.offerNoticeTrial : styles.offerNoticeMonthly,
       ]}
     >
-      <View style={styles.trialCueCopy}>
-        <Text variant="body" style={styles.trialCueTitle}>
-          {yearlySelected ? 'Free trial enabled' : 'Free trial not enabled'}
-        </Text>
+      <View style={[styles.offerIcon, yearlySelected ? styles.offerIconTrial : styles.offerIconMonthly]}>
+        <MaterialCommunityIcons
+          name={yearlySelected ? 'check-circle-outline' : 'calendar-today'}
+          size={17}
+          color={yearlySelected ? '#167A40' : '#5D4A12'}
+        />
       </View>
-      <View style={[styles.trialSwitch, yearlySelected && styles.trialSwitchOn]}>
-        <View style={[styles.trialSwitchKnob, yearlySelected && styles.trialSwitchKnobOn]} />
-      </View>
-    </Pressable>
+      <Text variant="body" style={styles.offerNoticeText}>
+        {yearlySelected ? '3-day free trial included' : 'Monthly plan starts today'}
+      </Text>
+    </View>
   );
 }
 
@@ -534,49 +523,44 @@ const styles = StyleSheet.create({
     borderColor: '#E1A700',
     backgroundColor: '#FFF7D7',
   },
-  trialCue: {
-    minHeight: 40,
+  offerNotice: {
+    minHeight: 38,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     gap: spacing.xs,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.borderLight,
-    backgroundColor: colors.surfaceCanvas,
     paddingHorizontal: 12,
     paddingVertical: 5,
   },
-  trialCueEnabled: {
+  offerNoticeTrial: {
     borderColor: '#BFE8CD',
     backgroundColor: '#ECF9F1',
   },
-  trialCueCopy: {
-    flex: 1,
+  offerNoticeMonthly: {
+    borderColor: '#F4DC7D',
+    backgroundColor: '#FFF7D7',
   },
-  trialCueTitle: {
+  offerIcon: {
+    width: 25,
+    height: 25,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+  },
+  offerIconTrial: {
+    backgroundColor: '#DDF5E6',
+    borderColor: '#BFE8CD',
+  },
+  offerIconMonthly: {
+    backgroundColor: '#FFF1B6',
+    borderColor: '#F4DC7D',
+  },
+  offerNoticeText: {
+    flex: 1,
     color: colors.textStrong,
     fontFamily: 'PlusJakartaSans_700Bold',
-  },
-  trialSwitch: {
-    width: 44,
-    height: 26,
-    borderRadius: 13,
-    justifyContent: 'center',
-    backgroundColor: colors.borderLight,
-    paddingHorizontal: 3,
-  },
-  trialSwitchOn: {
-    backgroundColor: '#24A35A',
-  },
-  trialSwitchKnob: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: colors.warmWhite,
-  },
-  trialSwitchKnobOn: {
-    alignSelf: 'flex-end',
   },
   pressed: {
     opacity: 0.86,
