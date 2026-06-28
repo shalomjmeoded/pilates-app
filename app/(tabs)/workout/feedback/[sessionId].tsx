@@ -8,16 +8,20 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
+import { EncouragementBanner } from '@/components/ui/EncouragementBanner';
 import { getSessionFeedback } from '@/db/repositories/workoutRepository';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
+import { useWorkoutStreak } from '@/hooks/useWorkoutStreak';
 import type { ExerciseFeedback } from '@/types/exercise';
 import type { WorkoutSessionExerciseFeedback } from '@/types/workout';
 import { colors, spacing } from '@/theme';
+import { workoutStreakEncouragement } from '@/utils/encouragement';
 
 export default function WorkoutFeedbackScreen() {
   const router = useRouter();
   const { sessionId } = useLocalSearchParams<{ sessionId: string }>();
   const { session, planDate, exercises, isLoading, error } = useWorkoutSession(sessionId);
+  const { stats, reload: reloadStreak } = useWorkoutStreak();
   const [feedback, setFeedback] = useState<WorkoutSessionExerciseFeedback[]>([]);
 
   useEffect(() => {
@@ -25,7 +29,8 @@ export default function WorkoutFeedbackScreen() {
       return;
     }
     void getSessionFeedback(session.id).then(setFeedback);
-  }, [session]);
+    void reloadStreak();
+  }, [reloadStreak, session]);
 
   if (isLoading) {
     return <BetterMeBootLoader message="Saving your session..." />;
@@ -44,6 +49,7 @@ export default function WorkoutFeedbackScreen() {
 
   const counts = buildFeedbackCounts(feedback);
   const totalTracked = counts.completed + counts.skipped + counts.modified;
+  const streakEncouragement = workoutStreakEncouragement(stats?.currentStreak);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -56,6 +62,10 @@ export default function WorkoutFeedbackScreen() {
         <Text variant="bodyMuted" style={styles.subtitle}>
           Your workout actions were saved as you moved, so there is nothing to remember now.
         </Text>
+
+        {streakEncouragement ? (
+          <EncouragementBanner title={streakEncouragement.title} body={streakEncouragement.body} />
+        ) : null}
 
         <Card style={styles.card}>
           <Text variant="label">Session summary</Text>

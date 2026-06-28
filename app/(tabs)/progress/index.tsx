@@ -29,6 +29,7 @@ import {
 import { WorkoutStreakCard } from '@/components/workout';
 import { ProgressPreviewGate } from '@/components/premium';
 import { Button } from '@/components/ui/Button';
+import { EncouragementBanner } from '@/components/ui/EncouragementBanner';
 import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { SettingsRow } from '@/components/settings';
 import { Screen } from '@/components/ui/Screen';
@@ -37,6 +38,7 @@ import { useProgressDashboard } from '@/hooks/useProgressDashboard';
 import { usePhysiqueAssessment } from '@/hooks/usePhysiqueAssessment';
 import { usePremium } from '@/hooks/usePremium';
 import { useWeeklyCoach } from '@/hooks/useWeeklyCoach';
+import { useEncouragementStore } from '@/stores/encouragementStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { useProgressStore } from '@/stores/progressStore';
 import { colors, radius, spacing } from '@/theme';
@@ -225,6 +227,8 @@ export default function ProgressScreen() {
   const highlightWeeklyCoach = params.focus === 'weekly_coach';
   const chartRange = useProgressStore((state) => state.chartRange);
   const setChartRange = useProgressStore((state) => state.setChartRange);
+  const encouragement = useEncouragementStore((state) => state.message);
+  const clearEncouragement = useEncouragementStore((state) => state.clearMessage);
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
   const listRef = useRef<FlatList<ProgressSectionKey>>(null);
   const scrollOffsetRef = useRef(0);
@@ -436,7 +440,18 @@ export default function ProgressScreen() {
         data={sectionKeys}
         keyExtractor={(item) => item}
         renderItem={renderSection}
-        ListHeaderComponent={<ProgressPulseHeader data={data} />}
+        ListHeaderComponent={
+          <View style={styles.headerStack}>
+            {encouragement?.target === 'progress' ? (
+              <EncouragementBanner
+                title={encouragement.title}
+                body={encouragement.body}
+                onDismiss={() => clearEncouragement(encouragement.id)}
+              />
+            ) : null}
+            <ProgressPulseHeader data={data} />
+          </View>
+        }
         style={styles.list}
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
@@ -458,6 +473,9 @@ const styles = StyleSheet.create({
   scroll: {
     gap: spacing.sm,
     paddingBottom: spacing.xl,
+  },
+  headerStack: {
+    gap: spacing.sm,
   },
   pulseHeader: {
     gap: 8,

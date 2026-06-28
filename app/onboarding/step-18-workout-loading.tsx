@@ -6,8 +6,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
+import { seedDatabaseIfNeeded } from '@/db/seed/exerciseSeed';
+import { deleteWorkoutPlanByDate } from '@/db/repositories/workoutRepository';
 import { ensureWorkoutPlanForDate } from '@/engines/workout/ensureDailyPlan';
 import { colors, radius, spacing } from '@/theme';
+import { PlanGenerationError } from '@/types/workout';
 
 const MIN_VISIBLE_MS = 1800;
 const TICK_MS = 260;
@@ -16,6 +19,34 @@ const FILL_CAP = 0.9;
 
 function getTodayPlanDate(): string {
   return format(new Date(), 'yyyy-MM-dd');
+}
+
+function isRecoverableFirstWorkoutError(error: unknown): boolean {
+  if (error instanceof PlanGenerationError) {
+    return error.code !== 'NO_PROFILE';
+  }
+
+  const message = error instanceof Error ? error.message : String(error);
+  return /FOREIGN KEY constraint failed|unknown exercises|outside the seeded library|exercise library/i.test(
+    message,
+  );
+}
+
+async function prepareFirstWorkoutPlan(planDate: string): Promise<void> {
+  await seedDatabaseIfNeeded();
+
+  try {
+    await ensureWorkoutPlanForDate(planDate);
+  } catch (error) {
+    if (!isRecoverableFirstWorkoutError(error)) {
+      throw error;
+    }
+
+    console.warn('[BetterMe] Repairing first workout generation state.', error);
+    await deleteWorkoutPlanByDate(planDate);
+    await seedDatabaseIfNeeded();
+    await ensureWorkoutPlanForDate(planDate);
+  }
 }
 
 export default function Step18WorkoutLoading() {
@@ -65,7 +96,7 @@ export default function Step18WorkoutLoading() {
 
     const startedAt = Date.now();
     try {
-      await ensureWorkoutPlanForDate(getTodayPlanDate());
+      await prepareFirstWorkoutPlan(getTodayPlanDate());
       if (runId !== runIdRef.current) {
         return;
       }
@@ -85,11 +116,8 @@ export default function Step18WorkoutLoading() {
       }
       clearTimers();
       setProgress(0);
-      setError(
-        generationError instanceof Error
-          ? generationError.message
-          : 'Could not prepare your workout yet.',
-      );
+      console.warn('[BetterMe] First workout generation failed.', generationError);
+      setError('Could not prepare your workout yet. Please try again.');
     } finally {
       if (runId === runIdRef.current) {
         setIsGenerating(false);

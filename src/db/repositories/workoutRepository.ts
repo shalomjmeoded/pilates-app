@@ -60,33 +60,52 @@ interface WorkoutChangeFeedbackRow {
 
 export async function saveWorkoutPlan(plan: WorkoutPlan): Promise<void> {
   const db = await getDatabase();
+  const exerciseIds = [...new Set(plan.exercises.map((exercise) => exercise.exerciseId))];
 
-  await db.runAsync(
-    `INSERT OR REPLACE INTO workout_plans (id, plan_date, generated_at, source)
-     VALUES (?, ?, ?, ?)`,
-    plan.id,
-    plan.planDate,
-    plan.generatedAt,
-    plan.source,
-  );
-
-  await db.runAsync('DELETE FROM workout_plan_exercises WHERE plan_id = ?', plan.id);
-
-  for (const exercise of plan.exercises) {
-    await db.runAsync(
-      `INSERT INTO workout_plan_exercises (
-        id, plan_id, exercise_id, sort_order, sets, reps, hold_seconds, notes
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      createId(),
-      plan.id,
-      exercise.exerciseId,
-      exercise.sortOrder,
-      exercise.sets,
-      exercise.reps,
-      exercise.holdSeconds,
-      exercise.notes ?? null,
-    );
+  if (exerciseIds.length === 0) {
+    throw new Error('Workout plan must include exercises before saving.');
   }
+
+  await db.withTransactionAsync(async () => {
+    const placeholders = exerciseIds.map(() => '?').join(', ');
+    const existingRows = await db.getAllAsync<{ id: string }>(
+      `SELECT id FROM exercise_library WHERE id IN (${placeholders})`,
+      ...exerciseIds,
+    );
+    const existingIds = new Set(existingRows.map((row) => row.id));
+    const missingIds = exerciseIds.filter((id) => !existingIds.has(id));
+
+    if (missingIds.length > 0) {
+      throw new Error(`Workout plan references unknown exercises: ${missingIds.join(', ')}`);
+    }
+
+    await db.runAsync(
+      `INSERT OR REPLACE INTO workout_plans (id, plan_date, generated_at, source)
+       VALUES (?, ?, ?, ?)`,
+      plan.id,
+      plan.planDate,
+      plan.generatedAt,
+      plan.source,
+    );
+
+    await db.runAsync('DELETE FROM workout_plan_exercises WHERE plan_id = ?', plan.id);
+
+    for (const exercise of plan.exercises) {
+      await db.runAsync(
+        `INSERT INTO workout_plan_exercises (
+          id, plan_id, exercise_id, sort_order, sets, reps, hold_seconds, notes
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        createId(),
+        plan.id,
+        exercise.exerciseId,
+        exercise.sortOrder,
+        exercise.sets,
+        exercise.reps,
+        exercise.holdSeconds,
+        exercise.notes ?? null,
+      );
+    }
+  });
 }
 
 export async function deleteWorkoutPlanByDate(planDate: string): Promise<void> {

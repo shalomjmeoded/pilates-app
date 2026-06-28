@@ -13,12 +13,15 @@ import { Text } from '@/components/ui/Text';
 import { saveMeal } from '@/db/repositories/nutritionRepository';
 import { deleteSavedMeal, getSavedMeals, saveSavedMeal } from '@/db/repositories/savedMealRepository';
 import { parseMealNumber, validateMealInput } from '@/engines/nutrition';
+import { useEncouragementStore } from '@/stores/encouragementStore';
 import type { SavedMeal } from '@/types/nutrition';
 import { colors, radius, spacing } from '@/theme';
+import { mealLoggedEncouragement } from '@/utils/encouragement';
 
 export default function SavedMealsScreen() {
   const router = useRouter();
   const { hasAccess } = usePremium();
+  const pushEncouragement = useEncouragementStore((state) => state.pushMessage);
   const [savedMeals, setSavedMeals] = useState<SavedMeal[]>([]);
   const [title, setTitle] = useState('');
   const [calories, setCalories] = useState('');
@@ -96,6 +99,8 @@ export default function SavedMealsScreen() {
       source: 'manual',
       mealDate: today,
     });
+    const encouragement = mealLoggedEncouragement();
+    pushEncouragement('nutrition', encouragement.title, encouragement.body);
     router.back();
   };
 

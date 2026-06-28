@@ -22,10 +22,15 @@ export function lbToKg(lb: number): number {
   return Math.round((lb / 2.20462) * 10) / 10;
 }
 
+function formatOneDecimal(value: number): string {
+  const rounded = Math.round((value + Number.EPSILON) * 10) / 10;
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+}
+
 export function displayHeight(cm: number, unit: 'cm' | 'in'): string {
   return unit === 'cm' ? `${cm} cm` : formatFeetInches(cmToInches(cm));
 }
 
 export function displayWeight(kg: number, unit: 'kg' | 'lb'): string {
-  return unit === 'kg' ? `${kg} kg` : `${kgToLb(kg)} lb`;
+  return unit === 'kg' ? `${formatOneDecimal(kg)} kg` : `${formatOneDecimal(kgToLb(kg))} lb`;
 }

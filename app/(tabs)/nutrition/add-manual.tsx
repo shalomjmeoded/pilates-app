@@ -9,14 +9,17 @@ import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { saveMeal } from '@/db/repositories/nutritionRepository';
 import { parseMealNumber, validateMealInput } from '@/engines/nutrition';
+import { useEncouragementStore } from '@/stores/encouragementStore';
 import { MEAL_PRESETS, type MealPreset, type MealSource } from '@/types/nutrition';
 import { colors, metrics, radius, spacing } from '@/theme';
+import { mealLoggedEncouragement } from '@/utils/encouragement';
 import { successNotificationHaptic } from '@/utils/haptics';
 
 export default function AddManualMealScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ mealDate: string; prefilledTitle?: string }>();
   const mealDate = params.mealDate ?? new Date().toISOString().slice(0, 10);
+  const pushEncouragement = useEncouragementStore((state) => state.pushMessage);
 
   const [title, setTitle] = useState(params.prefilledTitle ?? '');
   const [calories, setCalories] = useState('');
@@ -64,6 +67,8 @@ export default function AddManualMealScreen() {
 
     try {
       await saveMeal(input);
+      const encouragement = mealLoggedEncouragement();
+      pushEncouragement('nutrition', encouragement.title, encouragement.body);
       successNotificationHaptic();
       AccessibilityInfo.announceForAccessibility('Meal logged successfully.');
       closeToNutrition();

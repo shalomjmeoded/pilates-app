@@ -46,7 +46,7 @@ function buildPaywallOutcome(
     draft.currentWeightKg,
     draft.goalWeightKg,
   );
-  const diffKg = Math.abs(draft.currentWeightKg - draft.goalWeightKg);
+  const diffKg = Math.round(Math.abs(draft.currentWeightKg - draft.goalWeightKg) * 10) / 10;
 
   if (trajectory === 'steady_state' || diffKg < 0.1) {
     return {

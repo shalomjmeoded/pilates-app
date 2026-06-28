@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { colors, radius, shadows, spacing } from '@/theme';
+import { workoutStreakEncouragement } from '@/utils/encouragement';
 
 interface WorkoutCompletedBannerProps {
   movementCount: number;
@@ -10,6 +11,8 @@ interface WorkoutCompletedBannerProps {
 }
 
 export function WorkoutCompletedBanner({ movementCount, streakDays }: WorkoutCompletedBannerProps) {
+  const streakCopy = workoutStreakEncouragement(streakDays);
+
   return (
     <View style={[styles.banner, shadows.card]}>
       <View style={styles.iconWrap}>
@@ -21,9 +24,11 @@ export function WorkoutCompletedBanner({ movementCount, streakDays }: WorkoutCom
         </Text>
         <Text variant="bodyMuted" style={styles.message}>
           {movementCount} movements complete — your body thanks you for the care.
-          {streakDays && streakDays > 0
-            ? ` ${streakDays} day rhythm and counting.`
-            : ' Rest well and return when it feels right.'}
+          {streakCopy
+            ? ` ${streakCopy.title} ${streakCopy.body}`
+            : streakDays && streakDays > 0
+              ? ` ${streakDays} day rhythm and counting.`
+              : ' Rest well and return when it feels right.'}
         </Text>
       </View>
     </View>

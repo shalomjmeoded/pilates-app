@@ -10,6 +10,7 @@ import {
   RemainingCaloriesHero,
 } from '@/components/nutrition';
 import { WeekCalendarStrip } from '@/components/workout';
+import { EncouragementBanner } from '@/components/ui/EncouragementBanner';
 import { FloatingActionButton } from '@/components/ui/FloatingActionButton';
 import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Screen } from '@/components/ui/Screen';
@@ -26,8 +27,10 @@ import { getCalendarDates } from '@/engines/workout';
 import { NutritionPreviewGate } from '@/components/premium';
 import { useNutritionDay } from '@/hooks/useNutritionDay';
 import { usePremium } from '@/hooks/usePremium';
+import { useEncouragementStore } from '@/stores/encouragementStore';
 import { useNutritionStore } from '@/stores/nutritionStore';
 import { colors, radius, spacing } from '@/theme';
+import { mealLoggedEncouragement } from '@/utils/encouragement';
 
 const FAB_BOTTOM_PADDING = 88;
 
@@ -38,6 +41,9 @@ export default function NutritionScreen() {
   const calendarDates = useMemo(() => getCalendarDates(), []);
   const { summary, meals, isLoading, isRefreshing, error, reload } = useNutritionDay(selectedDate);
   const { hasAccess, requirePremium } = usePremium();
+  const encouragement = useEncouragementStore((state) => state.message);
+  const clearEncouragement = useEncouragementStore((state) => state.clearMessage);
+  const pushEncouragement = useEncouragementStore((state) => state.pushMessage);
   const [recentMeals, setRecentMeals] = useState<Meal[]>([]);
   const [recentMealsExpanded, setRecentMealsExpanded] = useState(false);
 
@@ -80,11 +86,15 @@ export default function NutritionScreen() {
 
   const handleDuplicateMeal = async (mealId: string) => {
     await duplicateMeal(mealId, selectedDate);
+    const copy = mealLoggedEncouragement();
+    pushEncouragement('nutrition', copy.title, copy.body);
     await reload();
   };
 
   const handleQuickAddRecent = async (mealId: string) => {
     await duplicateMeal(mealId, selectedDate);
+    const copy = mealLoggedEncouragement();
+    pushEncouragement('nutrition', copy.title, copy.body);
     await reload();
   };
 
@@ -133,6 +143,14 @@ export default function NutritionScreen() {
           message="Some nutrition details did not update. Try again when you’re ready."
           compact
           onRetry={() => void reload()}
+        />
+      ) : null}
+
+      {encouragement?.target === 'nutrition' ? (
+        <EncouragementBanner
+          title={encouragement.title}
+          body={encouragement.body}
+          onDismiss={() => clearEncouragement(encouragement.id)}
         />
       ) : null}
 

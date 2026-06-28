@@ -9,8 +9,10 @@ import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { getWeightLogById, saveWeightLog, updateWeightLog } from '@/db/repositories/weightLogRepository';
 import { parseWeightInput, validateWeightKg } from '@/engines/progress';
+import { useEncouragementStore } from '@/stores/encouragementStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { colors, radius, spacing } from '@/theme';
+import { weightLoggedEncouragement } from '@/utils/encouragement';
 import { kgToLb, lbToKg } from '@/utils/units';
 
 const NOTE_EXAMPLES = ['Vacation', 'Started new routine', 'Feeling stronger'];
@@ -21,6 +23,7 @@ export default function LogWeightModal() {
   const isEditing = Boolean(params.editId);
   const units = usePreferencesStore((state) => state.preferences.units);
   const setUnits = usePreferencesStore((state) => state.setUnits);
+  const pushEncouragement = useEncouragementStore((state) => state.pushMessage);
 
   const [weightValue, setWeightValue] = useState('');
   const [note, setNote] = useState('');
@@ -84,6 +87,8 @@ export default function LogWeightModal() {
       } else {
         await saveWeightLog({ weightKg, note: note.trim() || undefined });
       }
+      const encouragement = weightLoggedEncouragement(isEditing);
+      pushEncouragement('progress', encouragement.title, encouragement.body);
       router.back();
     } catch (saveError) {
       setErrors([saveError instanceof Error ? saveError.message : 'Could not save weight.']);
