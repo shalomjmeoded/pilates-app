@@ -5,6 +5,7 @@ import { getPremiumStatus } from '@/db/repositories/premiumRepository';
 import { logSettingChange } from '@/db/repositories/settingsAuditRepository';
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { preferencesStorage } from '@/storage/mmkv';
+import type { FitnessGoal } from '@/types/profile';
 import type { Reminder, ReminderType } from '@/types/settings';
 import { REMINDER_LABELS, REMINDER_MESSAGES } from '@/types/settings';
 
@@ -23,26 +24,127 @@ const REMINDER_ROUTES: Record<ReminderType, string> = {
 };
 
 const REMINDER_DEFAULTS_APPLIED_FLAG = 'notification_reminder_defaults_applied_v1';
-const ONBOARDING_PAYWALL_NUDGE_SEQUENCE = [
+
+export interface PaywallNudgeContext {
+  fitnessGoal: FitnessGoal;
+  /** Pre-formatted weight delta in the user's unit, e.g. "5 kg" or "12 lb". */
+  weightDeltaLabel?: string;
+}
+
+interface PaywallNudge {
+  identifier: string;
+  delaySeconds: number;
+  title: string;
+  body: string;
+}
+
+const PAYWALL_NUDGE_IDENTIFIERS = [
+  'betterme_onboarding_subscription_nudge_1',
+  'betterme_onboarding_subscription_nudge_2',
+  'betterme_onboarding_subscription_nudge_3',
+] as const;
+
+const PAYWALL_NUDGE_DELAYS_SECONDS = [3 * 60 * 60, 24 * 60 * 60, 72 * 60 * 60] as const;
+
+const GENERIC_PAYWALL_NUDGE_COPY: Array<{ title: string; body: string }> = [
   {
-    identifier: 'betterme_onboarding_subscription_nudge_1',
-    delaySeconds: 3 * 60 * 60,
     title: 'Your BetterMe plan is ready',
     body: "Unlock your AI-powered Pilates and nutrition coach when you're ready to begin.",
   },
   {
-    identifier: 'betterme_onboarding_subscription_nudge_2',
-    delaySeconds: 24 * 60 * 60,
     title: 'Your first plan is waiting',
     body: 'Start your personalized Pilates and nutrition rhythm with BetterMe.',
   },
   {
-    identifier: 'betterme_onboarding_subscription_nudge_3',
-    delaySeconds: 72 * 60 * 60,
     title: 'Begin when it feels right',
     body: 'Your BetterMe coach is ready to help you turn your plan into progress.',
   },
-] as const;
+];
+
+function buildPaywallNudgeCopy(
+  context?: PaywallNudgeContext,
+): Array<{ title: string; body: string }> {
+  if (!context) {
+    return GENERIC_PAYWALL_NUDGE_COPY;
+  }
+
+  const { fitnessGoal, weightDeltaLabel } = context;
+
+  switch (fitnessGoal) {
+    case 'lose_weight': {
+      const goalPhrase = weightDeltaLabel ? `lose ${weightDeltaLabel}` : 'lose the weight';
+      return [
+        {
+          title: `Your plan to ${goalPhrase} is ready`,
+          body: 'Everything is set — your Pilates sessions and nutrition targets are waiting for you.',
+        },
+        {
+          title: "Don't give up on your goal",
+          body: `You took the first step yesterday. Your personalized plan to ${goalPhrase} is still here.`,
+        },
+        {
+          title: `${weightDeltaLabel ? `${weightDeltaLabel} lighter` : 'A lighter you'} starts with day one`,
+          body: 'Your plan adapts to your pace. Begin whenever you feel ready — it only takes one tap.',
+        },
+      ];
+    }
+    case 'get_toned':
+      return [
+        {
+          title: 'Your toning plan is ready',
+          body: 'Sculpting sessions and nutrition targets built just for you are waiting.',
+        },
+        {
+          title: "Don't give up on getting toned",
+          body: 'You already built your plan — the daily Pilates rhythm that shapes results is one tap away.',
+        },
+        {
+          title: 'A stronger, toned you is still waiting',
+          body: 'Your personalized program adapts to your pace. Start when it feels right.',
+        },
+      ];
+    case 'build_muscle':
+      return [
+        {
+          title: 'Your strength plan is ready',
+          body: 'Muscle-building sessions and fueling targets tailored to you are waiting.',
+        },
+        {
+          title: "Don't give up on building strength",
+          body: `Your plan${weightDeltaLabel ? ` to gain ${weightDeltaLabel}` : ''} is built and ready — one tap to begin.`,
+        },
+        {
+          title: 'Stronger starts with session one',
+          body: 'Your personalized program adapts as you progress. Begin whenever you are ready.',
+        },
+      ];
+    case 'maintain':
+      return [
+        {
+          title: 'Your consistency plan is ready',
+          body: 'A steady Pilates and nutrition rhythm built around your life is waiting.',
+        },
+        {
+          title: "Don't lose the momentum you started",
+          body: 'You built your plan yesterday — your daily rhythm is one tap away.',
+        },
+        {
+          title: 'Consistency beats intensity',
+          body: 'Your personalized program is still here, ready when you are.',
+        },
+      ];
+  }
+}
+
+function buildPaywallNudgeSequence(context?: PaywallNudgeContext): PaywallNudge[] {
+  const copy = buildPaywallNudgeCopy(context);
+  return PAYWALL_NUDGE_IDENTIFIERS.map((identifier, index) => ({
+    identifier,
+    delaySeconds: PAYWALL_NUDGE_DELAYS_SECONDS[index],
+    title: copy[index].title,
+    body: copy[index].body,
+  }));
+}
 
 let handlerConfigured = false;
 let appStateSubscription: { remove: () => void } | null = null;
@@ -210,12 +312,14 @@ export async function cancelOnboardingPaywallNudge(): Promise<void> {
     return;
   }
 
-  for (const nudge of ONBOARDING_PAYWALL_NUDGE_SEQUENCE) {
-    await Notifications.cancelScheduledNotificationAsync(nudge.identifier);
+  for (const identifier of PAYWALL_NUDGE_IDENTIFIERS) {
+    await Notifications.cancelScheduledNotificationAsync(identifier);
   }
 }
 
-export async function scheduleOnboardingPaywallNudge(): Promise<void> {
+export async function scheduleOnboardingPaywallNudge(
+  context?: PaywallNudgeContext,
+): Promise<void> {
   const Notifications = getNotificationsModule();
   if (!Notifications || !ensureHandler()) {
     return;
@@ -237,7 +341,7 @@ export async function scheduleOnboardingPaywallNudge(): Promise<void> {
 
   await cancelOnboardingPaywallNudge();
 
-  for (const nudge of ONBOARDING_PAYWALL_NUDGE_SEQUENCE) {
+  for (const nudge of buildPaywallNudgeSequence(context)) {
     await Notifications.scheduleNotificationAsync({
       identifier: nudge.identifier,
       content: {
@@ -245,7 +349,7 @@ export async function scheduleOnboardingPaywallNudge(): Promise<void> {
         body: nudge.body,
         sound: true,
         data: {
-          route: '/onboarding/step-00-welcome',
+          route: '/paywall',
           source: 'onboarding_paywall_nudge',
           sequenceId: nudge.identifier,
         },

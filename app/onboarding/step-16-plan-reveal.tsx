@@ -59,42 +59,46 @@ export default function Step16PlanReveal() {
       phaseLabel="Your reveal"
       reasonWhy={null}
       hideStepIndicator
-      scrollEnabled={false}
+      scrollEnabled
       titleLines={1}
     >
-      <PlanRevealHero
-        calories={goalCalories}
-        proteinG={macros.proteinG}
-        workoutsPerWeek={workoutsPerWeek}
-        carbsG={macros.carbsG}
-        fatG={macros.fatG}
-        fiberG={macros.fiberG}
-        statusMessage={safetyWarning.triggered ? undefined : 'Plan is achievable and built to adapt.'}
-      />
+      <View style={styles.content}>
+        <PlanRevealHero
+          calories={goalCalories}
+          proteinG={macros.proteinG}
+          workoutsPerWeek={workoutsPerWeek}
+          carbsG={macros.carbsG}
+          fatG={macros.fatG}
+          fiberG={macros.fiberG}
+          statusMessage={safetyWarning.triggered ? undefined : 'Plan is achievable and built to adapt.'}
+        />
 
-      {safetyWarning.triggered ? (
-        <View style={styles.warning} accessibilityRole="alert">
-          <Text variant="label" style={styles.warningTitle}>
-            Safety note
-          </Text>
-          <Text variant="body" style={styles.warningText}>
-            {SAFETY_WARNING_MESSAGE}
-          </Text>
-        </View>
-      ) : null}
-
+        {safetyWarning.triggered ? (
+          <View style={styles.warning} accessibilityRole="alert">
+            <Text variant="label" style={styles.warningTitle}>
+              Safety note
+            </Text>
+            <Text variant="body" style={styles.warningText}>
+              {SAFETY_WARNING_MESSAGE}
+            </Text>
+          </View>
+        ) : null}
+      </View>
     </OnboardingShell>
   );
 }
 
 const styles = StyleSheet.create({
+  content: {
+    gap: 12,
+  },
   warning: {
     backgroundColor: colors.warningSurface,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.borderStrong,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 8,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   warningText: {
     color: colors.textDark,
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
   },
   warningTitle: {
     color: colors.textStrong,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   disclaimer: {
     backgroundColor: colors.surfaceCanvas,

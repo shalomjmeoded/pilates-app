@@ -182,13 +182,13 @@ function MacroPill({ label, value, icon, tone }: MacroPillProps) {
 
 const styles = StyleSheet.create({
   wrap: {
-    gap: 7,
+    gap: 12,
   },
   wrapCompact: {
-    gap: 5,
+    gap: 8,
   },
   readyStrip: {
-    minHeight: 30,
+    minHeight: 32,
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     borderColor: '#BFE8CD',
     backgroundColor: '#ECF9F1',
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
   },
   readyIcon: {
     width: 20,
@@ -213,10 +213,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans_600SemiBold',
   },
   sectionHeader: {
-    gap: 2,
+    gap: 4,
   },
   nutritionHeader: {
-    marginTop: 2,
+    marginTop: 10,
   },
   sectionTitleRow: {
     flexDirection: 'row',
@@ -235,12 +235,12 @@ const styles = StyleSheet.create({
   },
   workoutStrip: {
     position: 'relative',
-    height: 88,
+    height: 90,
     flexDirection: 'row',
-    gap: 7,
+    gap: 8,
   },
   workoutStripCompact: {
-    height: 76,
+    height: 80,
   },
   exerciseCard: {
     flex: 1,
@@ -293,11 +293,11 @@ const styles = StyleSheet.create({
   },
   programSummary: {
     flexDirection: 'row',
-    gap: 7,
+    gap: 8,
   },
   summaryChip: {
     flex: 1,
-    minHeight: 30,
+    minHeight: 32,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -317,12 +317,12 @@ const styles = StyleSheet.create({
     color: colors.textStrong,
   },
   nutritionGrid: {
-    minHeight: 130,
+    minHeight: 132,
     flexDirection: 'row',
-    gap: 7,
+    gap: 8,
   },
   nutritionGridCompact: {
-    minHeight: 118,
+    minHeight: 120,
   },
   calorieCard: {
     flex: 1.14,
@@ -334,6 +334,7 @@ const styles = StyleSheet.create({
     borderColor: '#E8A5B4',
     backgroundColor: '#FFF0F4',
     paddingHorizontal: 10,
+    paddingVertical: 6,
   },
   fireIcon: {
     width: 28,
@@ -353,18 +354,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 7,
+    gap: 8,
   },
   macroPill: {
     width: '47.5%',
-    minHeight: 61,
+    minHeight: 63,
     borderRadius: 14,
     borderWidth: 1,
-    paddingVertical: 5,
+    paddingVertical: 6,
     paddingHorizontal: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
+    gap: 3,
   },
   macroValue: {
     color: colors.textStrong,
@@ -380,7 +381,7 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   nutritionStatus: {
-    minHeight: 27,
+    minHeight: 28,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -390,7 +391,7 @@ const styles = StyleSheet.create({
     borderColor: '#BFE8CD',
     backgroundColor: '#ECF9F1',
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
   },
   nutritionStatusText: {
     color: '#167A40',

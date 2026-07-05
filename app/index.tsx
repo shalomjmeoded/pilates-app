@@ -27,8 +27,14 @@ export default function Index() {
     return <BetterMeBootLoader />;
   }
 
-  if (!onboardingCompleted || !hasAccess) {
+  if (!onboardingCompleted) {
     return <Redirect href="/onboarding/step-00-welcome" />;
+  }
+
+  if (!hasAccess) {
+    // Lapsed subscribers already have a profile — send them to the paywall,
+    // not back through onboarding.
+    return <Redirect href="/paywall" />;
   }
 
   return <Redirect href="/(tabs)/workout" />;

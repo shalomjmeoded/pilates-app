@@ -6,5 +6,6 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^expo-constants$': '<rootDir>/src/testMocks/expoConstants.ts',
+    '^expo-sqlite$': '<rootDir>/src/testMocks/expoSqlite.ts',
   },
 };

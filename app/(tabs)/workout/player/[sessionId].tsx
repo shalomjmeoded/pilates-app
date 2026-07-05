@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   timerEyebrow: {
-    color: colors.brandSecondary,
+    color: colors.brandSecondaryText,
   },
   timerValue: {
     color: colors.brandPrimary,

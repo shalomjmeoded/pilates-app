@@ -44,7 +44,7 @@ export default function PhysiqueAssessmentReviewScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <Text variant="h1">Review Assessment</Text>
         <Text variant="bodyMuted">
-          Review before saving. BetterMe never auto-saves AI results or changes your plan.
+          Review before saving. BetterMe never saves AI results without your confirmation.
         </Text>
 
         <Card style={styles.card}>
@@ -67,8 +67,13 @@ export default function PhysiqueAssessmentReviewScreen() {
 
         {error ? <Text variant="body" style={styles.errorText}>{error}</Text> : null}
 
+        <Text variant="caption" style={styles.saveNote}>
+          Saving recalibrates your nutrition targets and refreshes today&apos;s workout. Manual
+          target overrides and in-progress sessions are left untouched.
+        </Text>
+
         <Button
-          label={isSaving ? 'Saving...' : 'Save assessment'}
+          label={isSaving ? 'Saving...' : 'Save and update plan'}
           onPress={() => void save(assessment)}
           disabled={isSaving}
         />
@@ -100,5 +105,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.brandPrimary,
+  },
+  saveNote: {
+    color: colors.textMuted,
+    lineHeight: 18,
   },
 });

@@ -12,7 +12,10 @@ import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { usePremium } from '@/hooks/usePremium';
 import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
-import { scheduleOnboardingPaywallNudge } from '@/services/notifications/notificationService';
+import {
+  scheduleOnboardingPaywallNudge,
+  type PaywallNudgeContext,
+} from '@/services/notifications/notificationService';
 import { colors, spacing } from '@/theme';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
@@ -26,6 +29,25 @@ const PAYWALL_HEADER_IMAGES = [
 
 function compactDateLabel(label: string): string {
   return label.replace(/, \d{4}$/, '');
+}
+
+function buildNudgeContext(
+  draft: ReturnType<typeof useOnboardingStore.getState>['draft'],
+  weightUnit: 'kg' | 'lb',
+): PaywallNudgeContext | undefined {
+  if (!draft.fitnessGoal) {
+    return undefined;
+  }
+
+  const diffKg =
+    draft.currentWeightKg !== null && draft.goalWeightKg !== null
+      ? Math.round(Math.abs(draft.currentWeightKg - draft.goalWeightKg) * 10) / 10
+      : 0;
+
+  return {
+    fitnessGoal: draft.fitnessGoal,
+    weightDeltaLabel: diffKg >= 0.1 ? displayWeight(diffKg, weightUnit) : undefined,
+  };
 }
 
 function buildPaywallOutcome(
@@ -92,9 +114,11 @@ export default function Step17Paywall() {
   useEffect(() => {
     if (!rebuildMode) {
       trackPremiumEvent('paywall_viewed', { metadata: { source: 'onboarding' } });
-      void scheduleOnboardingPaywallNudge();
+      void scheduleOnboardingPaywallNudge(
+        buildNudgeContext(useOnboardingStore.getState().draft, weightUnit),
+      );
     }
-  }, [rebuildMode]);
+  }, [rebuildMode, weightUnit]);
 
   const unlockPlan = async (action: () => Promise<unknown>) => {
     setActionError(null);
@@ -144,7 +168,7 @@ export default function Step17Paywall() {
       onBack={goBack}
       hideFooter
       showBack
-      scrollEnabled={false}
+      scrollEnabled
       hideStepIndicator
       titleLines={1}
       phaseLabel="Unlock your plan"
@@ -175,7 +199,7 @@ export default function Step17Paywall() {
 
 const styles = StyleSheet.create({
   container: {
-    gap: spacing.xs,
+    gap: spacing.sm,
   },
   copy: {
     marginTop: 2,

@@ -22,6 +22,7 @@ export default function Step05Notifications() {
   const { step, goNext, goBack } = useOnboardingNavigation(5);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [remindersChosen, setRemindersChosen] = useState(true);
 
   const supportMessage = getNotificationsSupportMessage();
   const setAnnouncedStatus = (message: string) => {
@@ -46,7 +47,12 @@ export default function Step05Notifications() {
   };
 
   const handleNext = async () => {
-    await requestPermission();
+    if (remindersChosen) {
+      await requestPermission();
+    } else {
+      // Skip the OS permission dialog entirely — it can be enabled later in Settings.
+      patchDraft({ notificationsEnabled: false });
+    }
     goNext();
   };
 
@@ -63,9 +69,18 @@ export default function Step05Notifications() {
         label="Use gentle reminders"
         description="Meals, workouts, coaching tips, and a few plan reminders if you do not start today."
         index={0}
-        selected
+        selected={remindersChosen}
         accessibilityLabel="Enable local reminders for meals, workouts, coaching tips, and plan reminders"
-        onPress={() => patchDraft({ notificationsEnabled: true })}
+        onPress={() => setRemindersChosen(true)}
+      />
+
+      <OptionCard
+        label="Not now"
+        description="Continue without reminders. You can turn them on anytime in Settings."
+        index={1}
+        selected={!remindersChosen}
+        accessibilityLabel="Continue without reminders"
+        onPress={() => setRemindersChosen(false)}
       />
 
       <View style={styles.preview} accessibilityLabel="Reminder preview">

@@ -220,7 +220,12 @@ export default function NutritionScreen() {
         <Pressable
           accessibilityRole="button"
           onPress={() =>
-            requirePremium('saved_meals', () => router.push('/(tabs)/nutrition/saved-meals'))
+            requirePremium('saved_meals', () =>
+              router.push({
+                pathname: '/(tabs)/nutrition/saved-meals',
+                params: { mealDate: selectedDate },
+              }),
+            )
           }
           style={styles.linkButton}
         >

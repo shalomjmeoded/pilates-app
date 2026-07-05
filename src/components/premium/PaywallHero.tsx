@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   containerCompact: {
-    gap: spacing.xs,
+    gap: spacing.sm,
   },
   heroBand: {
     backgroundColor: colors.surfaceHero,
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   heroEyebrow: {
-    color: colors.brandSecondary,
+    color: colors.brandSecondaryText,
   },
   heroTitle: {
     color: colors.textStrong,
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   benefitsCompact: {
-    gap: 6,
+    gap: spacing.xs,
   },
   benefitRow: {
     flexDirection: 'row',
@@ -376,10 +376,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   benefitRowCompact: {
-    minHeight: 34,
+    minHeight: 44,
     borderRadius: 14,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
   },
   iconWrap: {
     width: 34,
@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   outcomeBanner: {
-    minHeight: 84,
+    minHeight: 92,
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
@@ -417,8 +417,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E8A5B4',
     backgroundColor: '#FFF0F4',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 12,
   },
   outcomeIcon: {
     width: 34,
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
   },
   outcomeCopy: {
     flex: 1,
-    gap: 3,
+    gap: 6,
   },
   outcomeTitle: {
     color: colors.textStrong,
@@ -467,8 +467,9 @@ const styles = StyleSheet.create({
   trustChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: spacing.xs,
     justifyContent: 'center',
+    marginTop: 2,
   },
   trustChip: {
     minHeight: 26,
@@ -488,13 +489,13 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   actionsCompact: {
-    gap: 4,
+    gap: spacing.xs,
   },
   plans: {
     gap: spacing.xs,
   },
   plansCompact: {
-    gap: 5,
+    gap: spacing.xs,
   },
   planOption: {
     minHeight: 78,
@@ -510,10 +511,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   planOptionCompact: {
-    minHeight: 58,
+    minHeight: 68,
     borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
   },
   planOptionSelected: {
     borderColor: '#24A35A',
@@ -524,14 +525,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF7D7',
   },
   offerNotice: {
-    minHeight: 38,
+    minHeight: 44,
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
     borderRadius: 16,
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
   },
   offerNoticeTrial: {
     borderColor: '#BFE8CD',
@@ -567,7 +568,7 @@ const styles = StyleSheet.create({
   },
   planCopy: {
     flex: 1,
-    gap: 4,
+    gap: 6,
   },
   planTitleRow: {
     flexDirection: 'row',

@@ -3,7 +3,7 @@ import { Tabs, router, useSegments } from 'expo-router';
 import type { ColorValue } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, radius, shadows } from '@/theme';
+import { colors, metrics, radius, shadows } from '@/theme';
 import { fontFamily } from '@/theme/typography';
 
 type TabIconName = 'dumbbell' | 'food-apple' | 'chart-line' | 'cog';
@@ -51,7 +51,7 @@ export default function TabsLayout() {
             },
         tabBarActiveBackgroundColor: colors.surfaceRose,
         tabBarItemStyle: {
-          minHeight: 42,
+          minHeight: metrics.touchTargetMin,
           justifyContent: 'center',
           borderRadius: radius.card,
           marginHorizontal: 4,

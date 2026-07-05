@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { buildBaselinePlan } from '@/engines/calculations';
 import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
 import { isBirthYearWithinSupportedAge } from '@/onboarding/helpers';
+import { preferencesStorage } from '@/storage/mmkv';
 import type { BaselinePlanResult } from '@/types/calculations';
 import type {
   ExercisePreference,
@@ -55,10 +56,37 @@ interface OnboardingState {
   rebuildMode: boolean;
   patchDraft: (patch: Partial<OnboardingDraft>) => void;
   resetDraft: () => void;
+  clearPersistedDraft: () => void;
   setRebuildMode: (value: boolean) => void;
   loadDraftFromProfile: (profile: Profile) => void;
   buildPlanFromDraft: () => BaselinePlanResult | null;
   toProfile: () => Profile | null;
+}
+
+function persistDraft(draft: OnboardingDraft): void {
+  try {
+    preferencesStorage.setOnboardingDraft(JSON.stringify(draft));
+  } catch (error) {
+    console.warn('[BetterMe] Failed to persist onboarding draft.', error);
+  }
+}
+
+function hydratePersistedDraft(): OnboardingDraft {
+  try {
+    const serialized = preferencesStorage.getOnboardingDraft();
+    if (!serialized) {
+      return INITIAL_DRAFT;
+    }
+    const parsed = JSON.parse(serialized) as unknown;
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      return INITIAL_DRAFT;
+    }
+    // Merge over defaults so drafts saved by older app versions stay usable.
+    return { ...INITIAL_DRAFT, ...(parsed as Partial<OnboardingDraft>) };
+  } catch (error) {
+    console.warn('[BetterMe] Failed to restore onboarding draft.', error);
+    return INITIAL_DRAFT;
+  }
 }
 
 type CompleteOnboardingDraft = OnboardingDraft & {
@@ -89,15 +117,22 @@ function isCompleteDraft(draft: OnboardingDraft): draft is CompleteOnboardingDra
 }
 
 export const useOnboardingStore = create<OnboardingState>((set, get) => ({
-  draft: INITIAL_DRAFT,
+  draft: hydratePersistedDraft(),
   rebuildMode: false,
 
   patchDraft(patch) {
-    set((state) => ({ draft: { ...state.draft, ...patch } }));
+    const nextDraft = { ...get().draft, ...patch };
+    persistDraft(nextDraft);
+    set({ draft: nextDraft });
   },
 
   resetDraft() {
+    preferencesStorage.clearOnboardingDraft();
     set({ draft: INITIAL_DRAFT, rebuildMode: false });
+  },
+
+  clearPersistedDraft() {
+    preferencesStorage.clearOnboardingDraft();
   },
 
   setRebuildMode(value) {
@@ -142,7 +177,9 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       paceKgPerWeek: profile.paceKgPerWeek,
     });
 
-    set((state) => ({ draft: { ...state.draft, baselinePlan: plan } }));
+    const nextDraft = { ...get().draft, baselinePlan: plan };
+    persistDraft(nextDraft);
+    set({ draft: nextDraft });
     return plan;
   },
 

@@ -11,6 +11,7 @@ import { setSqlitePreference } from './sqlitePreferences';
 
 const KEYS = {
   onboardingCompleted: 'onboarding_completed',
+  onboardingDraft: 'onboarding_draft',
   theme: 'theme',
   units: 'units',
   cachedFlags: 'cached_flags',
@@ -145,6 +146,19 @@ export const preferencesStorage = {
 
   setOnboardingCompleted(value: boolean): void {
     safeSet(KEYS.onboardingCompleted, value);
+  },
+
+  getOnboardingDraft(): string | undefined {
+    const value = safeGetString(KEYS.onboardingDraft);
+    return value && value.length > 0 ? value : undefined;
+  },
+
+  setOnboardingDraft(serializedDraft: string): void {
+    safeSet(KEYS.onboardingDraft, serializedDraft);
+  },
+
+  clearOnboardingDraft(): void {
+    safeSet(KEYS.onboardingDraft, '');
   },
 
   getTheme(): AppPreferences['theme'] {

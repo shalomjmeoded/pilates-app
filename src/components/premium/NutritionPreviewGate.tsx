@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   previewLabel: {
     textAlign: 'center',
-    color: colors.brandSecondary,
+    color: colors.brandSecondaryText,
   },
   macroCard: {
     backgroundColor: colors.surfaceCanvas,

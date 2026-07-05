@@ -20,6 +20,8 @@ export const colors = {
 
   brandPrimary: '#4A3048',
   brandSecondary: '#B8898E',
+  /** Deep dusty rose — use for text on light surfaces (WCAG AA; brandSecondary is decorative-only). */
+  brandSecondaryText: '#8E5C64',
   accentWarm: '#D9C8B4',
   accentCool: '#8FA68E',
   success: '#8FA68E',
