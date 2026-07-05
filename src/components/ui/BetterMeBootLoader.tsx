@@ -150,6 +150,6 @@ const styles = StyleSheet.create({
   },
   message: {
     textAlign: 'center',
-    color: colors.brandSecondary,
+    color: colors.brandSecondaryText,
   },
 });

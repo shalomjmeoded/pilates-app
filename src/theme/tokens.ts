@@ -20,6 +20,8 @@ export const colors = {
 
   brandPrimary: '#4A3048',
   brandSecondary: '#B8898E',
+  /** Deep dusty rose for text on light surfaces; brandSecondary stays decorative. */
+  brandSecondaryText: '#8E5C64',
   accentWarm: '#D9C8B4',
   accentCool: '#8FA68E',
   success: '#8FA68E',

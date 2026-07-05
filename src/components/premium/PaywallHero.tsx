@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   heroEyebrow: {
-    color: colors.brandSecondary,
+    color: colors.brandSecondaryText,
   },
   heroTitle: {
     color: colors.textStrong,

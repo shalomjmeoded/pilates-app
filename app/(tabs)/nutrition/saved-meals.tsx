@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +20,10 @@ import { mealLoggedEncouragement } from '@/utils/encouragement';
 
 export default function SavedMealsScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ mealDate?: string }>();
+  const today = new Date().toISOString().slice(0, 10);
+  const mealDate = params.mealDate ?? today;
+  const isLoggingToday = mealDate === today;
   const { hasAccess } = usePremium();
   const pushEncouragement = useEncouragementStore((state) => state.pushMessage);
   const [savedMeals, setSavedMeals] = useState<SavedMeal[]>([]);
@@ -88,7 +92,6 @@ export default function SavedMealsScreen() {
   };
 
   const logTemplate = async (template: SavedMeal) => {
-    const today = new Date().toISOString().slice(0, 10);
     await saveMeal({
       title: template.title,
       calories: template.calories,
@@ -97,7 +100,7 @@ export default function SavedMealsScreen() {
       fatG: template.fatG,
       fiberG: template.fiberG,
       source: 'manual',
-      mealDate: today,
+      mealDate,
     });
     const encouragement = mealLoggedEncouragement();
     pushEncouragement('nutrition', encouragement.title, encouragement.body);
@@ -124,7 +127,10 @@ export default function SavedMealsScreen() {
             <Text variant="h2">{meal.title}</Text>
             <Text variant="bodyMuted">{Math.round(meal.calories)} kcal</Text>
             <View style={styles.row}>
-              <Button label="Log today" onPress={() => void logTemplate(meal)} />
+              <Button
+                label={isLoggingToday ? 'Log today' : 'Log to selected day'}
+                onPress={() => void logTemplate(meal)}
+              />
               <Pressable accessibilityRole="button" onPress={() => void deleteSavedMeal(meal.id).then(reload)} style={styles.delete}>
                 <Text variant="label" style={styles.deleteText}>Remove</Text>
               </Pressable>

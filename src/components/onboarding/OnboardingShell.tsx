@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   phase: {
-    color: colors.brandSecondary,
+    color: colors.brandSecondaryText,
   },
   stepRow: {
     flexDirection: 'row',

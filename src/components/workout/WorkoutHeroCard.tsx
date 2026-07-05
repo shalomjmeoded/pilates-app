@@ -15,6 +15,7 @@ interface WorkoutHeroCardProps {
   estimatedMinutes: number;
   streak?: WorkoutStreakStats | null;
   canStart: boolean;
+  startUnavailableReason?: string;
   onChangeWorkout?: () => void;
   onStart: () => void;
 }
@@ -26,6 +27,7 @@ export function WorkoutHeroCard({
   estimatedMinutes,
   streak,
   canStart,
+  startUnavailableReason,
   onChangeWorkout,
   onStart,
 }: WorkoutHeroCardProps) {
@@ -61,6 +63,18 @@ export function WorkoutHeroCard({
 
       <View style={styles.actions}>
         {canStart ? <Button label="Start Workout" onPress={onStart} /> : null}
+        {!canStart && startUnavailableReason ? (
+          <View style={styles.startUnavailable} accessibilityRole="text">
+            <MaterialCommunityIcons
+              name="information-outline"
+              size={18}
+              color={colors.brandPrimary}
+            />
+            <Text variant="caption" style={styles.startUnavailableText}>
+              {startUnavailableReason}
+            </Text>
+          </View>
+        ) : null}
         {onChangeWorkout ? (
           <Button label="Change Workout" variant="secondary" onPress={onChangeWorkout} />
         ) : null}
@@ -138,7 +152,7 @@ const styles = StyleSheet.create({
     opacity: 0.45,
   },
   eyebrow: {
-    color: colors.brandSecondary,
+    color: colors.brandSecondaryText,
   },
   headerRow: {
     flexDirection: 'row',
@@ -225,5 +239,20 @@ const styles = StyleSheet.create({
   },
   actions: {
     gap: spacing.xs,
+  },
+  startUnavailable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.surfaceCanvas,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 10,
+  },
+  startUnavailableText: {
+    flex: 1,
+    lineHeight: 18,
   },
 });

@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   eyebrow: {
-    color: colors.brandSecondary,
+    color: colors.brandSecondaryText,
   },
   preview: {
     position: 'relative',

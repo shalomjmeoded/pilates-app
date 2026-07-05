@@ -53,12 +53,24 @@ export default function WorkoutScreen() {
   const [isApplyingChange, setIsApplyingChange] = useState(false);
   const [changeError, setChangeError] = useState<string | null>(null);
 
+  const MIN_STARTABLE_MOVEMENTS = 9;
+
   const canStartWorkout =
     data?.isToday &&
     !data.isReadOnly &&
     data.plan &&
     data.session?.status !== 'completed' &&
-    data.exercises.length >= 9;
+    data.exercises.length >= MIN_STARTABLE_MOVEMENTS;
+
+  const startUnavailableReason =
+    data?.isToday &&
+    !data.isReadOnly &&
+    data.plan &&
+    data.session?.status !== 'completed' &&
+    data.exercises.length > 0 &&
+    data.exercises.length < MIN_STARTABLE_MOVEMENTS
+      ? `Today's plan has ${data.exercises.length} of the ${MIN_STARTABLE_MOVEMENTS} movements needed for a full session. Use Change Workout to rebuild it.`
+      : undefined;
 
   const handleStartWorkout = async () => {
     if (!data?.plan) {
@@ -186,6 +198,7 @@ export default function WorkoutScreen() {
               estimatedMinutes={estimateWorkoutMinutes(data.exercises.length)}
               streak={streakStats}
               canStart={Boolean(canStartWorkout)}
+              startUnavailableReason={startUnavailableReason}
               onChangeWorkout={data.isToday && !data.isReadOnly ? openChangeSheet : undefined}
               onStart={() => {
                 requirePremium('start_workout', () => void handleStartWorkout());
