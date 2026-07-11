@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { MEAL_TEXT_ESTIMATE_COPY } from '@/engines/nutrition/mealTextEstimateFlow';
 import { useMealTextEstimate } from '@/hooks/useMealTextEstimate';
+import { useDelayedLoadingMessage } from '@/hooks/useDelayedLoadingMessage';
 import { colors, radius, spacing } from '@/theme';
 
 export default function AddTextEstimateScreen() {
@@ -23,6 +24,7 @@ export default function AddTextEstimateScreen() {
     estimate,
     openManualFallback,
   } = useMealTextEstimate(mealDate);
+  const loadingMessage = useDelayedLoadingMessage(isEstimating);
   const insets = useSafeAreaInsets();
   const bottomPadding = insets.bottom + spacing.lg;
   const closeToNutrition = () => {
@@ -59,6 +61,12 @@ export default function AddTextEstimateScreen() {
         {error ? (
           <Text variant="body" style={styles.errorText}>
             {error}
+          </Text>
+        ) : null}
+
+        {loadingMessage ? (
+          <Text variant="bodyMuted" style={styles.loadingMessage} accessibilityLiveRegion="polite">
+            {loadingMessage}
           </Text>
         ) : null}
 
@@ -102,5 +110,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.brandPrimary,
+  },
+  loadingMessage: {
+    color: colors.brandSecondaryText,
+    textAlign: 'center',
   },
 });

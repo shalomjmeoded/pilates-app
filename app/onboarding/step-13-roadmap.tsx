@@ -41,6 +41,7 @@ export default function Step13Roadmap() {
       insightText={roadmapInsight}
       onBack={goBack}
       onNext={goNext}
+      scrollFallbackOnCompact
     >
       <RoadmapChart
         points={points}

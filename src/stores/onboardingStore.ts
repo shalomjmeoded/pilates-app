@@ -3,6 +3,11 @@ import { create } from 'zustand';
 import { buildBaselinePlan } from '@/engines/calculations';
 import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
 import { isBirthYearWithinSupportedAge } from '@/onboarding/helpers';
+import {
+  clearPersistedOnboardingSession,
+  persistOnboardingSession,
+  readPersistedOnboardingSession,
+} from '@/onboarding/onboardingDraftPersistence';
 import type { BaselinePlanResult } from '@/types/calculations';
 import type {
   ExercisePreference,
@@ -50,13 +55,31 @@ const INITIAL_DRAFT: OnboardingDraft = {
   baselinePlan: null,
 };
 
+const PLAN_INPUT_KEYS = new Set<keyof OnboardingDraft>([
+  'genderIdentity',
+  'trainingFrequency',
+  'heightCm',
+  'currentWeightKg',
+  'birthYear',
+  'fitnessGoal',
+  'goalWeightKg',
+  'weightTrajectory',
+  'paceKgPerWeek',
+]);
+
 interface OnboardingState {
   draft: OnboardingDraft;
   rebuildMode: boolean;
+  entryMode: 'fresh' | 'returning';
+  currentStep: number;
   patchDraft: (patch: Partial<OnboardingDraft>) => void;
   resetDraft: () => void;
   setRebuildMode: (value: boolean) => void;
+  setCurrentStep: (step: number) => void;
+  restorePersistedDraft: () => number | null;
+  clearPersistedDraft: () => void;
   loadDraftFromProfile: (profile: Profile) => void;
+  prepareReturningFlow: (profile: Profile) => void;
   buildPlanFromDraft: () => BaselinePlanResult | null;
   toProfile: () => Profile | null;
 }
@@ -91,20 +114,71 @@ function isCompleteDraft(draft: OnboardingDraft): draft is CompleteOnboardingDra
 export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   draft: INITIAL_DRAFT,
   rebuildMode: false,
+  entryMode: 'fresh',
+  currentStep: 1,
 
   patchDraft(patch) {
-    set((state) => ({ draft: { ...state.draft, ...patch } }));
+    const state = get();
+    const invalidatesPlan = (Object.keys(patch) as Array<keyof OnboardingDraft>).some((key) =>
+      PLAN_INPUT_KEYS.has(key),
+    );
+    const draft = {
+      ...state.draft,
+      ...patch,
+      ...(invalidatesPlan ? { baselinePlan: null } : null),
+    };
+    set({ draft });
+    if (state.entryMode === 'fresh' && !state.rebuildMode) {
+      persistOnboardingSession(draft, state.currentStep);
+    }
   },
 
   resetDraft() {
-    set({ draft: INITIAL_DRAFT, rebuildMode: false });
+    clearPersistedOnboardingSession();
+    set({
+      draft: INITIAL_DRAFT,
+      rebuildMode: false,
+      entryMode: 'fresh',
+      currentStep: 1,
+    });
   },
 
   setRebuildMode(value) {
     set({ rebuildMode: value });
   },
 
+  setCurrentStep(step) {
+    const state = get();
+    set({ currentStep: step });
+    if (state.entryMode === 'fresh' && !state.rebuildMode) {
+      persistOnboardingSession(state.draft, step);
+    }
+  },
+
+  restorePersistedDraft() {
+    const session = readPersistedOnboardingSession();
+    if (!session) {
+      return null;
+    }
+
+    set({
+      draft: { ...INITIAL_DRAFT, ...session.draft },
+      rebuildMode: false,
+      entryMode: 'fresh',
+      currentStep: session.currentStep,
+    });
+    return session.currentStep;
+  },
+
+  clearPersistedDraft() {
+    clearPersistedOnboardingSession();
+  },
+
   loadDraftFromProfile(profile) {
+    const goalWeightKg =
+      profile.fitnessGoal === 'maintain' || profile.fitnessGoal === 'get_toned'
+        ? profile.currentWeightKg
+        : profile.goalWeightKg;
     set({
       draft: {
         ...INITIAL_DRAFT,
@@ -117,11 +191,21 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
         nutritionMode: 'full_tracking',
         birthYear: profile.birthYear,
         fitnessGoal: profile.fitnessGoal,
-        goalWeightKg: profile.goalWeightKg,
-        weightTrajectory: profile.weightTrajectory,
+        goalWeightKg,
+        weightTrajectory:
+          profile.fitnessGoal === 'maintain' || profile.fitnessGoal === 'get_toned'
+            ? 'steady_state'
+            : profile.weightTrajectory,
         paceKgPerWeek: profile.paceKgPerWeek,
       },
     });
+  },
+
+  prepareReturningFlow(profile) {
+    clearPersistedOnboardingSession();
+    get().loadDraftFromProfile(profile);
+    set({ entryMode: 'returning', rebuildMode: false, currentStep: 1 });
+    get().buildPlanFromDraft();
   },
 
   buildPlanFromDraft() {

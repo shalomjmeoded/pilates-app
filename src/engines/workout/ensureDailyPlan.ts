@@ -9,6 +9,8 @@ import {
   deleteWorkoutPlanByDate,
   getLatestWorkoutChangeFeedback,
   getLatestCompletedSessionFeedback,
+  getLatestCompletedSessionDifficulty,
+  getRecentPlanExerciseCounts,
   getRecentSkipCounts,
   getWorkoutChangeFeedbackForWeek,
   getWorkoutPlanByDate,
@@ -64,12 +66,16 @@ async function buildAdaptationContext(library: Exercise[], beforeDate: string) {
   const skipCounts = await getRecentSkipCounts(14);
   const skippedFrequentIds = getDeprioritizedExerciseIds(skipCounts);
   const lastSessionFeedback = await getLatestCompletedSessionFeedback(beforeDate);
+  const lastSessionDifficulty = await getLatestCompletedSessionDifficulty(beforeDate);
+  const recentExerciseCounts = await getRecentPlanExerciseCounts(beforeDate);
   const libraryById = new Map(library.map((exercise) => [exercise.id, exercise]));
 
   return {
     skippedFrequentIds,
     lastSessionFeedback,
     libraryById,
+    lastSessionDifficulty,
+    recentExerciseCounts,
   };
 }
 

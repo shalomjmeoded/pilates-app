@@ -1,6 +1,7 @@
 import { handleAiRoute } from '../handler';
 import { AI_ROUTES } from '../routes';
 import { resetRateLimitState } from '../rateLimit';
+import { generateGeminiJson } from '../gemini';
 
 jest.mock('../gemini', () => ({
   generateGeminiJson: jest.fn().mockResolvedValue(
@@ -28,6 +29,18 @@ function routeBody(payload: Record<string, unknown>, overrides?: Partial<{ devic
 describe('ai-proxy route handler', () => {
   beforeEach(() => {
     resetRateLimitState();
+    (generateGeminiJson as jest.Mock).mockResolvedValue(
+      JSON.stringify({
+        mealTitle: 'Test meal',
+        confidence: 0.8,
+        calories: 400,
+        proteinG: 30,
+        carbsG: 35,
+        fatG: 12,
+        fiberG: 6,
+        ingredients: [{ name: 'Chicken', grams: 120 }],
+      }),
+    );
   });
 
   it('rejects invalid JSON body', async () => {
@@ -118,6 +131,23 @@ describe('ai-proxy route handler', () => {
     expect(second.status).toBe(429);
     if (!second.body.ok) {
       expect(second.body.code).toBe('COOLDOWN');
+    }
+  });
+
+  it('returns a specific timeout response when Gemini exceeds its deadline', async () => {
+    const timeoutError = new Error('The AI model took too long to respond.');
+    timeoutError.name = 'GeminiTimeoutError';
+    (generateGeminiJson as jest.Mock).mockRejectedValueOnce(timeoutError);
+
+    const result = await handleAiRoute(
+      AI_ROUTES.mealText,
+      routeBody({ description: 'slow meal' }),
+      { apiKey: 'test-key' },
+    );
+
+    expect(result.status).toBe(504);
+    if (!result.body.ok) {
+      expect(result.body.code).toBe('UPSTREAM_TIMEOUT');
     }
   });
 });

@@ -43,6 +43,7 @@ import { usePreferencesStore } from '@/stores/preferencesStore';
 import { useProgressStore } from '@/stores/progressStore';
 import { colors, radius, spacing } from '@/theme';
 import type { ProgressDashboardData } from '@/types/progress';
+import { warmAiProxy } from '@/services/ai';
 
 type ProgressSectionKey =
   | 'workoutStreak'
@@ -235,6 +236,12 @@ export default function ProgressScreen() {
   const shouldRestoreScrollRef = useRef(false);
   const hasFocusedOnceRef = useRef(false);
 
+  useEffect(() => {
+    if (hasAccess) {
+      void warmAiProxy();
+    }
+  }, [hasAccess]);
+
   const openLogWeight = () => {
     router.push('/modals/log-weight');
   };
@@ -291,7 +298,7 @@ export default function ProgressScreen() {
 
   if (isLoading) {
     return (
-      <Screen title="Progress" isLoading loadingLabel="Loading your insights...">
+      <Screen title="Progress" isLoading loadingLabel="Loading your insights..." showBrandMark>
         {null}
       </Screen>
     );
@@ -299,7 +306,7 @@ export default function ProgressScreen() {
 
   if (error || !data) {
     return (
-      <Screen title="Progress" subtitle="Your analytics at a glance.">
+      <Screen title="Progress" subtitle="Your analytics at a glance." showBrandMark>
         <LoadErrorState
           title="Couldn’t load progress"
           message="Your progress data is still safe. Try reloading this screen."
@@ -311,7 +318,7 @@ export default function ProgressScreen() {
 
   if (!hasAccess) {
     return (
-      <Screen title="Progress" subtitle="Proof that your rhythm is working.">
+      <Screen title="Progress" subtitle="Proof that your rhythm is working." showBrandMark>
         <ProgressPreviewGate />
       </Screen>
     );
@@ -434,7 +441,7 @@ export default function ProgressScreen() {
   };
 
   return (
-    <Screen title="Progress" subtitle="Reflect on your rhythm and momentum.">
+    <Screen title="Progress" subtitle="Reflect on your rhythm and momentum." showBrandMark>
       <FlatList
         ref={listRef}
         data={sectionKeys}

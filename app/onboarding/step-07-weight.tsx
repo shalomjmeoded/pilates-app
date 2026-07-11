@@ -28,6 +28,7 @@ export default function Step07Weight() {
       onBack={goBack}
       onNext={goNext}
       nextDisabled={valueKg < 35 || valueKg > 250}
+      scrollFallbackOnCompact
     >
       <HorizontalMeasurementRuler
         valueKg={valueKg}

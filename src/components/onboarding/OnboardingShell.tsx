@@ -18,6 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
+import { BetterMeBrandMark } from '@/components/ui/BetterMeBrandMark';
 import { ONBOARDING_TOTAL_STEPS } from '@/onboarding/constants';
 import { getOnboardingPhase, getOnboardingPhaseIndex } from '@/onboarding/stepCopy';
 import { colors, radius, spacing } from '@/theme';
@@ -38,6 +39,7 @@ interface OnboardingShellProps {
   hideStepIndicator?: boolean;
   titleLines?: number;
   scrollEnabled?: boolean;
+  scrollFallbackOnCompact?: boolean;
   phaseLabel?: string;
   reasonWhy?: string | null;
   heroImageSource?: ImageSourcePropType;
@@ -52,6 +54,7 @@ interface OnboardingShellProps {
   insightText?: string;
   centerBody?: boolean;
   centerIntro?: boolean;
+  showBrandMark?: boolean;
 }
 
 const PHASE_HERO_IMAGES: Record<number, ImageSourcePropType> = {
@@ -75,7 +78,8 @@ export function OnboardingShell({
   hideFooter = false,
   hideStepIndicator = false,
   titleLines = 3,
-  scrollEnabled = true,
+  scrollEnabled = false,
+  scrollFallbackOnCompact = false,
   phaseLabel,
   reasonWhy: _reasonWhy,
   heroImageSource,
@@ -90,9 +94,11 @@ export function OnboardingShell({
   insightText,
   centerBody = false,
   centerIntro = false,
+  showBrandMark = false,
 }: OnboardingShellProps) {
   const { height } = useWindowDimensions();
   const isCompact = height < 760;
+  const resolvedScrollEnabled = scrollEnabled || (scrollFallbackOnCompact && isCompact);
   const phase = phaseLabel ?? getOnboardingPhase(step);
   const phaseIndex = getOnboardingPhaseIndex(step);
   const progress = useSharedValue(0);
@@ -210,7 +216,7 @@ export function OnboardingShell({
         contentContainerStyle={styles.scrollContent}
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
-        scrollEnabled={scrollEnabled}
+        scrollEnabled={resolvedScrollEnabled}
         showsVerticalScrollIndicator={false}
       >
         <Animated.View
@@ -219,6 +225,11 @@ export function OnboardingShell({
           style={[styles.page, isCompact && styles.pageCompact]}
         >
           <View style={[styles.intro, centerIntro && styles.introCentered]}>
+            {showBrandMark ? (
+              <Animated.View entering={FadeInDown.duration(240)}>
+                <BetterMeBrandMark showWordmark={false} />
+              </Animated.View>
+            ) : null}
             {showHero ? (
               <Animated.View entering={FadeInDown.duration(320)} style={styles.visualArea}>
                 {resolvedHeroSource ? (
@@ -324,6 +335,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   header: {
+    width: '100%',
+    maxWidth: 760,
+    alignSelf: 'center',
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.xs,
     paddingBottom: spacing.xs,
@@ -355,8 +369,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingBottom: spacing.sm,
     flexGrow: 1,
+    alignItems: 'center',
   },
   page: {
+    width: '100%',
+    maxWidth: 760,
     flexGrow: 1,
     paddingTop: spacing.xs,
     gap: spacing.sm,
@@ -517,6 +534,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   footer: {
+    width: '100%',
+    maxWidth: 760,
+    alignSelf: 'center',
     alignItems: 'flex-end',
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.xs,

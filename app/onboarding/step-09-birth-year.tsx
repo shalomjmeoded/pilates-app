@@ -22,6 +22,7 @@ export default function Step09BirthYear() {
       onNext={goNext}
       nextDisabled={!birthYearIsValid}
       nextDisabledReason={`Choose a year between ${MIN_BIRTH_YEAR} and ${MAX_BIRTH_YEAR}.`}
+      scrollFallbackOnCompact
     >
       <CompactYearPicker
         value={birthYear}

@@ -1,17 +1,7 @@
 import {
   buildManualFallbackParams,
   buildMealInputFromAiReview,
-  shouldFallbackToManual,
 } from '../mealTextEstimateFlow';
-import { AiValidationError } from '@/services/ai/errors';
-import { z } from 'zod';
-
-function proxyError(code: string, message = 'error'): Error {
-  const error = new Error(message);
-  error.name = 'AiProxyError';
-  (error as Error & { code: string }).code = code;
-  return error;
-}
 
 describe('mealTextEstimateFlow', () => {
   const estimate = {
@@ -67,12 +57,4 @@ describe('mealTextEstimateFlow', () => {
     });
   });
 
-  it('falls back to manual for upstream and validation failures', () => {
-    expect(shouldFallbackToManual(proxyError('UPSTREAM_ERROR'))).toBe(true);
-    expect(shouldFallbackToManual(proxyError('COOLDOWN'))).toBe(false);
-    expect(shouldFallbackToManual(proxyError('UNAUTHORIZED'))).toBe(false);
-    expect(
-      shouldFallbackToManual(new AiValidationError(z.object({ x: z.string() }).safeParse({}).error!)),
-    ).toBe(true);
-  });
 });

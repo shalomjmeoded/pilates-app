@@ -5,6 +5,7 @@ import type { ExerciseFeedback } from '@/types/exercise';
 import type {
   WorkoutChangeFeedback,
   WorkoutChangeRequest,
+  WorkoutDifficultyRating,
   WorkoutPlan,
   WorkoutPlanExercise,
   WorkoutSession,
@@ -37,6 +38,7 @@ interface WorkoutSessionRow {
   status: WorkoutSession['status'];
   current_exercise_index?: number;
   elapsed_seconds?: number;
+  difficulty_rating?: WorkoutDifficultyRating | null;
 }
 
 interface SessionExerciseRow {
@@ -202,6 +204,7 @@ function mapSessionRow(row: WorkoutSessionRow): WorkoutSession {
     status: row.status,
     currentExerciseIndex: row.current_exercise_index ?? 0,
     elapsedSeconds: row.elapsed_seconds ?? 0,
+    difficultyRating: row.difficulty_rating ?? undefined,
   };
 }
 
@@ -358,6 +361,18 @@ export async function completeWorkoutSession(sessionId: string): Promise<void> {
       sessionId,
     );
   });
+}
+
+export async function saveWorkoutDifficultyRating(
+  sessionId: string,
+  rating: WorkoutDifficultyRating,
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    'UPDATE workout_sessions SET difficulty_rating = ? WHERE id = ?',
+    rating,
+    sessionId,
+  );
 }
 
 export async function updateSessionProgress(
@@ -522,6 +537,43 @@ export async function getLatestCompletedSessionFeedback(
   }
 
   return getSessionFeedback(session.id);
+}
+
+export async function getLatestCompletedSessionDifficulty(
+  beforeDate: string,
+): Promise<WorkoutDifficultyRating | undefined> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ difficulty_rating: WorkoutDifficultyRating | null }>(
+    `SELECT ws.difficulty_rating
+     FROM workout_sessions ws
+     INNER JOIN workout_plans wp ON wp.id = ws.plan_id
+     WHERE ws.status = 'completed'
+       AND ws.difficulty_rating IS NOT NULL
+       AND wp.plan_date < ?
+     ORDER BY wp.plan_date DESC, ws.ended_at DESC
+     LIMIT 1`,
+    beforeDate,
+  );
+  return row?.difficulty_rating ?? undefined;
+}
+
+export async function getRecentPlanExerciseCounts(
+  beforeDate: string,
+  withinDays: number = 7,
+): Promise<Record<string, number>> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{ exercise_id: string; count: number }>(
+    `SELECT wpe.exercise_id, COUNT(*) AS count
+     FROM workout_plan_exercises wpe
+     INNER JOIN workout_plans wp ON wp.id = wpe.plan_id
+     WHERE wp.plan_date < ?
+       AND wp.plan_date >= date(?, ?)
+     GROUP BY wpe.exercise_id`,
+    beforeDate,
+    beforeDate,
+    `-${withinDays} days`,
+  );
+  return Object.fromEntries(rows.map((row) => [row.exercise_id, row.count]));
 }
 
 function mapWorkoutChangeFeedbackRow(row: WorkoutChangeFeedbackRow): WorkoutChangeFeedback {

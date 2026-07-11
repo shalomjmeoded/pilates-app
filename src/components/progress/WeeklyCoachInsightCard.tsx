@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Text } from '@/components/ui/Text';
+import { useDelayedLoadingMessage } from '@/hooks/useDelayedLoadingMessage';
 import type { WeeklyCoachInsightContent } from '@/types/coaching';
 import { colors, radius, spacing } from '@/theme';
 
@@ -29,6 +30,7 @@ export function WeeklyCoachInsightCard({
   onUnlock,
 }: WeeklyCoachInsightCardProps) {
   const [expanded, setExpanded] = useState(true);
+  const loadingMessage = useDelayedLoadingMessage(isLoading);
 
   useEffect(() => {
     if (insight) {
@@ -136,6 +138,12 @@ export function WeeklyCoachInsightCard({
         />
       ) : null}
 
+      {loadingMessage ? (
+        <Text variant="bodyMuted" style={styles.loadingMessage} accessibilityLiveRegion="polite">
+          {loadingMessage}
+        </Text>
+      ) : null}
+
       <Button
         label={isLoading ? 'Loading...' : insight ? 'Refresh weekly summary' : 'Generate weekly summary'}
         variant="secondary"
@@ -156,6 +164,10 @@ const styles = StyleSheet.create({
   highlighted: {
     borderColor: colors.brandPrimary,
     borderWidth: 1,
+  },
+  loadingMessage: {
+    color: colors.brandSecondaryText,
+    textAlign: 'center',
   },
   section: {
     gap: spacing.xs,

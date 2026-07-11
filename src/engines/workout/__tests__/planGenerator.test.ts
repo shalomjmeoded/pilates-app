@@ -115,4 +115,58 @@ describe('generateWorkoutPlan overrides', () => {
 
     expect(avgChallenging).toBeGreaterThan(avgLighter);
   });
+
+  it('reduces repeated exercises when recent alternatives are available', () => {
+    const baseline = generateWorkoutPlan(
+      baseProfile,
+      exercises,
+      '2026-06-13',
+      'plan-baseline',
+      undefined,
+      undefined,
+      { targetMinutes: 15, focusArea: 'full_body', intensity: 'balanced' },
+    );
+    const repeatedIds = baseline.exercises.slice(0, 3).map((item) => item.exerciseId);
+    const adapted = generateWorkoutPlan(
+      baseProfile,
+      exercises,
+      '2026-06-13',
+      'plan-varied',
+      {
+        skippedFrequentIds: new Set(),
+        lastSessionFeedback: [],
+        libraryById: new Map(exercises.map((exercise) => [exercise.id, exercise])),
+        recentExerciseCounts: Object.fromEntries(repeatedIds.map((id) => [id, 5])),
+      },
+      undefined,
+      { targetMinutes: 15, focusArea: 'full_body', intensity: 'balanced' },
+    );
+
+    const repeatedInAdaptedPlan = adapted.exercises.filter((item) =>
+      repeatedIds.includes(item.exerciseId),
+    );
+    expect(repeatedInAdaptedPlan.length).toBeLessThan(repeatedIds.length);
+  });
+
+  it('uses the last session difficulty to make a bounded set adjustment', () => {
+    const context = {
+      skippedFrequentIds: new Set<string>(),
+      lastSessionFeedback: [],
+      libraryById: new Map(exercises.map((exercise) => [exercise.id, exercise])),
+    };
+    const easier = generateWorkoutPlan(baseProfile, exercises, '2026-06-13', 'easy', {
+      ...context,
+      lastSessionDifficulty: 'too_hard',
+    });
+    const harder = generateWorkoutPlan(baseProfile, exercises, '2026-06-13', 'hard', {
+      ...context,
+      lastSessionDifficulty: 'too_easy',
+    });
+
+    expect(harder.exercises.reduce((sum, item) => sum + item.sets, 0)).toBeGreaterThan(
+      easier.exercises.reduce((sum, item) => sum + item.sets, 0),
+    );
+    expect(Math.min(...easier.exercises.map((item) => item.sets))).toBeGreaterThanOrEqual(2);
+    expect(Math.max(...harder.exercises.map((item) => item.sets))).toBeLessThanOrEqual(5);
+  });
 });

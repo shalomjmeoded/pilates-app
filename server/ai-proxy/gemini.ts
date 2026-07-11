@@ -13,6 +13,8 @@ export interface GenerateGeminiJsonOptions {
   temperature?: number;
 }
 
+const GEMINI_REQUEST_TIMEOUT_MS = 35_000;
+
 function normalizeImageBase64(imageBase64: string): string {
   return imageBase64.replace(/^data:image\/\w+;base64,/, '');
 }
@@ -44,17 +46,33 @@ export async function generateGeminiJson(
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`;
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ role: 'user', parts }],
-      generationConfig: {
-        temperature,
-        responseMimeType: 'application/json',
-      },
-    }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), GEMINI_REQUEST_TIMEOUT_MS);
+  let response: Response;
+
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts }],
+        generationConfig: {
+          temperature,
+          responseMimeType: 'application/json',
+        },
+      }),
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      const timeoutError = new Error('The AI model took too long to respond.');
+      timeoutError.name = 'GeminiTimeoutError';
+      throw timeoutError;
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     const body = await response.text();

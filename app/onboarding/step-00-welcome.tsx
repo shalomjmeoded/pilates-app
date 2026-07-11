@@ -5,23 +5,31 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { OnboardingShell } from '@/components/onboarding';
 import { Button } from '@/components/ui/Button';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
+import { useOnboardingStore } from '@/stores/onboardingStore';
 import { colors, radius, spacing } from '@/theme';
 
 const WELCOME_SHOWCASE_IMAGE = require('../../assets/onboarding/welcome-showcase-v2.png');
 const WELCOME_IMAGE_ASPECT_RATIO = 1024 / 1536;
 
 export default function Step00Welcome() {
-  const { step, goNext } = useOnboardingNavigation(1);
+  const { step, goNext, goToStep } = useOnboardingNavigation(1);
+  const entryMode = useOnboardingStore((state) => state.entryMode);
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const imageHeight = Math.min(height < 760 ? 360 : 440, height * 0.52);
   const imageWidth = imageHeight * WELCOME_IMAGE_ASPECT_RATIO;
 
+  const returning = entryMode === 'returning';
+
   return (
     <OnboardingShell
       step={step}
-      title="Welcome to BetterMe"
-      subtitle="AI-Powered Pilates, Fitness, and Nutrition coach"
+      title={returning ? 'Welcome back to BetterMe' : 'Welcome to BetterMe'}
+      subtitle={
+        returning
+          ? 'Your saved plan is ready for a quick review.'
+          : 'AI-Powered Pilates, Fitness, and Nutrition coach'
+      }
       showBack={false}
       hideFooter
       scrollEnabled={false}
@@ -29,6 +37,7 @@ export default function Step00Welcome() {
       phaseLabel="Welcome"
       centerBody
       centerIntro
+      showBrandMark
     >
       <View style={[styles.screen, { paddingBottom: Math.max(spacing.xs, insets.bottom) }]}>
         <Animated.View entering={FadeInDown.delay(80).duration(420)} style={styles.showcaseWrap}>
@@ -42,7 +51,10 @@ export default function Step00Welcome() {
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(220).duration(280)} style={styles.ctaWrap}>
-          <Button label="Get started" onPress={goNext} />
+          <Button
+            label={returning ? 'Review my plan' : 'Get started'}
+            onPress={returning ? () => goToStep(14) : goNext}
+          />
         </Animated.View>
       </View>
     </OnboardingShell>

@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import {
@@ -31,6 +31,7 @@ import { useEncouragementStore } from '@/stores/encouragementStore';
 import { useNutritionStore } from '@/stores/nutritionStore';
 import { colors, radius, spacing } from '@/theme';
 import { mealLoggedEncouragement } from '@/utils/encouragement';
+import { warmAiProxy } from '@/services/ai';
 
 const FAB_BOTTOM_PADDING = 88;
 
@@ -46,6 +47,12 @@ export default function NutritionScreen() {
   const pushEncouragement = useEncouragementStore((state) => state.pushMessage);
   const [recentMeals, setRecentMeals] = useState<Meal[]>([]);
   const [recentMealsExpanded, setRecentMealsExpanded] = useState(false);
+
+  useEffect(() => {
+    if (hasAccess) {
+      void warmAiProxy();
+    }
+  }, [hasAccess]);
 
   useFocusEffect(
     useCallback(() => {
@@ -109,7 +116,7 @@ export default function NutritionScreen() {
 
   if (error && !summary && !isLoading) {
     return (
-      <Screen title="Nutrition">
+      <Screen title="Nutrition" showBrandMark>
         <LoadErrorState
           title="Couldn’t load nutrition"
           message="Your meal history and targets are still safe. Try reloading this day."
@@ -121,7 +128,7 @@ export default function NutritionScreen() {
 
   if (!hasAccess && !isLoading) {
     return (
-      <Screen title="Nutrition" subtitle="Nourishment shaped around your body.">
+      <Screen title="Nutrition" subtitle="Nourishment shaped around your body." showBrandMark>
         <NutritionPreviewGate />
       </Screen>
     );
@@ -236,7 +243,7 @@ export default function NutritionScreen() {
   ) : null;
 
   return (
-    <Screen title="Nutrition" isLoading={isLoading} loadingLabel="Loading your day...">
+    <Screen title="Nutrition" isLoading={isLoading} loadingLabel="Loading your day..." showBrandMark>
       {summary ? (
         <>
           <FlatList

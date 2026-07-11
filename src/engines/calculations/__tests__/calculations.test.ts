@@ -94,14 +94,13 @@ describe('evaluateCalorieSafety', () => {
 });
 
 describe('calculateGoalCalories', () => {
-  it('never returns below 1000 kcal for auto-calculated targets', () => {
-    const goalCalories = calculateGoalCalories(1100, 'get_toned', 1);
+  it('never returns below 1000 kcal for weight-loss targets', () => {
+    const goalCalories = calculateGoalCalories(1100, 'lose_weight', 1);
     expect(goalCalories).toBe(1000);
   });
 
-  it('does not raise calories that are already above the floor', () => {
-    const goalCalories = calculateGoalCalories(2200, 'get_toned', 0.5);
-    expect(goalCalories).toBeGreaterThan(1000);
+  it('keeps get-toned plans at maintenance for recomposition', () => {
+    expect(calculateGoalCalories(2200, 'get_toned', 0.5)).toBe(2200);
   });
 });
 
@@ -112,16 +111,16 @@ describe('buildBaselinePlan', () => {
       birthYear: 1994,
       heightCm: 168,
       currentWeightKg: 68,
-      goalWeightKg: 62,
+      goalWeightKg: 68,
       trainingFrequency: '3_4',
       fitnessGoal: 'get_toned',
-      weightTrajectory: 'weight_loss',
+      weightTrajectory: 'steady_state',
       paceKgPerWeek: 0.5,
     });
 
     expect(plan.bmr).toBeGreaterThan(0);
     expect(plan.tdee).toBeGreaterThan(plan.bmr);
-    expect(plan.goalCalories).toBeLessThan(plan.tdee);
+    expect(plan.goalCalories).toBe(plan.tdee);
     expect(plan.macros.proteinG).toBeGreaterThan(0);
     expect(plan.macros.fiberG).toBeGreaterThanOrEqual(25);
     expect(plan.roadmap).toHaveLength(25);

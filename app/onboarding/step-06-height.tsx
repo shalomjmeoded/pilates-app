@@ -39,6 +39,7 @@ export default function Step06Height() {
       nextDisabled={valueCm < 120 || valueCm > 230}
       titleLines={2}
       scrollEnabled={false}
+      scrollFallbackOnCompact
       reasonWhy={null}
       showHero={false}
     >

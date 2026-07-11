@@ -1,10 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 
-import {
-  buildManualFallbackParams,
-  shouldFallbackToManual,
-} from '@/engines/nutrition/mealTextEstimateFlow';
+import { buildManualFallbackParams } from '@/engines/nutrition/mealTextEstimateFlow';
 import { aiFacade } from '@/services/ai';
 import { AiProxyError } from '@/services/ai/aiProxyClient';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
@@ -68,13 +65,10 @@ export function useMealTextEstimate(mealDate: string) {
           : 'Could not estimate this meal.',
       );
 
-      if (shouldFallbackToManual(estimateError)) {
-        openManualFallback(trimmed);
-      }
     } finally {
       setIsEstimating(false);
     }
-  }, [description, mealDate, openManualFallback, router, setPendingReview]);
+  }, [description, mealDate, router, setPendingReview]);
 
   return {
     description,

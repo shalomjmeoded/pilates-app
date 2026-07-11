@@ -58,6 +58,7 @@ export default function Step05Notifications() {
       onBack={goBack}
       onNext={() => void handleNext()}
       nextLabel="Continue"
+      scrollFallbackOnCompact
     >
       <OptionCard
         label="Use gentle reminders"

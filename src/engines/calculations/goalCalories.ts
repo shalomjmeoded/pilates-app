@@ -17,9 +17,9 @@ export function calculateGoalCalories(
 
   switch (fitnessGoal) {
     case 'lose_weight':
-    case 'get_toned':
       goalCalories = Math.max(0, tdee - paceToDailyDeficit(paceKgPerWeek));
       break;
+    case 'get_toned':
     case 'maintain':
       goalCalories = tdee;
       break;

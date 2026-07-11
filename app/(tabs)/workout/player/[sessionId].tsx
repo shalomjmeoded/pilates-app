@@ -23,7 +23,9 @@ import type { ExerciseFeedback } from '@/types/exercise';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
 import { colors, radius, shadows, spacing } from '@/theme';
 import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
-import { successNotificationHaptic } from '@/utils/haptics';
+import { lightImpactHaptic, successNotificationHaptic } from '@/utils/haptics';
+
+const REST_TIMER_SECONDS = 30;
 
 export default function WorkoutPlayerScreen() {
   const router = useRouter();
@@ -33,6 +35,7 @@ export default function WorkoutPlayerScreen() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [exitVisible, setExitVisible] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [restSecondsRemaining, setRestSecondsRemaining] = useState(0);
   const [swapSheetVisible, setSwapSheetVisible] = useState(false);
   const [swapMessage, setSwapMessage] = useState<string | null>(null);
   const [feedbackBySortOrder, setFeedbackBySortOrder] = useState<Record<number, ExerciseFeedback>>(
@@ -56,6 +59,23 @@ export default function WorkoutPlayerScreen() {
   useEffect(() => {
     setSwapMessage(null);
   }, [currentIndex]);
+
+  useEffect(() => {
+    if (restSecondsRemaining <= 0) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      setRestSecondsRemaining((value) => {
+        if (value <= 1) {
+          successNotificationHaptic();
+          AccessibilityInfo.announceForAccessibility('Rest complete.');
+          return 0;
+        }
+        return value - 1;
+      });
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [restSecondsRemaining]);
 
   useEffect(() => {
     if (!session) {
@@ -234,6 +254,12 @@ export default function WorkoutPlayerScreen() {
   const seconds = elapsedSeconds % 60;
   const elapsedLabel = `${minutes}:${seconds.toString().padStart(2, '0')}`;
   const completionProgress = ((currentIndex + 1) / exercises.length) * 100;
+  const restLabel = restSecondsRemaining > 0 ? `Rest 0:${restSecondsRemaining.toString().padStart(2, '0')}` : 'Rest 30s';
+
+  const handleRestTimer = () => {
+    lightImpactHaptic();
+    setRestSecondsRemaining((value) => (value > 0 ? 0 : REST_TIMER_SECONDS));
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -315,6 +341,13 @@ export default function WorkoutPlayerScreen() {
             disabled={isPaused || isSwapping}
             style={styles.compactButton}
             accessibilityLabel="Switch this exercise"
+          />
+          <Button
+            label={restLabel}
+            variant="secondary"
+            onPress={handleRestTimer}
+            style={styles.compactButton}
+            accessibilityLabel={restSecondsRemaining > 0 ? 'End rest timer' : 'Start 30 second rest timer'}
           />
         </View>
         <View style={styles.navigationRow}>

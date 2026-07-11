@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
+import { BetterMeBrandMark } from '@/components/ui/BetterMeBrandMark';
 import { colors, spacing } from '@/theme';
 
 interface ScreenProps {
@@ -11,6 +12,7 @@ interface ScreenProps {
   subtitle?: string;
   isLoading?: boolean;
   loadingLabel?: string;
+  showBrandMark?: boolean;
 }
 
 export function Screen({
@@ -19,11 +21,13 @@ export function Screen({
   subtitle,
   isLoading = false,
   loadingLabel = 'Loading...',
+  showBrandMark = false,
 }: ScreenProps) {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <View style={styles.loadingContainer}>
+          {showBrandMark ? <BetterMeBrandMark compact /> : null}
           <ActivityIndicator color={colors.brandPrimary} />
           <Text variant="bodyMuted" style={styles.loadingText}>
             {loadingLabel}
@@ -38,7 +42,12 @@ export function Screen({
       <View style={styles.container}>
         {title || subtitle ? (
           <View style={styles.header}>
-            {title ? <Text variant="h1" style={styles.title}>{title}</Text> : null}
+            {title ? (
+              <View style={styles.titleRow}>
+                <Text variant="h1" style={styles.title}>{title}</Text>
+                {showBrandMark ? <BetterMeBrandMark compact /> : null}
+              </View>
+            ) : null}
             {subtitle ? (
               <Text variant="bodyMuted" style={styles.subtitle}>
                 {subtitle}
@@ -59,6 +68,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    width: '100%',
+    maxWidth: 760,
+    alignSelf: 'center',
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.xs,
     gap: spacing.md,
@@ -69,6 +81,14 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.textStrong,
+    flex: 1,
+    minWidth: 0,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.xs,
   },
   subtitle: {
     marginBottom: spacing.xs,
@@ -76,6 +96,9 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
+    width: '100%',
+    maxWidth: 760,
+    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.xs,

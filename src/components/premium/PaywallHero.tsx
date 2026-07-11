@@ -238,7 +238,7 @@ function OfferNotice({ selectedPlan }: { selectedPlan: PremiumPlanId }) {
 function TrustChipRow({ selectedPlan }: { selectedPlan: PremiumPlanId }) {
   const chips =
     selectedPlan === 'yearly'
-      ? ['No payment today', 'Cancel anytime']
+      ? ['Save 75% compared with monthly', 'No payment today']
       : ['Cancel anytime'];
 
   return (

@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { MEAL_PHOTO_AI_DISCLOSURE } from '@/constants/compliance';
 import { useMealPhotoEstimate } from '@/hooks/useMealPhotoEstimate';
+import { useDelayedLoadingMessage } from '@/hooks/useDelayedLoadingMessage';
 import { colors, radius, spacing } from '@/theme';
 
 export default function AddPhotoEstimateScreen() {
@@ -23,6 +24,7 @@ export default function AddPhotoEstimateScreen() {
     estimateSelectedPhoto,
     openManualFallback,
   } = useMealPhotoEstimate(mealDate);
+  const loadingMessage = useDelayedLoadingMessage(isEstimating);
   const insets = useSafeAreaInsets();
   const bottomPadding = insets.bottom + spacing.lg;
   const closeToNutrition = () => {
@@ -64,6 +66,11 @@ export default function AddPhotoEstimateScreen() {
         )}
 
         {error ? <Text variant="body" style={styles.errorText}>{error}</Text> : null}
+        {loadingMessage ? (
+          <Text variant="bodyMuted" style={styles.loadingMessage} accessibilityLiveRegion="polite">
+            {loadingMessage}
+          </Text>
+        ) : null}
 
         <Button
           label={isEstimating ? 'Estimating...' : 'Take Photo'}
@@ -125,5 +132,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.brandPrimary,
+  },
+  loadingMessage: {
+    color: colors.brandSecondaryText,
+    textAlign: 'center',
   },
 });

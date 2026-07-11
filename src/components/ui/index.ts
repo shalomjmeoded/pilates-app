@@ -4,3 +4,4 @@ export { LoadErrorState } from './LoadErrorState';
 export { Screen } from './Screen';
 export { Text } from './Text';
 export { BetterMeBootLoader } from './BetterMeBootLoader';
+export { BetterMeBrandMark } from './BetterMeBrandMark';

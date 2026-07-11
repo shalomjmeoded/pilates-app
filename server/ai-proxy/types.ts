@@ -31,6 +31,7 @@ export interface AiProxyErrorResponse {
     | 'IMAGE_TOO_LARGE'
     | 'INVALID_REQUEST'
     | 'UPSTREAM_ERROR'
+    | 'UPSTREAM_TIMEOUT'
     | 'NOT_CONFIGURED';
 }
 

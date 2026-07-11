@@ -13,7 +13,7 @@ export default function SettingsScreen() {
   const units = usePreferencesStore((state) => state.preferences.units);
 
   return (
-    <Screen title="Settings" subtitle="Your rhythm, your data, your control.">
+    <Screen title="Settings" subtitle="Your rhythm, your data, your control." showBrandMark>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <PremiumBadge />
 

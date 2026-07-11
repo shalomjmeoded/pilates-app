@@ -14,4 +14,10 @@ describe('workout change feedback migration', () => {
     expect(migration?.sql).toContain('CREATE TABLE IF NOT EXISTS workout_change_events');
     expect(migration?.sql).toContain('event_date TEXT NOT NULL');
   });
+
+  it('registers migration 15 with workout difficulty feedback', () => {
+    const migration = MIGRATIONS.find((entry) => entry.version === 15);
+    expect(migration).toBeDefined();
+    expect(migration?.sql).toContain('difficulty_rating');
+  });
 });

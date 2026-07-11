@@ -13,6 +13,7 @@ export function useFinishOnboarding() {
   const draft = useOnboardingStore((state) => state.draft);
   const rebuildMode = useOnboardingStore((state) => state.rebuildMode);
   const setRebuildMode = useOnboardingStore((state) => state.setRebuildMode);
+  const clearPersistedDraft = useOnboardingStore((state) => state.clearPersistedDraft);
   const toProfile = useOnboardingStore((state) => state.toProfile);
   const setOnboardingCompleted = usePreferencesStore((state) => state.setOnboardingCompleted);
   const setComparison = useRecalibrationStore((state) => state.setComparison);
@@ -41,6 +42,7 @@ export function useFinishOnboarding() {
 
         setOnboardingCompleted(true);
         setRebuildMode(false);
+        clearPersistedDraft();
 
         if (rebuildMode && draft.baselinePlan) {
           setComparison({
@@ -74,6 +76,7 @@ export function useFinishOnboarding() {
     },
     [
       draft,
+      clearPersistedDraft,
       rebuildMode,
       router,
       setComparison,

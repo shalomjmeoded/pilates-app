@@ -1,15 +1,6 @@
 import type { AiMealEstimate } from '@/types/ai';
 import type { MealInput } from '@/types/nutrition';
 
-import { AiValidationError } from '@/services/ai/errors';
-
-function getProxyErrorCode(error: unknown): string | undefined {
-  if (error instanceof Error && 'code' in error && typeof error.code === 'string') {
-    return error.code;
-  }
-  return undefined;
-}
-
 export const MEAL_TEXT_ESTIMATE_COPY =
   'Text is recommended — faster, cheaper, and easier to correct.';
 
@@ -20,20 +11,6 @@ export interface ReviewedMealFields {
   carbsG: number;
   fatG: number;
   fiberG: number;
-}
-
-export function shouldFallbackToManual(error: unknown): boolean {
-  const code = getProxyErrorCode(error);
-  if (code === 'COOLDOWN' || code === 'UNAUTHORIZED') {
-    return false;
-  }
-  if (error instanceof AiValidationError) {
-    return true;
-  }
-  if (code) {
-    return true;
-  }
-  return true;
 }
 
 export function buildManualFallbackParams(

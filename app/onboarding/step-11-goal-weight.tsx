@@ -85,6 +85,7 @@ export default function Step11GoalWeight() {
       onNext={goNext}
       nextDisabled={!goalWeightIsValid}
       nextDisabledReason={`Choose a goal weight between ${minKg} and ${maxKg} kg.`}
+      scrollFallbackOnCompact
     >
       <HorizontalMeasurementRuler
         valueKg={clampedValueKg}

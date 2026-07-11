@@ -28,6 +28,7 @@ export default function Step03Preferences() {
       onBack={goBack}
       onNext={goNext}
       centerBody
+      scrollFallbackOnCompact
     >
       <OptionCard
         label="No preference"

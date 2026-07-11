@@ -131,9 +131,30 @@ describe('Phase 8.8 AI QA — client', () => {
   it('offline: network failure propagates to caller', async () => {
     global.fetch = jest.fn().mockRejectedValue(new TypeError('Network request failed')) as typeof fetch;
 
-    await expect(callAiProxy('meal_text_estimate', { description: 'offline meal' })).rejects.toThrow(
-      'Network request failed',
-    );
+    await expect(callAiProxy('meal_text_estimate', { description: 'offline meal' })).rejects.toMatchObject({
+      code: 'NETWORK_ERROR',
+    });
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('retries one transient proxy failure and returns the recovered response', async () => {
+    global.fetch = jest
+      .fn()
+      .mockResolvedValueOnce({
+        status: 503,
+        json: async () => ({ ok: false, error: 'Waking up', code: 'UPSTREAM_ERROR' }),
+      })
+      .mockResolvedValueOnce({
+        status: 200,
+        json: async () => ({ ok: true, data: { mealTitle: 'Recovered meal' } }),
+      }) as typeof fetch;
+
+    const result = await callAiProxy<{ mealTitle: string }>('meal_text_estimate', {
+      description: 'recovered meal',
+    });
+
+    expect(result.mealTitle).toBe('Recovered meal');
+    expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 
   it('quota exceeded: maps RATE_LIMITED from proxy', async () => {

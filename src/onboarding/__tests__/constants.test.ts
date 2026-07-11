@@ -26,7 +26,7 @@ describe('onboarding flow', () => {
       currentWeightKg: 65,
       birthYear: 1992,
       fitnessGoal: 'get_toned',
-      goalWeightKg: 60,
+      goalWeightKg: 65,
       paceKgPerWeek: 0.5,
     });
 
@@ -35,7 +35,7 @@ describe('onboarding flow', () => {
     expect(profile).not.toBeNull();
     expect(profile?.exercisePreferences).toEqual([]);
     expect(profile?.mediaPreference).toBe('static_only');
-    expect(profile?.weightTrajectory).toBe('weight_loss');
+    expect(profile?.weightTrajectory).toBe('steady_state');
   });
 
   it('derives weight trajectory from the selected goal and goal weight', () => {
@@ -59,7 +59,7 @@ describe('onboarding flow', () => {
       goalWeightKg: 68,
     });
 
-    expect(useOnboardingStore.getState().toProfile()?.weightTrajectory).toBe('lean_mass');
+    expect(useOnboardingStore.getState().toProfile()?.weightTrajectory).toBe('steady_state');
 
     useOnboardingStore.getState().patchDraft({
       fitnessGoal: 'maintain',
@@ -71,5 +71,48 @@ describe('onboarding flow', () => {
 
   it('keeps notification reminders selected by default', () => {
     expect(useOnboardingStore.getState().draft.notificationsEnabled).toBe(true);
+  });
+
+  it('invalidates a calculated plan when a plan input changes', () => {
+    const store = useOnboardingStore.getState();
+    store.patchDraft({
+      genderIdentity: 'female',
+      trainingFrequency: '3_4',
+      heightCm: 168,
+      currentWeightKg: 65,
+      birthYear: 1992,
+      fitnessGoal: 'maintain',
+      goalWeightKg: 65,
+      paceKgPerWeek: 0.5,
+    });
+
+    expect(store.buildPlanFromDraft()).not.toBeNull();
+    expect(useOnboardingStore.getState().draft.baselinePlan).not.toBeNull();
+
+    store.patchDraft({ heightCm: 169 });
+    expect(useOnboardingStore.getState().draft.baselinePlan).toBeNull();
+  });
+
+  it('prepares a complete returning-user plan without reopening the quiz', () => {
+    const store = useOnboardingStore.getState();
+    store.prepareReturningFlow({
+      genderIdentity: 'female',
+      trainingFrequency: '3_4',
+      exercisePreferences: ['mat_pilates'],
+      mediaPreference: 'static_only',
+      heightCm: 168,
+      currentWeightKg: 65,
+      nutritionMode: 'full_tracking',
+      birthYear: 1992,
+      fitnessGoal: 'get_toned',
+      goalWeightKg: 60,
+      weightTrajectory: 'weight_loss',
+      paceKgPerWeek: 0.5,
+    });
+
+    const state = useOnboardingStore.getState();
+    expect(state.entryMode).toBe('returning');
+    expect(state.draft.goalWeightKg).toBe(65);
+    expect(state.draft.baselinePlan).not.toBeNull();
   });
 });

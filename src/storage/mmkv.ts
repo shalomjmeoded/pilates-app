@@ -7,13 +7,12 @@ import {
   type UnitPreferences,
 } from '@/types/preferences';
 
-import { setSqlitePreference } from './sqlitePreferences';
-
 const KEYS = {
   onboardingCompleted: 'onboarding_completed',
   theme: 'theme',
   units: 'units',
   cachedFlags: 'cached_flags',
+  onboardingDraft: 'onboarding_draft',
 } as const;
 
 interface KeyValueStorage {
@@ -46,7 +45,7 @@ class MemoryStorage implements KeyValueStorage {
 }
 
 function createStorage(): { storage: KeyValueStorage; backend: StorageBackend } {
-  if (Constants.appOwnership === 'expo') {
+  if (Constants.appOwnership === 'expo' || process.env.NODE_ENV === 'test') {
     return {
       storage: new MemoryStorage(),
       backend: 'memory',
@@ -84,14 +83,16 @@ function parseJson<T>(value: string | undefined, fallback: T): T {
 }
 
 function mirrorToSqlite(key: string, value: boolean | string | number): void {
-  if (storageBackend !== 'memory') {
+  if (storageBackend !== 'memory' || process.env.NODE_ENV === 'test') {
     return;
   }
 
   const serialized = typeof value === 'string' ? value : JSON.stringify(value);
-  void setSqlitePreference(key, serialized).catch((error) => {
-    console.warn(`[BetterMe] Failed to mirror preference "${key}" to SQLite.`, error);
-  });
+  void import('./sqlitePreferences')
+    .then(({ setSqlitePreference }) => setSqlitePreference(key, serialized))
+    .catch((error) => {
+      console.warn(`[BetterMe] Failed to mirror preference "${key}" to SQLite.`, error);
+    });
 }
 
 function safeGetBoolean(key: string): boolean | undefined {
@@ -172,6 +173,18 @@ export const preferencesStorage = {
     const flags = this.getCachedFlags();
     flags[key] = value;
     safeSet(KEYS.cachedFlags, JSON.stringify(flags));
+  },
+
+  getOnboardingDraft(): string | undefined {
+    return safeGetString(KEYS.onboardingDraft);
+  },
+
+  setOnboardingDraft(value: string): void {
+    safeSet(KEYS.onboardingDraft, value);
+  },
+
+  clearOnboardingDraft(): void {
+    safeSet(KEYS.onboardingDraft, '');
   },
 
   getAll(): AppPreferences {

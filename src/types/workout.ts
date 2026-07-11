@@ -25,7 +25,10 @@ export interface WorkoutSession {
   status: 'in_progress' | 'completed' | 'abandoned';
   currentExerciseIndex?: number;
   elapsedSeconds?: number;
+  difficultyRating?: WorkoutDifficultyRating;
 }
+
+export type WorkoutDifficultyRating = 'too_easy' | 'just_right' | 'too_hard';
 
 export interface WorkoutStreakStats {
   currentStreak: number;

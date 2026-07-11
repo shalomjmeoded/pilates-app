@@ -169,6 +169,7 @@ export default function Step17Paywall() {
       hideFooter
       showBack
       scrollEnabled={false}
+      scrollFallbackOnCompact
       hideStepIndicator
       titleLines={1}
       phaseLabel="Unlock your plan"

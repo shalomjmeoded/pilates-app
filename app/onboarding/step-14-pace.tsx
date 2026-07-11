@@ -8,6 +8,7 @@ const DEFAULT_PACE: Pace = 0.5;
 export default function Step14Pace() {
   const { step, goNext, goBack } = useOnboardingNavigation(11);
   const paceKgPerWeek = useOnboardingStore((state) => state.draft.paceKgPerWeek);
+  const fitnessGoal = useOnboardingStore((state) => state.draft.fitnessGoal);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const buildPlanFromDraft = useOnboardingStore((state) => state.buildPlanFromDraft);
 
@@ -22,8 +23,12 @@ export default function Step14Pace() {
   return (
     <OnboardingShell
       step={step}
-      title="Your pace"
-      subtitle="Gentle, moderate, or strong."
+      title={fitnessGoal === 'maintain' || fitnessGoal === 'get_toned' ? 'Your intensity' : 'Your pace'}
+      subtitle={
+        fitnessGoal === 'maintain' || fitnessGoal === 'get_toned'
+          ? 'Choose how challenging your weekly plan should feel.'
+          : 'Gentle, moderate, or strong.'
+      }
       onBack={goBack}
       onNext={handleNext}
     >

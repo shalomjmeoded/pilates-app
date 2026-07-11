@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, StyleSheet, View } from 'react-native';
 
 import {
@@ -29,6 +29,7 @@ import { useWorkoutStreak } from '@/hooks/useWorkoutStreak';
 import { useWorkoutStore } from '@/stores/workoutStore';
 import type { WorkoutChangeRequest } from '@/types/workout';
 import { applyWorkoutChangeRequest } from '@/services/workout/applyWorkoutChangeRequest';
+import { warmAiProxy } from '@/services/ai';
 import { spacing } from '@/theme';
 
 const DEFAULT_CHANGE_REQUEST: WorkoutChangeRequest = {
@@ -47,11 +48,17 @@ export default function WorkoutScreen() {
     useWorkoutDay(selectedDate);
   const { completedDates, reload: reloadCalendar } = useWorkoutCalendarCompletion(calendarDates);
   const { stats: streakStats, reload: reloadStreak } = useWorkoutStreak();
-  const { requirePremium } = usePremium();
+  const { hasAccess, requirePremium } = usePremium();
   const [changeVisible, setChangeVisible] = useState(false);
   const [changeRequest, setChangeRequest] = useState<WorkoutChangeRequest>(DEFAULT_CHANGE_REQUEST);
   const [isApplyingChange, setIsApplyingChange] = useState(false);
   const [changeError, setChangeError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (hasAccess) {
+      void warmAiProxy();
+    }
+  }, [hasAccess]);
 
   const MIN_STARTABLE_MOVEMENTS = 9;
 
@@ -110,7 +117,7 @@ export default function WorkoutScreen() {
         planDate: selectedDate,
         request: changeRequest,
         todayMovementCount: data?.exercises.length ?? 0,
-        todayEstimatedMinutes: estimateWorkoutMinutes(data?.exercises.length ?? 0),
+        todayEstimatedMinutes: estimateWorkoutMinutes(data?.exercises ?? []),
       });
       await reload();
       await reloadCalendar();
@@ -195,7 +202,7 @@ export default function WorkoutScreen() {
               focusTitle={deriveWorkoutFocusTitle(data.exercises)}
               whyThisWorkout={deriveWhyThisWorkout(data.exercises)}
               movementCount={data.exercises.length}
-              estimatedMinutes={estimateWorkoutMinutes(data.exercises.length)}
+              estimatedMinutes={estimateWorkoutMinutes(data.exercises)}
               streak={streakStats}
               canStart={Boolean(canStartWorkout)}
               startUnavailableReason={startUnavailableReason}
@@ -234,7 +241,7 @@ export default function WorkoutScreen() {
   );
 
   return (
-    <Screen title="Workout" subtitle="Your daily movement, guided." isLoading={isLoading} loadingLabel="Loading your plan...">
+    <Screen title="Workout" subtitle="Your daily movement, guided." isLoading={isLoading} loadingLabel="Loading your plan..." showBrandMark>
       {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
         <FlatList
           data={data.exercises}

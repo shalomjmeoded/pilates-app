@@ -1,5 +1,9 @@
 import type { Exercise, ExerciseFeedback } from '@/types/exercise';
-import type { WorkoutPlanExercise, WorkoutSessionExerciseFeedback } from '@/types/workout';
+import type {
+  WorkoutDifficultyRating,
+  WorkoutPlanExercise,
+  WorkoutSessionExerciseFeedback,
+} from '@/types/workout';
 
 const SKIPPED_DEPRIORITIZE_THRESHOLD = 2;
 const MODIFIED_REP_REDUCTION = 0.9;
@@ -8,6 +12,8 @@ export interface AdaptationContext {
   skippedFrequentIds: Set<string>;
   lastSessionFeedback: WorkoutSessionExerciseFeedback[];
   libraryById: Map<string, Exercise>;
+  recentExerciseCounts?: Record<string, number>;
+  lastSessionDifficulty?: WorkoutDifficultyRating;
 }
 
 export function getDeprioritizedExerciseIds(

@@ -75,6 +75,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
   },
   container: {
+    width: '100%',
+    maxWidth: 760,
+    alignSelf: 'center',
     padding: spacing.sm,
     gap: spacing.sm,
     paddingBottom: spacing.lg,

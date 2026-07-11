@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -9,11 +9,18 @@ import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
 import { EncouragementBanner } from '@/components/ui/EncouragementBanner';
-import { getSessionFeedback } from '@/db/repositories/workoutRepository';
+import { BetterMeBrandMark } from '@/components/ui/BetterMeBrandMark';
+import {
+  getSessionFeedback,
+  saveWorkoutDifficultyRating,
+} from '@/db/repositories/workoutRepository';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
 import { useWorkoutStreak } from '@/hooks/useWorkoutStreak';
 import type { ExerciseFeedback } from '@/types/exercise';
-import type { WorkoutSessionExerciseFeedback } from '@/types/workout';
+import type {
+  WorkoutDifficultyRating,
+  WorkoutSessionExerciseFeedback,
+} from '@/types/workout';
 import { colors, spacing } from '@/theme';
 import { workoutStreakEncouragement } from '@/utils/encouragement';
 
@@ -23,12 +30,14 @@ export default function WorkoutFeedbackScreen() {
   const { session, planDate, exercises, isLoading, error } = useWorkoutSession(sessionId);
   const { stats, reload: reloadStreak } = useWorkoutStreak();
   const [feedback, setFeedback] = useState<WorkoutSessionExerciseFeedback[]>([]);
+  const [difficultyRating, setDifficultyRating] = useState<WorkoutDifficultyRating | undefined>();
 
   useEffect(() => {
     if (!session) {
       return;
     }
     void getSessionFeedback(session.id).then(setFeedback);
+    setDifficultyRating(session.difficultyRating);
     void reloadStreak();
   }, [reloadStreak, session]);
 
@@ -58,6 +67,7 @@ export default function WorkoutFeedbackScreen() {
         accessibilityLabel="Return to workout tab"
       />
       <ScrollView contentContainerStyle={styles.container}>
+        <BetterMeBrandMark compact />
         <Text variant="h1">You showed up — beautifully</Text>
         <Text variant="bodyMuted" style={styles.subtitle}>
           Your workout actions were saved as you moved, so there is nothing to remember now.
@@ -79,6 +89,44 @@ export default function WorkoutFeedbackScreen() {
           </Text>
         </Card>
 
+        <Card style={styles.difficultyCard}>
+          <View style={styles.difficultyHeading}>
+            <Text variant="label">How did that feel?</Text>
+            {difficultyRating ? <Text variant="caption" style={styles.savedText}>Saved</Text> : null}
+          </View>
+          <View style={styles.difficultyRow}>
+            {DIFFICULTY_OPTIONS.map((option) => {
+              const selected = difficultyRating === option.value;
+              return (
+                <Pressable
+                  key={option.value}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected }}
+                  onPress={() => {
+                    setDifficultyRating(option.value);
+                    void saveWorkoutDifficultyRating(session.id, option.value);
+                  }}
+                  style={({ pressed }) => [
+                    styles.difficultyOption,
+                    selected && styles.difficultyOptionSelected,
+                    pressed && styles.difficultyOptionPressed,
+                  ]}
+                >
+                  <Text
+                    variant="label"
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    style={selected ? styles.difficultyTextSelected : styles.difficultyText}
+                  >
+                    {option.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <Text variant="caption">Your next sessions will gently adjust to this response.</Text>
+        </Card>
+
         <Button
           label="Done"
           onPress={() => router.replace('/(tabs)/workout')}
@@ -87,6 +135,12 @@ export default function WorkoutFeedbackScreen() {
     </SafeAreaView>
   );
 }
+
+const DIFFICULTY_OPTIONS: Array<{ label: string; value: WorkoutDifficultyRating }> = [
+  { label: 'Too easy', value: 'too_easy' },
+  { label: 'Just right', value: 'just_right' },
+  { label: 'Too hard', value: 'too_hard' },
+];
 
 function buildFeedbackCounts(feedback: WorkoutSessionExerciseFeedback[]): Record<ExerciseFeedback, number> {
   return feedback.reduce<Record<ExerciseFeedback, number>>(
@@ -139,6 +193,48 @@ const styles = StyleSheet.create({
   },
   card: {
     gap: spacing.xs,
+  },
+  difficultyCard: {
+    gap: spacing.xs,
+    backgroundColor: colors.surfaceCanvas,
+  },
+  difficultyHeading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  savedText: {
+    color: colors.success,
+  },
+  difficultyRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  difficultyOption: {
+    flex: 1,
+    minHeight: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    borderRadius: 12,
+    paddingHorizontal: 6,
+    backgroundColor: colors.backgroundPrimary,
+  },
+  difficultyOptionSelected: {
+    borderColor: colors.brandPrimary,
+    backgroundColor: colors.brandPrimary,
+  },
+  difficultyOptionPressed: {
+    opacity: 0.78,
+  },
+  difficultyText: {
+    color: colors.textStrong,
+    letterSpacing: 0,
+  },
+  difficultyTextSelected: {
+    color: colors.warmWhite,
+    letterSpacing: 0,
   },
   summaryGrid: {
     flexDirection: 'row',

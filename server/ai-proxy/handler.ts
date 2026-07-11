@@ -253,9 +253,14 @@ export async function handleAiRoute(
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'AI request failed.';
+    const timedOut = error instanceof Error && error.name === 'GeminiTimeoutError';
     return {
-      status: 502,
-      body: { ok: false, error: message, code: 'UPSTREAM_ERROR' },
+      status: timedOut ? 504 : 502,
+      body: {
+        ok: false,
+        error: message,
+        code: timedOut ? 'UPSTREAM_TIMEOUT' : 'UPSTREAM_ERROR',
+      },
     };
   }
 }

@@ -3,10 +3,7 @@ import { useCallback, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 
 import { MEAL_PHOTO_AI_DISCLOSURE } from '@/constants/compliance';
-import {
-  buildManualFallbackParams,
-  shouldFallbackToManual,
-} from '@/engines/nutrition/mealTextEstimateFlow';
+import { buildManualFallbackParams } from '@/engines/nutrition/mealTextEstimateFlow';
 import { MealPhotoTooLargeError } from '@/engines/nutrition/mealPhotoCompression';
 import { aiFacade } from '@/services/ai';
 import { AiProxyError } from '@/services/ai/aiProxyClient';
@@ -116,14 +113,11 @@ export function useMealPhotoEstimate(mealDate: string) {
             : 'Could not estimate this meal from the photo.',
         );
 
-        if (shouldFallbackToManual(estimateError)) {
-          openManualFallback();
-        }
       } finally {
         setIsEstimating(false);
       }
     },
-    [mealDate, openManualFallback, router, setPendingReview],
+    [mealDate, router, setPendingReview],
   );
 
   const selectPhoto = useCallback(

@@ -28,6 +28,7 @@ const TARGET_MAX = 12;
 const MIN_PILATES_ALIGNED = 8;
 const TARGET_DISTINCT_MUSCLE_GROUPS = 4;
 const DATE_VARIETY_WEIGHT = 6;
+const RECENT_EXERCISE_PENALTY = 3;
 
 interface PlanControls {
   focus: WorkoutFocus;
@@ -246,6 +247,7 @@ function scoreExercise(
   planDate: string,
   focus: WorkoutFocus,
   intensity: WorkoutIntensity,
+  recentExerciseCounts: Record<string, number>,
   physique?: PhysiquePlanContext,
 ): number {
   let score =
@@ -253,6 +255,8 @@ function scoreExercise(
     physiqueExerciseBonus(exercise, physique) +
     focusExerciseBonus(exercise, focus) +
     dateVarietyBonus(exercise, planDate);
+
+  score -= Math.min(9, (recentExerciseCounts[exercise.id] ?? 0) * RECENT_EXERCISE_PENALTY);
 
   if (deprioritizedIds.has(exercise.id)) {
     score -= 5;
@@ -316,6 +320,7 @@ function selectBalancedExercises(
   deprioritizedIds: Set<string>,
   planDate: string,
   controls: PlanControls,
+  recentExerciseCounts: Record<string, number>,
   physique?: PhysiquePlanContext,
 ): Exercise[] {
   const selected: Exercise[] = [];
@@ -348,6 +353,7 @@ function selectBalancedExercises(
             planDate,
             controls.focus,
             controls.intensity,
+            recentExerciseCounts,
             physique,
           ) -
           scoreExercise(
@@ -358,6 +364,7 @@ function selectBalancedExercises(
             planDate,
             controls.focus,
             controls.intensity,
+            recentExerciseCounts,
             physique,
           )
         );
@@ -396,6 +403,7 @@ function setsForExercise(
   exercise: Exercise,
   focus: WorkoutFocus,
   intensity: WorkoutIntensity,
+  lastSessionDifficulty?: AdaptationContext['lastSessionDifficulty'],
 ): number {
   let sets: number;
   if (focus === 'mobility_recovery' && exercise.difficulty === 'beginner') {
@@ -411,10 +419,16 @@ function setsForExercise(
   }
 
   if (intensity === 'lighter') {
-    return Math.max(2, sets - 1);
+    sets = Math.max(2, sets - 1);
+  } else if (intensity === 'challenging') {
+    sets = Math.min(5, sets + 1);
   }
-  if (intensity === 'challenging') {
+
+  if (lastSessionDifficulty === 'too_easy') {
     return Math.min(5, sets + 1);
+  }
+  if (lastSessionDifficulty === 'too_hard') {
+    return Math.max(2, sets - 1);
   }
   return sets;
 }
@@ -439,6 +453,7 @@ export function generateWorkoutPlan(
   const deprioritizedIds = adaptation?.skippedFrequentIds ?? new Set<string>();
   const pilatesPool = selectPilatesCandidatePool(exercises);
   const controls = resolvePlanControls(profile, planDate, overrides);
+  const recentExerciseCounts = adaptation?.recentExerciseCounts ?? {};
 
   const preferencePool = pilatesPool.filter(
     (exercise) =>
@@ -464,6 +479,7 @@ export function generateWorkoutPlan(
     deprioritizedIds,
     planDate,
     controls,
+    recentExerciseCounts,
     physique,
   );
 
@@ -492,6 +508,7 @@ export function generateWorkoutPlan(
             planDate,
             controls.focus,
             controls.intensity,
+            recentExerciseCounts,
             physique,
           ) -
           scoreExercise(
@@ -502,6 +519,7 @@ export function generateWorkoutPlan(
             planDate,
             controls.focus,
             controls.intensity,
+            recentExerciseCounts,
             physique,
           ),
       );
@@ -524,7 +542,13 @@ export function generateWorkoutPlan(
   let planExercises: WorkoutPlanExercise[] = orderWorkoutFlow(selected).map((exercise, index) => ({
     exerciseId: exercise.id,
     sortOrder: index + 1,
-    sets: setsForExercise(profile, exercise, controls.focus, controls.intensity),
+    sets: setsForExercise(
+      profile,
+      exercise,
+      controls.focus,
+      controls.intensity,
+      adaptation?.lastSessionDifficulty,
+    ),
     reps: exercise.repsBaseline,
     holdSeconds: exercise.holdSeconds,
   }));

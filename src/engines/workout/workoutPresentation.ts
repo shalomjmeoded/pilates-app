@@ -34,6 +34,22 @@ export function deriveWhyThisWorkout(exercises: WorkoutPlanExerciseDetail[]): st
   return `Today's session emphasizes ${focusList} — chosen to help you ${intention}.`;
 }
 
-export function estimateWorkoutMinutes(exerciseCount: number): number {
-  return Math.max(12, Math.round(exerciseCount * 2.2));
+export function estimateWorkoutMinutes(input: number | WorkoutPlanExerciseDetail[]): number {
+  if (typeof input === 'number') {
+    return Math.max(12, Math.round(input * 2.2));
+  }
+
+  if (input.length === 0) {
+    return 0;
+  }
+
+  const totalSeconds = input.reduce((sum, item) => {
+    const activeSecondsPerSet = item.holdSeconds
+      ? item.holdSeconds
+      : Math.max(1, item.reps ?? 8) * 4;
+    const betweenSetRest = Math.max(0, item.sets - 1) * 18;
+    return sum + activeSecondsPerSet * item.sets + betweenSetRest + 15;
+  }, 0);
+
+  return Math.max(8, Math.round(totalSeconds / 60));
 }

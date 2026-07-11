@@ -4,9 +4,28 @@ import { FITNESS_GOAL_OPTIONS } from '@/onboarding/constants';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
 export default function Step10FitnessGoal() {
-  const { step, goNext, goBack } = useOnboardingNavigation(9);
+  const { step, goNext, goBack, pushToStep } = useOnboardingNavigation(9);
   const fitnessGoal = useOnboardingStore((state) => state.draft.fitnessGoal);
+  const currentWeightKg = useOnboardingStore((state) => state.draft.currentWeightKg);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
+
+  const handleNext = () => {
+    if (!fitnessGoal) {
+      return;
+    }
+
+    if ((fitnessGoal === 'maintain' || fitnessGoal === 'get_toned') && currentWeightKg) {
+      patchDraft({
+        goalWeightKg: currentWeightKg,
+        weightTrajectory: 'steady_state',
+        baselinePlan: null,
+      });
+      pushToStep(11);
+      return;
+    }
+
+    goNext();
+  };
 
   return (
     <OnboardingShell
@@ -14,7 +33,7 @@ export default function Step10FitnessGoal() {
       title="Your main goal"
       subtitle="This shapes your daily plan."
       onBack={goBack}
-      onNext={goNext}
+      onNext={handleNext}
       nextDisabled={!fitnessGoal}
       nextDisabledReason="Pick your primary goal to continue."
       centerBody
@@ -25,7 +44,14 @@ export default function Step10FitnessGoal() {
           index={index}
           label={option.label}
           selected={fitnessGoal === option.value}
-          onPress={() => patchDraft({ fitnessGoal: option.value })}
+          onPress={() =>
+            patchDraft({
+              fitnessGoal: option.value,
+              goalWeightKg: null,
+              weightTrajectory: null,
+              baselinePlan: null,
+            })
+          }
         />
       ))}
     </OnboardingShell>
