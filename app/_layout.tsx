@@ -15,6 +15,7 @@ import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
 import { useDatabase } from '@/hooks/useDatabase';
 import { useNotificationDeepLinks } from '@/hooks/useNotificationDeepLinks';
 import { usePreferencesStore } from '@/stores/preferencesStore';
+import { AnalyticsProvider } from '@/services/analytics/AnalyticsProvider';
 import { colors } from '@/theme';
 
 export default function RootLayout() {
@@ -57,5 +58,9 @@ export default function RootLayout() {
     );
   }
 
-  return <SafeAreaProvider initialMetrics={initialWindowMetrics}>{content}</SafeAreaProvider>;
+  return (
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <AnalyticsProvider>{content}</AnalyticsProvider>
+    </SafeAreaProvider>
+  );
 }

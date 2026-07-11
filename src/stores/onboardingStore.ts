@@ -175,10 +175,6 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   },
 
   loadDraftFromProfile(profile) {
-    const goalWeightKg =
-      profile.fitnessGoal === 'maintain' || profile.fitnessGoal === 'get_toned'
-        ? profile.currentWeightKg
-        : profile.goalWeightKg;
     set({
       draft: {
         ...INITIAL_DRAFT,
@@ -191,11 +187,8 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
         nutritionMode: 'full_tracking',
         birthYear: profile.birthYear,
         fitnessGoal: profile.fitnessGoal,
-        goalWeightKg,
-        weightTrajectory:
-          profile.fitnessGoal === 'maintain' || profile.fitnessGoal === 'get_toned'
-            ? 'steady_state'
-            : profile.weightTrajectory,
+        goalWeightKg: profile.goalWeightKg,
+        weightTrajectory: profile.weightTrajectory,
         paceKgPerWeek: profile.paceKgPerWeek,
       },
     });

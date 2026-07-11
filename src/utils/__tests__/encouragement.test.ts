@@ -2,7 +2,7 @@ import { mealLoggedEncouragement, weightLoggedEncouragement, workoutStreakEncour
 
 describe('encouragement copy', () => {
   it('keeps meal and weight log encouragement brief', () => {
-    expect(mealLoggedEncouragement().title).toBe('Logged. Nice and steady.');
+    expect(mealLoggedEncouragement().title).toBe('Meal added to today.');
     expect(weightLoggedEncouragement(false).title).toBe('Weight logged.');
     expect(weightLoggedEncouragement(true).title).toBe('Weight updated.');
   });

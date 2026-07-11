@@ -1,5 +1,6 @@
 import type { PremiumAnalyticsEvent, PremiumFeatureKey } from '@/types/premium';
 import { preferencesStorage } from '@/storage/mmkv';
+import { captureProductEvent } from '@/services/analytics/analyticsCore';
 
 const PREMIUM_ANALYTICS_FLAG = 'premium_analytics_events';
 const MAX_STORED_EVENTS = 200;
@@ -43,6 +44,14 @@ export function trackPremiumEvent(
   };
 
   writeEvents([...readEvents(), record]);
+
+  if (event === 'paywall_viewed') {
+    captureProductEvent('paywall viewed');
+  } else if (event === 'trial_started') {
+    captureProductEvent('trial started', {
+      selected_plan: options?.metadata?.plan,
+    });
+  }
 
   if (typeof __DEV__ !== 'undefined' && __DEV__) {
     console.info('[premium_analytics]', record);

@@ -32,6 +32,7 @@ interface PlanRevealHeroProps {
   fatG: number;
   fiberG: number;
   statusMessage?: string;
+  personalizationSummary: string;
 }
 
 export function PlanRevealHero({
@@ -42,6 +43,7 @@ export function PlanRevealHero({
   fatG,
   fiberG,
   statusMessage,
+  personalizationSummary,
 }: PlanRevealHeroProps) {
   const { height } = useWindowDimensions();
   const compact = height < 760;
@@ -52,8 +54,14 @@ export function PlanRevealHero({
         <View style={styles.readyIcon}>
           <MaterialCommunityIcons name="check" size={15} color="#FFFFFF" />
         </View>
-        <Text variant="caption" style={styles.readyText}>
-          Personalized plan generated
+        <Text
+          variant="caption"
+          style={styles.readyText}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.76}
+        >
+          {personalizationSummary}
         </Text>
       </View>
 
@@ -211,6 +219,7 @@ const styles = StyleSheet.create({
   readyText: {
     color: '#167A40',
     fontFamily: 'PlusJakartaSans_600SemiBold',
+    flexShrink: 1,
   },
   sectionHeader: {
     gap: 2,

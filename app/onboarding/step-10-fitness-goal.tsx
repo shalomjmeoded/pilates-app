@@ -4,23 +4,12 @@ import { FITNESS_GOAL_OPTIONS } from '@/onboarding/constants';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
 export default function Step10FitnessGoal() {
-  const { step, goNext, goBack, pushToStep } = useOnboardingNavigation(9);
+  const { step, goNext, goBack } = useOnboardingNavigation(9);
   const fitnessGoal = useOnboardingStore((state) => state.draft.fitnessGoal);
-  const currentWeightKg = useOnboardingStore((state) => state.draft.currentWeightKg);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
 
   const handleNext = () => {
     if (!fitnessGoal) {
-      return;
-    }
-
-    if ((fitnessGoal === 'maintain' || fitnessGoal === 'get_toned') && currentWeightKg) {
-      patchDraft({
-        goalWeightKg: currentWeightKg,
-        weightTrajectory: 'steady_state',
-        baselinePlan: null,
-      });
-      pushToStep(11);
       return;
     }
 

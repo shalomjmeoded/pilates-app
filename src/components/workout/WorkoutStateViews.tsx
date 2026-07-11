@@ -9,15 +9,22 @@ import { colors, spacing } from '@/theme';
 interface WorkoutEmptyStateProps {
   title: string;
   message: string;
+  actionLabel?: string;
+  onAction?: () => void;
 }
 
-export function WorkoutEmptyState({ title, message }: WorkoutEmptyStateProps) {
+export function WorkoutEmptyState({ title, message, actionLabel, onAction }: WorkoutEmptyStateProps) {
   return (
     <Card style={styles.card}>
       <Text variant="h2">{title}</Text>
       <Text variant="bodyMuted" style={styles.copy}>
         {message}
       </Text>
+      {actionLabel && onAction ? (
+        <View style={styles.action}>
+          <Button label={actionLabel} onPress={onAction} />
+        </View>
+      ) : null}
     </Card>
   );
 }

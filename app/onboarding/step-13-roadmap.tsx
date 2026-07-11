@@ -10,6 +10,7 @@ import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
+import { buildPersonalizationSummary } from '@/onboarding/personalizationSummary';
 
 export default function Step13Roadmap() {
   const { step, goNext, goBack } = useOnboardingNavigation(12);
@@ -30,15 +31,18 @@ export default function Step13Roadmap() {
   );
 
   const targetDateLabel = formatRoadmapTargetDate(weeksToGoal);
-  const roadmapInsight =
-    weeksToGoal === null ? 'Consistency-first path ready.' : `Milestone in ~${weeksToGoal} weeks.`;
+  const personalizationSummary = buildPersonalizationSummary({
+    trainingFrequency: draft.trainingFrequency,
+    exercisePreferences: draft.exercisePreferences,
+    pace: draft.paceKgPerWeek,
+  });
 
   return (
     <OnboardingShell
       step={step}
       title="Your roadmap"
       subtitle="Preview your milestone journey."
-      insightText={roadmapInsight}
+      insightText={personalizationSummary}
       onBack={goBack}
       onNext={goNext}
       scrollFallbackOnCompact

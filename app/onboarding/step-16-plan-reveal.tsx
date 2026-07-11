@@ -9,6 +9,8 @@ import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { colors, radius, spacing } from '@/theme';
 import { successNotificationHaptic } from '@/utils/haptics';
+import { buildPersonalizationSummary } from '@/onboarding/personalizationSummary';
+import { captureProductEvent, getElapsedOnboardingSeconds } from '@/services/analytics/analyticsCore';
 
 export default function Step16PlanReveal() {
   const { step, goNext, goToStep } = useOnboardingNavigation(14);
@@ -22,8 +24,13 @@ export default function Step16PlanReveal() {
       hasPlayedSuccess.current = true;
       successNotificationHaptic();
       AccessibilityInfo.announceForAccessibility('Your personalized plan is ready.');
+      captureProductEvent('plan revealed', {
+        entry_mode: entryMode,
+        step_index: step,
+        elapsed_onboarding_seconds: getElapsedOnboardingSeconds(),
+      });
     }
-  }, [baselinePlan]);
+  }, [baselinePlan, entryMode, step]);
 
   if (!baselinePlan) {
     return (
@@ -48,6 +55,11 @@ export default function Step16PlanReveal() {
 
   const { macros, goalCalories, safetyWarning } = baselinePlan;
   const workoutsPerWeek = trainingFrequencyToWorkoutsPerWeek(draft.trainingFrequency);
+  const personalizationSummary = buildPersonalizationSummary({
+    trainingFrequency: draft.trainingFrequency,
+    exercisePreferences: draft.exercisePreferences,
+    pace: draft.paceKgPerWeek,
+  });
 
   return (
     <OnboardingShell
@@ -63,7 +75,6 @@ export default function Step16PlanReveal() {
       scrollEnabled={false}
       scrollFallbackOnCompact
       titleLines={1}
-      showBrandMark
     >
       <PlanRevealHero
         calories={goalCalories}
@@ -73,6 +84,7 @@ export default function Step16PlanReveal() {
         fatG={macros.fatG}
         fiberG={macros.fiberG}
         statusMessage={safetyWarning.triggered ? undefined : 'Plan is achievable and built to adapt.'}
+        personalizationSummary={personalizationSummary}
       />
 
       {safetyWarning.triggered ? (

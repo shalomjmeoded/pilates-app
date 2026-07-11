@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,6 +23,7 @@ import type {
 } from '@/types/workout';
 import { colors, spacing } from '@/theme';
 import { workoutStreakEncouragement } from '@/utils/encouragement';
+import { successNotificationHaptic } from '@/utils/haptics';
 
 export default function WorkoutFeedbackScreen() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function WorkoutFeedbackScreen() {
   const { stats, reload: reloadStreak } = useWorkoutStreak();
   const [feedback, setFeedback] = useState<WorkoutSessionExerciseFeedback[]>([]);
   const [difficultyRating, setDifficultyRating] = useState<WorkoutDifficultyRating | undefined>();
+  const hasCelebrated = useRef(false);
 
   useEffect(() => {
     if (!session) {
@@ -39,6 +41,10 @@ export default function WorkoutFeedbackScreen() {
     void getSessionFeedback(session.id).then(setFeedback);
     setDifficultyRating(session.difficultyRating);
     void reloadStreak();
+    if (!hasCelebrated.current) {
+      hasCelebrated.current = true;
+      successNotificationHaptic();
+    }
   }, [reloadStreak, session]);
 
   if (isLoading) {

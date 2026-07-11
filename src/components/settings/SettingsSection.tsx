@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface SettingsSectionProps {
   title: string;
@@ -29,26 +29,22 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   titleRow: {
-    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    minHeight: 28,
-    borderRadius: radius.pill,
-    borderWidth: 1,
+    minHeight: 32,
+    borderBottomWidth: 1,
     borderColor: colors.borderLight,
-    backgroundColor: colors.surfaceCanvas,
-    paddingHorizontal: 10,
+    paddingHorizontal: 2,
   },
   accent: {
-    width: 18,
-    height: 3,
+    width: 4,
+    height: 16,
     borderRadius: 999,
   },
   title: {
     color: colors.textMuted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
+    letterSpacing: 0,
   },
   group: {
     gap: 8,

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { successNotificationHaptic } from '@/utils/haptics';
 
 export type EncouragementTarget = 'nutrition' | 'progress';
 
@@ -18,6 +19,7 @@ interface EncouragementState {
 export const useEncouragementStore = create<EncouragementState>((set, get) => ({
   message: null,
   pushMessage: (target, title, body) => {
+    successNotificationHaptic();
     set({
       message: {
         id: Date.now(),

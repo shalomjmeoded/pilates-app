@@ -254,7 +254,7 @@ export default function NutritionScreen() {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
             ListHeaderComponent={listHeader}
-            ListEmptyComponent={<NutritionEmptyState />}
+            ListEmptyComponent={<NutritionEmptyState onAddMeal={openAddMeal} />}
             renderItem={({ item: meal }) => (
               <MealCard
                 meal={meal}

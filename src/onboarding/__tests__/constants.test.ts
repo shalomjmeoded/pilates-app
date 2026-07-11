@@ -13,6 +13,7 @@ describe('onboarding flow', () => {
     expect(getOnboardingRoute(1)).toBe('step-00-welcome');
     expect(getOnboardingRoute(2)).toBe('step-01-gender');
     expect(getOnboardingRoute(5)).toBe('step-05-notifications');
+    expect(getOnboardingRoute(10)).toBe('step-11-goal-weight');
     expect(getOnboardingRoute(11)).toBe('step-14-pace');
   });
 
@@ -59,7 +60,14 @@ describe('onboarding flow', () => {
       goalWeightKg: 68,
     });
 
-    expect(useOnboardingStore.getState().toProfile()?.weightTrajectory).toBe('steady_state');
+    expect(useOnboardingStore.getState().toProfile()?.weightTrajectory).toBe('lean_mass');
+
+    useOnboardingStore.getState().patchDraft({
+      fitnessGoal: 'maintain',
+      goalWeightKg: 62,
+    });
+
+    expect(useOnboardingStore.getState().toProfile()?.weightTrajectory).toBe('weight_loss');
 
     useOnboardingStore.getState().patchDraft({
       fitnessGoal: 'maintain',
@@ -112,7 +120,8 @@ describe('onboarding flow', () => {
 
     const state = useOnboardingStore.getState();
     expect(state.entryMode).toBe('returning');
-    expect(state.draft.goalWeightKg).toBe(65);
+    expect(state.draft.goalWeightKg).toBe(60);
+    expect(state.draft.weightTrajectory).toBe('weight_loss');
     expect(state.draft.baselinePlan).not.toBeNull();
   });
 });

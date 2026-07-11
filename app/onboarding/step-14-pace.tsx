@@ -1,5 +1,6 @@
 import { OnboardingShell, PaceIntensityPicker } from '@/components/onboarding';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
+import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import type { Pace } from '@/types/profile';
 
@@ -9,8 +10,14 @@ export default function Step14Pace() {
   const { step, goNext, goBack } = useOnboardingNavigation(11);
   const paceKgPerWeek = useOnboardingStore((state) => state.draft.paceKgPerWeek);
   const fitnessGoal = useOnboardingStore((state) => state.draft.fitnessGoal);
+  const currentWeightKg = useOnboardingStore((state) => state.draft.currentWeightKg);
+  const goalWeightKg = useOnboardingStore((state) => state.draft.goalWeightKg);
   const patchDraft = useOnboardingStore((state) => state.patchDraft);
   const buildPlanFromDraft = useOnboardingStore((state) => state.buildPlanFromDraft);
+  const steadyTrajectory =
+    fitnessGoal !== null && currentWeightKg !== null && goalWeightKg !== null
+      ? deriveWeightTrajectory(fitnessGoal, currentWeightKg, goalWeightKg) === 'steady_state'
+      : fitnessGoal === 'maintain' || fitnessGoal === 'get_toned';
 
   const handleNext = () => {
     if (paceKgPerWeek === null) {
@@ -23,9 +30,9 @@ export default function Step14Pace() {
   return (
     <OnboardingShell
       step={step}
-      title={fitnessGoal === 'maintain' || fitnessGoal === 'get_toned' ? 'Your intensity' : 'Your pace'}
+      title={steadyTrajectory ? 'Your intensity' : 'Your pace'}
       subtitle={
-        fitnessGoal === 'maintain' || fitnessGoal === 'get_toned'
+        steadyTrajectory
           ? 'Choose how challenging your weekly plan should feel.'
           : 'Gentle, moderate, or strong.'
       }

@@ -7,7 +7,10 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_ANALYTICS_ENABLED": "false"
+      }
     },
     "preview": {
       "distribution": "internal"

@@ -15,6 +15,7 @@ import {
   getRevenueCatEntitlementId,
 } from '@/services/monetization/revenueCatConfig';
 import type { PremiumPlanId, PremiumStatus } from '@/types/premium';
+import { captureProductEvent } from '@/services/analytics/analyticsCore';
 
 let configured = false;
 const REVENUECAT_NATIVE_UNAVAILABLE_MESSAGE =
@@ -155,6 +156,7 @@ export async function configureRevenueCat(): Promise<void> {
 export async function purchaseRevenueCatCurrentOffering(
   plan: PremiumPlanId = 'yearly',
 ): Promise<PremiumStatus> {
+  captureProductEvent('subscription purchase started', { selected_plan: plan });
   try {
     await configureRevenueCat();
     const offerings = await Purchases.getOfferings();
@@ -167,7 +169,7 @@ export async function purchaseRevenueCatCurrentOffering(
     const { customerInfo } = await Purchases.purchasePackage(currentPackage);
     const status = mapCustomerInfoToPremiumStatus(customerInfo);
     await setMockPremiumStatus(status);
-    trackPremiumEvent('trial_started', { metadata: { source: 'revenuecat' } });
+    trackPremiumEvent('trial_started', { metadata: { source: 'revenuecat', plan } });
     return status;
   } catch (error) {
     if (

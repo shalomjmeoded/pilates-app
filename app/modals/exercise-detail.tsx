@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -115,26 +116,29 @@ export default function ExerciseDetailModal() {
 
         <ExerciseMediaView exercise={exercise} variant="gif" fillWidth />
 
-        <Card style={styles.card}>
-          <Text variant="label">Today’s prescription</Text>
-          <Text variant="h2" style={styles.prescription}>
-            {prescription}
-          </Text>
-        </Card>
-
-        <Card style={styles.card}>
-          <Text variant="label">Target muscles</Text>
-          <Text variant="body">Primary: {titleCase(exercise.muscleGroup)}</Text>
-          {secondaryTargets ? (
-            <Text variant="bodyMuted">Secondary: {secondaryTargets}</Text>
-          ) : null}
-          <Text variant="bodyMuted">Equipment: {titleCase(exercise.equipment)}</Text>
-          <Text variant="bodyMuted">Difficulty: {titleCase(exercise.difficulty)}</Text>
-        </Card>
-
-        <Card style={styles.card}>
-          <Text variant="label">About</Text>
+        <Card style={styles.summaryCard}>
+          <View style={styles.prescriptionRow}>
+            <View style={styles.prescriptionIcon}>
+              <MaterialCommunityIcons name="repeat" size={18} color={colors.brandPrimary} />
+            </View>
+            <View style={styles.prescriptionCopy}>
+              <Text variant="caption">Today’s prescription</Text>
+              <Text variant="h2" style={styles.prescription}>
+                {prescription}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.metaRow}>
+            <MetaPill label={titleCase(exercise.difficulty)} />
+            <MetaPill label={titleCase(exercise.equipment)} />
+            <MetaPill label={titleCase(exercise.sessionRole)} />
+          </View>
           <Text variant="body">{exercise.description}</Text>
+          {secondaryTargets ? (
+            <Text variant="bodyMuted">
+              Also works {secondaryTargets}.
+            </Text>
+          ) : null}
         </Card>
 
         <Card style={styles.card}>
@@ -187,6 +191,14 @@ export default function ExerciseDetailModal() {
   );
 }
 
+function MetaPill({ label }: { label: string }) {
+  return (
+    <View style={styles.metaPill}>
+      <Text variant="caption" style={styles.metaPillText}>{label}</Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -203,8 +215,45 @@ const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
   },
+  summaryCard: {
+    gap: spacing.sm,
+    backgroundColor: colors.surfaceCanvas,
+  },
+  prescriptionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  prescriptionIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surfaceRose,
+  },
+  prescriptionCopy: {
+    flex: 1,
+    gap: 1,
+  },
   prescription: {
     color: colors.brandPrimary,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  metaPill: {
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceMuted,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 5,
+  },
+  metaPillText: {
+    color: colors.textMuted,
   },
   errorText: {
     color: colors.brandPrimary,

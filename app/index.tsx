@@ -9,6 +9,11 @@ import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumS
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { usePremiumStore } from '@/stores/premiumStore';
+import {
+  beginOnboardingAnalyticsSession,
+  captureProductEvent,
+  resetOnboardingAnalyticsSession,
+} from '@/services/analytics/analyticsCore';
 
 export default function Index() {
   const onboardingCompleted = usePreferencesStore(
@@ -31,12 +36,33 @@ export default function Index() {
         const profile = await getProfile();
         if (profile) {
           useOnboardingStore.getState().prepareReturningFlow(profile);
+          resetOnboardingAnalyticsSession();
+          captureProductEvent('onboarding started', {
+            route_key: getOnboardingRoute(1),
+            step_index: 1,
+            entry_mode: 'returning',
+          });
           setDestination('/onboarding/step-00-welcome');
           return;
         }
       }
 
       const savedStep = useOnboardingStore.getState().restorePersistedDraft();
+      if (savedStep) {
+        beginOnboardingAnalyticsSession();
+        captureProductEvent('onboarding resumed', {
+          route_key: getOnboardingRoute(savedStep),
+          step_index: savedStep,
+          entry_mode: 'fresh',
+        });
+      } else {
+        resetOnboardingAnalyticsSession();
+        captureProductEvent('onboarding started', {
+          route_key: getOnboardingRoute(1),
+          step_index: 1,
+          entry_mode: 'fresh',
+        });
+      }
       setDestination(
         savedStep
           ? `/onboarding/${getOnboardingRoute(savedStep)}`

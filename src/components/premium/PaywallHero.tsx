@@ -238,7 +238,7 @@ function OfferNotice({ selectedPlan }: { selectedPlan: PremiumPlanId }) {
 function TrustChipRow({ selectedPlan }: { selectedPlan: PremiumPlanId }) {
   const chips =
     selectedPlan === 'yearly'
-      ? ['Save 75% compared with monthly', 'No payment today']
+      ? ['Save 75%', 'No payment today']
       : ['Cancel anytime'];
 
   return (
@@ -246,7 +246,7 @@ function TrustChipRow({ selectedPlan }: { selectedPlan: PremiumPlanId }) {
       {chips.map((chip, index) => (
         <View key={chip} style={[styles.trustChip, trustChipStyleList[index % trustChipStyleList.length]]}>
           <MaterialCommunityIcons name="check-circle-outline" size={14} color={trustChipIconColors[index % trustChipIconColors.length]} />
-          <Text variant="caption" style={styles.trustChipText}>
+          <Text variant="caption" style={styles.trustChipText} numberOfLines={1}>
             {chip}
           </Text>
         </View>
@@ -466,12 +466,13 @@ const styles = StyleSheet.create({
   },
   trustChips: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 6,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   trustChip: {
     minHeight: 26,
+    flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,

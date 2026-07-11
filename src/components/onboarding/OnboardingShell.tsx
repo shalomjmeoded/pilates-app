@@ -194,10 +194,10 @@ export function OnboardingShell({
         <View style={styles.header}>
           <View style={styles.stepRow}>
             <Text variant="label" style={styles.phase}>
-              Phase {phaseIndex}: {phase}
+              {phase}
             </Text>
             <Text variant="caption">
-              {step}/{ONBOARDING_TOTAL_STEPS}
+              Phase {phaseIndex} of 4
             </Text>
           </View>
           <View

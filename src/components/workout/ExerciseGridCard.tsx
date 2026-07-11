@@ -18,12 +18,21 @@ function titleCase(value: string): string {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function estimateDurationMinutes(item: WorkoutPlanExerciseDetail): number {
+function prescriptionLabel(item: WorkoutPlanExerciseDetail): string {
   if (item.holdSeconds) {
-    return Math.max(1, Math.round((item.sets * item.holdSeconds) / 60));
+    return `${item.sets} × ${item.holdSeconds}s hold`;
   }
-  const reps = item.reps ?? item.exercise.repsBaseline ?? 10;
-  return Math.max(1, Math.round((item.sets * reps * 3) / 60));
+  return `${item.sets} × ${item.reps ?? item.exercise.repsBaseline ?? 8} reps`;
+}
+
+function roleLabel(role: Exercise['sessionRole']): string {
+  if (role === 'warmup') {
+    return 'Warm-up';
+  }
+  if (role === 'cooldown') {
+    return 'Cool-down';
+  }
+  return 'Main flow';
 }
 
 function ExerciseGridMedia({ exercise }: { exercise: Exercise }) {
@@ -54,8 +63,6 @@ function ExerciseGridMedia({ exercise }: { exercise: Exercise }) {
 }
 
 export function ExerciseGridCard({ item, onPress, disabled = false }: ExerciseGridCardProps) {
-  const durationMin = estimateDurationMinutes(item);
-
   return (
     <Pressable
       accessibilityRole="button"
@@ -67,19 +74,22 @@ export function ExerciseGridCard({ item, onPress, disabled = false }: ExerciseGr
       <View style={styles.badgeRow}>
         <View style={styles.difficultyBadge}>
           <Text variant="label" style={styles.difficultyText}>
-            {titleCase(item.exercise.difficulty)}
+            {roleLabel(item.exercise.sessionRole)}
           </Text>
         </View>
-        <Text variant="label" style={styles.duration}>
-          ~{durationMin} min
-        </Text>
       </View>
       <View style={styles.copy}>
         <Text variant="body" numberOfLines={2} style={styles.title}>
           {item.exercise.name}
         </Text>
         <Text variant="label" style={styles.target}>
-          {titleCase(item.exercise.muscleGroup)}
+          {titleCase(item.exercise.muscleGroup)} · {titleCase(item.exercise.difficulty)}
+        </Text>
+      </View>
+      <View style={styles.prescriptionRow}>
+        <MaterialCommunityIcons name="repeat" size={14} color={colors.brandPrimary} />
+        <Text variant="label" style={styles.prescription} numberOfLines={1}>
+          {prescriptionLabel(item)}
         </Text>
       </View>
     </Pressable>
@@ -122,9 +132,10 @@ const styles = StyleSheet.create({
   },
   badgeRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 4,
+    minHeight: 25,
   },
   difficultyBadge: {
     backgroundColor: colors.surfaceRose,
@@ -138,22 +149,34 @@ const styles = StyleSheet.create({
     color: colors.brandPrimary,
     fontSize: 11,
   },
-  duration: {
-    color: colors.textMuted,
-    fontSize: 11,
-  },
   copy: {
     gap: 2,
     paddingHorizontal: 4,
-    paddingBottom: 2,
   },
   title: {
     color: colors.textDark,
     fontSize: 14,
     lineHeight: 18,
+    minHeight: 36,
   },
   target: {
     color: colors.textMuted,
     textTransform: 'capitalize',
+  },
+  prescriptionRow: {
+    minHeight: 32,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    borderRadius: radius.square,
+    backgroundColor: colors.surfaceMuted,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  prescription: {
+    flex: 1,
+    color: colors.brandPrimary,
+    fontSize: 11,
+    lineHeight: 15,
   },
 });

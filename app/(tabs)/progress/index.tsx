@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 
 import {
-  AdherenceCard,
   BmiTdeeCards,
   ConsistencyScoreRing,
   CoachingTipCard,
+  NutritionAdherenceSummary,
   PhysiqueAssessmentCard,
   WeeklyCoachInsightCard,
   GoalProjectionCard,
@@ -28,7 +28,6 @@ import {
 } from '@/components/progress';
 import { WorkoutStreakCard } from '@/components/workout';
 import { ProgressPreviewGate } from '@/components/premium';
-import { Button } from '@/components/ui/Button';
 import { EncouragementBanner } from '@/components/ui/EncouragementBanner';
 import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { SettingsRow } from '@/components/settings';
@@ -46,75 +45,52 @@ import type { ProgressDashboardData } from '@/types/progress';
 import { warmAiProxy } from '@/services/ai';
 
 type ProgressSectionKey =
-  | 'workoutStreak'
   | 'weeklyCoach'
   | 'weightEmpty'
   | 'weightJourney'
-  | 'coachingTip'
   | 'adherence'
-  | 'consistency'
-  | 'bmiTdee'
-  | 'milestones'
-  | 'physique'
-  | 'logWeightAction';
+  | 'moreInsights'
+  | 'physique';
 
-interface ProgressSignalChipProps {
-  label: string;
-  value: string;
-  accentColor: string;
-  surfaceColor: string;
-}
-
-function ProgressSignalChip({ label, value, accentColor, surfaceColor }: ProgressSignalChipProps) {
-  return (
-    <View style={[styles.signalChip, { backgroundColor: surfaceColor }]}>
-      <View style={[styles.signalDot, { backgroundColor: accentColor }]} />
-      <View style={styles.signalCopy}>
-        <Text
-          variant="label"
-          style={styles.signalLabel}
-          numberOfLines={1}
-          adjustsFontSizeToFit
-          minimumFontScale={0.76}
-        >
-          {label}
-        </Text>
-        <Text variant="body" style={styles.signalValue} numberOfLines={1}>
-          {value}
-        </Text>
-      </View>
-    </View>
-  );
-}
-
-function ProgressPulseHeader({ data }: { data: ProgressDashboardData }) {
-  const weightLogLabel = data.weightLogs.length === 1 ? '1 log' : `${data.weightLogs.length} logs`;
+function ProgressPulseHeader({
+  data,
+  onLogWeight,
+}: {
+  data: ProgressDashboardData;
+  onLogWeight: () => void;
+}) {
+  const consistency = data.consistency.score;
+  const title =
+    consistency >= 80
+      ? 'A strong week'
+      : consistency >= 60
+        ? 'Momentum is building'
+        : 'Every check-in counts';
+  const streak = data.workoutStreak.currentStreak;
+  const summary =
+    streak > 0
+      ? `${streak}-day movement streak · ${consistency}% consistency`
+      : `${consistency}% consistency · your next workout starts a new streak`;
 
   return (
     <View style={styles.pulseHeader}>
-      <View style={styles.pulseHeaderCopy}>
-        <Text variant="label">Your rhythm</Text>
-        <Text variant="bodyMuted">A quick read on the signals that matter most.</Text>
-      </View>
-      <View style={styles.signalRow}>
-        <ProgressSignalChip
-          label="Workouts"
-          value={`${data.workoutStreak.currentStreak}d streak`}
-          accentColor={colors.brandSecondary}
-          surfaceColor={colors.surfaceRose}
-        />
-        <ProgressSignalChip
-          label="Consistency"
-          value={`${data.consistency.score}%`}
-          accentColor={colors.success}
-          surfaceColor={colors.surfaceMuted}
-        />
-        <ProgressSignalChip
-          label="Weight"
-          value={weightLogLabel}
-          accentColor={colors.accentWarm}
-          surfaceColor={colors.surfacePeach}
-        />
+      <View style={styles.pulseHeaderTopRow}>
+        <View style={styles.pulseHeaderCopy}>
+          <Text variant="label">This week</Text>
+          <Text variant="h2" style={styles.pulseTitle}>{title}</Text>
+          <Text variant="bodyMuted" style={styles.pulseSummary}>{summary}</Text>
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Log weight"
+          onPress={onLogWeight}
+          style={({ pressed }) => [styles.logWeightQuickAction, pressed && styles.pressed]}
+        >
+          <MaterialCommunityIcons name="scale-bathroom" size={17} color={colors.brandPrimary} />
+          <Text variant="label" style={styles.logWeightQuickActionText} numberOfLines={1}>
+            Log weight
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -268,7 +244,7 @@ export default function ProgressScreen() {
       return [];
     }
 
-    const sections: ProgressSectionKey[] = ['workoutStreak', 'weeklyCoach'];
+    const sections: ProgressSectionKey[] = ['weeklyCoach'];
 
     if (!hasWeightLogs) {
       sections.push('weightEmpty');
@@ -276,11 +252,7 @@ export default function ProgressScreen() {
       sections.push('weightJourney');
     }
 
-    sections.push('coachingTip', 'adherence', 'consistency');
-    if (data.bmi && data.tdee) {
-      sections.push('bmiTdee');
-    }
-    sections.push('milestones', 'physique', 'logWeightAction');
+    sections.push('adherence', 'moreInsights', 'physique');
     return sections;
   }, [data, hasWeightLogs]);
 
@@ -326,11 +298,9 @@ export default function ProgressScreen() {
 
   const renderSection = ({ item }: ListRenderItemInfo<ProgressSectionKey>) => {
     switch (item) {
-      case 'workoutStreak':
-        return <WorkoutStreakCard stats={data.workoutStreak} />;
       case 'weeklyCoach':
         return withSectionLabel(
-          'Coach summary',
+          'Coach check-in',
           colors.brandSecondary,
           <WeeklyCoachInsightCard
             insight={weeklyCoach.insight}
@@ -341,7 +311,6 @@ export default function ProgressScreen() {
             onUnlock={openPaywall}
             onGenerate={() => requirePremium('weekly_coach', () => void weeklyCoach.generate())}
           />,
-          { collapsible: true, initiallyExpanded: true },
         );
       case 'weightEmpty':
         return <ProgressEmptyState onLogWeight={openLogWeight} />;
@@ -358,9 +327,6 @@ export default function ProgressScreen() {
               onRangeChange={setChartRange}
               weightUnit={weightUnit}
             />
-            <WeightTrendSummary trends={data.weightTrends} weightUnit={weightUnit} />
-            <WeightStreakCard stats={data.weightStreak} />
-            <GoalProjectionCard projection={data.goalProjection} />
             <SettingsRow
               label="Weight history"
               value="Edit, search, delete"
@@ -369,55 +335,46 @@ export default function ProgressScreen() {
           </View>,
           { collapsible: true, initiallyExpanded: true },
         );
-      case 'coachingTip':
-        return <CoachingTipCard tip={data.coachingTip} />;
       case 'adherence':
         return withSectionLabel(
-          'Nutrition adherence',
+          'Nutrition check-in',
           colors.accentWarm,
-          <View style={styles.adherenceGrid}>
-            <View style={styles.adherenceGridItem}>
-              <AdherenceCard metric={data.adherence.calories} />
-            </View>
-            <View style={styles.adherenceGridItem}>
-              <AdherenceCard metric={data.adherence.protein} />
-            </View>
-            <View style={styles.adherenceGridItemWide}>
-              <AdherenceCard metric={data.adherence.fiber} />
-            </View>
-          </View>,
+          <NutritionAdherenceSummary
+            calories={data.adherence.calories}
+            protein={data.adherence.protein}
+            fiber={data.adherence.fiber}
+          />,
           { collapsible: true, initiallyExpanded: true },
         );
-      case 'consistency':
+      case 'moreInsights':
         return withSectionLabel(
-          'Consistency',
-          colors.success,
-          <ConsistencyScoreRing consistency={data.consistency} />,
-          { collapsible: true, initiallyExpanded: false },
-        );
-      case 'bmiTdee':
-        return data.bmi && data.tdee ? (
-          withSectionLabel(
-            'Body metrics',
-            colors.accentCool,
-            <BmiTdeeCards
-              bmi={data.bmi}
-              tdee={data.tdee}
-              bodyFatAssumption={data.bodyFatAssumption}
-            />,
-            { collapsible: true, initiallyExpanded: false },
-          )
-        ) : null;
-      case 'milestones':
-        return withSectionLabel(
-          'Milestones',
+          'More insights',
           colors.brandSecondary,
-          <MilestoneGrid milestones={data.milestones} />,
+          <View style={styles.detailsStack}>
+            <CoachingTipCard tip={data.coachingTip} />
+            <WorkoutStreakCard stats={data.workoutStreak} />
+            <ConsistencyScoreRing consistency={data.consistency} />
+            {hasWeightLogs ? (
+              <>
+                <WeightTrendSummary trends={data.weightTrends} weightUnit={weightUnit} />
+                <WeightStreakCard stats={data.weightStreak} />
+                <GoalProjectionCard projection={data.goalProjection} />
+              </>
+            ) : null}
+            {data.bmi && data.tdee ? (
+              <BmiTdeeCards
+                bmi={data.bmi}
+                tdee={data.tdee}
+                bodyFatAssumption={data.bodyFatAssumption}
+              />
+            ) : null}
+            <MilestoneGrid milestones={data.milestones} />
+          </View>,
           { collapsible: true, initiallyExpanded: false },
         );
       case 'physique':
         return withSectionLabel(
-          'Physique check-in',
+          'Physique assessment',
           '#9B7BB8',
           <PhysiqueAssessmentCard
             latest={physiqueAssessment.latest}
@@ -431,17 +388,14 @@ export default function ProgressScreen() {
                 : undefined
             }
           />,
-          { collapsible: true, initiallyExpanded: false },
         );
-      case 'logWeightAction':
-        return <Button label="Log Weight" onPress={openLogWeight} style={styles.logButton} />;
       default:
         return null;
     }
   };
 
   return (
-    <Screen title="Progress" subtitle="Reflect on your rhythm and momentum." showBrandMark>
+    <Screen title="Progress" subtitle="Your week at a glance." showBrandMark>
       <FlatList
         ref={listRef}
         data={sectionKeys}
@@ -456,18 +410,17 @@ export default function ProgressScreen() {
                 onDismiss={() => clearEncouragement(encouragement.id)}
               />
             ) : null}
-            <ProgressPulseHeader data={data} />
+            <ProgressPulseHeader data={data} onLogWeight={openLogWeight} />
           </View>
         }
         style={styles.list}
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
-        removeClippedSubviews
         scrollEventThrottle={16}
-        initialNumToRender={6}
-        maxToRenderPerBatch={5}
-        windowSize={7}
+        initialNumToRender={4}
+        maxToRenderPerBatch={4}
+        windowSize={5}
       />
     </Screen>
   );
@@ -485,50 +438,53 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   pulseHeader: {
-    gap: 8,
+    gap: spacing.xs,
     borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.borderLight,
-    backgroundColor: colors.surfaceCanvas,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceRose,
     paddingHorizontal: spacing.sm,
     paddingVertical: 14,
   },
   pulseHeaderCopy: {
+    flex: 1,
+    minWidth: 0,
     gap: 2,
   },
-  signalRow: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  signalChip: {
-    flex: 1,
-    minHeight: 64,
-    borderRadius: radius.square,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    paddingHorizontal: 8,
-    paddingVertical: spacing.xs,
-    gap: 6,
-  },
-  signalDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  signalCopy: {
-    gap: 1,
-  },
-  signalLabel: {
-    fontSize: 11,
-    lineHeight: 14,
-  },
-  signalValue: {
+  pulseTitle: {
     color: colors.textStrong,
-    fontSize: 14,
+    fontSize: 21,
+    lineHeight: 26,
+  },
+  pulseSummary: {
+    fontSize: 13,
     lineHeight: 18,
   },
-  sectionBlock: {
+  pulseHeaderTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: spacing.xs,
+  },
+  logWeightQuickAction: {
+    minHeight: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceCanvas,
+    paddingHorizontal: 10,
+  },
+  logWeightQuickActionText: {
+    color: colors.brandPrimary,
+    fontSize: 10,
+    lineHeight: 13,
+    letterSpacing: 0,
+  },
+  sectionBlock: {
+    gap: 10,
   },
   sectionStack: {
     gap: spacing.sm,
@@ -537,19 +493,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
-    minHeight: 32,
-    borderRadius: radius.pill,
-    paddingHorizontal: 10,
-    backgroundColor: colors.surfaceCanvas,
-    borderWidth: 1,
+    minHeight: 44,
+    paddingHorizontal: 2,
+    backgroundColor: 'transparent',
+    borderBottomWidth: 1,
     borderColor: colors.borderLight,
   },
   sectionLabelButton: {
-    backgroundColor: colors.surfaceRose,
+    backgroundColor: 'transparent',
   },
   sectionLabelLine: {
-    width: 18,
-    height: 3,
+    width: 4,
+    height: 18,
     borderRadius: 999,
   },
   sectionLabelText: {
@@ -562,19 +517,7 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.86,
   },
-  adherenceGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  detailsStack: {
     gap: spacing.sm,
-  },
-  adherenceGridItem: {
-    flexBasis: '48%',
-    flexGrow: 1,
-  },
-  adherenceGridItemWide: {
-    flexBasis: '100%',
-  },
-  logButton: {
-    marginTop: spacing.xs,
   },
 });

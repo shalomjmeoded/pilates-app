@@ -61,6 +61,11 @@ export function WorkoutHeroCard({
         </Pressable>
       </View>
 
+      <View style={styles.metaRow}>
+        <MetaChip icon="format-list-numbered" label={`${movementCount} movements`} />
+        <MetaChip icon="clock-outline" label={`About ${estimatedMinutes} min`} />
+      </View>
+
       <View style={styles.actions}>
         {canStart ? <Button label="Start Workout" onPress={onStart} /> : null}
         {!canStart && startUnavailableReason ? (
@@ -82,11 +87,6 @@ export function WorkoutHeroCard({
 
       {expanded ? (
         <View style={styles.details}>
-          <View style={styles.metaRow}>
-            <MetaChip icon="format-list-numbered" label={`${movementCount} movements`} />
-            <MetaChip icon="clock-outline" label={`${estimatedMinutes} min`} />
-          </View>
-
           {streak && streak.currentStreak > 0 ? (
             <View style={styles.streakRow}>
               <MaterialCommunityIcons name="fire" size={18} color={colors.brandSecondary} />

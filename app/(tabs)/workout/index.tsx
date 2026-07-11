@@ -66,6 +66,7 @@ export default function WorkoutScreen() {
     data?.isToday &&
     !data.isReadOnly &&
     data.plan &&
+    data.session?.status !== 'in_progress' &&
     data.session?.status !== 'completed' &&
     data.exercises.length >= MIN_STARTABLE_MOVEMENTS;
 
@@ -73,6 +74,7 @@ export default function WorkoutScreen() {
     data?.isToday &&
     !data.isReadOnly &&
     data.plan &&
+    data.session?.status !== 'in_progress' &&
     data.session?.status !== 'completed' &&
     data.exercises.length > 0 &&
     data.exercises.length < MIN_STARTABLE_MOVEMENTS
@@ -106,6 +108,27 @@ export default function WorkoutScreen() {
   const openChangeSheet = () => {
     setChangeError(null);
     setChangeVisible(true);
+  };
+
+  const confirmDiscardSession = () => {
+    if (!data?.session) {
+      return;
+    }
+    Alert.alert('Discard this workout?', 'Your completed movements in this session will be cleared.', [
+      { text: 'Keep workout', style: 'cancel' },
+      {
+        text: 'Discard',
+        style: 'destructive',
+        onPress: () => {
+          void (async () => {
+            await discardWorkoutSession(data.session!.id);
+            await reload();
+            await reloadCalendar();
+            await reloadStreak();
+          })();
+        },
+      },
+    ]);
   };
 
   const confirmDiscardAndApplyChange = async () => {
@@ -190,6 +213,14 @@ export default function WorkoutScreen() {
         <WorkoutErrorState code={errorCode} message={errorMessage} onRetry={() => void reload()} />
       ) : null}
 
+      {!errorMessage && data?.session?.status === 'in_progress' && data.isToday ? (
+        <ResumeWorkoutBanner
+          exerciseLabel={`exercise ${(data.session.currentExerciseIndex ?? 0) + 1}`}
+          onResume={() => router.push(`/(tabs)/workout/player/${data.session!.id}`)}
+          onDiscard={confirmDiscardSession}
+        />
+      ) : null}
+
       {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
         <>
           {data.session?.status === 'completed' && data.isToday ? (
@@ -251,20 +282,6 @@ export default function WorkoutScreen() {
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={listHeader}
-          ListFooterComponent={
-            data.session?.status === 'in_progress' && data.isToday ? (
-              <ResumeWorkoutBanner
-                exerciseLabel={`exercise ${(data.session.currentExerciseIndex ?? 0) + 1}`}
-                onResume={() => router.push(`/(tabs)/workout/player/${data.session!.id}`)}
-                onDiscard={async () => {
-                  await discardWorkoutSession(data.session!.id);
-                  await reload();
-                  await reloadCalendar();
-                  await reloadStreak();
-                }}
-              />
-            ) : null
-          }
           renderItem={({ item }) => (
             <View style={styles.gridItem}>
               <ExerciseGridCard
@@ -283,6 +300,8 @@ export default function WorkoutScreen() {
         <WorkoutEmptyState
           title="No workout plan"
           message="We couldn’t find exercises for this day. Pull to refresh or try again."
+          actionLabel="Try again"
+          onAction={() => void reload()}
         />
       ) : null}
 

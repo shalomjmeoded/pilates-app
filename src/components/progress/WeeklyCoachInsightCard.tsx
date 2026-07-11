@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
@@ -29,14 +29,8 @@ export function WeeklyCoachInsightCard({
   locked = false,
   onUnlock,
 }: WeeklyCoachInsightCardProps) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const loadingMessage = useDelayedLoadingMessage(isLoading);
-
-  useEffect(() => {
-    if (insight) {
-      setExpanded(true);
-    }
-  }, [insight]);
 
   if (locked) {
     return (
@@ -83,9 +77,12 @@ export function WeeklyCoachInsightCard({
           </View>
           <View style={styles.summaryHeaderCopy}>
             <Text variant="label" style={styles.headerLabel}>Weekly AI coach</Text>
-            <Text variant="body" style={styles.summaryText} numberOfLines={expanded ? undefined : 1}>
+            <Text variant="body" style={styles.summaryText} numberOfLines={2}>
               {insight.summary}
             </Text>
+            {!expanded ? (
+              <Text variant="caption" style={styles.expandHint}>View weekly guidance</Text>
+            ) : null}
           </View>
           <View style={styles.chevronBadge}>
             <MaterialCommunityIcons
@@ -111,17 +108,35 @@ export function WeeklyCoachInsightCard({
 
       {insight && expanded ? (
         <View style={styles.section}>
-          {insight.wins.map((win) => (
-            <Text key={win} variant="body">
-              • {win}
-            </Text>
-          ))}
-          <Text variant="label">Focus next week</Text>
-          <Text variant="body">{insight.focusForNextWeek}</Text>
-          <Text variant="label">Nutrition tip</Text>
-          <Text variant="body">{insight.nutritionTip}</Text>
-          <Text variant="label">Workout tip</Text>
-          <Text variant="body">{insight.workoutTip}</Text>
+          {insight.wins.length > 0 ? (
+            <View style={styles.winsWrap}>
+              <Text variant="label" style={styles.sectionLabel}>This week’s wins</Text>
+              {insight.wins.map((win) => (
+                <View key={win} style={styles.winRow}>
+                  <MaterialCommunityIcons name="check-circle" size={16} color={colors.success} />
+                  <Text variant="body" style={styles.rowText}>{win}</Text>
+                </View>
+              ))}
+            </View>
+          ) : null}
+          <CoachGuidanceRow
+            icon="target"
+            label="Next focus"
+            body={insight.focusForNextWeek}
+            color={colors.brandPrimary}
+          />
+          <CoachGuidanceRow
+            icon="food-apple-outline"
+            label="Nutrition"
+            body={insight.nutritionTip}
+            color={colors.accentWarm}
+          />
+          <CoachGuidanceRow
+            icon="yoga"
+            label="Movement"
+            body={insight.workoutTip}
+            color={colors.accentCool}
+          />
           <Text variant="bodyMuted">
             Source: {insight.source === 'ai' ? 'AI coach' : 'Local coach fallback'}
           </Text>
@@ -154,6 +169,30 @@ export function WeeklyCoachInsightCard({
   );
 }
 
+function CoachGuidanceRow({
+  icon,
+  label,
+  body,
+  color,
+}: {
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;
+  label: string;
+  body: string;
+  color: string;
+}) {
+  return (
+    <View style={styles.guidanceRow}>
+      <View style={[styles.guidanceIcon, { backgroundColor: `${color}18` }]}>
+        <MaterialCommunityIcons name={icon} size={17} color={color} />
+      </View>
+      <View style={styles.guidanceCopy}>
+        <Text variant="label" style={styles.sectionLabel}>{label}</Text>
+        <Text variant="body" style={styles.rowText}>{body}</Text>
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
@@ -170,7 +209,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   section: {
-    gap: spacing.xs,
+    gap: spacing.sm,
     borderRadius: radius.square,
     backgroundColor: colors.surfaceRose,
     padding: spacing.sm,
@@ -222,6 +261,45 @@ const styles = StyleSheet.create({
   },
   summaryText: {
     color: colors.textStrong,
+    lineHeight: 20,
+  },
+  expandHint: {
+    color: colors.brandPrimary,
+    fontFamily: 'PlusJakartaSans_600SemiBold',
+  },
+  winsWrap: {
+    gap: 6,
+  },
+  winRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 7,
+  },
+  guidanceRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.xs,
+    borderTopWidth: 1,
+    borderColor: colors.borderLight,
+    paddingTop: spacing.xs,
+  },
+  guidanceIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  guidanceCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  sectionLabel: {
+    color: colors.textMuted,
+  },
+  rowText: {
+    flex: 1,
+    lineHeight: 20,
   },
   pressed: {
     opacity: 0.82,

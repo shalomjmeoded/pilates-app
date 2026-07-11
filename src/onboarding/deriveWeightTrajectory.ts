@@ -13,10 +13,6 @@ export function deriveWeightTrajectory(
     return 'lean_mass';
   }
 
-  if (fitnessGoal === 'maintain' || fitnessGoal === 'get_toned') {
-    return 'steady_state';
-  }
-
   if (goalWeightKg < currentWeightKg) {
     return 'weight_loss';
   }

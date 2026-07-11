@@ -1,5 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { colors, radius, spacing } from '@/theme';
 import { Text } from './Text';
@@ -11,8 +13,16 @@ interface EncouragementBannerProps {
 }
 
 export function EncouragementBanner({ title, body, onDismiss }: EncouragementBannerProps) {
+  useEffect(() => {
+    if (!onDismiss) {
+      return undefined;
+    }
+    const timer = setTimeout(onDismiss, 5000);
+    return () => clearTimeout(timer);
+  }, [onDismiss, title]);
+
   return (
-    <View style={styles.banner} accessibilityRole="summary">
+    <Animated.View entering={FadeInDown.duration(240)} style={styles.banner} accessibilityRole="summary">
       <View style={styles.iconWrap}>
         <MaterialCommunityIcons name="check-circle-outline" size={20} color={colors.success} />
       </View>
@@ -37,7 +47,7 @@ export function EncouragementBanner({ title, body, onDismiss }: EncouragementBan
           <MaterialCommunityIcons name="close" size={18} color={colors.textMuted} />
         </Pressable>
       ) : null}
-    </View>
+    </Animated.View>
   );
 }
 

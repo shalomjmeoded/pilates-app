@@ -5,8 +5,8 @@ export interface EncouragementCopy {
 
 export function mealLoggedEncouragement(): EncouragementCopy {
   return {
-    title: 'Logged. Nice and steady.',
-    body: 'One small check-in keeps the day clearer.',
+    title: 'Meal added to today.',
+    body: 'Your daily totals are up to date.',
   };
 }
 

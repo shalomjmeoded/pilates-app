@@ -1,12 +1,16 @@
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { OnboardingShell } from '@/components/onboarding';
 import { Button } from '@/components/ui/Button';
+import { Text } from '@/components/ui/Text';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
+import { usePreferencesStore } from '@/stores/preferencesStore';
 import { colors, radius, spacing } from '@/theme';
+import { captureProductEvent, resetOnboardingAnalyticsSession } from '@/services/analytics/analyticsCore';
 
 const WELCOME_SHOWCASE_IMAGE = require('../../assets/onboarding/welcome-showcase-v2.png');
 const WELCOME_IMAGE_ASPECT_RATIO = 1024 / 1536;
@@ -14,12 +18,22 @@ const WELCOME_IMAGE_ASPECT_RATIO = 1024 / 1536;
 export default function Step00Welcome() {
   const { step, goNext, goToStep } = useOnboardingNavigation(1);
   const entryMode = useOnboardingStore((state) => state.entryMode);
+  const resetDraft = useOnboardingStore((state) => state.resetDraft);
+  const setOnboardingCompleted = usePreferencesStore((state) => state.setOnboardingCompleted);
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const imageHeight = Math.min(height < 760 ? 360 : 440, height * 0.52);
+  const imageHeight = Math.min(height < 760 ? 320 : 390, height * 0.46);
   const imageWidth = imageHeight * WELCOME_IMAGE_ASPECT_RATIO;
 
   const returning = entryMode === 'returning';
+
+  const restartOnboarding = () => {
+    captureProductEvent('onboarding restarted', { entry_mode: entryMode });
+    resetOnboardingAnalyticsSession();
+    resetDraft();
+    setOnboardingCompleted(false);
+    goToStep(2);
+  };
 
   return (
     <OnboardingShell
@@ -55,6 +69,19 @@ export default function Step00Welcome() {
             label={returning ? 'Review my plan' : 'Get started'}
             onPress={returning ? () => goToStep(14) : goNext}
           />
+          {returning ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Start over with new answers"
+              onPress={restartOnboarding}
+              style={({ pressed }) => [styles.restartButton, pressed && styles.restartButtonPressed]}
+            >
+              <MaterialCommunityIcons name="refresh" size={15} color={colors.brandPrimary} />
+              <Text variant="caption" style={styles.restartText}>
+                Start over with new answers
+              </Text>
+            </Pressable>
+          ) : null}
         </Animated.View>
       </View>
     </OnboardingShell>
@@ -66,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
   showcaseWrap: {
     alignItems: 'center',
@@ -87,5 +114,24 @@ const styles = StyleSheet.create({
   },
   ctaWrap: {
     width: '100%',
+    alignItems: 'center',
+    gap: 6,
+  },
+  restartButton: {
+    minHeight: 38,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+  },
+  restartButtonPressed: {
+    backgroundColor: colors.surfaceRose,
+    opacity: 0.86,
+  },
+  restartText: {
+    color: colors.brandPrimary,
+    fontFamily: 'PlusJakartaSans_600SemiBold',
   },
 });

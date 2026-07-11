@@ -8,9 +8,17 @@ import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { seedDatabaseIfNeeded } from '@/db/seed/exerciseSeed';
 import { deleteWorkoutPlanByDate } from '@/db/repositories/workoutRepository';
+import { startWorkoutSession } from '@/db/repositories/workoutRepository';
 import { ensureWorkoutPlanForDate } from '@/engines/workout/ensureDailyPlan';
+import { loadWorkoutDay } from '@/engines/workout';
+import {
+  deriveWorkoutFocusTitle,
+  estimateWorkoutMinutes,
+} from '@/engines/workout/workoutPresentation';
 import { colors, radius, spacing } from '@/theme';
-import { PlanGenerationError } from '@/types/workout';
+import { PlanGenerationError, type WorkoutPlan } from '@/types/workout';
+import { captureProductEvent, getElapsedOnboardingSeconds } from '@/services/analytics/analyticsCore';
+import { successNotificationHaptic } from '@/utils/haptics';
 
 const MIN_VISIBLE_MS = 1800;
 const TICK_MS = 260;
@@ -32,11 +40,11 @@ function isRecoverableFirstWorkoutError(error: unknown): boolean {
   );
 }
 
-async function prepareFirstWorkoutPlan(planDate: string): Promise<void> {
+async function prepareFirstWorkoutPlan(planDate: string): Promise<WorkoutPlan> {
   await seedDatabaseIfNeeded();
 
   try {
-    await ensureWorkoutPlanForDate(planDate);
+    return await ensureWorkoutPlanForDate(planDate);
   } catch (error) {
     if (!isRecoverableFirstWorkoutError(error)) {
       throw error;
@@ -45,8 +53,15 @@ async function prepareFirstWorkoutPlan(planDate: string): Promise<void> {
     console.warn('[BetterMe] Repairing first workout generation state.', error);
     await deleteWorkoutPlanByDate(planDate);
     await seedDatabaseIfNeeded();
-    await ensureWorkoutPlanForDate(planDate);
+    return await ensureWorkoutPlanForDate(planDate);
   }
+}
+
+interface ReadyWorkout {
+  planId: string;
+  focusTitle: string;
+  movementCount: number;
+  estimatedMinutes: number;
 }
 
 export default function Step18WorkoutLoading() {
@@ -54,6 +69,8 @@ export default function Step18WorkoutLoading() {
   const [progress, setProgress] = useState(0.08);
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
+  const [readyWorkout, setReadyWorkout] = useState<ReadyWorkout | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const runIdRef = useRef(0);
@@ -85,6 +102,7 @@ export default function Step18WorkoutLoading() {
     clearTimers();
     setError(null);
     setIsGenerating(true);
+    setReadyWorkout(null);
     setProgress(0.08);
 
     intervalRef.current = setInterval(() => {
@@ -96,10 +114,19 @@ export default function Step18WorkoutLoading() {
 
     const startedAt = Date.now();
     try {
-      await prepareFirstWorkoutPlan(getTodayPlanDate());
+      const planDate = getTodayPlanDate();
+      const plan = await prepareFirstWorkoutPlan(planDate);
+      const day = await loadWorkoutDay(planDate);
       if (runId !== runIdRef.current) {
         return;
       }
+
+      const ready: ReadyWorkout = {
+        planId: plan.id,
+        focusTitle: deriveWorkoutFocusTitle(day.exercises),
+        movementCount: day.exercises.length,
+        estimatedMinutes: estimateWorkoutMinutes(day.exercises),
+      };
 
       const remainingMs = Math.max(0, MIN_VISIBLE_MS - (Date.now() - startedAt));
       timeoutRef.current = setTimeout(() => {
@@ -108,7 +135,11 @@ export default function Step18WorkoutLoading() {
         }
         clearTimers();
         setProgress(1);
-        router.replace('/(tabs)/workout');
+        setReadyWorkout(ready);
+        successNotificationHaptic();
+        captureProductEvent('first workout ready', {
+          elapsed_onboarding_seconds: getElapsedOnboardingSeconds(),
+        });
       }, remainingMs);
     } catch (generationError) {
       if (runId !== runIdRef.current) {
@@ -124,6 +155,24 @@ export default function Step18WorkoutLoading() {
       }
     }
   }, [clearTimers, router]);
+
+  const startFirstWorkout = async () => {
+    if (!readyWorkout || isStarting) {
+      return;
+    }
+    setIsStarting(true);
+    try {
+      const session = await startWorkoutSession(readyWorkout.planId);
+      captureProductEvent('first workout started', {
+        elapsed_onboarding_seconds: getElapsedOnboardingSeconds(),
+      });
+      router.replace(`/(tabs)/workout/player/${session.id}`);
+    } catch {
+      setError('Your workout is ready, but it could not start yet. Please try again.');
+    } finally {
+      setIsStarting(false);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -143,21 +192,54 @@ export default function Step18WorkoutLoading() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.hero}>
-          <ActivityIndicator size="small" color={colors.brandPrimary} />
-          <Text variant="h1" style={styles.title}>
-            Building your first session
-          </Text>
-          <Text variant="bodyMuted" style={styles.subtitle}>
-            {error ? 'We hit a delay. Retry in one tap.' : statusLabel}
-          </Text>
-        </View>
+        {readyWorkout ? (
+          <View style={styles.readyCard}>
+            <View style={styles.readyIcon}>
+              <Text variant="h2" style={styles.readyIconText}>✓</Text>
+            </View>
+            <Text variant="label" style={styles.readyEyebrow}>Your first session is ready</Text>
+            <Text variant="h1" style={styles.title}>{readyWorkout.focusTitle}</Text>
+            <View style={styles.readyMeta}>
+              <Text variant="body">{readyWorkout.movementCount} movements</Text>
+              <Text variant="bodyMuted">·</Text>
+              <Text variant="body">About {readyWorkout.estimatedMinutes} min</Text>
+            </View>
+            <Text variant="bodyMuted" style={styles.subtitle}>
+              Start now, or review the full movement list first.
+            </Text>
+            <View style={styles.readyActions}>
+              <Button
+                label={isStarting ? 'Starting...' : 'Start my first workout'}
+                onPress={() => void startFirstWorkout()}
+                disabled={isStarting}
+              />
+              <Button
+                label="View my plan"
+                variant="secondary"
+                onPress={() => router.replace('/(tabs)/workout')}
+              />
+            </View>
+            {error ? <Text variant="body" style={styles.error}>{error}</Text> : null}
+          </View>
+        ) : (
+          <>
+            <View style={styles.hero}>
+              <ActivityIndicator size="small" color={colors.brandPrimary} />
+              <Text variant="h1" style={styles.title}>
+                Building your first session
+              </Text>
+              <Text variant="bodyMuted" style={styles.subtitle}>
+                {error ? 'We hit a delay. Retry in one tap.' : statusLabel}
+              </Text>
+            </View>
 
-        <View style={styles.track}>
-          <View style={[styles.fill, { width: `${Math.round(progress * 100)}%` }]} />
-        </View>
+            <View style={styles.track}>
+              <View style={[styles.fill, { width: `${Math.round(progress * 100)}%` }]} />
+            </View>
+          </>
+        )}
 
-        {error ? (
+        {error && !readyWorkout ? (
           <>
             <Text variant="body" style={styles.error}>
               {error}
@@ -213,5 +295,44 @@ const styles = StyleSheet.create({
   error: {
     color: colors.destructive,
     textAlign: 'center',
+  },
+  readyCard: {
+    width: '100%',
+    maxWidth: 380,
+    alignSelf: 'center',
+    alignItems: 'center',
+    gap: spacing.sm,
+    borderRadius: radius.hero,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceCanvas,
+    padding: spacing.md,
+  },
+  readyIcon: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ECF9F1',
+    borderWidth: 1,
+    borderColor: '#BFE8CD',
+  },
+  readyIconText: {
+    color: colors.success,
+  },
+  readyEyebrow: {
+    color: colors.brandPrimary,
+  },
+  readyMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  readyActions: {
+    width: '100%',
+    gap: spacing.xs,
   },
 });

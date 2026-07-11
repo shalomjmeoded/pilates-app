@@ -45,7 +45,7 @@ export function Screen({
             {title ? (
               <View style={styles.titleRow}>
                 <Text variant="h1" style={styles.title}>{title}</Text>
-                {showBrandMark ? <BetterMeBrandMark compact /> : null}
+                {showBrandMark ? <BetterMeBrandMark compact showDescriptor /> : null}
               </View>
             ) : null}
             {subtitle ? (

@@ -7,6 +7,7 @@ import { completeOnboarding } from '@/services/onboarding/completeOnboarding';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { useRecalibrationStore } from '@/stores/recalibrationStore';
+import { captureProductEvent, getElapsedOnboardingSeconds } from '@/services/analytics/analyticsCore';
 
 export function useFinishOnboarding() {
   const router = useRouter();
@@ -41,6 +42,10 @@ export function useFinishOnboarding() {
         });
 
         setOnboardingCompleted(true);
+        captureProductEvent('onboarding completed', {
+          entry_mode: useOnboardingStore.getState().entryMode,
+          elapsed_onboarding_seconds: getElapsedOnboardingSeconds(),
+        });
         setRebuildMode(false);
         clearPersistedDraft();
 

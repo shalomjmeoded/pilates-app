@@ -44,9 +44,11 @@ export default function PrivacySettingsScreen() {
       </Card>
 
       <Card style={styles.card}>
-        <Text variant="h2">No ads. No analytics.</Text>
+        <Text variant="h2">No ads. Minimal product analytics.</Text>
         <Text variant="bodyMuted" style={styles.copy}>
-          BetterMe does not include ad SDKs or third-party analytics trackers.
+          BetterMe uses an anonymous device identifier to measure onboarding completion and basic
+          feature activation. Analytics never includes your profile answers, body measurements,
+          meals, photos, goals, or free text. Session replay and advertising tracking are disabled.
         </Text>
       </Card>
 

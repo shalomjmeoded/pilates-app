@@ -8,11 +8,13 @@ const BETTERME_ICON = require('../../../assets/icon.png');
 interface BetterMeBrandMarkProps {
   showWordmark?: boolean;
   compact?: boolean;
+  showDescriptor?: boolean;
 }
 
 export function BetterMeBrandMark({
   showWordmark = true,
   compact = false,
+  showDescriptor = false,
 }: BetterMeBrandMarkProps) {
   const size = compact ? 22 : 28;
 
@@ -21,7 +23,7 @@ export function BetterMeBrandMark({
       style={styles.container}
       accessible
       accessibilityRole="image"
-      accessibilityLabel="BetterMe"
+      accessibilityLabel={showDescriptor ? 'BetterMe: Pilates Coach' : 'BetterMe'}
     >
       <Image
         source={BETTERME_ICON}
@@ -29,9 +31,16 @@ export function BetterMeBrandMark({
         style={[styles.icon, { width: size, height: size }]}
       />
       {showWordmark ? (
-        <Text variant="label" style={[styles.wordmark, compact && styles.wordmarkCompact]}>
-          BetterMe
-        </Text>
+        <View style={styles.wordmarkStack}>
+          <Text variant="label" style={[styles.wordmark, compact && styles.wordmarkCompact]}>
+            {showDescriptor ? 'BetterMe:' : 'BetterMe'}
+          </Text>
+          {showDescriptor ? (
+            <Text variant="caption" style={styles.descriptor} numberOfLines={1}>
+              Pilates Coach
+            </Text>
+          ) : null}
+        </View>
       ) : null}
     </View>
   );
@@ -53,7 +62,18 @@ const styles = StyleSheet.create({
   wordmark: {
     color: colors.brandPrimary,
   },
+  wordmarkStack: {
+    flexShrink: 1,
+    gap: 0,
+  },
   wordmarkCompact: {
-    fontSize: 12,
+    fontSize: 11,
+    lineHeight: 13,
+  },
+  descriptor: {
+    color: colors.textMuted,
+    fontSize: 9,
+    lineHeight: 11,
+    letterSpacing: 0,
   },
 });

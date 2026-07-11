@@ -21,7 +21,7 @@ export function NutritionDayHeader({
   targets,
 }: NutritionDayHeaderProps) {
   const today = isDateToday(mealDate);
-  const mealLabel = mealCount === 1 ? '1 meal' : `${mealCount} meals`;
+  const mealLabel = mealCount === 1 ? 'meal' : 'meals';
 
   return (
     <View style={styles.card}>

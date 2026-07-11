@@ -1,17 +1,19 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
+import { Button } from '@/components/ui/Button';
 import { colors, radius, spacing } from '@/theme';
 
-export function NutritionEmptyState() {
+export function NutritionEmptyState({ onAddMeal }: { onAddMeal: () => void }) {
   return (
     <View style={styles.wrap}>
       <Text variant="body" style={styles.title}>
         No meals logged yet
       </Text>
       <Text variant="bodyMuted" style={styles.copy}>
-        Tap + Add Meal to log your first entry for this day.
+        Add your first meal to see today’s nutrition balance.
       </Text>
+      <Button label="Log your first meal" onPress={onAddMeal} style={styles.button} />
     </View>
   );
 }
@@ -31,5 +33,8 @@ const styles = StyleSheet.create({
   },
   copy: {
     textAlign: 'center',
+  },
+  button: {
+    alignSelf: 'stretch',
   },
 });
