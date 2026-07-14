@@ -20,6 +20,34 @@ export interface WeeklyCoachInsightContent {
   workoutTip: string;
   source: 'ai' | 'local';
   generatedAt: string;
+  /** Present when the coach changed nutrition targets this week. */
+  targetAdjustmentSummary?: string;
+}
+
+export type WeeklyTargetAdjustmentReason = 'too_fast' | 'too_slow';
+
+export interface WeeklyTargetAdjustmentRecord {
+  weekStart: string;
+  reason: WeeklyTargetAdjustmentReason;
+  observedPaceKgPerWeek: number;
+  expectedPaceKgPerWeek: number;
+  calorieDelta: number;
+  previous: {
+    calories: number;
+    proteinG: number;
+    carbsG: number;
+    fatG: number;
+    fiberG: number;
+  };
+  next: {
+    calories: number;
+    proteinG: number;
+    carbsG: number;
+    fatG: number;
+    fiberG: number;
+  };
+  appliedAt: string;
+  message: string;
 }
 
 export interface CoachingInsight {
@@ -37,4 +65,5 @@ export interface CoachingPayload {
   calorieAdherencePercent?: number;
   weeklyCoach?: WeeklyCoachInsightContent;
   weeklyCoachInput?: WeeklyCoachSummary;
+  weeklyTargetAdjustment?: WeeklyTargetAdjustmentRecord;
 }

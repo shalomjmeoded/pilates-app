@@ -1,9 +1,11 @@
+import { parseISO } from 'date-fns';
+
 import { getRecentDailyTotals } from '@/db/repositories/nutritionRepository';
 import { getProfile } from '@/db/repositories/profileRepository';
 import { getAllWeightLogs } from '@/db/repositories/weightLogRepository';
 import {
-  countCompletedWorkoutsInLastDays,
-  countPlannedWorkoutDaysInLastDays,
+  getCompletedWorkoutDatesBetween,
+  getPlannedWorkoutDatesBetween,
   getRecentSkipCounts,
 } from '@/db/repositories/workoutRepository';
 import { getExerciseById } from '@/db/repositories/exerciseRepository';
@@ -13,10 +15,16 @@ import {
 } from '@/db/repositories/coachingRepository';
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { buildWeeklyCoachSummary } from '@/engines/coaching/buildWeeklyCoachSummary';
-import { getWeekStartDate } from '@/engines/coaching/weekStart';
+import {
+  getPreviousWeekStartDate,
+  getWeekEndDate,
+  getWeekStartDate,
+  isWeekStartDay,
+} from '@/engines/coaching/weekStart';
 import { aiFacade } from '@/services/ai';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { notifyWeeklyCoachReady } from '@/services/notifications/notificationService';
+import { ensureWeeklyTargetAdjustment } from '@/services/coaching/weeklyTargetAdjustmentService';
 import type { WeeklyCoachInsightContent, WeeklyCoachSummary } from '@/types/coaching';
 
 async function resolveSkippedExerciseNames(withinDays: number): Promise<string[]> {
@@ -35,19 +43,26 @@ async function resolveSkippedExerciseNames(withinDays: number): Promise<string[]
 
 export async function loadWeeklyCoachSummary(): Promise<WeeklyCoachSummary> {
   const profile = await getProfile();
-  const [nutritionRows, weightLogs, skippedExerciseNames] = await Promise.all([
-    getRecentDailyTotals(7),
-    getAllWeightLogs(),
-    resolveSkippedExerciseNames(7),
-  ]);
+  const reviewWeekStart = getPreviousWeekStartDate();
+  const reviewWeekEnd = getWeekEndDate(reviewWeekStart);
+
+  const [nutritionRows, weightLogs, skippedExerciseNames, plannedDates, completedDates] =
+    await Promise.all([
+      getRecentDailyTotals(7),
+      getAllWeightLogs(),
+      resolveSkippedExerciseNames(7),
+      getPlannedWorkoutDatesBetween(reviewWeekStart, reviewWeekEnd),
+      getCompletedWorkoutDatesBetween(reviewWeekStart, reviewWeekEnd),
+    ]);
 
   return buildWeeklyCoachSummary({
     nutritionRows,
-    workoutsCompleted: await countCompletedWorkoutsInLastDays(7),
-    workoutsPlanned: await countPlannedWorkoutDaysInLastDays(7),
+    workoutsCompleted: completedDates.length,
+    workoutsPlanned: plannedDates.length,
     weightLogs,
     skippedExerciseNames,
     goal: profile?.fitnessGoal ?? 'maintain',
+    referenceDate: parseISO(`${reviewWeekStart}T12:00:00`),
   });
 }
 
@@ -74,16 +89,45 @@ export async function getCachedWeeklyCoachInsight(): Promise<WeeklyCoachInsightC
   return row?.payload.weeklyCoach ?? null;
 }
 
+function cachedMatchesSummary(
+  input: WeeklyCoachSummary | null | undefined,
+  summary: WeeklyCoachSummary,
+): boolean {
+  if (!input) {
+    return false;
+  }
+  return (
+    input.workoutsPlanned === summary.workoutsPlanned &&
+    input.workoutsCompleted === summary.workoutsCompleted
+  );
+}
+
 export async function generateWeeklyCoachInsight(options?: {
   notify?: boolean;
 }): Promise<WeeklyCoachInsightContent> {
   const weekStart = getWeekStartDate();
-  const cached = await getCachedWeeklyCoachInsight();
-  if (cached) {
-    return cached;
+  const onWeekStart = isWeekStartDay();
+
+  if (!onWeekStart) {
+    const cachedEarly = await getCachedWeeklyCoachInsight();
+    if (cachedEarly) {
+      return cachedEarly;
+    }
+    throw new Error(
+      'Weekly coach unlocks on the first day of your week. You can change that day in Settings when available.',
+    );
   }
 
   const summary = await loadWeeklyCoachSummary();
+  const cached = await getCachedWeeklyCoachInsight();
+  const row = cached ? await getWeeklyCoachInsight(weekStart) : null;
+  const cachedInput = row?.payload.weeklyCoachInput;
+
+  if (cached && cachedMatchesSummary(cachedInput, summary)) {
+    return cached;
+  }
+
+  const adjustment = await ensureWeeklyTargetAdjustment({ weekStart });
   const premium = await getCurrentPremiumStatus();
 
   if (!hasPremiumAccess(premium)) {
@@ -99,6 +143,14 @@ export async function generateWeeklyCoachInsight(options?: {
       '@/engines/coaching/buildLocalWeeklyCoachFallback'
     );
     insight = buildLocalWeeklyCoachFallback(summary);
+  }
+
+  if (adjustment) {
+    insight = {
+      ...insight,
+      targetAdjustmentSummary: adjustment.message,
+      nutritionTip: `${adjustment.message} ${insight.nutritionTip}`.trim(),
+    };
   }
 
   await upsertWeeklyCoachInsight(weekStart, insight, summary);

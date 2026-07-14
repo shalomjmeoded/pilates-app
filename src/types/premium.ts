@@ -29,4 +29,5 @@ export type PremiumFeatureKey =
   | 'ai_meal_photo'
   | 'exercise_swap'
   | 'weekly_coach'
-  | 'physique_assessment';
+  | 'physique_assessment'
+  | 'premium_theme';

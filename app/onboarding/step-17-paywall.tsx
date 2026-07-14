@@ -105,7 +105,7 @@ function buildPaywallOutcome(
 export default function Step17Paywall() {
   const { step, goBack } = useOnboardingNavigation(15);
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
-  const { beginFreeTrial, restore } = usePremium();
+  const { beginFreeTrial, restore, unlockDevPremium } = usePremium();
   const draft = useOnboardingStore((state) => state.draft);
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -186,6 +186,13 @@ export default function Step17Paywall() {
           onStartTrial={(plan) => void unlockPlan(() => beginFreeTrial(plan))}
           onRestore={() => void unlockPlan(restore)}
         />
+        {__DEV__ ? (
+          <Button
+            label="Dev: unlock premium (bypass)"
+            variant="secondary"
+            onPress={() => void unlockPlan(unlockDevPremium)}
+          />
+        ) : null}
 
         {isSubmitting ? <Text variant="bodyMuted">Unlocking your plan...</Text> : null}
         {actionError || error ? (

@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
-import { AccessibilityInfo, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { AccessibilityInfo, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
@@ -8,10 +8,14 @@ import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { saveMeal } from '@/db/repositories/nutritionRepository';
-import { parseMealNumber, validateMealInput } from '@/engines/nutrition';
+import {
+  parseMealNumber,
+  roundCaloriesFromMacros,
+  validateMealInput,
+} from '@/engines/nutrition';
 import { useEncouragementStore } from '@/stores/encouragementStore';
 import { MEAL_PRESETS, type MealPreset, type MealSource } from '@/types/nutrition';
-import { colors, metrics, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
 import { mealLoggedEncouragement } from '@/utils/encouragement';
 import { successNotificationHaptic } from '@/utils/haptics';
 
@@ -27,10 +31,25 @@ export default function AddManualMealScreen() {
   const [carbsG, setCarbsG] = useState('');
   const [fatG, setFatG] = useState('');
   const [fiberG, setFiberG] = useState('');
+  const [caloriesManualOverride, setCaloriesManualOverride] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const insets = useSafeAreaInsets();
   const bottomPadding = insets.bottom + spacing.lg;
+
+  useEffect(() => {
+    if (caloriesManualOverride) {
+      return;
+    }
+    const protein = parseMealNumber(proteinG);
+    const carbs = parseMealNumber(carbsG);
+    const fat = parseMealNumber(fatG);
+    if (protein === null && carbs === null && fat === null) {
+      return;
+    }
+    const derived = roundCaloriesFromMacros(protein ?? 0, carbs ?? 0, fat ?? 0);
+    setCalories(String(derived));
+  }, [proteinG, carbsG, fatG, caloriesManualOverride]);
 
   const closeToNutrition = () => {
     router.dismissAll();
@@ -97,7 +116,9 @@ export default function AddManualMealScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <Text variant="h1">Quick Add</Text>
-        <Text variant="bodyMuted">Enter macros manually when you already know them.</Text>
+        <Text variant="bodyMuted">
+          Enter protein, carbs, and fat — calories update from the macro breakdown.
+        </Text>
 
         <View style={styles.presets}>
           {MEAL_PRESETS.map((preset) => (
@@ -115,13 +136,6 @@ export default function AddManualMealScreen() {
         </View>
 
         <MealFormField label="Meal name" value={title} onChangeText={setTitle} placeholder="Breakfast bowl" />
-        <MealFormField
-          label="Calories"
-          value={calories}
-          onChangeText={setCalories}
-          keyboardType="decimal-pad"
-          placeholder="420"
-        />
         <MealFormField
           label="Protein (g)"
           value={proteinG}
@@ -143,6 +157,21 @@ export default function AddManualMealScreen() {
           keyboardType="decimal-pad"
           placeholder="12"
         />
+        <MealFormField
+          label="Calories"
+          value={calories}
+          onChangeText={(value) => {
+            setCaloriesManualOverride(true);
+            setCalories(value);
+          }}
+          keyboardType="decimal-pad"
+          placeholder="420"
+        />
+        <Text variant="caption" style={styles.hint}>
+          {caloriesManualOverride
+            ? 'Calories overridden — must stay within ~2% of P×4 + C×4 + F×9.'
+            : 'Calories auto-calculated from macros (P×4 + C×4 + F×9).'}
+        </Text>
         <MealFormField
           label="Fiber (g)"
           value={fiberG}
@@ -167,7 +196,7 @@ export default function AddManualMealScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -198,6 +227,10 @@ const styles = StyleSheet.create({
   presetTextSelected: {
     color: colors.brandPrimary,
   },
+  hint: {
+    color: colors.textMuted,
+    marginTop: -spacing.xs,
+  },
   errorBox: {
     backgroundColor: colors.warningSurface,
     borderRadius: radius.card,
@@ -209,4 +242,4 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.textDark,
   },
-});
+}));

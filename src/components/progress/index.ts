@@ -1,6 +1,7 @@
 export { AdherenceCard } from './AdherenceCard';
 export { CoachingTipCard } from './CoachingTipCard';
 export { WeeklyCoachInsightCard } from './WeeklyCoachInsightCard';
+export { WeeklyReportCard } from './WeeklyReportCard';
 export { BmiTdeeCards } from './BmiTdeeCards';
 export { ConsistencyScoreRing } from './ConsistencyScoreRing';
 export { GoalProjectionCard } from './GoalProjectionCard';

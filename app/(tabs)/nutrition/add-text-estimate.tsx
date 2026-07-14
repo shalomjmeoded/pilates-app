@@ -1,15 +1,15 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, TextInput } from 'react-native';
+import { ScrollView, TextInput } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
-import { MEAL_TEXT_ESTIMATE_COPY } from '@/engines/nutrition/mealTextEstimateFlow';
+import { MEAL_TEXT_ESTIMATE_COPY, MEAL_TEXT_ESTIMATE_PLACEHOLDER } from '@/engines/nutrition/mealTextEstimateFlow';
 import { useMealTextEstimate } from '@/hooks/useMealTextEstimate';
 import { useDelayedLoadingMessage } from '@/hooks/useDelayedLoadingMessage';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 export default function AddTextEstimateScreen() {
   const router = useRouter();
@@ -20,6 +20,7 @@ export default function AddTextEstimateScreen() {
     description,
     setDescription,
     error,
+    showManualFallbackCta,
     isEstimating,
     estimate,
     openManualFallback,
@@ -50,7 +51,7 @@ export default function AddTextEstimateScreen() {
           <TextInput
             accessibilityLabel="Meal description"
             multiline
-            placeholder="Grilled salmon, quinoa, roasted broccoli, olive oil"
+            placeholder={MEAL_TEXT_ESTIMATE_PLACEHOLDER}
             placeholderTextColor={colors.textMuted}
             style={styles.input}
             value={description}
@@ -62,6 +63,10 @@ export default function AddTextEstimateScreen() {
           <Text variant="body" style={styles.errorText}>
             {error}
           </Text>
+        ) : null}
+
+        {showManualFallbackCta ? (
+          <Button label="Enter manually" onPress={openManualFallback} disabled={isEstimating} />
         ) : null}
 
         {loadingMessage ? (
@@ -86,7 +91,7 @@ export default function AddTextEstimateScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -115,4 +120,4 @@ const styles = StyleSheet.create({
     color: colors.brandSecondaryText,
     textAlign: 'center',
   },
-});
+}));

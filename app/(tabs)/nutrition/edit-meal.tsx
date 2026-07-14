@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { format, parseISO } from 'date-fns';
 
@@ -9,8 +9,8 @@ import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { deleteMeal, getMealById, updateMeal } from '@/db/repositories/nutritionRepository';
-import { parseMealNumber, validateMealInput } from '@/engines/nutrition';
-import { colors, spacing } from '@/theme';
+import { parseMealNumber, roundCaloriesFromMacros, validateMealInput } from '@/engines/nutrition';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 function formSnapshot(fields: {
   title: string;
@@ -34,6 +34,7 @@ export default function EditMealScreen() {
   const [fatG, setFatG] = useState('');
   const [fiberG, setFiberG] = useState('');
   const [loggedAt, setLoggedAt] = useState('');
+  const [caloriesManualOverride, setCaloriesManualOverride] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [initialSnapshot, setInitialSnapshot] = useState<string | null>(null);
@@ -71,6 +72,19 @@ export default function EditMealScreen() {
       );
     })();
   }, [params.mealId]);
+
+  useEffect(() => {
+    if (caloriesManualOverride || initialSnapshot === null) {
+      return;
+    }
+    const protein = parseMealNumber(proteinG);
+    const carbs = parseMealNumber(carbsG);
+    const fat = parseMealNumber(fatG);
+    if (protein === null && carbs === null && fat === null) {
+      return;
+    }
+    setCalories(String(roundCaloriesFromMacros(protein ?? 0, carbs ?? 0, fat ?? 0)));
+  }, [proteinG, carbsG, fatG, caloriesManualOverride, initialSnapshot]);
 
   const currentSnapshot = useMemo(
     () =>
@@ -143,11 +157,39 @@ export default function EditMealScreen() {
       >
         <Text variant="h1">Edit Meal</Text>
         <MealFormField label="Name" value={title} onChangeText={setTitle} />
-        <MealFormField label="Calories" value={calories} onChangeText={setCalories} keyboardType="decimal-pad" />
-        <MealFormField label="Protein (g)" value={proteinG} onChangeText={setProteinG} keyboardType="decimal-pad" />
-        <MealFormField label="Carbs (g)" value={carbsG} onChangeText={setCarbsG} keyboardType="decimal-pad" />
-        <MealFormField label="Fat (g)" value={fatG} onChangeText={setFatG} keyboardType="decimal-pad" />
-        <MealFormField label="Fiber (g)" value={fiberG} onChangeText={setFiberG} keyboardType="decimal-pad" />
+        <MealFormField
+          label="Protein (g)"
+          value={proteinG}
+          onChangeText={setProteinG}
+          keyboardType="decimal-pad"
+        />
+        <MealFormField
+          label="Carbs (g)"
+          value={carbsG}
+          onChangeText={setCarbsG}
+          keyboardType="decimal-pad"
+        />
+        <MealFormField
+          label="Fat (g)"
+          value={fatG}
+          onChangeText={setFatG}
+          keyboardType="decimal-pad"
+        />
+        <MealFormField
+          label="Calories"
+          value={calories}
+          onChangeText={(value) => {
+            setCaloriesManualOverride(true);
+            setCalories(value);
+          }}
+          keyboardType="decimal-pad"
+        />
+        <MealFormField
+          label="Fiber (g)"
+          value={fiberG}
+          onChangeText={setFiberG}
+          keyboardType="decimal-pad"
+        />
         <MealFormField label="Logged at (ISO local)" value={loggedAt} onChangeText={setLoggedAt} />
         {errors.map((error) => (
           <Text key={error} variant="body" style={styles.error}>
@@ -163,7 +205,7 @@ export default function EditMealScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -178,4 +220,4 @@ const styles = StyleSheet.create({
   error: {
     color: colors.brandPrimary,
   },
-});
+}));

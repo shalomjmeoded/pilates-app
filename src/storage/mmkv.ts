@@ -3,14 +3,18 @@ import Constants from 'expo-constants';
 import {
   DEFAULT_PREFERENCES,
   type AppPreferences,
+  type CoachNutritionPreferences,
   type StorageBackend,
   type UnitPreferences,
+  type WeekStartsOn,
 } from '@/types/preferences';
 
 const KEYS = {
   onboardingCompleted: 'onboarding_completed',
   theme: 'theme',
   units: 'units',
+  coachNutrition: 'coach_nutrition',
+  weekStartsOn: 'week_starts_on',
   cachedFlags: 'cached_flags',
   onboardingDraft: 'onboarding_draft',
 } as const;
@@ -150,11 +154,38 @@ export const preferencesStorage = {
 
   getTheme(): AppPreferences['theme'] {
     const theme = safeGetString(KEYS.theme);
-    return theme === 'light' ? 'light' : DEFAULT_PREFERENCES.theme;
+    if (theme === 'light' || theme === 'luxe' || theme === 'pride') {
+      return theme;
+    }
+
+    // Expo Go uses in-memory prefs that reset on reload — fall back to SQLite.
+    try {
+      // Lazy require avoids pulling sqlite into jest/unit paths that mock storage.
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { readThemePreferenceSync } =
+        require('./themePreferenceSync') as typeof import('./themePreferenceSync');
+      const persisted = readThemePreferenceSync();
+      if (persisted) {
+        storage.set(KEYS.theme, persisted);
+        return persisted;
+      }
+    } catch {
+      // SQLite unavailable during early/test boot.
+    }
+
+    return DEFAULT_PREFERENCES.theme;
   },
 
   setTheme(theme: AppPreferences['theme']): void {
     safeSet(KEYS.theme, theme);
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { writeThemePreferenceSync } =
+        require('./themePreferenceSync') as typeof import('./themePreferenceSync');
+      writeThemePreferenceSync(theme);
+    } catch (error) {
+      console.warn('[BetterMe] Failed to persist theme synchronously.', error);
+    }
   },
 
   getUnits(): UnitPreferences {
@@ -163,6 +194,34 @@ export const preferencesStorage = {
 
   setUnits(units: UnitPreferences): void {
     safeSet(KEYS.units, JSON.stringify(units));
+  },
+
+  getCoachNutrition(): CoachNutritionPreferences {
+    const parsed = parseJson<Partial<CoachNutritionPreferences>>(
+      safeGetString(KEYS.coachNutrition),
+      {},
+    );
+    return { ...DEFAULT_PREFERENCES.coachNutrition, ...parsed };
+  },
+
+  setCoachNutrition(prefs: CoachNutritionPreferences): void {
+    safeSet(KEYS.coachNutrition, JSON.stringify(prefs));
+  },
+
+  getWeekStartsOn(): WeekStartsOn {
+    const raw = safeGetString(KEYS.weekStartsOn);
+    if (raw === undefined || raw === '') {
+      return DEFAULT_PREFERENCES.weekStartsOn;
+    }
+    const parsed = Number(raw);
+    if (parsed >= 0 && parsed <= 6 && Number.isInteger(parsed)) {
+      return parsed as WeekStartsOn;
+    }
+    return DEFAULT_PREFERENCES.weekStartsOn;
+  },
+
+  setWeekStartsOn(weekStartsOn: WeekStartsOn): void {
+    safeSet(KEYS.weekStartsOn, String(weekStartsOn));
   },
 
   getCachedFlags(): AppPreferences['cachedFlags'] {
@@ -192,6 +251,8 @@ export const preferencesStorage = {
       onboardingCompleted: this.getOnboardingCompleted(),
       theme: this.getTheme(),
       units: this.getUnits(),
+      coachNutrition: this.getCoachNutrition(),
+      weekStartsOn: this.getWeekStartsOn(),
       cachedFlags: this.getCachedFlags(),
       storageBackend: this.getStorageBackend(),
     };

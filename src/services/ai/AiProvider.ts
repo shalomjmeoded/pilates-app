@@ -12,7 +12,7 @@ import type { WorkoutChangeRequest, WorkoutFocusArea } from '@/types/workout';
 
 export interface AiProvider {
   estimateMealFromText(description: string): Promise<AiMealEstimate>;
-  estimateMealFromPhoto(imageBase64: string): Promise<AiMealEstimate>;
+  estimateMealFromPhoto(imageBase64: string, description?: string): Promise<AiMealEstimate>;
   generateWeeklyCoach(summary: WeeklyCoachSummary): Promise<AiWeeklyCoachInsight>;
   substituteExercise(context: {
     exerciseId: string;

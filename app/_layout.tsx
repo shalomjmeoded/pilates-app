@@ -5,18 +5,23 @@ import {
   PlusJakartaSans_700Bold,
   useFonts,
 } from '@expo-google-fonts/plus-jakarta-sans';
+import {
+  PlayfairDisplay_600SemiBold,
+  PlayfairDisplay_700Bold,
+} from '@expo-google-fonts/playfair-display';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
-import { GlobalUpsellModal } from '@/components/premium';
+import '@/theme';
+import { GlobalUpsellModal, PremiumThemeGuard } from '@/components/premium';
 import { BetterMeBootError } from '@/components/ui/BetterMeBootError';
 import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
 import { useDatabase } from '@/hooks/useDatabase';
 import { useNotificationDeepLinks } from '@/hooks/useNotificationDeepLinks';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { AnalyticsProvider } from '@/services/analytics/AnalyticsProvider';
-import { colors } from '@/theme';
+import { ThemeProvider, colors } from '@/theme';
 
 export default function RootLayout() {
   const [bootAttempt, setBootAttempt] = useState(0);
@@ -25,6 +30,8 @@ export default function RootLayout() {
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
     PlusJakartaSans_700Bold,
+    PlayfairDisplay_600SemiBold,
+    PlayfairDisplay_700Bold,
   });
 
   const hydratePreferences = usePreferencesStore((state) => state.hydrate);
@@ -54,13 +61,16 @@ export default function RootLayout() {
           }}
         />
         <GlobalUpsellModal />
+        <PremiumThemeGuard />
       </>
     );
   }
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <AnalyticsProvider>{content}</AnalyticsProvider>
+      <ThemeProvider>
+        <AnalyticsProvider>{content}</AnalyticsProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
@@ -8,9 +8,13 @@ import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
+import {
+  MEAL_LOW_CONFIDENCE_NUDGE,
+  MEAL_LOW_CONFIDENCE_THRESHOLD,
+} from '@/engines/nutrition/mealTextEstimateFlow';
 import { useSaveReviewedAiMeal } from '@/hooks/useSaveReviewedAiMeal';
 import { useAiMealReviewStore } from '@/stores/aiMealReviewStore';
-import { colors, metrics, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
 
 export default function ReviewAiMealScreen() {
   const router = useRouter();
@@ -117,6 +121,13 @@ export default function ReviewAiMealScreen() {
         <Card style={styles.card}>
           <Text variant="label">AI confidence</Text>
           <Text variant="body">{Math.round(estimate.confidence * 100)}%</Text>
+          {estimate.confidence < MEAL_LOW_CONFIDENCE_THRESHOLD ? (
+            <View style={styles.nudgeBox}>
+              <Text variant="body" style={styles.nudgeText}>
+                {MEAL_LOW_CONFIDENCE_NUDGE}
+              </Text>
+            </View>
+          ) : null}
           {estimate.ingredients.length > 0 ? (
             <View style={styles.ingredients}>
               <Text variant="label">Ingredients</Text>
@@ -193,7 +204,7 @@ export default function ReviewAiMealScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -208,6 +219,17 @@ const styles = StyleSheet.create({
   ingredients: {
     gap: 4,
     marginTop: spacing.xs,
+  },
+  nudgeBox: {
+    marginTop: spacing.xs,
+    backgroundColor: colors.warningSurface,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    padding: spacing.sm,
+  },
+  nudgeText: {
+    color: colors.textDark,
   },
   checkboxRow: {
     flexDirection: 'row',
@@ -238,4 +260,4 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.textDark,
   },
-});
+}));

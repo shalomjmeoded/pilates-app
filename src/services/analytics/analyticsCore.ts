@@ -11,7 +11,9 @@ export type ProductAnalyticsEvent =
   | 'trial started'
   | 'onboarding completed'
   | 'first workout ready'
-  | 'first workout started';
+  | 'first workout started'
+  | 'meal_text_estimated'
+  | 'meal_photo_estimated';
 
 export type AnalyticsPropertyKey =
   | 'route_key'
@@ -22,7 +24,8 @@ export type AnalyticsPropertyKey =
   | 'selected_plan'
   | 'app_version'
   | 'platform'
-  | 'elapsed_onboarding_seconds';
+  | 'elapsed_onboarding_seconds'
+  | 'has_description';
 
 export type AnalyticsProperties = Partial<
   Record<AnalyticsPropertyKey, string | number | boolean>
@@ -40,6 +43,7 @@ const ALLOWED_PROPERTY_KEYS = new Set<AnalyticsPropertyKey>([
   'app_version',
   'platform',
   'elapsed_onboarding_seconds',
+  'has_description',
 ]);
 
 let sink: AnalyticsSink | null = null;

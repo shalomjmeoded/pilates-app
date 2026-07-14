@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { PaywallHero } from '@/components/premium';
+import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { useFinishOnboarding } from '@/hooks/useFinishOnboarding';
 import { usePremium } from '@/hooks/usePremium';
@@ -18,7 +19,7 @@ export default function PaywallScreen() {
     (state) => state.preferences.onboardingCompleted,
   );
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
-  const { beginFreeTrial, restore, hasAccess, hydrate } = usePremium();
+  const { beginFreeTrial, restore, unlockDevPremium, hasAccess, hydrate } = usePremium();
   const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -58,6 +59,13 @@ export default function PaywallScreen() {
           onStartTrial={(plan) => void completeAccess(() => beginFreeTrial(plan))}
           onRestore={() => void completeAccess(restore)}
         />
+        {__DEV__ ? (
+          <Button
+            label="Dev: unlock premium (bypass)"
+            variant="secondary"
+            onPress={() => void completeAccess(unlockDevPremium)}
+          />
+        ) : null}
         {isSubmitting ? <Text variant="bodyMuted">Unlocking your plan...</Text> : null}
         {actionError || error ? (
           <Text variant="body" style={styles.error}>

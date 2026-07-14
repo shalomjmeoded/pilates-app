@@ -1,5 +1,11 @@
 export { computeNutritionTargets } from './targets';
-export { validateMealInput, parseMealNumber } from './validation';
+export {
+  caloriesFromMacros,
+  macrosMatchCalories,
+  parseMealNumber,
+  roundCaloriesFromMacros,
+  validateMealInput,
+} from './validation';
 export {
   adjustPortionByStep,
   applyPortionToMeal,
@@ -8,5 +14,6 @@ export {
   sumMealTotals,
 } from './portion';
 export { calculateNutritionScore } from './score';
+export { reconcileMealEstimate } from './reconcileMealEstimate';
 export { buildNutritionDaySummary, macroProgress } from './summaries';
 export { resolveNutritionTargets } from './resolveTargets';
