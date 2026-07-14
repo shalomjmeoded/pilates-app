@@ -11,23 +11,33 @@ const MEAL_JSON_RULES = `Respond with ONLY valid JSON matching this shape:
   "fatG": number,
   "fiberG": number,
   "ingredients": [{ "name": string, "grams": number }]
-}`;
+}
+Hard rules — follow every one:
+- calories MUST equal proteinG*4 + carbsG*4 + fatG*9, rounded. Do the arithmetic and make the numbers agree; never return a total that does not match the macros.
+- Base grams and macros on standard nutrition data for realistic portions. Do not inflate or guess wildly.
+- Only include ingredients that are actually described or clearly visible. Never invent foods, brands, or quantities that were not provided.
+- confidence is 0..1 and must reflect real uncertainty: lower it when portions or ingredients are ambiguous.
+- All numbers are non-negative.`;
 
 export function buildPrompt(feature: AiFeature, payload: Record<string, unknown>): string {
   switch (feature) {
     case 'meal_text_estimate':
-      return `You are a nutrition assistant for a Pilates and wellness app.
-Estimate macros for this meal description. Be conservative and practical.
+      return `You are a precise nutrition assistant for BetterMe, a Pilates and wellness app for women and the LGBTQ+ community.
+Estimate macros for this meal from the description only. Be accurate and conservative — when in doubt, estimate a sensible standard portion and lower your confidence rather than guessing high.
 ${MEAL_JSON_RULES}
 Meal description: ${String(payload.description ?? '')}`;
 
-    case 'meal_photo_estimate':
-      return `You are a nutrition assistant. Estimate visible meal macros from the photo.
-Keep ingredients simple and conservative.
+    case 'meal_photo_estimate': {
+      const note = String(payload.description ?? '').trim();
+      return `You are a precise nutrition assistant for BetterMe. Estimate macros for food that is clearly visible in the photo.
+Do not assume hidden ingredients or oversized portions; if the photo is ambiguous, lower your confidence.
+${note ? `The user also provided this optional description — use it to refine portions, oil/cooking fat, and ingredients that may be hard to see:\n${note}\n` : ''}
 ${MEAL_JSON_RULES}`;
+    }
 
     case 'weekly_coach':
-      return `You are a supportive Pilates coach. Return ONLY JSON:
+      return `You are a supportive BetterMe Pilates coach for women and the LGBTQ+ community — warm, empowering, and genuinely encouraging. Speak in the second person like a coach who celebrated their week with them. Name real wins, acknowledge what slipped without shame or judgment, and always leave them with one concrete, kind next action.
+Return ONLY JSON:
 {
   "summary": string,
   "wins": string[],
@@ -35,7 +45,14 @@ ${MEAL_JSON_RULES}`;
   "nutritionTip": string,
   "workoutTip": string
 }
-Use only the provided weekly summary aggregates. Do not invent detailed history.
+Guidance:
+- summary: 1-2 sentences on how LAST week went (use workoutsCompleted vs workoutsPlanned and weightTrend). workoutsPlanned is training days on their plan (e.g. 4), NOT calendar days.
+- wins: 1-3 specific wins grounded in the numbers provided. Never invent a win that the data does not support.
+- focusForNextWeek: one clear, motivating priority tied to their goal — frame it as an invitation, not a demand.
+- workoutTip: one actionable Pilates/movement cue; if topSkippedExerciseNames is non-empty, gently suggest a swap or modification rather than skipping.
+- nutritionTip: tie to calorieAdherencePercent / proteinAdherencePercent with supportive language (no shaming about food).
+- Never say they planned 7 sessions unless workoutsPlanned is actually 7.
+Use ONLY the provided aggregates. Do NOT fabricate history, workouts, or numbers that are not in the context.
 Context: ${JSON.stringify(payload)}`;
 
     case 'exercise_substitution':

@@ -109,13 +109,17 @@ export class GeminiDirectProvider implements AiProvider {
     );
   }
 
-  estimateMealFromPhoto(imageBase64: string): Promise<AiMealEstimate> {
+  estimateMealFromPhoto(imageBase64: string, description?: string): Promise<AiMealEstimate> {
     return withAudit(
       'meal_photo_estimate',
-      { imageByteLength: imageBase64.length },
-      `${imageBase64.slice(0, 64)}:${imageBase64.length}`,
+      { imageByteLength: imageBase64.length, descriptionLength: description?.length ?? 0 },
+      `${imageBase64.slice(0, 64)}:${imageBase64.length}:${description ?? ''}`,
       async () => {
-        const raw = await callGeminiFeature('meal_photo_estimate', { imageBase64 }, imageBase64);
+        const raw = await callGeminiFeature(
+          'meal_photo_estimate',
+          { imageBase64, ...(description ? { description } : {}) },
+          imageBase64,
+        );
         return parseMealEstimateResponse(raw);
       },
     );

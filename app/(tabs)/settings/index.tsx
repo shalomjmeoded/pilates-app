@@ -25,6 +25,21 @@ export default function SettingsScreen() {
 
         <SettingsSection title="Nutrition" accentColor={colors.accentWarm}>
           <SettingsRow accentColor={colors.accentWarm} label="Nutrition targets" onPress={() => router.push('/(tabs)/settings/nutrition')} />
+          <SettingsRow
+            accentColor={colors.accentWarm}
+            label="Weekly coach targets"
+            value="Auto-adjust · safeguard"
+            onPress={() => router.push('/(tabs)/settings/coach-nutrition')}
+          />
+        </SettingsSection>
+
+        <SettingsSection title="Appearance" accentColor={colors.brandPrimary}>
+          <SettingsRow
+            accentColor={colors.brandPrimary}
+            label="Theme"
+            value="Wellness · Golden · Pride"
+            onPress={() => router.push('/(tabs)/settings/appearance')}
+          />
         </SettingsSection>
 
         <SettingsSection title="Notifications" accentColor="#2F6FDB">

@@ -62,10 +62,10 @@ export class MockAiProvider implements AiProvider {
     );
   }
 
-  estimateMealFromPhoto(): Promise<AiMealEstimate> {
+  estimateMealFromPhoto(_imageBase64?: string, _description?: string): Promise<AiMealEstimate> {
     return withMockAudit(
       'meal_photo_estimate',
-      { imageByteLength: 0 },
+      { imageByteLength: 0, descriptionLength: _description?.length ?? 0 },
       'mock-photo',
       () =>
         parseMealEstimateResponse({

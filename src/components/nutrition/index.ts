@@ -10,3 +10,4 @@ export { NutritionEmptyState } from './NutritionEmptyState';
 export { NutritionScoreBadge } from './NutritionScoreBadge';
 export { NutritionTodayCard } from './NutritionTodayCard';
 export { PortionControls } from './PortionControls';
+export { AddMealSheet, AddMealOptionsGrid } from './AddMealSheet';

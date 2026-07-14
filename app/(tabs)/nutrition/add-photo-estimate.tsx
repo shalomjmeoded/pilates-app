@@ -1,15 +1,19 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, TextInput, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
-import { MEAL_PHOTO_AI_DISCLOSURE } from '@/constants/compliance';
+import {
+  MEAL_PHOTO_DESCRIPTION_HINT,
+  MEAL_PHOTO_DESCRIPTION_PLACEHOLDER,
+  MEAL_PHOTO_ESTIMATE_COPY,
+} from '@/engines/nutrition/mealTextEstimateFlow';
 import { useMealPhotoEstimate } from '@/hooks/useMealPhotoEstimate';
 import { useDelayedLoadingMessage } from '@/hooks/useDelayedLoadingMessage';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 export default function AddPhotoEstimateScreen() {
   const router = useRouter();
@@ -18,7 +22,10 @@ export default function AddPhotoEstimateScreen() {
 
   const {
     previewUri,
+    description,
+    setDescription,
     error,
+    showManualFallbackCta,
     isEstimating,
     selectPhoto,
     estimateSelectedPhoto,
@@ -37,21 +44,16 @@ export default function AddPhotoEstimateScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <SubscreenTopBar hasUnsavedChanges={previewUri !== null} onPress={closeToNutrition} />
+      <SubscreenTopBar
+        hasUnsavedChanges={previewUri !== null || description.trim().length > 0}
+        onPress={closeToNutrition}
+      />
       <ScrollView
         contentContainerStyle={[styles.container, { paddingBottom: bottomPadding }]}
         keyboardShouldPersistTaps="handled"
       >
         <Text variant="h1">Photo Estimate</Text>
-        <Text variant="bodyMuted">
-          Photo estimates are best for simple visible meals. Premium only.
-        </Text>
-
-        <Card style={styles.card}>
-          <Text variant="body">
-            {MEAL_PHOTO_AI_DISCLOSURE}
-          </Text>
-        </Card>
+        <Text variant="bodyMuted">{MEAL_PHOTO_ESTIMATE_COPY}</Text>
 
         {previewUri ? (
           <Image
@@ -65,7 +67,27 @@ export default function AddPhotoEstimateScreen() {
           </View>
         )}
 
+        <Card style={styles.card}>
+          <Text variant="label">Add details (optional)</Text>
+          <Text variant="caption" style={styles.hint}>
+            {MEAL_PHOTO_DESCRIPTION_HINT}
+          </Text>
+          <TextInput
+            accessibilityLabel="Optional meal description for photo estimate"
+            multiline
+            placeholder={MEAL_PHOTO_DESCRIPTION_PLACEHOLDER}
+            placeholderTextColor={colors.textMuted}
+            style={styles.input}
+            value={description}
+            onChangeText={setDescription}
+            editable={!isEstimating}
+          />
+        </Card>
+
         {error ? <Text variant="body" style={styles.errorText}>{error}</Text> : null}
+        {showManualFallbackCta ? (
+          <Button label="Enter manually" onPress={openManualFallback} disabled={isEstimating} />
+        ) : null}
         {loadingMessage ? (
           <Text variant="bodyMuted" style={styles.loadingMessage} accessibilityLiveRegion="polite">
             {loadingMessage}
@@ -86,7 +108,6 @@ export default function AddPhotoEstimateScreen() {
         {previewUri ? (
           <Button
             label="Estimate Selected Photo"
-            variant="secondary"
             onPress={() => void estimateSelectedPhoto()}
             disabled={isEstimating}
           />
@@ -102,7 +123,7 @@ export default function AddPhotoEstimateScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -113,6 +134,19 @@ const styles = StyleSheet.create({
   },
   card: {
     gap: spacing.xs,
+  },
+  hint: {
+    color: colors.textMuted,
+  },
+  input: {
+    minHeight: 88,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    borderRadius: radius.card,
+    padding: spacing.sm,
+    color: colors.textDark,
+    textAlignVertical: 'top',
+    backgroundColor: colors.surfaceCanvas,
   },
   preview: {
     width: '100%',
@@ -137,4 +171,4 @@ const styles = StyleSheet.create({
     color: colors.brandSecondaryText,
     textAlign: 'center',
   },
-});
+}));

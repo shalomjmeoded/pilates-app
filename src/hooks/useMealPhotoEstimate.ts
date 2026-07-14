@@ -4,9 +4,15 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { MEAL_PHOTO_AI_DISCLOSURE } from '@/constants/compliance';
 import { buildManualFallbackParams } from '@/engines/nutrition/mealTextEstimateFlow';
+import {
+  isMealEstimateRecoverableError,
+  mealEstimateErrorMessage,
+} from '@/engines/nutrition/mealEstimateErrors';
+import { reconcileMealEstimate } from '@/engines/nutrition/reconcileMealEstimate';
 import { MealPhotoTooLargeError } from '@/engines/nutrition/mealPhotoCompression';
 import { aiFacade } from '@/services/ai';
 import { AiProxyError } from '@/services/ai/aiProxyClient';
+import { captureProductEvent } from '@/services/analytics/analyticsCore';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { compressMealPhotoForUpload } from '@/services/nutrition/compressMealPhoto';
 import { useAiMealReviewStore } from '@/stores/aiMealReviewStore';
@@ -56,22 +62,36 @@ export function useMealPhotoEstimate(mealDate: string) {
   const setPendingReview = useAiMealReviewStore((state) => state.setPendingReview);
 
   const [previewUri, setPreviewUri] = useState<string | null>(null);
+  const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [showManualFallbackCta, setShowManualFallbackCta] = useState(false);
   const [isEstimating, setIsEstimating] = useState(false);
 
   const openManualFallback = useCallback(() => {
     router.replace({
       pathname: '/(tabs)/nutrition/add-manual',
-      params: buildManualFallbackParams(mealDate, PHOTO_MEAL_FALLBACK_TITLE),
+      params: buildManualFallbackParams(
+        mealDate,
+        description.trim() || PHOTO_MEAL_FALLBACK_TITLE,
+      ),
     });
-  }, [mealDate, router]);
+  }, [description, mealDate, router]);
 
   const estimateFromUri = useCallback(
     async (uri: string) => {
       setIsEstimating(true);
       setError(null);
+      setShowManualFallbackCta(false);
 
       try {
+        const accepted = await confirmThirdPartyAiUse({
+          title: 'Send photo to AI?',
+          message: MEAL_PHOTO_AI_DISCLOSURE,
+        });
+        if (!accepted) {
+          return;
+        }
+
         const premium = await getCurrentPremiumStatus();
         if (!premium.isPremium) {
           setError('AI photo estimates require BetterMe Premium.');
@@ -79,11 +99,19 @@ export function useMealPhotoEstimate(mealDate: string) {
         }
 
         const imageBase64 = await compressMealPhotoForUpload(uri);
-        const result = await aiFacade.estimateMealFromPhoto(imageBase64);
+        const trimmedDescription = description.trim();
+        const result = await aiFacade.estimateMealFromPhoto(
+          imageBase64,
+          trimmedDescription || undefined,
+        );
+        const { estimate: reconciled } = reconcileMealEstimate(result);
+        captureProductEvent('meal_photo_estimated', {
+          has_description: Boolean(trimmedDescription),
+        });
 
         setPendingReview({
-          estimate: result,
-          originalDescription: PHOTO_MEAL_FALLBACK_TITLE,
+          estimate: reconciled,
+          originalDescription: trimmedDescription || PHOTO_MEAL_FALLBACK_TITLE,
           mealDate,
           source: 'ai_photo',
         });
@@ -94,58 +122,49 @@ export function useMealPhotoEstimate(mealDate: string) {
       } catch (estimateError) {
         if (estimateError instanceof MealPhotoTooLargeError) {
           setError(estimateError.message);
+          setShowManualFallbackCta(true);
           return;
         }
 
         if (estimateError instanceof AiProxyError && estimateError.code === 'IMAGE_TOO_LARGE') {
           setError('Photo is too large for AI upload. Try a simpler photo or use text estimate.');
+          setShowManualFallbackCta(true);
           return;
         }
 
         if (estimateError instanceof AiProxyError && estimateError.code === 'UNAUTHORIZED') {
           setError('AI photo estimates require BetterMe Premium.');
+          setShowManualFallbackCta(false);
           return;
         }
 
         setError(
-          estimateError instanceof Error
-            ? estimateError.message
-            : 'Could not estimate this meal from the photo.',
+          mealEstimateErrorMessage(
+            estimateError,
+            'Could not estimate this meal from the photo.',
+          ),
         );
-
+        setShowManualFallbackCta(isMealEstimateRecoverableError(estimateError));
       } finally {
         setIsEstimating(false);
       }
     },
-    [mealDate, router, setPendingReview],
+    [description, mealDate, router, setPendingReview],
   );
 
-  const selectPhoto = useCallback(
-    async (source: 'camera' | 'library') => {
-      setError(null);
-      try {
-        const accepted = await confirmThirdPartyAiUse({
-          title: 'Send photo to AI?',
-          message: MEAL_PHOTO_AI_DISCLOSURE,
-        });
-
-        if (!accepted) {
-          return;
-        }
-
-        const uri =
-          source === 'camera' ? await pickImageFromCamera() : await pickImageFromLibrary();
-        if (!uri) {
-          return;
-        }
-        setPreviewUri(uri);
-        await estimateFromUri(uri);
-      } catch (pickError) {
-        setError(pickError instanceof Error ? pickError.message : 'Could not open photo picker.');
+  const selectPhoto = useCallback(async (source: 'camera' | 'library') => {
+    setError(null);
+    try {
+      const uri =
+        source === 'camera' ? await pickImageFromCamera() : await pickImageFromLibrary();
+      if (!uri) {
+        return;
       }
-    },
-    [estimateFromUri],
-  );
+      setPreviewUri(uri);
+    } catch (pickError) {
+      setError(pickError instanceof Error ? pickError.message : 'Could not open photo picker.');
+    }
+  }, []);
 
   const estimateSelectedPhoto = useCallback(async () => {
     if (!previewUri) {
@@ -157,7 +176,10 @@ export function useMealPhotoEstimate(mealDate: string) {
 
   return {
     previewUri,
+    description,
+    setDescription,
     error,
+    showManualFallbackCta,
     isEstimating,
     selectPhoto,
     estimateSelectedPhoto,

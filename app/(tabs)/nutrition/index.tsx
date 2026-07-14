@@ -1,12 +1,15 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, FlatList, Pressable, ScrollView, View } from 'react-native';
 
 import {
+  AddMealSheet,
+  CalorieRadialRing,
   MealCard,
   NutritionDayHeader,
   NutritionEmptyState,
+  NutritionScoreBadge,
   RemainingCaloriesHero,
 } from '@/components/nutrition';
 import { WeekCalendarStrip } from '@/components/workout';
@@ -29,7 +32,8 @@ import { useNutritionDay } from '@/hooks/useNutritionDay';
 import { usePremium } from '@/hooks/usePremium';
 import { useEncouragementStore } from '@/stores/encouragementStore';
 import { useNutritionStore } from '@/stores/nutritionStore';
-import { colors, radius, spacing } from '@/theme';
+import { useUiOverlayStore } from '@/stores/uiOverlayStore';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { mealLoggedEncouragement } from '@/utils/encouragement';
 import { warmAiProxy } from '@/services/ai';
 
@@ -47,6 +51,8 @@ export default function NutritionScreen() {
   const pushEncouragement = useEncouragementStore((state) => state.pushMessage);
   const [recentMeals, setRecentMeals] = useState<Meal[]>([]);
   const [recentMealsExpanded, setRecentMealsExpanded] = useState(false);
+  const addSheetVisible = useUiOverlayStore((state) => state.addMealSheetVisible);
+  const setAddMealSheetVisible = useUiOverlayStore((state) => state.setAddMealSheetVisible);
 
   useEffect(() => {
     if (hasAccess) {
@@ -58,16 +64,18 @@ export default function NutritionScreen() {
     useCallback(() => {
       void getRecentMeals(10).then(setRecentMeals);
       void reload();
-    }, [reload]),
+      return () => {
+        setAddMealSheetVisible(false);
+      };
+    }, [reload, setAddMealSheetVisible]),
   );
 
   const openAddMeal = () => {
-    requirePremium('add_meal', () => {
-      router.push({
-        pathname: '/(tabs)/nutrition/add-meal',
-        params: { mealDate: selectedDate },
-      });
-    });
+    setAddMealSheetVisible(true);
+  };
+
+  const closeAddMeal = () => {
+    setAddMealSheetVisible(false);
   };
 
   const handlePortionChange = async (mealId: string, multiplier: number) => {
@@ -161,6 +169,14 @@ export default function NutritionScreen() {
         />
       ) : null}
 
+      <View style={styles.ringWrap}>
+        <CalorieRadialRing
+          consumed={summary.consumed.calories}
+          target={summary.targets.calories}
+          remaining={summary.remainingCalories}
+        />
+      </View>
+
       <RemainingCaloriesHero
         remainingCalories={summary.remainingCalories}
         targetCalories={summary.targets.calories}
@@ -173,6 +189,8 @@ export default function NutritionScreen() {
         consumed={summary.consumed}
         targets={summary.targets}
       />
+
+      <NutritionScoreBadge score={summary.nutritionScore} />
 
       {recentMeals.length > 0 ? (
         <View style={styles.recentWrap}>
@@ -269,13 +287,18 @@ export default function NutritionScreen() {
             )}
           />
           <FloatingActionButton label="Add Meal" onPress={openAddMeal} accessibilityLabel="Add a meal" />
+          <AddMealSheet
+            visible={addSheetVisible}
+            mealDate={selectedDate}
+            onClose={closeAddMeal}
+          />
         </>
       ) : null}
     </Screen>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   list: {
     flex: 1,
   },
@@ -285,6 +308,10 @@ const styles = StyleSheet.create({
   },
   header: {
     gap: spacing.sm,
+  },
+  ringWrap: {
+    alignItems: 'center',
+    paddingVertical: spacing.xs,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -312,8 +339,8 @@ const styles = StyleSheet.create({
     minHeight: 48,
     borderRadius: radius.square,
     borderWidth: 1,
-    borderColor: '#BBD4FF',
-    backgroundColor: '#EAF2FF',
+    borderColor: 'rgba(94,234,212,0.35)',
+    backgroundColor: 'rgba(94,234,212,0.12)',
     paddingHorizontal: spacing.xs,
     paddingVertical: 8,
   },
@@ -327,7 +354,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   recentHeaderActionText: {
-    color: '#2F6FDB',
+    color: '#5EEAD4',
     fontFamily: 'PlusJakartaSans_600SemiBold',
   },
   recentRow: {
@@ -359,4 +386,4 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.86,
   },
-});
+}));

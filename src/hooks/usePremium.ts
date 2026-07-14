@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect } from 'react';
 
+import { grantDevPremiumBypass } from '@/services/monetization/devPremiumBypass';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
 import {
   restorePurchases,
@@ -66,6 +67,12 @@ export function usePremium() {
     return nextStatus;
   }, [setStatus]);
 
+  const unlockDevPremium = useCallback(async () => {
+    const nextStatus = await grantDevPremiumBypass();
+    setStatus(nextStatus);
+    return nextStatus;
+  }, [setStatus]);
+
   const openPaywall = useCallback(() => {
     trackPremiumEvent('paywall_viewed');
     router.push('/paywall');
@@ -81,6 +88,7 @@ export function usePremium() {
     requirePremium,
     beginFreeTrial,
     restore,
+    unlockDevPremium,
     openPaywall,
     openUpsell,
     closeUpsell,

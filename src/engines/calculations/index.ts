@@ -10,7 +10,7 @@ import { buildRoadmapProjection } from './roadmap';
 import { evaluateCalorieSafety } from './safety';
 import { calculateTdee } from './tdee';
 
-export { MIN_AUTO_CALORIE_TARGET } from './constants';
+export { MIN_AUTO_CALORIE_TARGET, KCAL_PER_KG_FAT } from './constants';
 export { calculateAge } from './age';
 export { calculateBmr } from './bmr';
 export { calculateTdee, getTdeeMultiplier } from './tdee';

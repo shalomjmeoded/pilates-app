@@ -18,6 +18,7 @@ import {
   NutritionAdherenceSummary,
   PhysiqueAssessmentCard,
   WeeklyCoachInsightCard,
+  WeeklyReportCard,
   GoalProjectionCard,
   MilestoneGrid,
   ProgressEmptyState,
@@ -33,6 +34,7 @@ import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { SettingsRow } from '@/components/settings';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
+import { buildWeeklyReportCard } from '@/engines/coaching/weeklyReportCard';
 import { useProgressDashboard } from '@/hooks/useProgressDashboard';
 import { usePhysiqueAssessment } from '@/hooks/usePhysiqueAssessment';
 import { usePremium } from '@/hooks/usePremium';
@@ -302,15 +304,31 @@ export default function ProgressScreen() {
         return withSectionLabel(
           'Coach check-in',
           colors.brandSecondary,
-          <WeeklyCoachInsightCard
-            insight={weeklyCoach.insight}
-            isLoading={weeklyCoach.isLoading}
-            error={weeklyCoach.error}
-            highlighted={highlightWeeklyCoach}
-            locked={!hasAccess}
-            onUnlock={openPaywall}
-            onGenerate={() => requirePremium('weekly_coach', () => void weeklyCoach.generate())}
-          />,
+          <View style={styles.sectionStack}>
+            <WeeklyCoachInsightCard
+              insight={weeklyCoach.insight}
+              isLoading={weeklyCoach.isLoading}
+              error={weeklyCoach.error}
+              highlighted={highlightWeeklyCoach}
+              locked={!hasAccess}
+              onUnlock={openPaywall}
+              onGenerate={() => requirePremium('weekly_coach', () => void weeklyCoach.generate())}
+            />
+            {weeklyCoach.insight ? (
+              <WeeklyReportCard
+                data={buildWeeklyReportCard({
+                  insight: weeklyCoach.insight,
+                  workoutsCompleted: Math.min(
+                    7,
+                    Math.round((data.consistency.workoutScore / 100) * 4),
+                  ),
+                  workoutsPlanned: 4,
+                  weekLabel: 'Last week',
+                  targetAdjustmentSummary: weeklyCoach.insight.targetAdjustmentSummary,
+                })}
+              />
+            ) : null}
+          </View>,
         );
       case 'weightEmpty':
         return <ProgressEmptyState onLogWeight={openLogWeight} />;

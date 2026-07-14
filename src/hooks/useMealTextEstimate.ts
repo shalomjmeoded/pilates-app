@@ -2,8 +2,14 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 import { buildManualFallbackParams } from '@/engines/nutrition/mealTextEstimateFlow';
+import {
+  isMealEstimateRecoverableError,
+  mealEstimateErrorMessage,
+} from '@/engines/nutrition/mealEstimateErrors';
+import { reconcileMealEstimate } from '@/engines/nutrition/reconcileMealEstimate';
 import { aiFacade } from '@/services/ai';
 import { AiProxyError } from '@/services/ai/aiProxyClient';
+import { captureProductEvent } from '@/services/analytics/analyticsCore';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { useAiMealReviewStore } from '@/stores/aiMealReviewStore';
 
@@ -13,6 +19,7 @@ export function useMealTextEstimate(mealDate: string) {
 
   const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [showManualFallbackCta, setShowManualFallbackCta] = useState(false);
   const [isEstimating, setIsEstimating] = useState(false);
 
   const openManualFallback = useCallback(
@@ -34,6 +41,7 @@ export function useMealTextEstimate(mealDate: string) {
 
     setIsEstimating(true);
     setError(null);
+    setShowManualFallbackCta(false);
 
     try {
       const premium = await getCurrentPremiumStatus();
@@ -43,8 +51,10 @@ export function useMealTextEstimate(mealDate: string) {
       }
 
       const result = await aiFacade.estimateMealFromText(trimmed);
+      const { estimate: reconciled } = reconcileMealEstimate(result);
+      captureProductEvent('meal_text_estimated');
       setPendingReview({
-        estimate: result,
+        estimate: reconciled,
         originalDescription: trimmed,
         mealDate,
         source: 'ai_text',
@@ -56,14 +66,14 @@ export function useMealTextEstimate(mealDate: string) {
     } catch (estimateError) {
       if (estimateError instanceof AiProxyError && estimateError.code === 'UNAUTHORIZED') {
         setError('AI meal estimates require BetterMe Premium.');
+        setShowManualFallbackCta(false);
         return;
       }
 
       setError(
-        estimateError instanceof Error
-          ? estimateError.message
-          : 'Could not estimate this meal.',
+        mealEstimateErrorMessage(estimateError, 'Could not estimate this meal.'),
       );
+      setShowManualFallbackCta(isMealEstimateRecoverableError(estimateError));
 
     } finally {
       setIsEstimating(false);
@@ -74,6 +84,7 @@ export function useMealTextEstimate(mealDate: string) {
     description,
     setDescription,
     error,
+    showManualFallbackCta,
     isEstimating,
     estimate,
     openManualFallback: () => openManualFallback(description),

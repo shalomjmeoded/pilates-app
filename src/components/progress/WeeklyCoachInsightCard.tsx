@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -8,7 +8,7 @@ import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Text } from '@/components/ui/Text';
 import { useDelayedLoadingMessage } from '@/hooks/useDelayedLoadingMessage';
 import type { WeeklyCoachInsightContent } from '@/types/coaching';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface WeeklyCoachInsightCardProps {
   insight: WeeklyCoachInsightContent | null;
@@ -131,6 +131,14 @@ export function WeeklyCoachInsightCard({
             body={insight.nutritionTip}
             color={colors.accentWarm}
           />
+          {insight.targetAdjustmentSummary ? (
+            <CoachGuidanceRow
+              icon="tune-vertical"
+              label="Target update"
+              body={insight.targetAdjustmentSummary}
+              color={colors.brandPrimary}
+            />
+          ) : null}
           <CoachGuidanceRow
             icon="yoga"
             label="Movement"
@@ -193,7 +201,7 @@ function CoachGuidanceRow({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     gap: spacing.xs,
     borderWidth: 1,
@@ -319,4 +327,4 @@ const styles = StyleSheet.create({
   lockOverlay: {
     marginTop: spacing.xs,
   },
-});
+}));
