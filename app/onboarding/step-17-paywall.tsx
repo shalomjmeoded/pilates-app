@@ -103,7 +103,7 @@ function buildPaywallOutcome(
 }
 
 export default function Step17Paywall() {
-  const { step, goBack } = useOnboardingNavigation(15);
+  const { step, goBack } = useOnboardingNavigation(16);
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
   const { beginFreeTrial, restore, unlockDevPremium } = usePremium();
   const draft = useOnboardingStore((state) => state.draft);

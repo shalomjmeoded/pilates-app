@@ -6,3 +6,6 @@ export const MEAL_PHOTO_AI_DISCLOSURE =
 
 export const PHYSIQUE_PHOTO_AI_DISCLOSURE =
   'If you continue, your selected physique photo and optional notes will be sent to our AI model for an experimental wellness assessment. This is not a medical measurement or diagnosis.';
+
+export const YOUTUBE_DEMO_PRIVACY_DISCLOSURE =
+  'When video demos are enabled, optional exercise demos load from YouTube (Google). You can turn streaming demos off in Preferences anytime. BetterMe does not download or host YouTube video files.';

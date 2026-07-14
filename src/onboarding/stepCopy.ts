@@ -1,24 +1,24 @@
 export function getOnboardingPhase(step: number): string {
-  if (step <= 4) {
+  if (step <= 5) {
     return 'Your rhythm';
   }
-  if (step <= 7) {
+  if (step <= 8) {
     return 'Your body';
   }
-  if (step <= 11) {
+  if (step <= 12) {
     return 'Your goals';
   }
   return 'Your plan';
 }
 
 export function getOnboardingPhaseIndex(step: number): number {
-  if (step <= 4) {
+  if (step <= 5) {
     return 1;
   }
-  if (step <= 7) {
+  if (step <= 8) {
     return 2;
   }
-  if (step <= 11) {
+  if (step <= 12) {
     return 3;
   }
   return 4;

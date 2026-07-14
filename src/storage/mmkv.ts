@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 import {
   DEFAULT_PREFERENCES,
   type AppPreferences,
+  type AvailableEquipmentPreference,
   type CoachNutritionPreferences,
   type StorageBackend,
   type UnitPreferences,
@@ -15,6 +16,7 @@ const KEYS = {
   units: 'units',
   coachNutrition: 'coach_nutrition',
   weekStartsOn: 'week_starts_on',
+  availableEquipment: 'available_equipment',
   cachedFlags: 'cached_flags',
   onboardingDraft: 'onboarding_draft',
 } as const;
@@ -154,7 +156,20 @@ export const preferencesStorage = {
 
   getTheme(): AppPreferences['theme'] {
     const theme = safeGetString(KEYS.theme);
-    if (theme === 'light' || theme === 'luxe' || theme === 'pride') {
+    if (theme === 'pride') {
+      // Legacy Pride theme — migrate to Wellness.
+      safeSet(KEYS.theme, 'light');
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const { writeThemePreferenceSync } =
+          require('./themePreferenceSync') as typeof import('./themePreferenceSync');
+        writeThemePreferenceSync('light');
+      } catch {
+        // ignore
+      }
+      return 'light';
+    }
+    if (theme === 'light' || theme === 'luxe') {
       return theme;
     }
 
@@ -224,6 +239,17 @@ export const preferencesStorage = {
     safeSet(KEYS.weekStartsOn, String(weekStartsOn));
   },
 
+  getAvailableEquipment(): AvailableEquipmentPreference[] {
+    return parseJson(
+      safeGetString(KEYS.availableEquipment),
+      DEFAULT_PREFERENCES.availableEquipment,
+    );
+  },
+
+  setAvailableEquipment(equipment: AvailableEquipmentPreference[]): void {
+    safeSet(KEYS.availableEquipment, JSON.stringify(equipment));
+  },
+
   getCachedFlags(): AppPreferences['cachedFlags'] {
     return parseJson(safeGetString(KEYS.cachedFlags), DEFAULT_PREFERENCES.cachedFlags);
   },
@@ -253,6 +279,7 @@ export const preferencesStorage = {
       units: this.getUnits(),
       coachNutrition: this.getCoachNutrition(),
       weekStartsOn: this.getWeekStartsOn(),
+      availableEquipment: this.getAvailableEquipment(),
       cachedFlags: this.getCachedFlags(),
       storageBackend: this.getStorageBackend(),
     };

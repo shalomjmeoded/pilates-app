@@ -1,8 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface DevPremiumBypassProps {
   onUnlock: () => void;
@@ -29,7 +29,7 @@ export function DevPremiumBypass({ onUnlock, disabled = false }: DevPremiumBypas
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.xs,
     marginTop: spacing.xs,
@@ -46,4 +46,4 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },
-});
+}));

@@ -17,6 +17,7 @@ export default function SettingsStackLayout() {
       <Stack.Screen name="nutrition" />
       <Stack.Screen name="coach-nutrition" />
       <Stack.Screen name="appearance" />
+      <Stack.Screen name="equipment" />
       <Stack.Screen name="notifications" />
       <Stack.Screen name="units" />
       <Stack.Screen name="privacy" />

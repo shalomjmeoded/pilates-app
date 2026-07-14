@@ -21,7 +21,7 @@ import { useDatabase } from '@/hooks/useDatabase';
 import { useNotificationDeepLinks } from '@/hooks/useNotificationDeepLinks';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { AnalyticsProvider } from '@/services/analytics/AnalyticsProvider';
-import { ThemeProvider, colors } from '@/theme';
+import { ThemeProvider, colors, useAppTheme } from '@/theme';
 
 export default function RootLayout() {
   const [bootAttempt, setBootAttempt] = useState(0);
@@ -42,18 +42,48 @@ export default function RootLayout() {
     hydratePreferences();
   }, [hydratePreferences]);
 
+  return (
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <ThemeProvider>
+        <AnalyticsProvider>
+          <RootLayoutContent
+            fontsLoaded={fontsLoaded}
+            error={error}
+            isReady={isReady}
+            onRetry={() => setBootAttempt((attempt) => attempt + 1)}
+          />
+        </AnalyticsProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
+  );
+}
+
+function RootLayoutContent({
+  fontsLoaded,
+  error,
+  isReady,
+  onRetry,
+}: {
+  fontsLoaded: boolean;
+  error: string | null;
+  isReady: boolean;
+  onRetry: () => void;
+}) {
+  const { scheme } = useAppTheme();
+
   let content;
 
   if (!fontsLoaded) {
     content = <BetterMeBootLoader />;
   } else if (error) {
-    content = <BetterMeBootError message={error} onRetry={() => setBootAttempt((attempt) => attempt + 1)} />;
+    content = <BetterMeBootError message={error} onRetry={onRetry} />;
   } else if (!isReady) {
     content = <BetterMeBootLoader />;
   } else {
     content = (
       <>
         <Stack
+          key={scheme}
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: colors.backgroundPrimary },
@@ -66,11 +96,5 @@ export default function RootLayout() {
     );
   }
 
-  return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <ThemeProvider>
-        <AnalyticsProvider>{content}</AnalyticsProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
-  );
+  return content;
 }

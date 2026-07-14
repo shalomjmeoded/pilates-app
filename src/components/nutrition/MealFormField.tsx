@@ -1,7 +1,7 @@
-import { StyleSheet, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { fontFamily } from '@/theme/typography';
 
 interface MealFormFieldProps {
@@ -35,7 +35,7 @@ export function MealFormField({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.xs,
   },
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.textDark,
   },
-});
+}));

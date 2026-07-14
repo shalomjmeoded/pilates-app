@@ -1,8 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import { workoutStreakEncouragement } from '@/utils/encouragement';
 
 interface WorkoutCompletedBannerProps {
@@ -35,7 +35,7 @@ export function WorkoutCompletedBanner({ movementCount, streakDays }: WorkoutCom
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   banner: {
     flexDirection: 'row',
     gap: spacing.sm,
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   message: {
     lineHeight: 22,
   },
-});
+}));

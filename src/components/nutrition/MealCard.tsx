@@ -1,11 +1,11 @@
 import { Feather } from '@expo/vector-icons';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { format, parseISO } from 'date-fns';
 
 import { Text } from '@/components/ui/Text';
 import { applyPortionToMeal } from '@/engines/nutrition';
 import type { Meal } from '@/types/nutrition';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 
 import { PortionControls } from './PortionControls';
 
@@ -118,7 +118,7 @@ export function MealCard({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
@@ -203,4 +203,4 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     transform: [{ scale: 0.99 }],
   },
-});
+}));

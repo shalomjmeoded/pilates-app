@@ -1,7 +1,7 @@
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius } from '@/theme';
+import { colors, radius, createDynamicStyles } from '@/theme';
 
 const BETTERME_ICON = require('../../../assets/icon.png');
 
@@ -46,7 +46,7 @@ export function BetterMeBrandMark({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
     lineHeight: 11,
     letterSpacing: 0,
   },
-});
+}));

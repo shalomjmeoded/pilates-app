@@ -1,8 +1,8 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { PORTION_PRESETS } from '@/types/nutrition';
-import { colors, metrics, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface PortionControlsProps {
   multiplier: number;
@@ -59,7 +59,7 @@ export function PortionControls({ multiplier, onChange, onStep }: PortionControl
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.xs,
   },
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   chipTextSelected: {
     color: colors.brandPrimary,
   },
-});
+}));

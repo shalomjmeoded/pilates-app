@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface FloatingAddButtonProps {
   onPress: () => void;
@@ -17,7 +17,7 @@ export function FloatingAddButton({ onPress }: FloatingAddButtonProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   button: {
     position: 'absolute',
     right: spacing.sm,
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
     color: colors.surfaceCanvas,
     lineHeight: 30,
   },
-});
+}));

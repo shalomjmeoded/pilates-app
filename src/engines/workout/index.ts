@@ -10,6 +10,12 @@ export {
 } from './ensureDailyPlan';
 export { generateWorkoutPlan, validatePlanExerciseIds } from './planGenerator';
 export {
+  defaultTargetMinutesForProfile,
+  exerciseCountBoundsForMinutes,
+  planMeetsExerciseFloor,
+  SESSION_DURATION_BUCKETS,
+} from './sessionDurationBounds';
+export {
   isPilatesAlignedExercise,
   normalizePilatesExercise,
 } from './pilatesExerciseCatalog';

@@ -1,9 +1,9 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { format, parseISO } from 'date-fns';
 
 import { Text } from '@/components/ui/Text';
 import { formatPlanDate, isDateToday } from '@/engines/workout';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface WeekCalendarStripProps {
   dates: string[];
@@ -64,7 +64,7 @@ export function buildCompletedDatesSet(
 
 export { formatPlanDate };
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -116,4 +116,4 @@ const styles = StyleSheet.create({
   completedDotSelected: {
     backgroundColor: colors.surfaceCanvas,
   },
-});
+}));

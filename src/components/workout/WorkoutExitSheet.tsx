@@ -1,8 +1,8 @@
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { Modal, Pressable, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface WorkoutExitSheetProps {
   visible: boolean;
@@ -38,7 +38,7 @@ export function WorkoutExitSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(46, 42, 41, 0.35)',
@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     marginTop: spacing.xs,
   },
-});
+}));

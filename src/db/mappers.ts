@@ -24,6 +24,8 @@ export function mapExerciseRow(row: ExerciseRow): Exercise {
     categories: JSON.parse(row.categories_json),
     sessionRole: row.session_role ?? 'main',
     source: row.source,
+    youtubeVideoId: row.youtube_video_id ?? null,
+    youtubeAttribution: row.youtube_attribution ?? null,
   };
 }
 

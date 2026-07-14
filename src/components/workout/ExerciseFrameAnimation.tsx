@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import { VisualAsset, muscleGroupIcon } from '@/components/media';
 import {
@@ -8,7 +8,7 @@ import {
   hasAnimatedExerciseDemo,
 } from '@/constants/exerciseMedia';
 import type { Exercise } from '@/types/exercise';
-import { colors, radius } from '@/theme';
+import { colors, radius, createDynamicStyles } from '@/theme';
 
 const FRAME_INTERVAL_MS = 850;
 
@@ -71,7 +71,7 @@ export function ExerciseFrameAnimation({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   frame: {
     backgroundColor: colors.surfaceRose,
     borderWidth: 1,
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-});
+}));

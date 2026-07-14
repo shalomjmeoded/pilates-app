@@ -3,6 +3,7 @@ import {
   getExerciseGifSource,
   getExerciseThumbnailSource,
   hasAnimatedExerciseDemo,
+  prefersNativeGifDemo,
 } from '@/constants/exerciseMedia';
 import type { Exercise } from '@/types/exercise';
 
@@ -24,6 +25,7 @@ export function ExerciseMediaView({
   const thumbnail = getExerciseThumbnailSource(exercise.id);
   const gif = getExerciseGifSource(exercise.id);
   const animateDemo = variant === 'gif' && hasAnimatedExerciseDemo(exercise.id);
+  const nativeGif = animateDemo && prefersNativeGifDemo(exercise.id);
   const resolvedFillHeight = fillHeight ?? (variant === 'gif' ? 260 : 112);
 
   return (
@@ -31,7 +33,7 @@ export function ExerciseMediaView({
       image={thumbnail}
       gif={gif}
       preferGif={animateDemo}
-      animateFrames={animateDemo}
+      animateFrames={animateDemo && !nativeGif}
       icon={muscleGroupIcon(exercise.muscleGroup)}
       fallback="icon"
       size={size}

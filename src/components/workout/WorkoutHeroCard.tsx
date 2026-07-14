@@ -1,12 +1,12 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { WorkoutStreakStats } from '@/types/workout';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 
 interface WorkoutHeroCardProps {
   focusTitle: string;
@@ -131,7 +131,7 @@ function MetaChip({ icon, label }: { icon: keyof typeof MaterialCommunityIcons.g
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   heroWrap: {
     backgroundColor: colors.surfaceHero,
     borderRadius: radius.hero,
@@ -255,4 +255,4 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 18,
   },
-});
+}));

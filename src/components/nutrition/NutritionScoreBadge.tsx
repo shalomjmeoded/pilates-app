@@ -1,7 +1,7 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface NutritionScoreBadgeProps {
   score: number;
@@ -19,7 +19,7 @@ export function NutritionScoreBadge({ score }: NutritionScoreBadgeProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   badge: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
     fontSize: 36,
     lineHeight: 42,
   },
-});
+}));

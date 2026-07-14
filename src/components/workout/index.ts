@@ -4,6 +4,7 @@ export { ExerciseGridCard } from './ExerciseGridCard';
 export { ExerciseFrameAnimation } from './ExerciseFrameAnimation';
 export { ExerciseMediaView } from './ExerciseMediaView';
 export { ExercisePlaceholderVisual } from './ExercisePlaceholderVisual';
+export { ExerciseYouTubeEmbed } from './ExerciseYouTubeEmbed';
 export { WorkoutExitSheet } from './WorkoutExitSheet';
 export { WorkoutHeroCard } from './WorkoutHeroCard';
 export { FeedbackSelector, feedbackLabel } from './FeedbackSelector';

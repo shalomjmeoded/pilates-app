@@ -1,11 +1,11 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 import { SettingsToggleRow } from '@/components/settings/SettingsToggleRow';
 import { Text } from '@/components/ui/Text';
 import type { Reminder } from '@/types/settings';
 import { REMINDER_LABELS } from '@/types/settings';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface ReminderTimeRowProps {
   reminder: Reminder;
@@ -63,7 +63,7 @@ function formatMinute(minute: number): string {
   return minute.toString().padStart(2, '0');
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.xs,
   },
@@ -81,4 +81,4 @@ const styles = StyleSheet.create({
   picker: {
     flex: 1,
   },
-});
+}));

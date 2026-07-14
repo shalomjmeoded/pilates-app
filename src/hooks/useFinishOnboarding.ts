@@ -17,6 +17,7 @@ export function useFinishOnboarding() {
   const clearPersistedDraft = useOnboardingStore((state) => state.clearPersistedDraft);
   const toProfile = useOnboardingStore((state) => state.toProfile);
   const setOnboardingCompleted = usePreferencesStore((state) => state.setOnboardingCompleted);
+  const setAvailableEquipment = usePreferencesStore((state) => state.setAvailableEquipment);
   const setComparison = useRecalibrationStore((state) => state.setComparison);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +42,7 @@ export function useFinishOnboarding() {
           draft,
         });
 
+        setAvailableEquipment(draft.availableEquipment);
         setOnboardingCompleted(true);
         captureProductEvent('onboarding completed', {
           entry_mode: useOnboardingStore.getState().entryMode,
@@ -86,6 +88,7 @@ export function useFinishOnboarding() {
       router,
       setComparison,
       setOnboardingCompleted,
+      setAvailableEquipment,
       setRebuildMode,
       toProfile,
     ],

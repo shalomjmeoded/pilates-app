@@ -89,10 +89,10 @@ export const PREMIUM_UPSELLS: Record<PremiumFeatureKey, PremiumUpsellContent> = 
   premium_theme: {
     featureName: 'premium_theme',
     title: 'Premium Themes',
-    description: 'Unlock Golden Mode and Pride — signature looks for BetterMe.',
+    description: 'Unlock Golden Mode — the signature BetterMe look.',
     benefits: [
       'Golden Mode — editorial white + champagne gold',
-      'Pride — deep violet with magenta, teal, and gold',
+      'Elegant serif type across the app',
       'Applies across the whole app',
     ],
   },

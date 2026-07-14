@@ -13,6 +13,7 @@ import { MIGRATION_012 } from './012_workout_change_feedback';
 import { MIGRATION_013 } from './013_workout_change_events';
 import { MIGRATION_014 } from './014_fitness_goal_lose_weight';
 import { MIGRATION_015 } from './015_workout_difficulty';
+import { MIGRATION_016 } from './016_exercise_youtube_media';
 
 export const MIGRATIONS: Array<{ version: number; sql: string }> = [
   { version: 1, sql: MIGRATION_001 },
@@ -30,4 +31,5 @@ export const MIGRATIONS: Array<{ version: number; sql: string }> = [
   { version: 13, sql: MIGRATION_013 },
   { version: 14, sql: MIGRATION_014 },
   { version: 15, sql: MIGRATION_015 },
+  { version: 16, sql: MIGRATION_016 },
 ];

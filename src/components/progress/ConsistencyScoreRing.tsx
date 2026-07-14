@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -11,7 +11,7 @@ import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { ConsistencyBreakdown } from '@/types/progress';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -100,7 +100,7 @@ function BreakdownRow({ label, value }: { label: string; value: number }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     alignItems: 'center',
     gap: spacing.sm,
@@ -138,4 +138,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
     paddingVertical: 6,
   },
-});
+}));

@@ -7,7 +7,7 @@
       "Lie down on the floor and secure your feet. Your legs should be bent at the knees.",
       "Place your hands behind or to the side of your head. You will begin with your back on the ground. This will be your starting position.",
       "Flex your hips and spine to raise your torso toward your knees.",
-      "At the top of the contraction your torso should be perpendicular to the ground. Reverse the motion, going only \u00be of the way down.",
+      "At the top of the contraction your torso should be perpendicular to the ground. Reverse the motion, going only ¾ of the way down.",
       "Repeat for the recommended amount of repetitions."
     ],
     "commonMistakes": [
@@ -36,7 +36,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "youtubeAttribution": null
   },
   {
     "id": "Bent-Knee_Hip_Raise",
@@ -73,7 +75,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "FLVpQ2P_9QA",
+    "youtubeAttribution": null
   },
   {
     "id": "Bird_Dog",
@@ -114,7 +118,9 @@
     "source": "generated_betterme",
     "repsBaseline": 10,
     "holdSeconds": null,
-    "caloriesFactor": 0.034
+    "caloriesFactor": 0.034,
+    "youtubeVideoId": "rbcvbbtB6E0",
+    "youtubeAttribution": null
   },
   {
     "id": "Bodyweight_Squat",
@@ -151,7 +157,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.08
+    "caloriesFactor": 0.08,
+    "youtubeVideoId": "QDBzjlhKsco",
+    "youtubeAttribution": null
   },
   {
     "id": "Bodyweight_Walking_Lunge",
@@ -189,7 +197,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.08
+    "caloriesFactor": 0.08,
+    "youtubeVideoId": "hgLDMHCcw4k",
+    "youtubeAttribution": null
   },
   {
     "id": "Butt_Lift_Bridge",
@@ -225,7 +235,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": null
   },
   {
     "id": "Cat_Cow",
@@ -265,7 +277,9 @@
     "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
-    "caloriesFactor": 0.02
+    "caloriesFactor": 0.02,
+    "youtubeVideoId": "XZGuNaEV-nM",
+    "youtubeAttribution": null
   },
   {
     "id": "Cross-Body_Crunch",
@@ -304,7 +318,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "youtubeAttribution": null
   },
   {
     "id": "Crossover_Reverse_Lunge",
@@ -342,7 +358,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.08
+    "caloriesFactor": 0.08,
+    "youtubeVideoId": "hgLDMHCcw4k",
+    "youtubeAttribution": null
   },
   {
     "id": "Crunch_-_Hands_Overhead",
@@ -381,7 +399,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "youtubeAttribution": null
   },
   {
     "id": "Crunches",
@@ -419,7 +439,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "youtubeAttribution": null
   },
   {
     "id": "Dead_Bug",
@@ -461,7 +483,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "fuwzt4d7FuY",
+    "youtubeAttribution": null
   },
   {
     "id": "Decline_Crunch",
@@ -501,7 +525,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "youtubeAttribution": null
   },
   {
     "id": "Decline_Push-Up",
@@ -537,7 +563,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "Ny0qFffcemg",
+    "youtubeAttribution": null
   },
   {
     "id": "Elbow_to_Knee",
@@ -572,7 +600,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "youtubeAttribution": null
   },
   {
     "id": "Flat_Bench_Lying_Leg_Raise",
@@ -609,7 +639,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "fuwzt4d7FuY",
+    "youtubeAttribution": null
   },
   {
     "id": "Flutter_Kicks",
@@ -646,7 +678,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "CO9_19vfCf4",
+    "youtubeAttribution": null
   },
   {
     "id": "Freehand_Jump_Squat",
@@ -686,7 +720,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.08
+    "caloriesFactor": 0.08,
+    "youtubeVideoId": "QDBzjlhKsco",
+    "youtubeAttribution": null
   },
   {
     "id": "Frog_Sit-Ups",
@@ -725,7 +761,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "youtubeAttribution": null
   },
   {
     "id": "Glute_Kickback",
@@ -764,7 +802,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.08
+    "caloriesFactor": 0.08,
+    "youtubeVideoId": "X79gMUknrVs",
+    "youtubeAttribution": null
   },
   {
     "id": "Incline_Push-Up",
@@ -799,7 +839,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "Ny0qFffcemg",
+    "youtubeAttribution": null
   },
   {
     "id": "Jackknife_Sit-Up",
@@ -837,7 +879,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "SXYp9AJ1uWM",
+    "youtubeAttribution": null
   },
   {
     "id": "Leg_Lift",
@@ -875,7 +919,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "fLYsUbi_f-A",
+    "youtubeAttribution": null
   },
   {
     "id": "Mountain_Climbers",
@@ -914,7 +960,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.08
+    "caloriesFactor": 0.08,
+    "youtubeVideoId": "fLYsUbi_f-A",
+    "youtubeAttribution": null
   },
   {
     "id": "Oblique_Crunches",
@@ -953,7 +1001,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": null
   },
   {
     "id": "Oblique_Crunches_-_On_The_Floor",
@@ -990,7 +1040,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": null
   },
   {
     "id": "Pelvic_Tilt_Into_Bridge",
@@ -1029,7 +1081,9 @@
     "source": "free_exercise_db",
     "repsBaseline": null,
     "holdSeconds": 30,
-    "caloriesFactor": 0.05
+    "caloriesFactor": 0.05,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": null
   },
   {
     "id": "Pilates_Hundred",
@@ -1068,7 +1122,9 @@
     "source": "generated_betterme",
     "repsBaseline": 50,
     "holdSeconds": null,
-    "caloriesFactor": 0.045
+    "caloriesFactor": 0.045,
+    "youtubeVideoId": "9mlone4NObI",
+    "youtubeAttribution": null
   },
   {
     "id": "Pilates_Roll_Up",
@@ -1109,7 +1165,9 @@
     "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
-    "caloriesFactor": 0.04
+    "caloriesFactor": 0.04,
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "youtubeAttribution": null
   },
   {
     "id": "Pilates_Shoulder_Bridge",
@@ -1148,7 +1206,9 @@
     "source": "generated_betterme",
     "repsBaseline": 10,
     "holdSeconds": null,
-    "caloriesFactor": 0.036
+    "caloriesFactor": 0.036,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": null
   },
   {
     "id": "Pilates_Swan",
@@ -1188,7 +1248,9 @@
     "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
-    "caloriesFactor": 0.032
+    "caloriesFactor": 0.032,
+    "youtubeVideoId": "KAotX1bDGps",
+    "youtubeAttribution": null
   },
   {
     "id": "Pilates_Swimming",
@@ -1228,7 +1290,9 @@
     "source": "generated_betterme",
     "repsBaseline": 20,
     "holdSeconds": null,
-    "caloriesFactor": 0.042
+    "caloriesFactor": 0.042,
+    "youtubeVideoId": "rbcvbbtB6E0",
+    "youtubeAttribution": null
   },
   {
     "id": "Pilates_Teaser",
@@ -1266,7 +1330,9 @@
     "source": "generated_betterme",
     "repsBaseline": 6,
     "holdSeconds": null,
-    "caloriesFactor": 0.052
+    "caloriesFactor": 0.052,
+    "youtubeVideoId": "9WFOlfrqWo8",
+    "youtubeAttribution": null
   },
   {
     "id": "Plank",
@@ -1303,7 +1369,9 @@
     "source": "free_exercise_db",
     "repsBaseline": null,
     "holdSeconds": 30,
-    "caloriesFactor": 0.05
+    "caloriesFactor": 0.05,
+    "youtubeVideoId": "fLYsUbi_f-A",
+    "youtubeAttribution": null
   },
   {
     "id": "Push-Up_Wide",
@@ -1340,7 +1408,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "Ny0qFffcemg",
+    "youtubeAttribution": null
   },
   {
     "id": "Push_Up_to_Side_Plank",
@@ -1379,7 +1449,9 @@
     "source": "free_exercise_db",
     "repsBaseline": null,
     "holdSeconds": 30,
-    "caloriesFactor": 0.05
+    "caloriesFactor": 0.05,
+    "youtubeVideoId": "Ny0qFffcemg",
+    "youtubeAttribution": null
   },
   {
     "id": "Reverse_Crunch",
@@ -1418,7 +1490,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "Y5YdoRMCCKM",
+    "youtubeAttribution": null
   },
   {
     "id": "Russian_Twist",
@@ -1457,7 +1531,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "PPFkp7Aa3Rg",
+    "youtubeAttribution": null
   },
   {
     "id": "Scissor_Kick",
@@ -1499,7 +1575,9 @@
     "source": "free_exercise_db",
     "repsBaseline": null,
     "holdSeconds": 30,
-    "caloriesFactor": 0.04
+    "caloriesFactor": 0.04,
+    "youtubeVideoId": "CO9_19vfCf4",
+    "youtubeAttribution": null
   },
   {
     "id": "Side_Lying_Leg_Lift",
@@ -1538,7 +1616,9 @@
     "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.035
+    "caloriesFactor": 0.035,
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "youtubeAttribution": null
   },
   {
     "id": "Single_Leg_Glute_Bridge",
@@ -1575,7 +1655,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": null
   },
   {
     "id": "Sit-Up",
@@ -1614,7 +1696,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "youtubeAttribution": null
   },
   {
     "id": "Step-up_with_Knee_Raise",
@@ -1650,7 +1734,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "X79gMUknrVs",
+    "youtubeAttribution": null
   },
   {
     "id": "Superman",
@@ -1685,11 +1771,13 @@
       "flexibility",
       "mobility"
     ],
-    "sessionRole": "main",
+    "sessionRole": "warmup",
     "source": "free_exercise_db",
     "repsBaseline": null,
     "holdSeconds": 30,
-    "caloriesFactor": 0.05
+    "caloriesFactor": 0.05,
+    "youtubeVideoId": "mjZZ22GLcDc",
+    "youtubeAttribution": null
   },
   {
     "id": "Tuck_Crunch",
@@ -1729,7 +1817,9 @@
     "source": "free_exercise_db",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "youtubeAttribution": null
   },
   {
     "id": "Single_Leg_Stretch",
@@ -1766,7 +1856,9 @@
     "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.055
+    "caloriesFactor": 0.055,
+    "youtubeVideoId": "Ad4lgW4ieAM",
+    "youtubeAttribution": null
   },
   {
     "id": "Double_Leg_Stretch",
@@ -1803,7 +1895,9 @@
     "source": "generated_betterme",
     "repsBaseline": 10,
     "holdSeconds": null,
-    "caloriesFactor": 0.055
+    "caloriesFactor": 0.055,
+    "youtubeVideoId": "fuwzt4d7FuY",
+    "youtubeAttribution": null
   },
   {
     "id": "Criss_Cross",
@@ -1841,7 +1935,9 @@
     "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.055
+    "caloriesFactor": 0.055,
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "youtubeAttribution": null
   },
   {
     "id": "Spine_Stretch_Forward",
@@ -1876,11 +1972,13 @@
       "flexibility",
       "posture"
     ],
-    "sessionRole": "cooldown",
+    "sessionRole": "warmup",
     "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
-    "caloriesFactor": 0.035
+    "caloriesFactor": 0.035,
+    "youtubeVideoId": "XZGuNaEV-nM",
+    "youtubeAttribution": null
   },
   {
     "id": "Saw",
@@ -1921,7 +2019,9 @@
     "source": "generated_betterme",
     "repsBaseline": 10,
     "holdSeconds": null,
-    "caloriesFactor": 0.04
+    "caloriesFactor": 0.04,
+    "youtubeVideoId": "Sb0SG1cXgEY",
+    "youtubeAttribution": null
   },
   {
     "id": "Mermaid_Stretch",
@@ -1956,11 +2056,13 @@
       "flexibility",
       "posture"
     ],
-    "sessionRole": "cooldown",
+    "sessionRole": "warmup",
     "source": "generated_betterme",
     "repsBaseline": 6,
     "holdSeconds": null,
-    "caloriesFactor": 0.03
+    "caloriesFactor": 0.03,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": null
   },
   {
     "id": "Side_Kick",
@@ -1998,7 +2100,9 @@
     "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.05
+    "caloriesFactor": 0.05,
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "youtubeAttribution": null
   },
   {
     "id": "Clamshell",
@@ -2034,7 +2138,9 @@
     "source": "generated_betterme",
     "repsBaseline": 14,
     "holdSeconds": null,
-    "caloriesFactor": 0.045
+    "caloriesFactor": 0.045,
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "youtubeAttribution": null
   },
   {
     "id": "Fire_Hydrant",
@@ -2071,7 +2177,9 @@
     "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.05
+    "caloriesFactor": 0.05,
+    "youtubeVideoId": "hgLDMHCcw4k",
+    "youtubeAttribution": null
   },
   {
     "id": "Donkey_Kick",
@@ -2108,7 +2216,9 @@
     "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.05
+    "caloriesFactor": 0.05,
+    "youtubeVideoId": "hgLDMHCcw4k",
+    "youtubeAttribution": null
   },
   {
     "id": "Toe_Taps",
@@ -2145,7 +2255,9 @@
     "source": "generated_betterme",
     "repsBaseline": 12,
     "holdSeconds": null,
-    "caloriesFactor": 0.04
+    "caloriesFactor": 0.04,
+    "youtubeVideoId": "Ad4lgW4ieAM",
+    "youtubeAttribution": null
   },
   {
     "id": "Hollow_Hold",
@@ -2182,7 +2294,9 @@
     "source": "generated_betterme",
     "repsBaseline": null,
     "holdSeconds": 25,
-    "caloriesFactor": 0.055
+    "caloriesFactor": 0.055,
+    "youtubeVideoId": "9mlone4NObI",
+    "youtubeAttribution": null
   },
   {
     "id": "Side_Plank",
@@ -2221,7 +2335,9 @@
     "source": "generated_betterme",
     "repsBaseline": null,
     "holdSeconds": 25,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": null
   },
   {
     "id": "Open_Leg_Rocker",
@@ -2260,7 +2376,9 @@
     "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "E4FSgzPlUcs",
+    "youtubeAttribution": null
   },
   {
     "id": "Corkscrew",
@@ -2297,7 +2415,9 @@
     "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
-    "caloriesFactor": 0.06
+    "caloriesFactor": 0.06,
+    "youtubeVideoId": "yssUvNuQowE",
+    "youtubeAttribution": null
   },
   {
     "id": "Childs_Pose",
@@ -2331,11 +2451,13 @@
       "mobility",
       "flexibility"
     ],
-    "sessionRole": "cooldown",
+    "sessionRole": "warmup",
     "source": "generated_betterme",
     "repsBaseline": null,
     "holdSeconds": 30,
-    "caloriesFactor": 0.025
+    "caloriesFactor": 0.025,
+    "youtubeVideoId": "XZGuNaEV-nM",
+    "youtubeAttribution": null
   },
   {
     "id": "Thread_the_Needle",
@@ -2370,11 +2492,13 @@
       "flexibility",
       "posture"
     ],
-    "sessionRole": "cooldown",
+    "sessionRole": "warmup",
     "source": "generated_betterme",
     "repsBaseline": 6,
     "holdSeconds": null,
-    "caloriesFactor": 0.03
+    "caloriesFactor": 0.03,
+    "youtubeVideoId": "PPFkp7Aa3Rg",
+    "youtubeAttribution": null
   },
   {
     "id": "Seated_Spine_Twist",
@@ -2410,10 +2534,2323 @@
       "posture",
       "core"
     ],
-    "sessionRole": "cooldown",
+    "sessionRole": "warmup",
     "source": "generated_betterme",
     "repsBaseline": 8,
     "holdSeconds": null,
-    "caloriesFactor": 0.035
+    "caloriesFactor": 0.035,
+    "youtubeVideoId": "PPFkp7Aa3Rg",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Magic_Circle_Inner_Thigh_Squeeze",
+    "name": "Magic Circle Inner Thigh Squeeze",
+    "description": "Seated or supine inner-thigh work with the magic circle for controlled adduction.",
+    "instructions": [
+      "Place the magic circle between your knees or ankles.",
+      "Exhale and gently squeeze the pads together without collapsing the spine.",
+      "Inhale to release halfway — keep tension in the circle.",
+      "Keep ribs soft and pelvis steady."
+    ],
+    "commonMistakes": [
+      "Clenching the jaw",
+      "Tucking the pelvis hard",
+      "Rushing the squeeze"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "inner thighs",
+    "secondaryMuscles": [
+      "core",
+      "glutes"
+    ],
+    "equipment": "magic circle",
+    "thumbnailUri": "assets/exercises/thumbnails/Magic_Circle_Inner_Thigh_Squeeze.jpg",
+    "gifUri": "assets/exercises/gifs/Magic_Circle_Inner_Thigh_Squeeze.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 12,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "1hQVdnxnfLk",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Magic_Circle_Arm_Press",
+    "name": "Magic Circle Arm Press",
+    "description": "Standing or seated arm press into the magic circle for shoulder stability and posture.",
+    "instructions": [
+      "Hold the magic circle at chest height with both palms on the pads.",
+      "Exhale and press inward evenly.",
+      "Keep shoulders away from ears and ribs stacked over hips.",
+      "Release halfway on the inhale."
+    ],
+    "commonMistakes": [
+      "Shrugging shoulders",
+      "Flaring ribs",
+      "Locking elbows"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "shoulders",
+    "secondaryMuscles": [
+      "arms",
+      "upper back"
+    ],
+    "equipment": "magic circle",
+    "thumbnailUri": "assets/exercises/thumbnails/Magic_Circle_Arm_Press.jpg",
+    "gifUri": "assets/exercises/gifs/Magic_Circle_Arm_Press.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.3,
+    "youtubeVideoId": "1hQVdnxnfLk",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Magic_Circle_Chest_Opener",
+    "name": "Magic Circle Chest Opener",
+    "description": "Gentle chest expansion using the magic circle behind the back or overhead.",
+    "instructions": [
+      "Hold the circle in front or behind with soft elbows.",
+      "Inhale to open the chest without dumping into the low back.",
+      "Exhale to return with control.",
+      "Keep the neck long."
+    ],
+    "commonMistakes": [
+      "Arching the lumbar spine",
+      "Tensing the neck"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "upper back",
+    "secondaryMuscles": [
+      "shoulders",
+      "core"
+    ],
+    "equipment": "magic circle",
+    "thumbnailUri": "assets/exercises/thumbnails/Magic_Circle_Chest_Opener.jpg",
+    "gifUri": "assets/exercises/gifs/Magic_Circle_Chest_Opener.jpg",
+    "tags": [
+      "mat_pilates",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "flexibility",
+      "posture"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.25,
+    "youtubeVideoId": "1hQVdnxnfLk",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Magic_Circle_Hundred_Prep",
+    "name": "Magic Circle Hundred Prep",
+    "description": "Hundred-style core prep with light magic-circle resistance in the hands.",
+    "instructions": [
+      "Curl head and shoulders up as for the Hundred.",
+      "Hold the circle above the thighs and pulse the arms.",
+      "Breathe in for five pumps, out for five.",
+      "Keep the low back supported."
+    ],
+    "commonMistakes": [
+      "Straining the neck",
+      "Dropping the circle into the hips"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "arms",
+      "hip flexors"
+    ],
+    "equipment": "magic circle",
+    "thumbnailUri": "assets/exercises/thumbnails/Magic_Circle_Hundred_Prep.jpg",
+    "gifUri": "assets/exercises/gifs/Magic_Circle_Hundred_Prep.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": null,
+    "holdSeconds": 40,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "9mlone4NObI",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Magic_Circle_Side_Lying_Press",
+    "name": "Magic Circle Side-Lying Press",
+    "description": "Side-lying outer-hip work pressing into the magic circle.",
+    "instructions": [
+      "Lie on your side with the circle between ankles or knees.",
+      "Exhale and press the top pad away with control.",
+      "Keep the waist long and hips stacked.",
+      "Return halfway without collapsing."
+    ],
+    "commonMistakes": [
+      "Rolling the top hip back",
+      "Using momentum"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "outer thighs",
+    "secondaryMuscles": [
+      "glutes",
+      "core"
+    ],
+    "equipment": "magic circle",
+    "thumbnailUri": "assets/exercises/thumbnails/Magic_Circle_Side_Lying_Press.jpg",
+    "gifUri": "assets/exercises/gifs/Magic_Circle_Side_Lying_Press.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Light_Weight_Arm_Circles",
+    "name": "Light Weight Arm Circles",
+    "description": "Controlled standing or seated arm circles with light dumbbells for shoulder endurance.",
+    "instructions": [
+      "Hold light weights at shoulder height with soft elbows.",
+      "Draw small circles forward, then reverse.",
+      "Keep the ribs quiet and neck long.",
+      "Stop if shoulders creep toward the ears."
+    ],
+    "commonMistakes": [
+      "Circles too large",
+      "Arching the back"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "shoulders",
+    "secondaryMuscles": [
+      "arms",
+      "upper back"
+    ],
+    "equipment": "light weights",
+    "thumbnailUri": "assets/exercises/thumbnails/Light_Weight_Arm_Circles.jpg",
+    "gifUri": "assets/exercises/gifs/Light_Weight_Arm_Circles.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 12,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "MnArWKzhSwM",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Light_Weight_Tricep_Reach",
+    "name": "Light Weight Tricep Reach",
+    "description": "Supine or seated tricep reach with light weights for arm tone without bulk focus.",
+    "instructions": [
+      "Hold weights above the chest or behind the head with elbows soft.",
+      "Exhale and extend with control.",
+      "Inhale to bend without flaring elbows wide.",
+      "Keep ribs knitted."
+    ],
+    "commonMistakes": [
+      "Elbows winging out",
+      "Holding breath"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "arms",
+    "secondaryMuscles": [
+      "shoulders",
+      "core"
+    ],
+    "equipment": "light weights",
+    "thumbnailUri": "assets/exercises/thumbnails/Light_Weight_Tricep_Reach.jpg",
+    "gifUri": "assets/exercises/gifs/Light_Weight_Tricep_Reach.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.3,
+    "youtubeVideoId": "Ny0qFffcemg",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Light_Weight_Bridge_Press",
+    "name": "Light Weight Bridge Press",
+    "description": "Shoulder bridge with light weights held over the chest for added upper-body awareness.",
+    "instructions": [
+      "Set up for a shoulder bridge with weights above the sternum.",
+      "Exhale and peel the spine up vertebra by vertebra.",
+      "Hold briefly, then articulate down.",
+      "Keep wrists stacked over elbows."
+    ],
+    "commonMistakes": [
+      "Dumping into the neck",
+      "Weights drifting over the face"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "hamstrings",
+      "core",
+      "arms"
+    ],
+    "equipment": "light weights",
+    "thumbnailUri": "assets/exercises/thumbnails/Light_Weight_Bridge_Press.jpg",
+    "gifUri": "assets/exercises/gifs/Light_Weight_Bridge_Press.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Light_Weight_Seated_Row",
+    "name": "Light Weight Seated Row",
+    "description": "Seated posture row with light weights to open the chest and strengthen the upper back.",
+    "instructions": [
+      "Sit tall with weights in hand, elbows soft.",
+      "Exhale and draw elbows back as if rowing.",
+      "Squeeze the shoulder blades gently.",
+      "Return with control."
+    ],
+    "commonMistakes": [
+      "Rounding the upper back",
+      "Shrugging"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "upper back",
+    "secondaryMuscles": [
+      "shoulders",
+      "arms"
+    ],
+    "equipment": "light weights",
+    "thumbnailUri": "assets/exercises/thumbnails/Light_Weight_Seated_Row.jpg",
+    "gifUri": "assets/exercises/gifs/Light_Weight_Seated_Row.jpg",
+    "tags": [
+      "mat_pilates",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "posture"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 12,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "kDnRUErxC7k",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Light_Weight_Hundred_Arms",
+    "name": "Light Weight Hundred Arms",
+    "description": "Hundred arm pumps with very light weights for added endurance.",
+    "instructions": [
+      "Curl into Hundred position with light weights in hand.",
+      "Pump the arms while breathing five in, five out.",
+      "Keep the weights hovering above the thighs.",
+      "Lower if the neck fatigues."
+    ],
+    "commonMistakes": [
+      "Weights slamming into thighs",
+      "Neck strain"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "arms",
+      "shoulders"
+    ],
+    "equipment": "light weights",
+    "thumbnailUri": "assets/exercises/thumbnails/Light_Weight_Hundred_Arms.jpg",
+    "gifUri": "assets/exercises/gifs/Light_Weight_Hundred_Arms.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": null,
+    "holdSeconds": 50,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "9mlone4NObI",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Band_Glute_Bridge",
+    "name": "Band Glute Bridge",
+    "description": "Shoulder bridge with a mini-band above the knees for outer-hip activation.",
+    "instructions": [
+      "Place a band above the knees and set up for bridge.",
+      "Press knees gently outward against the band.",
+      "Exhale and peel the hips up.",
+      "Lower with control while keeping band tension."
+    ],
+    "commonMistakes": [
+      "Knees collapsing inward",
+      "Overarching the ribs"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "outer thighs",
+      "hamstrings"
+    ],
+    "equipment": "resistance band",
+    "thumbnailUri": "assets/exercises/thumbnails/Band_Glute_Bridge.jpg",
+    "gifUri": "assets/exercises/gifs/Band_Glute_Bridge.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "resistance_band"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Band_Clamshell",
+    "name": "Band Clamshell",
+    "description": "Side-lying clamshell with a resistance band for controlled outer-hip work.",
+    "instructions": [
+      "Lie on your side with band around thighs, knees bent.",
+      "Exhale and open the top knee without rolling the pelvis.",
+      "Inhale to close with control.",
+      "Keep feet stacked."
+    ],
+    "commonMistakes": [
+      "Rocking the pelvis back",
+      "Using momentum"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "outer thighs",
+    "secondaryMuscles": [
+      "glutes",
+      "core"
+    ],
+    "equipment": "resistance band",
+    "thumbnailUri": "assets/exercises/thumbnails/Band_Clamshell.jpg",
+    "gifUri": "assets/exercises/gifs/Band_Clamshell.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "resistance_band"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 12,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Band_Row",
+    "name": "Band Row",
+    "description": "Seated or standing band row for posture and upper-back strength.",
+    "instructions": [
+      "Anchor the band and sit or stand tall.",
+      "Exhale and draw elbows back.",
+      "Keep wrists neutral and shoulders down.",
+      "Return slowly."
+    ],
+    "commonMistakes": [
+      "Rounding forward",
+      "Yanking the band"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "upper back",
+    "secondaryMuscles": [
+      "shoulders",
+      "arms"
+    ],
+    "equipment": "resistance band",
+    "thumbnailUri": "assets/exercises/thumbnails/Band_Row.jpg",
+    "gifUri": "assets/exercises/gifs/Band_Row.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "posture",
+      "resistance_band"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 12,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "MvsOFQ_1rgU",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Band_Side_Step",
+    "name": "Band Side Step",
+    "description": "Lateral band walk for hip stability and glute activation.",
+    "instructions": [
+      "Place band around ankles or above knees.",
+      "Soft knees, tall spine.",
+      "Step sideways maintaining band tension.",
+      "Keep toes pointing forward."
+    ],
+    "commonMistakes": [
+      "Waddling with torso lean",
+      "Losing band tension"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "outer thighs",
+      "core"
+    ],
+    "equipment": "resistance band",
+    "thumbnailUri": "assets/exercises/thumbnails/Band_Side_Step.jpg",
+    "gifUri": "assets/exercises/gifs/Band_Side_Step.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "resistance_band"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 16,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Band_Pull_Apart",
+    "name": "Band Pull-Apart",
+    "description": "Standing band pull-apart to open the chest and strengthen the rear shoulders.",
+    "instructions": [
+      "Hold the band at chest height with soft elbows.",
+      "Exhale and open the arms wide.",
+      "Squeeze the shoulder blades gently.",
+      "Return without collapsing the chest."
+    ],
+    "commonMistakes": [
+      "Shrugging",
+      "Locking elbows"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "shoulders",
+    "secondaryMuscles": [
+      "upper back"
+    ],
+    "equipment": "resistance band",
+    "thumbnailUri": "assets/exercises/thumbnails/Band_Pull_Apart.jpg",
+    "gifUri": "assets/exercises/gifs/Band_Pull_Apart.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "posture",
+      "resistance_band"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 12,
+    "holdSeconds": null,
+    "caloriesFactor": 0.3,
+    "youtubeVideoId": "MvsOFQ_1rgU",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Ball_Seated_March",
+    "name": "Ball Seated March",
+    "description": "Seated on a pilates ball with gentle marches for core and balance.",
+    "instructions": [
+      "Sit tall on the ball with feet grounded.",
+      "Alternate lifting one foot a few inches.",
+      "Keep the pelvis quiet and ribs soft.",
+      "Use arms for balance if needed."
+    ],
+    "commonMistakes": [
+      "Slumping",
+      "Holding the breath"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors",
+      "full body"
+    ],
+    "equipment": "pilates ball",
+    "thumbnailUri": "assets/exercises/thumbnails/Ball_Seated_March.jpg",
+    "gifUri": "assets/exercises/gifs/Ball_Seated_March.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 16,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "elkcXFPyaW8",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Ball_Bridge",
+    "name": "Ball Bridge",
+    "description": "Feet on the pilates ball for an unstable shoulder bridge.",
+    "instructions": [
+      "Lie on your back with heels on the ball.",
+      "Exhale and lift the hips into a bridge.",
+      "Keep the ball steady under the feet.",
+      "Lower vertebra by vertebra."
+    ],
+    "commonMistakes": [
+      "Letting the ball roll away",
+      "Overarching the neck"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "pilates ball",
+    "thumbnailUri": "assets/exercises/thumbnails/Ball_Bridge.jpg",
+    "gifUri": "assets/exercises/gifs/Ball_Bridge.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Ball_Roll_Out",
+    "name": "Ball Roll-Out",
+    "description": "Kneeling roll-out on the pilates ball for deep core control.",
+    "instructions": [
+      "Kneel with forearms or hands on the ball.",
+      "Exhale and roll the ball forward a comfortable distance.",
+      "Keep the ribs from dumping.",
+      "Roll back in with control."
+    ],
+    "commonMistakes": [
+      "Sagging through the low back",
+      "Going too far too soon"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "pilates ball",
+    "thumbnailUri": "assets/exercises/thumbnails/Ball_Roll_Out.jpg",
+    "gifUri": "assets/exercises/gifs/Ball_Roll_Out.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "elkcXFPyaW8",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Ball_Spine_Stretch",
+    "name": "Ball Spine Stretch",
+    "description": "Seated spine stretch supported by the pilates ball behind or under the hands.",
+    "instructions": [
+      "Sit tall with the ball nearby for support.",
+      "Exhale and articulate forward over the legs.",
+      "Use the ball lightly if needed for balance.",
+      "Stack the spine to return."
+    ],
+    "commonMistakes": [
+      "Rounding only at the neck",
+      "Forcing the stretch"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "hamstrings",
+    "secondaryMuscles": [
+      "lower back",
+      "core"
+    ],
+    "equipment": "pilates ball",
+    "thumbnailUri": "assets/exercises/thumbnails/Ball_Spine_Stretch.jpg",
+    "gifUri": "assets/exercises/gifs/Ball_Spine_Stretch.jpg",
+    "tags": [
+      "mat_pilates",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "flexibility"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.25,
+    "youtubeVideoId": "XZGuNaEV-nM",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Ball_Side_Crunch",
+    "name": "Ball Side Crunch",
+    "description": "Side-lying or seated lateral flexion with the pilates ball for waist support.",
+    "instructions": [
+      "Set up with the ball supporting the side body or under the hand.",
+      "Exhale and shorten the top waist.",
+      "Inhale to lengthen without collapsing.",
+      "Keep the neck long."
+    ],
+    "commonMistakes": [
+      "Pulling on the neck",
+      "Twisting instead of side-bending"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "outer thighs"
+    ],
+    "equipment": "pilates ball",
+    "thumbnailUri": "assets/exercises/thumbnails/Ball_Side_Crunch.jpg",
+    "gifUri": "assets/exercises/gifs/Ball_Side_Crunch.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Reformer_Footwork",
+    "name": "Reformer Footwork",
+    "description": "Classic reformer footwork series for legs and pelvic stability.",
+    "instructions": [
+      "Lie on the reformer carriage with feet on the footbar.",
+      "Exhale to press the carriage out with control.",
+      "Inhale to return without slamming the stoppers.",
+      "Keep the pelvis neutral."
+    ],
+    "commonMistakes": [
+      "Hyperextending knees",
+      "Tucking aggressively"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "quadriceps",
+    "secondaryMuscles": [
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Footwork.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Footwork.jpg",
+    "tags": [
+      "reformer_pilates",
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "QDBzjlhKsco",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Reformer_Hundred",
+    "name": "Reformer Hundred",
+    "description": "Hundred variation on the reformer with straps or arms pumping.",
+    "instructions": [
+      "Set up in Hundred position on the carriage.",
+      "Pump the arms while breathing five in, five out.",
+      "Keep the carriage quiet unless cued otherwise.",
+      "Modify legs bent if needed."
+    ],
+    "commonMistakes": [
+      "Neck strain",
+      "Losing abdominal connection"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "arms",
+      "hip flexors"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Hundred.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Hundred.jpg",
+    "tags": [
+      "reformer_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": null,
+    "holdSeconds": 50,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "9mlone4NObI",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Reformer_Long_Stretch",
+    "name": "Reformer Long Stretch",
+    "description": "Plank-based long stretch on the reformer for full-body strength.",
+    "instructions": [
+      "Start in a plank with hands on the footbar.",
+      "Exhale and press the carriage back.",
+      "Inhale to return without sinking the hips.",
+      "Keep the neck long."
+    ],
+    "commonMistakes": [
+      "Sagging hips",
+      "Shrugging into the ears"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "full body",
+    "secondaryMuscles": [
+      "core",
+      "shoulders"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Long_Stretch.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Long_Stretch.jpg",
+    "tags": [
+      "reformer_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.55,
+    "youtubeVideoId": "BfRY99Ka-zQ",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Reformer_Elephant",
+    "name": "Reformer Elephant",
+    "description": "Standing elephant on the reformer for hamstrings and abdominal scoop.",
+    "instructions": [
+      "Stand on the reformer in elephant setup with hands on the footbar.",
+      "Exhale and scoop to move the carriage.",
+      "Keep heels reaching and spine rounded intentionally.",
+      "Return with control."
+    ],
+    "commonMistakes": [
+      "Locking the knees",
+      "Losing the scoop"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "hamstrings",
+    "secondaryMuscles": [
+      "core",
+      "shoulders"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Elephant.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Elephant.jpg",
+    "tags": [
+      "reformer_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "q4aSiZC1yjo",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Reformer_Mermaid",
+    "name": "Reformer Mermaid",
+    "description": "Seated mermaid side stretch on the reformer for lateral mobility.",
+    "instructions": [
+      "Sit sideways on the reformer in mermaid setup.",
+      "Inhale to reach the arm up and open the side body.",
+      "Exhale to return with control.",
+      "Keep the sit bones grounded."
+    ],
+    "commonMistakes": [
+      "Collapsing into the supporting hip",
+      "Forcing range"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "shoulders",
+      "outer thighs"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Mermaid.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Mermaid.jpg",
+    "tags": [
+      "reformer_pilates",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "flexibility"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.3,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Reformer_Arms_Supine",
+    "name": "Reformer Arms Supine",
+    "description": "Supine arm work in straps for shoulder mobility and core control.",
+    "instructions": [
+      "Lie on the carriage with arms in straps.",
+      "Exhale and move the arms through the cued pattern.",
+      "Keep the ribs heavy and pelvis quiet.",
+      "Avoid yanking the straps."
+    ],
+    "commonMistakes": [
+      "Arching the low back",
+      "Shrugging"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "shoulders",
+    "secondaryMuscles": [
+      "core",
+      "arms"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Arms_Supine.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Arms_Supine.jpg",
+    "tags": [
+      "reformer_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "3dYwRDMassE",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Half_Roll_Down",
+    "name": "Half Roll-Down",
+    "description": "Seated half roll-down to train spinal articulation and abdominal scoop.",
+    "instructions": [
+      "Sit tall with knees bent or legs long.",
+      "Exhale and roll halfway back, keeping a C-curve.",
+      "Hold, then stack to sitting.",
+      "Move vertebra by vertebra."
+    ],
+    "commonMistakes": [
+      "Collapsing the chest",
+      "Using momentum"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Half_Roll_Down.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Half_Roll_Down.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Pelvic_Curl",
+    "name": "Pelvic Curl",
+    "description": "Articulated pelvic curl to warm the spine and wake the glutes.",
+    "instructions": [
+      "Lie on your back with knees bent, feet hip-width.",
+      "Exhale and peel the spine up into a bridge.",
+      "Inhale at the top, exhale to roll down.",
+      "Keep the neck long."
+    ],
+    "commonMistakes": [
+      "Pushing into the neck",
+      "Skipping spinal articulation"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Pelvic_Curl.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Pelvic_Curl.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Single_Leg_Circles",
+    "name": "Single Leg Circles",
+    "description": "Classical single-leg circles for hip mobility with a quiet pelvis.",
+    "instructions": [
+      "Lie on your back with one leg extended to the ceiling.",
+      "Draw controlled circles from the hip.",
+      "Reverse direction after several reps.",
+      "Keep the pelvis glued to the mat."
+    ],
+    "commonMistakes": [
+      "Rocking the hips",
+      "Circles too large"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "hip flexors",
+    "secondaryMuscles": [
+      "core",
+      "outer thighs"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Single_Leg_Circles.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Single_Leg_Circles.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "RZqtVL6K8DM",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Rolling_Like_a_Ball",
+    "name": "Rolling Like a Ball",
+    "description": "Classical rolling like a ball for massage and core control.",
+    "instructions": [
+      "Balance in a tucked seat with hands on shins.",
+      "Inhale to roll back to the shoulders.",
+      "Exhale to roll up to balance without putting feet down.",
+      "Keep the shape round."
+    ],
+    "commonMistakes": [
+      "Using momentum only",
+      "Landing on the neck"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "full body"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Rolling_Like_a_Ball.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Rolling_Like_a_Ball.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "elkcXFPyaW8",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Spine_Twist",
+    "name": "Spine Twist",
+    "description": "Seated spine twist for rotational mobility with a tall seat.",
+    "instructions": [
+      "Sit tall with legs long or crossed.",
+      "Exhale and rotate through the waist.",
+      "Pulse gently if cued, then return to center.",
+      "Grow taller on every twist."
+    ],
+    "commonMistakes": [
+      "Rounding the spine",
+      "Twisting only from the arms"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "upper back"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Spine_Twist.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Spine_Twist.jpg",
+    "tags": [
+      "mat_pilates",
+      "flexibility_length"
+    ],
+    "categories": [
+      "pilates",
+      "flexibility",
+      "mobility"
+    ],
+    "sessionRole": "warmup",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.25,
+    "youtubeVideoId": "PPFkp7Aa3Rg",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Leg_Pull_Front",
+    "name": "Leg Pull Front",
+    "description": "Plank-based leg pull front for shoulder and core strength.",
+    "instructions": [
+      "Start in a strong plank.",
+      "Lift one leg slightly without tipping the hips.",
+      "Lower and switch sides.",
+      "Keep the wrists stacked under shoulders."
+    ],
+    "commonMistakes": [
+      "Sagging hips",
+      "Hiking one hip"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "full body",
+    "secondaryMuscles": [
+      "core",
+      "shoulders",
+      "glutes"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Leg_Pull_Front.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Leg_Pull_Front.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "fLYsUbi_f-A",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Side_Bend",
+    "name": "Side Bend",
+    "description": "Side plank variation lifting into a side bend for oblique strength.",
+    "instructions": [
+      "Set up in a side plank on hand or forearm.",
+      "Exhale and lift the hips into a side bend.",
+      "Inhale to lower with control.",
+      "Keep the neck long."
+    ],
+    "commonMistakes": [
+      "Collapsing the supporting shoulder",
+      "Twisting the chest forward"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "shoulders",
+      "outer thighs"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Side_Bend.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Side_Bend.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Neck_Pull",
+    "name": "Neck Pull",
+    "description": "Classical neck pull for advanced spinal articulation and abs.",
+    "instructions": [
+      "Lie with hands behind the head, legs long.",
+      "Exhale and roll up through the spine.",
+      "Reach forward, then articulate down with control.",
+      "Do not pull on the neck."
+    ],
+    "commonMistakes": [
+      "Yanking the head",
+      "Using momentum"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Neck_Pull.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Neck_Pull.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 5,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "wVaSdDSxKwY",
+    "youtubeAttribution": null
+  },
+  {
+    "id": "Mat_Roll_Over",
+    "name": "Roll Over",
+    "description": "Classical mat Roll Over for spinal articulation and lower-abdominal control.",
+    "instructions": [
+      "Lie supine with legs long and arms by your sides.",
+      "Exhale and peel the hips up, rolling over until toes reach toward the floor behind you.",
+      "Keep the neck soft and weight across the shoulders — not the head.",
+      "Inhale to prepare, exhale to roll down vertebra by vertebra."
+    ],
+    "commonMistakes": [
+      "Dumping into the neck",
+      "Using momentum to throw the legs",
+      "Collapsing the ribs"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors",
+      "lower back"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Roll_Over.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Roll_Over.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "Y5YdoRMCCKM",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Single_Leg_Kick",
+    "name": "Single Leg Kick",
+    "description": "Prone Single Leg Kick for hamstrings, glutes, and upper-back extension.",
+    "instructions": [
+      "Lie prone on your forearms with chest lifted and pubic bone heavy.",
+      "Kick one heel twice toward the seat, then lengthen the leg long.",
+      "Alternate legs with control; keep hips quiet on the mat.",
+      "Maintain length through the crown and soft shoulders."
+    ],
+    "commonMistakes": [
+      "Sagging in the low back",
+      "Rocking the pelvis",
+      "Shrugging the shoulders"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "hamstrings",
+    "secondaryMuscles": [
+      "glutes",
+      "lower back"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Single_Leg_Kick.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Single_Leg_Kick.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "X79gMUknrVs",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Double_Leg_Kick",
+    "name": "Double Leg Kick",
+    "description": "Classical Double Leg Kick combining hamstring work with thoracic extension.",
+    "instructions": [
+      "Lie prone with hands stacked behind the back and one cheek on the mat.",
+      "Kick both heels to the seat three times, then stretch arms long and lift the chest.",
+      "Turn the other cheek to the mat as you lower.",
+      "Keep the pubic bone anchored and neck long."
+    ],
+    "commonMistakes": [
+      "Over-arching the lumbar spine",
+      "Lifting with the neck",
+      "Rushing the kicks"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "hamstrings",
+    "secondaryMuscles": [
+      "glutes",
+      "upper back"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Double_Leg_Kick.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Double_Leg_Kick.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "posture",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "KAotX1bDGps",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Hip_Circles",
+    "name": "Hip Circles",
+    "description": "Seated Hip Circles for hip mobility with deep center support.",
+    "instructions": [
+      "Balance on the sit bones with legs lifted in a V and hands lightly behind you.",
+      "Circle both legs together without collapsing the low back.",
+      "Reverse direction after equal reps.",
+      "Keep the chest open and jaw soft."
+    ],
+    "commonMistakes": [
+      "Rounding hard into the lumbar spine",
+      "Holding the breath",
+      "Using the hands to shove"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors",
+      "inner thighs"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Hip_Circles.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Hip_Circles.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "mobility"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "E4FSgzPlUcs",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Seal",
+    "name": "Seal",
+    "description": "Classical Seal for balance, spinal massage, and playful control.",
+    "instructions": [
+      "Sit in a tucked ball, hold the ankles, and clap the feet three times.",
+      "Roll back to the shoulders and clap again, then return to balance.",
+      "Keep the chin slightly tucked and the roll smooth.",
+      "Land quietly on the sit bones without collapsing."
+    ],
+    "commonMistakes": [
+      "Rolling onto the neck",
+      "Losing the tuck",
+      "Using momentum only"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Seal.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Seal.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "elkcXFPyaW8",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Boomerang",
+    "name": "Boomerang",
+    "description": "Advanced classical Boomerang combining roll over, teaser, and arm circles.",
+    "instructions": [
+      "Sit tall with ankles crossed and arms reaching long.",
+      "Roll back over the shoulders, switch the cross of the ankles, then roll up to Teaser.",
+      "Circle the arms and fold forward with control before repeating.",
+      "Move as one continuous phrase — no dumping into the neck."
+    ],
+    "commonMistakes": [
+      "Breaking the sequence into jerks",
+      "Collapsing the chest in Teaser",
+      "Neck strain on the roll"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "full body",
+    "secondaryMuscles": [
+      "core",
+      "hip flexors"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Boomerang.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Boomerang.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.55,
+    "youtubeVideoId": "9WFOlfrqWo8",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Bicycle",
+    "name": "Bicycle",
+    "description": "Classical Bicycle for oblique control with long, precise leg reach.",
+    "instructions": [
+      "Curl head and shoulders up with hands lightly supporting the skull.",
+      "Reach one leg long while the other knee draws in; rotate opposite elbow toward the knee.",
+      "Switch with control — no bouncing.",
+      "Keep the low back supported and elbows wide."
+    ],
+    "commonMistakes": [
+      "Pulling on the neck",
+      "Short chopping switches",
+      "Losing the curl"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Bicycle.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Bicycle.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "posture"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 12,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Kneeling_Side_Kick",
+    "name": "Kneeling Side Kick",
+    "description": "Kneeling Side Kick series for lateral hip strength and balance.",
+    "instructions": [
+      "Kneel and lean onto one hand with the top leg long at hip height.",
+      "Kick the top leg forward and back with a pointed or flexed foot as cued.",
+      "Keep the waist long and hips stacked over the kneeling knee.",
+      "Switch sides after equal work."
+    ],
+    "commonMistakes": [
+      "Collapsing into the supporting shoulder",
+      "Swinging from the low back",
+      "Hiking the hip"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "outer thighs",
+      "core"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Kneeling_Side_Kick.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Kneeling_Side_Kick.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "hgLDMHCcw4k",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Leg_Pull_Back",
+    "name": "Leg Pull Back",
+    "description": "Reverse plank Leg Pull for posterior chain and shoulder stability.",
+    "instructions": [
+      "Sit with hands behind you and lift into a reverse plank.",
+      "Kick one leg toward the ceiling without dropping the hips.",
+      "Lower with control and alternate.",
+      "Keep the chest open and neck long."
+    ],
+    "commonMistakes": [
+      "Sagging hips",
+      "Shrugging shoulders",
+      "Locking the elbows harshly"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "hamstrings",
+      "shoulders",
+      "core"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Leg_Pull_Back.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Leg_Pull_Back.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "fLYsUbi_f-A",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Teaser_Prep",
+    "name": "Teaser Prep",
+    "description": "Beginner-friendly Teaser progression with bent knees and supported roll.",
+    "instructions": [
+      "Lie supine with knees bent and arms reaching to the ceiling.",
+      "Exhale and roll up to a balanced V with shins parallel to the floor.",
+      "Hold briefly, then roll down with control.",
+      "Keep the gaze between the knees and the low back supported."
+    ],
+    "commonMistakes": [
+      "Yanking with the hip flexors",
+      "Rounding the upper back hard",
+      "Holding the breath"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Teaser_Prep.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Teaser_Prep.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "9WFOlfrqWo8",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Mat_Swan_Dive",
+    "name": "Swan Dive",
+    "description": "Dynamic Swan Dive for spinal extension strength and control.",
+    "instructions": [
+      "Start in Swan with hands under shoulders and legs long.",
+      "Rock forward onto the chest as the legs lift, then rock back lifting the chest.",
+      "Keep the glutes lightly engaged and neck in line with the spine.",
+      "Reduce range if the low back pinches."
+    ],
+    "commonMistakes": [
+      "Compressing the lumbar spine",
+      "Leading with the chin",
+      "Floppy legs"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "lower back",
+    "secondaryMuscles": [
+      "glutes",
+      "upper back"
+    ],
+    "equipment": "mat",
+    "thumbnailUri": "assets/exercises/thumbnails/Mat_Swan_Dive.jpg",
+    "gifUri": "assets/exercises/gifs/Mat_Swan_Dive.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "posture",
+      "bodyweight"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 6,
+    "holdSeconds": null,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "mjZZ22GLcDc",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Magic_Circle_Bridge_Squeeze",
+    "name": "Magic Circle Bridge Squeeze",
+    "description": "Shoulder bridge with magic-circle adduction for glutes and inner thighs.",
+    "instructions": [
+      "Lie supine with the circle between the knees and feet grounded.",
+      "Exhale to bridge up while lightly squeezing the circle.",
+      "Hold at the top, then articulate down.",
+      "Keep ribs soft and knees tracking over the mid-foot."
+    ],
+    "commonMistakes": [
+      "Over-squeezing the jaw",
+      "Flaring the ribs",
+      "Pushing from the low back"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "glutes",
+    "secondaryMuscles": [
+      "inner thighs",
+      "core"
+    ],
+    "equipment": "magic circle",
+    "thumbnailUri": "assets/exercises/thumbnails/Magic_Circle_Bridge_Squeeze.jpg",
+    "gifUri": "assets/exercises/gifs/Magic_Circle_Bridge_Squeeze.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "glutes"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.35,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Magic_Circle_Standing_Press",
+    "name": "Magic Circle Standing Press",
+    "description": "Standing press-out with the magic circle for posture and shoulder stability.",
+    "instructions": [
+      "Stand tall holding the circle at chest height.",
+      "Exhale and press the pads outward or inward as cued without shrugging.",
+      "Keep ribs stacked over the pelvis.",
+      "Release halfway on the inhale."
+    ],
+    "commonMistakes": [
+      "Hiking the shoulders",
+      "Locking the elbows",
+      "Arching the low back"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "shoulders",
+    "secondaryMuscles": [
+      "upper back",
+      "arms"
+    ],
+    "equipment": "magic circle",
+    "thumbnailUri": "assets/exercises/thumbnails/Magic_Circle_Standing_Press.jpg",
+    "gifUri": "assets/exercises/gifs/Magic_Circle_Standing_Press.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "posture"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.3,
+    "youtubeVideoId": "1hQVdnxnfLk",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Band_Roll_Down",
+    "name": "Band Roll-Down",
+    "description": "Standing or seated roll-down assisted by a resistance band for spinal articulation.",
+    "instructions": [
+      "Hold the band with light tension and begin standing or seated tall.",
+      "Exhale and articulate the spine forward vertebra by vertebra.",
+      "Inhale at the bottom, exhale to stack back up.",
+      "Keep the band tension honest — not a yank."
+    ],
+    "commonMistakes": [
+      "Rounding only at the waist",
+      "Pulling the band with the neck",
+      "Locking the knees"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "upper back",
+      "hamstrings"
+    ],
+    "equipment": "resistance band",
+    "thumbnailUri": "assets/exercises/thumbnails/Band_Roll_Down.jpg",
+    "gifUri": "assets/exercises/gifs/Band_Roll_Down.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "resistance_band"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.3,
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Band_Side_Lying_Kick",
+    "name": "Band Side-Lying Kick",
+    "description": "Side-lying kick series with light band resistance for outer hip control.",
+    "instructions": [
+      "Loop the band around the thighs or ankles and lie on your side.",
+      "Kick the top leg forward and back within the band’s tension.",
+      "Keep hips stacked and waist long.",
+      "Switch sides after equal reps."
+    ],
+    "commonMistakes": [
+      "Rolling the top hip back",
+      "Using momentum",
+      "Hiking the shoulder"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "outer thighs",
+    "secondaryMuscles": [
+      "glutes",
+      "core"
+    ],
+    "equipment": "resistance band",
+    "thumbnailUri": "assets/exercises/thumbnails/Band_Side_Lying_Kick.jpg",
+    "gifUri": "assets/exercises/gifs/Band_Side_Lying_Kick.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "glutes",
+      "resistance_band"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Band_Hundred",
+    "name": "Band Hundred",
+    "description": "Hundred variation with light band resistance for deeper center work.",
+    "instructions": [
+      "Hold the band lightly above the thighs in Hundred position.",
+      "Pump the arms against the band’s tension for a five-count breath cycle.",
+      "Keep the low back supported and neck soft.",
+      "Lower with control when finished."
+    ],
+    "commonMistakes": [
+      "Straining the neck",
+      "Over-pulling the band",
+      "Breath-holding"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "arms",
+      "hip flexors"
+    ],
+    "equipment": "resistance band",
+    "thumbnailUri": "assets/exercises/thumbnails/Band_Hundred.jpg",
+    "gifUri": "assets/exercises/gifs/Band_Hundred.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "resistance_band"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": null,
+    "holdSeconds": 50,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "9mlone4NObI",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Ball_Pike",
+    "name": "Ball Pike",
+    "description": "Plank-to-pike on the pilates ball for deep core and shoulder stability.",
+    "instructions": [
+      "Start in plank with shins or feet on the ball.",
+      "Exhale and lift the hips into a pike without collapsing the shoulders.",
+      "Return to plank with control.",
+      "Keep the neck long and ribs knitted."
+    ],
+    "commonMistakes": [
+      "Sagging through the low back",
+      "Shrugging",
+      "Rushing the pike"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "shoulders",
+      "hip flexors"
+    ],
+    "equipment": "pilates ball",
+    "thumbnailUri": "assets/exercises/thumbnails/Ball_Pike.jpg",
+    "gifUri": "assets/exercises/gifs/Ball_Pike.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.55,
+    "youtubeVideoId": "elkcXFPyaW8",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Ball_Hamstring_Curl",
+    "name": "Ball Hamstring Curl",
+    "description": "Supine hamstring curl with heels on the pilates ball.",
+    "instructions": [
+      "Lie supine with heels on the ball and hips bridged.",
+      "Exhale and draw the ball toward you by bending the knees.",
+      "Extend the legs to return without dropping the hips.",
+      "Keep ribs soft and glutes engaged."
+    ],
+    "commonMistakes": [
+      "Collapsing the bridge",
+      "Using only the calves",
+      "Flaring the ribs"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "hamstrings",
+    "secondaryMuscles": [
+      "glutes",
+      "core"
+    ],
+    "equipment": "pilates ball",
+    "thumbnailUri": "assets/exercises/thumbnails/Ball_Hamstring_Curl.jpg",
+    "gifUri": "assets/exercises/gifs/Ball_Hamstring_Curl.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "glutes"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Ball_Plank",
+    "name": "Ball Plank",
+    "description": "Forearm or hand plank with forearms or hands on the pilates ball.",
+    "instructions": [
+      "Place forearms or hands on the ball and step back to plank.",
+      "Hold a long line from head to heels without sagging.",
+      "Breathe steadily; reset if the low back dips.",
+      "Keep shoulders broad and neck long."
+    ],
+    "commonMistakes": [
+      "Dumping into the lumbar spine",
+      "Hiking the shoulders",
+      "Holding the breath"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": "pilates ball",
+    "thumbnailUri": "assets/exercises/thumbnails/Ball_Plank.jpg",
+    "gifUri": "assets/exercises/gifs/Ball_Plank.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": null,
+    "holdSeconds": 30,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "fLYsUbi_f-A",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Light_Weight_Coordination",
+    "name": "Light Weight Coordination",
+    "description": "Supine coordination with light weights for arms and center connection.",
+    "instructions": [
+      "Lie supine holding light weights, knees tabletop.",
+      "Extend opposite arm and leg, then switch with control.",
+      "Keep the low back supported and ribs soft.",
+      "Move with the breath — no swinging the weights."
+    ],
+    "commonMistakes": [
+      "Arching the low back",
+      "Rushing the switches",
+      "Shrugging the weights"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "arms",
+      "shoulders"
+    ],
+    "equipment": "light weights",
+    "thumbnailUri": "assets/exercises/thumbnails/Light_Weight_Coordination.jpg",
+    "gifUri": "assets/exercises/gifs/Light_Weight_Coordination.jpg",
+    "tags": [
+      "mat_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.4,
+    "youtubeVideoId": "3dYwRDMassE",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Light_Weight_Standing_Side_Bend",
+    "name": "Light Weight Standing Side Bend",
+    "description": "Standing side bend with a light weight for lateral strength and length.",
+    "instructions": [
+      "Stand tall holding one light weight in the bottom hand.",
+      "Exhale and side-bend over the weighted side without collapsing forward.",
+      "Reach the top arm overhead, then return to vertical.",
+      "Keep both sit bones heavy and ribs stacked."
+    ],
+    "commonMistakes": [
+      "Twisting forward",
+      "Hiking the opposite hip",
+      "Yank with the neck"
+    ],
+    "difficulty": "beginner",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "shoulders",
+      "outer thighs"
+    ],
+    "equipment": "light weights",
+    "thumbnailUri": "assets/exercises/thumbnails/Light_Weight_Standing_Side_Bend.jpg",
+    "gifUri": "assets/exercises/gifs/Light_Weight_Standing_Side_Bend.jpg",
+    "tags": [
+      "mat_pilates"
+    ],
+    "categories": [
+      "pilates",
+      "core",
+      "posture"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.3,
+    "youtubeVideoId": "zprsJDjeONM",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Reformer_Knee_Stretches",
+    "name": "Reformer Knee Stretches",
+    "description": "Reformer Knee Stretches for deep abdominal connection and hip flexion control.",
+    "instructions": [
+      "Kneel on the carriage with hands on the footbar and rounded spine.",
+      "Exhale and draw the knees under while keeping the carriage control.",
+      "Inhale to lengthen without dumping into the shoulders.",
+      "Maintain a scooped center throughout."
+    ],
+    "commonMistakes": [
+      "Losing the round back",
+      "Pushing from the arms only",
+      "Collapsing the wrists"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors",
+      "shoulders"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Knee_Stretches.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Knee_Stretches.jpg",
+    "tags": [
+      "reformer_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 10,
+    "holdSeconds": null,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "q4aSiZC1yjo",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Reformer_Short_Box_Round",
+    "name": "Reformer Short Box Round Back",
+    "description": "Short Box series Round Back for spinal articulation and center strength.",
+    "instructions": [
+      "Sit on the short box with feet under the strap and arms folded or reaching.",
+      "Exhale and roll back through a C-curve with control.",
+      "Inhale to prepare, exhale to stack tall without thrusting the ribs.",
+      "Keep the strap tension honest and the neck soft."
+    ],
+    "commonMistakes": [
+      "Dumping into the low back",
+      "Pulling with the feet only",
+      "Chin jutting"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "hip flexors"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Short_Box_Round.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Short_Box_Round.jpg",
+    "tags": [
+      "reformer_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Reformer_Coordination",
+    "name": "Reformer Coordination",
+    "description": "Supine Coordination on the reformer linking breath, arms, and legs.",
+    "instructions": [
+      "Lie supine holding the straps with knees tabletop.",
+      "Exhale: extend arms and legs, open/close the legs, then return.",
+      "Keep the head curled or down per level, and the low back supported.",
+      "Move as one phrase with the breath."
+    ],
+    "commonMistakes": [
+      "Arching the lumbar spine",
+      "Yank the straps",
+      "Rushing the open-close"
+    ],
+    "difficulty": "intermediate",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "arms",
+      "hip flexors"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Coordination.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Coordination.jpg",
+    "tags": [
+      "reformer_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.45,
+    "youtubeVideoId": "3dYwRDMassE",
+    "youtubeAttribution": "Pilates Anytime"
+  },
+  {
+    "id": "Reformer_Stomach_Massage",
+    "name": "Reformer Stomach Massage",
+    "description": "Stomach Massage Round Back for deep flexion strength and carriage control.",
+    "instructions": [
+      "Sit on the carriage with heels on the footbar and hands holding the frame or reaching.",
+      "Exhale and extend the legs while maintaining a scooped C-curve.",
+      "Bend to return without losing the round shape.",
+      "Keep shoulders soft and gaze slightly down."
+    ],
+    "commonMistakes": [
+      "Sitting up tall mid-rep",
+      "Pushing only with quads",
+      "Tensing the neck"
+    ],
+    "difficulty": "advanced",
+    "muscleGroup": "core",
+    "secondaryMuscles": [
+      "quadriceps",
+      "hip flexors"
+    ],
+    "equipment": "reformer",
+    "thumbnailUri": "assets/exercises/thumbnails/Reformer_Stomach_Massage.jpg",
+    "gifUri": "assets/exercises/gifs/Reformer_Stomach_Massage.jpg",
+    "tags": [
+      "reformer_pilates",
+      "core_focus"
+    ],
+    "categories": [
+      "pilates",
+      "core"
+    ],
+    "sessionRole": "main",
+    "source": "curated_betterme",
+    "repsBaseline": 8,
+    "holdSeconds": null,
+    "caloriesFactor": 0.5,
+    "youtubeVideoId": "QDBzjlhKsco",
+    "youtubeAttribution": "Pilates Anytime"
   }
 ]

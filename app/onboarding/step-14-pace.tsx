@@ -7,7 +7,7 @@ import type { Pace } from '@/types/profile';
 const DEFAULT_PACE: Pace = 0.5;
 
 export default function Step14Pace() {
-  const { step, goNext, goBack } = useOnboardingNavigation(11);
+  const { step, goNext, goBack } = useOnboardingNavigation(12);
   const paceKgPerWeek = useOnboardingStore((state) => state.draft.paceKgPerWeek);
   const fitnessGoal = useOnboardingStore((state) => state.draft.fitnessGoal);
   const currentWeightKg = useOnboardingStore((state) => state.draft.currentWeightKg);

@@ -6,7 +6,6 @@ export {
   getActiveColorScheme,
   lightColors,
   luxeColors,
-  prideColors,
   metrics,
   radius,
   shadows,

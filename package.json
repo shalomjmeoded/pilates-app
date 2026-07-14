@@ -12,9 +12,11 @@
     "ai-proxy": "tsx server/ai-proxy/dev-server.ts",
     "start:ai-proxy": "tsx server/ai-proxy/dev-server.ts",
     "import-exercises": "tsx scripts/import-free-exercise-db.ts",
+    "add-exercise": "tsx scripts/add-exercise.ts",
     "validate-seed": "tsx scripts/validate-exercise-seed.ts",
+    "validate-youtube": "tsx scripts/validate-youtube-embeds.ts",
     "audit-exercises": "tsx scripts/audit-exercise-library.ts",
-    "build:exercises": "npm run import-exercises && npm run validate-seed && npm run audit-exercises"
+    "build:exercises": "npm run validate-seed && npm run audit-exercises"
   },
   "dependencies": {
     "@expo-google-fonts/playfair-display": "^0.4.2",
@@ -51,6 +53,7 @@
     "react-native-screens": "4.25.2",
     "react-native-svg": "15.15.4",
     "react-native-web": "^0.21.2",
+    "react-native-webview": "13.16.1",
     "react-native-worklets": "^0.8.3",
     "uuid": "^11.1.0",
     "zod": "^3.25.76",

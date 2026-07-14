@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { muscleGroupIcon } from '@/components/media';
@@ -6,7 +6,7 @@ import { Text } from '@/components/ui/Text';
 import { getExerciseGifSource, getExerciseThumbnailSource } from '@/constants/exerciseMedia';
 import type { WorkoutPlanExerciseDetail } from '@/types/workout';
 import type { Exercise } from '@/types/exercise';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 
 interface ExerciseGridCardProps {
   item: WorkoutPlanExerciseDetail;
@@ -96,7 +96,7 @@ export function ExerciseGridCard({ item, onPress, disabled = false }: ExerciseGr
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     flex: 1,
     backgroundColor: colors.surfaceCanvas,
@@ -179,4 +179,4 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 15,
   },
-});
+}));

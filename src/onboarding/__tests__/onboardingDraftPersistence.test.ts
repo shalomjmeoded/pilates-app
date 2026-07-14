@@ -8,6 +8,7 @@ const draft: OnboardingDraft = {
   genderIdentity: 'female',
   trainingFrequency: null,
   exercisePreferences: [],
+  availableEquipment: [],
   mediaPreference: 'static_only',
   notificationsEnabled: true,
   heightCm: null,

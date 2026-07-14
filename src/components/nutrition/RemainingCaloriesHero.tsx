@@ -1,7 +1,7 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 
 interface RemainingCaloriesHeroProps {
   remainingCalories: number;
@@ -42,7 +42,7 @@ export function RemainingCaloriesHero({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   hero: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.hero,
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   status: {
     color: colors.textMuted,
   },
-});
+}));

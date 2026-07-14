@@ -2,6 +2,37 @@ import { getDatabase } from '@/db/connection';
 import { mapExerciseRow } from '@/db/mappers';
 import type { Exercise, ExerciseRow } from '@/types/exercise';
 
+const INSERT_COLUMNS = `id, name, description, instructions_json, common_mistakes_json,
+          difficulty, muscle_group, secondary_muscles_json, equipment,
+          reps_baseline, hold_seconds, calories_factor,
+          thumbnail_uri, gif_uri, tags_json, categories_json, session_role, source,
+          youtube_video_id, youtube_attribution`;
+
+function insertParams(exercise: Exercise): Array<string | number | null> {
+  return [
+    exercise.id,
+    exercise.name,
+    exercise.description,
+    JSON.stringify(exercise.instructions),
+    JSON.stringify(exercise.commonMistakes),
+    exercise.difficulty,
+    exercise.muscleGroup,
+    JSON.stringify(exercise.secondaryMuscles),
+    exercise.equipment,
+    exercise.repsBaseline,
+    exercise.holdSeconds,
+    exercise.caloriesFactor,
+    exercise.thumbnailUri,
+    exercise.gifUri,
+    JSON.stringify(exercise.tags),
+    JSON.stringify(exercise.categories),
+    exercise.sessionRole,
+    exercise.source,
+    exercise.youtubeVideoId,
+    exercise.youtubeAttribution,
+  ];
+}
+
 export async function countExercises(): Promise<number> {
   const db = await getDatabase();
   const row = await db.getFirstAsync<{ count: number }>(
@@ -34,29 +65,9 @@ export async function insertExercises(exercises: Exercise[]): Promise<void> {
     for (const exercise of exercises) {
       await db.runAsync(
         `INSERT OR REPLACE INTO exercise_library (
-          id, name, description, instructions_json, common_mistakes_json,
-          difficulty, muscle_group, secondary_muscles_json, equipment,
-          reps_baseline, hold_seconds, calories_factor,
-          thumbnail_uri, gif_uri, tags_json, categories_json, session_role, source
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        exercise.id,
-        exercise.name,
-        exercise.description,
-        JSON.stringify(exercise.instructions),
-        JSON.stringify(exercise.commonMistakes),
-        exercise.difficulty,
-        exercise.muscleGroup,
-        JSON.stringify(exercise.secondaryMuscles),
-        exercise.equipment,
-        exercise.repsBaseline,
-        exercise.holdSeconds,
-        exercise.caloriesFactor,
-        exercise.thumbnailUri,
-        exercise.gifUri,
-        JSON.stringify(exercise.tags),
-        JSON.stringify(exercise.categories),
-        exercise.sessionRole,
-        exercise.source,
+          ${INSERT_COLUMNS}
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ...insertParams(exercise),
       );
     }
   });
@@ -73,29 +84,9 @@ export async function replaceExerciseLibrary(exercises: Exercise[]): Promise<voi
     for (const exercise of exercises) {
       await db.runAsync(
         `INSERT INTO exercise_library (
-          id, name, description, instructions_json, common_mistakes_json,
-          difficulty, muscle_group, secondary_muscles_json, equipment,
-          reps_baseline, hold_seconds, calories_factor,
-          thumbnail_uri, gif_uri, tags_json, categories_json, session_role, source
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        exercise.id,
-        exercise.name,
-        exercise.description,
-        JSON.stringify(exercise.instructions),
-        JSON.stringify(exercise.commonMistakes),
-        exercise.difficulty,
-        exercise.muscleGroup,
-        JSON.stringify(exercise.secondaryMuscles),
-        exercise.equipment,
-        exercise.repsBaseline,
-        exercise.holdSeconds,
-        exercise.caloriesFactor,
-        exercise.thumbnailUri,
-        exercise.gifUri,
-        JSON.stringify(exercise.tags),
-        JSON.stringify(exercise.categories),
-        exercise.sessionRole,
-        exercise.source,
+          ${INSERT_COLUMNS}
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ...insertParams(exercise),
       );
     }
   });

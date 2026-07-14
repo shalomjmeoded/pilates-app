@@ -1,11 +1,11 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { format, parseISO } from 'date-fns';
 
 import { CompactMacroSummary } from './CompactMacroSummary';
 import { Text } from '@/components/ui/Text';
 import { isDateToday } from '@/engines/workout';
 import type { MacroTotals, NutritionTargets } from '@/types/nutrition';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface NutritionDayHeaderProps {
   mealDate: string;
@@ -47,7 +47,7 @@ export function NutritionDayHeader({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
@@ -96,4 +96,4 @@ const styles = StyleSheet.create({
   mealCountLabel: {
     color: colors.textMuted,
   },
-});
+}));

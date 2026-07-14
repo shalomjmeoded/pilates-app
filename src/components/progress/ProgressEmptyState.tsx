@@ -1,9 +1,7 @@
-import { StyleSheet } from 'react-native';
-
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 interface ProgressEmptyStateProps {
   onLogWeight: () => void;
@@ -21,7 +19,7 @@ export function ProgressEmptyState({ onLogWeight }: ProgressEmptyStateProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     alignItems: 'flex-start',
     gap: spacing.sm,
@@ -34,4 +32,4 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'stretch',
   },
-});
+}));

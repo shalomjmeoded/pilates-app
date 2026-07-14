@@ -25,6 +25,8 @@ const mockExercise = (id: string, muscleGroup: ExerciseMuscleGroup): Exercise =>
   categories: ['bodyweight', 'core'],
   sessionRole: 'main',
   source: 'free_exercise_db',
+  youtubeVideoId: null,
+  youtubeAttribution: null,
 });
 
 describe('getDeprioritizedExerciseIds', () => {

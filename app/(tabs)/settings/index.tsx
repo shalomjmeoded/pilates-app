@@ -20,6 +20,12 @@ export default function SettingsScreen() {
           <SettingsRow accentColor={colors.brandSecondary} label="Profile" value="Body & activity" onPress={() => router.push('/(tabs)/settings/profile')} />
           <SettingsRow accentColor={colors.brandSecondary} label="Goals" value="Weight & pace" onPress={() => router.push('/(tabs)/settings/goals')} />
           <SettingsRow accentColor={colors.brandSecondary} label="Preferences" value="Exercise styles" onPress={() => router.push('/(tabs)/settings/preferences')} />
+          <SettingsRow
+            accentColor={colors.brandSecondary}
+            label="Equipment I have"
+            value="Props & reformer"
+            onPress={() => router.push('/(tabs)/settings/equipment')}
+          />
           <SettingsRow label="Plan assumptions" onPress={() => router.push('/(tabs)/settings/plan-assumptions')} />
         </SettingsSection>
 
@@ -37,7 +43,7 @@ export default function SettingsScreen() {
           <SettingsRow
             accentColor={colors.brandPrimary}
             label="Theme"
-            value="Wellness · Golden · Pride"
+            value="Wellness · Golden"
             onPress={() => router.push('/(tabs)/settings/appearance')}
           />
         </SettingsSection>

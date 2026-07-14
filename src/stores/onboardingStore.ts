@@ -20,11 +20,14 @@ import type {
   TrainingFrequency,
   WeightTrajectory,
 } from '@/types/profile';
+import type { AvailableEquipmentPreference } from '@/types/preferences';
+import { preferencesStorage } from '@/storage/mmkv';
 
 export interface OnboardingDraft {
   genderIdentity: GenderIdentity | null;
   trainingFrequency: TrainingFrequency | null;
   exercisePreferences: ExercisePreference[];
+  availableEquipment: AvailableEquipmentPreference[];
   mediaPreference: MediaPreference | null;
   notificationsEnabled: boolean;
   heightCm: number | null;
@@ -42,7 +45,8 @@ const INITIAL_DRAFT: OnboardingDraft = {
   genderIdentity: null,
   trainingFrequency: null,
   exercisePreferences: [],
-  mediaPreference: 'static_only',
+  availableEquipment: [],
+  mediaPreference: 'video_streaming',
   notificationsEnabled: true,
   heightCm: null,
   currentWeightKg: null,
@@ -181,7 +185,8 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
         genderIdentity: profile.genderIdentity,
         trainingFrequency: profile.trainingFrequency,
         exercisePreferences: profile.exercisePreferences,
-        mediaPreference: 'static_only',
+        availableEquipment: preferencesStorage.getAvailableEquipment(),
+        mediaPreference: 'video_streaming',
         heightCm: profile.heightCm,
         currentWeightKg: profile.currentWeightKg,
         nutritionMode: 'full_tracking',
@@ -243,7 +248,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
       trainingFrequency: draft.trainingFrequency,
       fitnessGoal: draft.fitnessGoal,
       exercisePreferences: draft.exercisePreferences,
-      mediaPreference: 'static_only',
+      mediaPreference: draft.mediaPreference ?? 'video_streaming',
       nutritionMode: 'full_tracking',
       weightTrajectory,
       paceKgPerWeek: draft.paceKgPerWeek,

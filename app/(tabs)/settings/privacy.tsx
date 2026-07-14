@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { SettingsScreenShell } from '@/components/settings';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
-import { WELLNESS_DISCLAIMER } from '@/constants/compliance';
+import { WELLNESS_DISCLAIMER, YOUTUBE_DEMO_PRIVACY_DISCLOSURE } from '@/constants/compliance';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { colors, spacing } from '@/theme';
 
@@ -23,7 +23,15 @@ export default function PrivacySettingsScreen() {
         <Text variant="h2">What leaves device</Text>
         <Text variant="bodyMuted" style={styles.copy}>
           Only the specific AI request you start — meal text, a meal photo, physique photos, workout context, or coach prompts.
-          Requests are sent to our AI processing service with only the data needed for that feature.
+          Requests are sent to our AI processing service with only the data needed for that feature. Optional exercise video
+          demos also load from YouTube when streaming demos are enabled.
+        </Text>
+      </Card>
+
+      <Card style={styles.card}>
+        <Text variant="h2">Exercise video demos</Text>
+        <Text variant="bodyMuted" style={styles.copy}>
+          {YOUTUBE_DEMO_PRIVACY_DISCLOSURE}
         </Text>
       </Card>
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -9,7 +9,7 @@ import Animated, {
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 
 import { Text } from '@/components/ui/Text';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -87,7 +87,7 @@ export function CalorieRadialRing({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
   consumed: {
     marginTop: spacing.xs,
   },
-});
+}));
