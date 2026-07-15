@@ -111,23 +111,6 @@ export async function generateWeeklyCoachInsight(options?: {
   const weekStart = getWeekStartDate();
   const onWeekStart = isWeekStartDay();
 
-  // #region agent log
-  {
-    const { getAiProxyBaseUrl, isAiConfigured, isAiMockMode, isGeminiDirectMode } = await import(
-      '@/services/ai/config'
-    );
-    const proxy = getAiProxyBaseUrl() ?? null;
-    let proxyHost: string | null = null;
-    try {
-      proxyHost = proxy ? new URL(proxy).host : null;
-    } catch {
-      proxyHost = 'invalid_url';
-    }
-    const completedCount = await countCompletedWorkouts();
-    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'partner-audit',hypothesisId:'A1',location:'weeklyCoachService.ts:generate',message:'ai coach gate',data:{weekStart,onWeekStart,completedCount,weekStartsOn:getConfiguredWeekStartsOn(),isAiConfigured:isAiConfigured(),isAiMockMode:isAiMockMode(),isGeminiDirectMode:isGeminiDirectMode(),proxyHost,proxyIsLanHttp:Boolean(proxy?.startsWith('http://192.168.'))},timestamp:Date.now()})}).catch(()=>{});
-  }
-  // #endregion
-
   const completedCount = await countCompletedWorkouts();
   if (completedCount === 0) {
     throw new Error(

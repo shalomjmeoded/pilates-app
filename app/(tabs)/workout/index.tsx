@@ -115,32 +115,10 @@ export default function WorkoutScreen() {
     let cancelled = false;
     setIsEnsuringWeek(true);
     void ensureWeekWorkoutPlans(weekStart)
-      .then((result) => {
+      .then(() => {
         if (cancelled) {
           return;
         }
-        // #region agent log
-        fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '1efa2d' },
-          body: JSON.stringify({
-            sessionId: '1efa2d',
-            runId: 'schedule-v1',
-            hypothesisId: 'H1',
-            location: 'workout/index.tsx:ensureWeek',
-            message: 'week strip ready',
-            data: {
-              weekOffset,
-              weekStart,
-              weekStartsOn,
-              workoutDates: result.workoutDates,
-              restDates: result.restDates,
-              ensuredCount: result.ensured.length,
-            },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
         void reload();
         void reloadCalendar();
       })

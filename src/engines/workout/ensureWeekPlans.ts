@@ -61,29 +61,5 @@ export async function ensureWeekWorkoutPlans(weekStart: string): Promise<{
     preferencesStorage.setCachedFlag(PLAN_DIVERSITY_KEY, PLAN_DIVERSITY_VERSION);
   }
 
-  // #region agent log
-  fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '1efa2d' },
-    body: JSON.stringify({
-      sessionId: '1efa2d',
-      runId: 'content-fix-v1',
-      hypothesisId: 'H3',
-      location: 'ensureWeekPlans.ts:ensureWeekWorkoutPlans',
-      message: 'week plans ensured',
-      data: {
-        weekStart,
-        frequency: profile.trainingFrequency,
-        workoutDates,
-        restDates,
-        ensuredCount: ensured.length,
-        regenerated,
-        diversityRefresh: shouldRefreshForDiversity,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
-
   return { weekStart, workoutDates, restDates, ensured, regenerated };
 }

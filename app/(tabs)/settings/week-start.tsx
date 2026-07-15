@@ -20,9 +20,6 @@ export default function WeekStartSettingsScreen() {
     }
     await logSettingChange('weekStartsOn', weekStartsOn, value);
     setWeekStartsOn(value);
-    // #region agent log
-    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'partner-audit',hypothesisId:'W1',location:'week-start.tsx:select',message:'week start changed',data:{previous:weekStartsOn,next:value,label:WEEK_START_DAY_LABELS[value]},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
   };
 
   return (

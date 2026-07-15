@@ -39,29 +39,6 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
     ? !isScheduledWorkoutDay(planDate, profile.trainingFrequency, weekStartsOn)
     : false;
 
-  // #region agent log
-  fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '1efa2d' },
-    body: JSON.stringify({
-      sessionId: '1efa2d',
-      runId: 'schedule-v1',
-      hypothesisId: 'H2',
-      location: 'resolveWorkoutDay.ts:loadWorkoutDay',
-      message: 'day schedule classification',
-      data: {
-        planDate,
-        isToday,
-        isFuture,
-        isRestDay,
-        frequency: profile?.trainingFrequency ?? null,
-        weekStartsOn,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
-
   if (isRestDay) {
     return {
       planDate,

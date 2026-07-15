@@ -252,32 +252,6 @@ export async function ensureWorkoutPlanForDate(
     preferencesStorage.getAvailableEquipment(),
   );
 
-  // #region agent log
-  {
-    const owned = preferencesStorage.getAvailableEquipment();
-    const byId = new Map(library.map((exercise) => [exercise.id, exercise]));
-    const selected = plan.exercises
-      .map((item) => byId.get(item.exerciseId))
-      .filter((exercise): exercise is (typeof library)[number] => Boolean(exercise));
-    const leaks = selected.filter(
-      (exercise) =>
-        exercise.equipment !== 'mat' &&
-        exercise.equipment !== 'none' &&
-        !owned.includes(
-          exercise.equipment as
-            | 'reformer'
-            | 'resistance band'
-            | 'magic circle'
-            | 'light weights'
-            | 'pilates ball',
-        ),
-    );
-    const muscleGroups = [...new Set(selected.map((exercise) => exercise.muscleGroup))];
-    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'content-fix-v1',hypothesisId:'D1',location:'ensureDailyPlan.ts:afterGenerate',message:'plan focus diversity',data:{planDate,focusArea:resolvedOverrides?.focusArea??null,targetMinutes:resolvedOverrides?.targetMinutes??null,muscleGroups,selectedNames:selected.slice(0,8).map((e)=>e.name),leakCount:leaks.length},timestamp:Date.now()})}).catch(()=>{});
-    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'partner-audit',hypothesisId:'E1',location:'ensureDailyPlan.ts:afterGenerate',message:'equipment filter result',data:{owned,selectedCount:selected.length,leakCount:leaks.length,leaks:leaks.map((e)=>({id:e.id,equipment:e.equipment})),selectedEquipment:selected.map((e)=>e.equipment)},timestamp:Date.now()})}).catch(()=>{});
-  }
-  // #endregion
-
   if (adaptation.lastSessionFeedback.length > 0) {
     plan = {
       ...plan,

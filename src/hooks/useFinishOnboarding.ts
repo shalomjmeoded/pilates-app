@@ -44,22 +44,7 @@ export function useFinishOnboarding() {
         });
 
         // First post-onboarding day must be a workout day, never rest.
-        const phase = setSchedulePhaseFromDate(today);
-        // #region agent log
-        fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '1efa2d' },
-          body: JSON.stringify({
-            sessionId: '1efa2d',
-            runId: 'schedule-phase-v1',
-            hypothesisId: 'S1',
-            location: 'useFinishOnboarding.ts',
-            message: 'onboarding schedule phase set',
-            data: { today, phase },
-            timestamp: Date.now(),
-          }),
-        }).catch(() => {});
-        // #endregion
+        setSchedulePhaseFromDate(today);
 
         setAvailableEquipment(draft.availableEquipment);
         setOnboardingCompleted(true);
