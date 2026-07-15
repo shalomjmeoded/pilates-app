@@ -17,6 +17,7 @@ interface WorkoutHeroCardProps {
   canStart: boolean;
   startUnavailableReason?: string;
   onChangeWorkout?: () => void;
+  onTakeRestDay?: () => void;
   onStart: () => void;
 }
 
@@ -29,6 +30,7 @@ export function WorkoutHeroCard({
   canStart,
   startUnavailableReason,
   onChangeWorkout,
+  onTakeRestDay,
   onStart,
 }: WorkoutHeroCardProps) {
   const [expanded, setExpanded] = useState(false);
@@ -82,6 +84,9 @@ export function WorkoutHeroCard({
         ) : null}
         {onChangeWorkout ? (
           <Button label="Change Workout" variant="secondary" onPress={onChangeWorkout} />
+        ) : null}
+        {onTakeRestDay ? (
+          <Button label="Take a rest day" variant="secondary" onPress={onTakeRestDay} />
         ) : null}
       </View>
 

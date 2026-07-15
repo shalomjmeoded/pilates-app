@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
-import { ExerciseMediaView, ExerciseSwapReasonSheet, ExerciseYouTubeEmbed } from '@/components/workout';
+import { ExerciseSwapReasonSheet, ExerciseYouTubeEmbed } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -128,7 +128,11 @@ export default function ExerciseDetailModal() {
           <Text variant="bodyMuted">{titleCase(exercise.muscleGroup)}</Text>
         </View>
 
-        <ExerciseMediaView exercise={exercise} variant="gif" fillWidth />
+        <ExerciseYouTubeEmbed
+          exercise={exercise}
+          allowStreaming={mediaPreference === 'video_streaming'}
+          onEnableStreaming={() => void handleEnableStreaming()}
+        />
 
         <Card style={styles.summaryCard}>
           <View style={styles.prescriptionRow}>
@@ -162,14 +166,6 @@ export default function ExerciseDetailModal() {
               {index + 1}. {step}
             </Text>
           ))}
-        </Card>
-
-        <Card style={styles.card}>
-          <ExerciseYouTubeEmbed
-            exercise={exercise}
-            allowStreaming={mediaPreference === 'video_streaming'}
-            onEnableStreaming={() => void handleEnableStreaming()}
-          />
         </Card>
 
         <Card style={styles.card}>

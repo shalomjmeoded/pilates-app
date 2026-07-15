@@ -108,11 +108,6 @@ export default function DevExerciseBrowserScreen() {
               <ExerciseMediaView exercise={selected} variant="thumbnail" fillWidth fillHeight={160} />
 
               <Text variant="label" style={styles.section}>
-                GIF / animation
-              </Text>
-              <ExerciseMediaView exercise={selected} variant="gif" fillWidth fillHeight={220} />
-
-              <Text variant="label" style={styles.section}>
                 YouTube
               </Text>
               {selected.youtubeVideoId ? (

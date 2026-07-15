@@ -1,14 +1,17 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
 
+import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 
 interface RestDayCardProps {
   isToday?: boolean;
+  onAddWorkout?: () => void;
+  isAddingWorkout?: boolean;
 }
 
-export function RestDayCard({ isToday }: RestDayCardProps) {
+export function RestDayCard({ isToday, onAddWorkout, isAddingWorkout }: RestDayCardProps) {
   return (
     <View style={[styles.card, shadows.card]}>
       <View style={styles.iconWrap}>
@@ -22,6 +25,14 @@ export function RestDayCard({ isToday }: RestDayCardProps) {
           Recovery is part of the plan. Stretch lightly if you like, and come back strong on your next
           workout day.
         </Text>
+        {onAddWorkout ? (
+          <Button
+            label={isAddingWorkout ? 'Adding workout…' : 'Add a workout today'}
+            variant="secondary"
+            onPress={onAddWorkout}
+            disabled={isAddingWorkout}
+          />
+        ) : null}
       </View>
     </View>
   );
@@ -51,7 +62,7 @@ const styles = createDynamicStyles(() => ({
   },
   copy: {
     flex: 1,
-    gap: 4,
+    gap: spacing.xs,
   },
   title: {
     color: colors.textStrong,

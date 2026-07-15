@@ -5,7 +5,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import {
-  ExerciseMediaView,
   ExerciseSwapReasonSheet,
   ExerciseYouTubeEmbed,
   WorkoutExitSheet,
@@ -305,7 +304,20 @@ export default function WorkoutPlayerScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <ExerciseMediaView exercise={current.exercise} variant="gif" fillWidth />
+        <ExerciseYouTubeEmbed
+          exercise={current.exercise}
+          allowStreaming={mediaPreference === 'video_streaming'}
+          onEnableStreaming={() => {
+            void (async () => {
+              const profile = await getProfile();
+              if (!profile) {
+                return;
+              }
+              await saveProfile({ ...profile, mediaPreference: 'video_streaming' });
+              setMediaPreference('video_streaming');
+            })();
+          }}
+        />
 
         <Text variant="h1" style={styles.title}>
           {current.exercise.name}
@@ -324,21 +336,6 @@ export default function WorkoutPlayerScreen() {
             </Text>
           ))}
         </View>
-
-        <ExerciseYouTubeEmbed
-          exercise={current.exercise}
-          allowStreaming={mediaPreference === 'video_streaming'}
-          onEnableStreaming={() => {
-            void (async () => {
-              const profile = await getProfile();
-              if (!profile) {
-                return;
-              }
-              await saveProfile({ ...profile, mediaPreference: 'video_streaming' });
-              setMediaPreference('video_streaming');
-            })();
-          }}
-        />
 
         {swapMessage ? (
           <View style={styles.swapSuccess}>

@@ -26,8 +26,10 @@ import { getProfile } from '@/db/repositories/profileRepository';
 import {
   ensureWeekWorkoutPlans,
   formatPlanDate,
+  getDayScheduleOverride,
   getScheduledWorkoutDatesForWeek,
   getWeekCalendarDates,
+  setDayScheduleOverride,
 } from '@/engines/workout';
 import {
   deriveWhyThisWorkout,
@@ -64,6 +66,8 @@ export default function WorkoutScreen() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [trainingFrequency, setTrainingFrequency] = useState<TrainingFrequency | null>(null);
   const [isEnsuringWeek, setIsEnsuringWeek] = useState(false);
+  const [scheduleRevision, setScheduleRevision] = useState(0);
+  const [isAddingWorkout, setIsAddingWorkout] = useState(false);
 
   const calendarDates = useMemo(
     () => getWeekCalendarDates(weekOffset, weekStartsOn),
@@ -88,8 +92,15 @@ export default function WorkoutScreen() {
       return new Set<string>();
     }
     const workoutDates = new Set(getScheduledWorkoutDatesForWeek(weekStart, trainingFrequency));
+    const today = formatPlanDate(new Date());
+    const todayOverride = getDayScheduleOverride(today);
+    if (todayOverride === 'workout') {
+      workoutDates.add(today);
+    } else if (todayOverride === 'rest') {
+      workoutDates.delete(today);
+    }
     return new Set(calendarDates.filter((date) => !workoutDates.has(date)));
-  }, [calendarDates, trainingFrequency, weekStart]);
+  }, [calendarDates, trainingFrequency, weekStart, scheduleRevision]);
 
   const { data, isLoading, isRefreshing, errorCode, errorMessage, reload } =
     useWorkoutDay(selectedDate);
@@ -246,6 +257,59 @@ export default function WorkoutScreen() {
     ]);
   };
 
+  const handleAddWorkoutOnRestDay = () => {
+    if (!data?.isToday || !data.isRestDay) {
+      return;
+    }
+    Alert.alert('Add a workout today?', 'We’ll build a session for today. Your usual weekly pattern stays the same.', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Add workout',
+        onPress: () => {
+          void (async () => {
+            setIsAddingWorkout(true);
+            try {
+              setDayScheduleOverride(selectedDate, 'workout');
+              setScheduleRevision((value) => value + 1);
+              await reload();
+              await reloadCalendar();
+            } finally {
+              setIsAddingWorkout(false);
+            }
+          })();
+        },
+      },
+    ]);
+  };
+
+  const handleTakeRestDay = () => {
+    if (!data?.isToday || data.isRestDay) {
+      return;
+    }
+    if (data.session?.status === 'completed' || data.session?.status === 'in_progress') {
+      return;
+    }
+    Alert.alert('Take a rest day?', 'Today becomes a rest day. Your usual weekly pattern stays the same.', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Rest today',
+        onPress: () => {
+          setDayScheduleOverride(selectedDate, 'rest');
+          setScheduleRevision((value) => value + 1);
+          void reload();
+          void reloadCalendar();
+        },
+      },
+    ]);
+  };
+
+  const canTakeRestDay =
+    Boolean(data?.isToday) &&
+    !data?.isRestDay &&
+    !data?.isReadOnly &&
+    data?.session?.status !== 'completed' &&
+    data?.session?.status !== 'in_progress';
+
   const confirmDiscardAndApplyChange = async () => {
     setIsApplyingChange(true);
     setChangeError(null);
@@ -338,7 +402,13 @@ export default function WorkoutScreen() {
         <WorkoutErrorState code={errorCode} message={errorMessage} onRetry={() => void reload()} />
       ) : null}
 
-      {!errorMessage && data?.isRestDay ? <RestDayCard isToday={data.isToday} /> : null}
+      {!errorMessage && data?.isRestDay ? (
+        <RestDayCard
+          isToday={data.isToday}
+          onAddWorkout={data.isToday ? handleAddWorkoutOnRestDay : undefined}
+          isAddingWorkout={isAddingWorkout}
+        />
+      ) : null}
 
       {!errorMessage && data?.session?.status === 'in_progress' && data.isToday && !data.isRestDay ? (
         <ResumeWorkoutBanner
@@ -366,6 +436,7 @@ export default function WorkoutScreen() {
               canStart={Boolean(canStartWorkout)}
               startUnavailableReason={startUnavailableReason}
               onChangeWorkout={data.isToday && !data.isReadOnly ? openChangeSheet : undefined}
+              onTakeRestDay={canTakeRestDay ? handleTakeRestDay : undefined}
               onStart={() => {
                 requirePremium('start_workout', () => void handleStartWorkout());
               }}

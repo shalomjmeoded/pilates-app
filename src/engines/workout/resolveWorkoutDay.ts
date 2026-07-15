@@ -4,9 +4,9 @@ import { getSessionFeedback, getSessionForPlan, getWorkoutPlanByDate } from '@/d
 import { getConfiguredWeekStartsOn } from '@/engines/coaching/weekStart';
 import { PlanGenerationError, type WorkoutDayView, type WorkoutPlanExerciseDetail } from '@/types/workout';
 
+import { isEffectiveWorkoutDay } from './dayScheduleOverride';
 import { ensureWorkoutPlanForDate, isDateInFuture, isDateReadOnly, isDateToday } from './ensureDailyPlan';
 import { planMatchesLibrary, refreshWorkoutPlanForDate } from './repairStalePlan';
-import { isScheduledWorkoutDay } from './weeklySchedule';
 
 async function hydratePlanExercises(
   plan: NonNullable<WorkoutDayView['plan']>,
@@ -36,7 +36,7 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
   const profile = await getProfile();
   const weekStartsOn = getConfiguredWeekStartsOn();
   const isRestDay = profile
-    ? !isScheduledWorkoutDay(planDate, profile.trainingFrequency, weekStartsOn)
+    ? !isEffectiveWorkoutDay(planDate, profile.trainingFrequency, weekStartsOn)
     : false;
 
   if (isRestDay) {

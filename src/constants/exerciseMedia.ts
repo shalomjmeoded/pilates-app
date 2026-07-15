@@ -58,9 +58,9 @@ export function prefersNativeGifDemo(exerciseId: string): boolean {
 }
 
 /**
- * Resolve display media. Prefer YouTube storyboard frames when a curated video exists so
- * (1) donor-copied stills don't collide across exercises, and (2) flip-book animation works
- * even when bundled thumb/gif files are identical JPGs.
+ * Resolve display media for thumbnails/cards.
+ * Prefer bundled exercise photos; never autoplay flip-book or YouTube storyboard animation.
+ * Motion demos live in the YouTube embed on detail/player screens.
  */
 export function resolveExerciseDisplayMedia(exercise: Exercise): {
   thumbnail: ImageSourcePropType | null;
@@ -69,39 +69,38 @@ export function resolveExerciseDisplayMedia(exercise: Exercise): {
   preferNativeGif: boolean;
   source: 'youtube_frames' | 'bundled_motion' | 'bundled_still' | 'none';
 } {
-  const videoId = exercise.youtubeVideoId?.trim() || null;
   const bundledThumb = getExerciseThumbnailSource(exercise.id);
   const bundledGif = EXERCISE_GIF_MANIFEST[exercise.id] ?? null;
-  const preferNativeGif = prefersNativeGifDemo(exercise.id);
-  const bundledMotion = hasAnimatedExerciseDemo(exercise.id);
+  const still = bundledThumb ?? bundledGif ?? getExerciseGifSource(exercise.id);
 
-  if (videoId) {
+  if (still) {
     return {
-      thumbnail: getYouTubeFrameSource(videoId, 0),
-      motionFrame: getYouTubeFrameSource(videoId, 1),
-      animate: true,
+      thumbnail: still,
+      motionFrame: still,
+      animate: false,
+      preferNativeGif: false,
+      source: 'bundled_still',
+    };
+  }
+
+  const videoId = exercise.youtubeVideoId?.trim() || null;
+  if (videoId) {
+    const frame = getYouTubeFrameSource(videoId, 0);
+    return {
+      thumbnail: frame,
+      motionFrame: frame,
+      animate: false,
       preferNativeGif: false,
       source: 'youtube_frames',
     };
   }
 
-  if (bundledMotion && bundledThumb && bundledGif) {
-    return {
-      thumbnail: bundledThumb,
-      motionFrame: bundledGif,
-      animate: true,
-      preferNativeGif,
-      source: 'bundled_motion',
-    };
-  }
-
-  const still = bundledThumb ?? bundledGif ?? getExerciseGifSource(exercise.id);
   return {
-    thumbnail: still,
-    motionFrame: still,
+    thumbnail: null,
+    motionFrame: null,
     animate: false,
     preferNativeGif: false,
-    source: still ? 'bundled_still' : 'none',
+    source: 'none',
   };
 }
 

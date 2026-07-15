@@ -47,3 +47,9 @@ export {
   workoutDayOffsetsForCount,
 } from './weeklySchedule';
 export { ensureWeekWorkoutPlans, PLAN_DIVERSITY_VERSION } from './ensureWeekPlans';
+export {
+  getDayScheduleOverride,
+  isEffectiveWorkoutDay,
+  setDayScheduleOverride,
+  type DayScheduleOverride,
+} from './dayScheduleOverride';
