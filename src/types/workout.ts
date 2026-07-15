@@ -56,6 +56,8 @@ export interface WorkoutDayView {
   isReadOnly: boolean;
   isToday: boolean;
   isFuture: boolean;
+  /** Scheduled rest day from training frequency (no workout plan). */
+  isRestDay: boolean;
   planRefreshed?: boolean;
   partialLibraryMatch?: boolean;
 }

@@ -20,6 +20,8 @@ import {
   defaultTargetMinutesForProfile,
   exerciseCountBoundsForMinutes,
 } from './sessionDurationBounds';
+import { workoutDayIndexInWeek } from './weeklySchedule';
+import { getConfiguredWeekStartsOn } from '@/engines/coaching/weekStart';
 
 export interface PhysiquePlanContext {
   physiqueCategory: PhysiqueCategory;
@@ -28,8 +30,8 @@ export interface PhysiquePlanContext {
 export type WorkoutFocus = 'core_control' | 'posterior_chain' | 'mobility_recovery' | 'full_body_control';
 
 const TARGET_DISTINCT_MUSCLE_GROUPS = 4;
-const DATE_VARIETY_WEIGHT = 6;
-const RECENT_EXERCISE_PENALTY = 3;
+const DATE_VARIETY_WEIGHT = 10;
+const RECENT_EXERCISE_PENALTY = 5;
 
 interface PlanControls {
   focus: WorkoutFocus;
@@ -44,36 +46,36 @@ const GOAL_WEEKLY_FOCUS: Record<Profile['fitnessGoal'], WorkoutFocus[]> = {
     'full_body_control',
     'core_control',
     'posterior_chain',
-    'full_body_control',
     'mobility_recovery',
-    'core_control',
     'full_body_control',
+    'core_control',
+    'posterior_chain',
   ],
   get_toned: [
-    'full_body_control',
     'posterior_chain',
-    'mobility_recovery',
     'core_control',
-    'posterior_chain',
+    'mobility_recovery',
     'full_body_control',
+    'posterior_chain',
+    'core_control',
     'mobility_recovery',
   ],
   maintain: [
-    'full_body_control',
     'mobility_recovery',
+    'full_body_control',
     'core_control',
     'posterior_chain',
     'mobility_recovery',
     'full_body_control',
-    'mobility_recovery',
+    'core_control',
   ],
   build_muscle: [
     'posterior_chain',
-    'core_control',
     'full_body_control',
-    'posterior_chain',
+    'core_control',
     'mobility_recovery',
     'posterior_chain',
+    'full_body_control',
     'core_control',
   ],
 };
@@ -100,7 +102,15 @@ function dayIndex(planDate: string): number {
 
 function weeklyFocusFor(profile: Profile, planDate: string): WorkoutFocus {
   const weeklyFocus = GOAL_WEEKLY_FOCUS[profile.fitnessGoal];
-  return weeklyFocus[dayIndex(planDate)] ?? 'full_body_control';
+  const scheduledIndex = workoutDayIndexInWeek(
+    planDate,
+    profile.trainingFrequency,
+    getConfiguredWeekStartsOn(),
+  );
+  if (scheduledIndex >= 0) {
+    return weeklyFocus[scheduledIndex % weeklyFocus.length] ?? 'full_body_control';
+  }
+  return weeklyFocus[dayIndex(planDate) % weeklyFocus.length] ?? 'full_body_control';
 }
 
 function mapFocusAreaToWorkoutFocus(area: WorkoutFocusArea): WorkoutFocus {

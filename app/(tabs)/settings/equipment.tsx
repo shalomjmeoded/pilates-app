@@ -42,16 +42,43 @@ export default function EquipmentSettingsScreen() {
     const next = previous.includes(value)
       ? previous.filter((item) => item !== value)
       : [...previous, value];
+    // #region agent log
+    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'partner-audit',hypothesisId:'M1',location:'equipment.tsx:toggle',message:'equipment toggled',data:{value,next,matOnly:next.length===0},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     await logSettingChange('availableEquipment', previous, next);
     setAvailableEquipment(next);
   };
 
+  const selectMatOnly = async () => {
+    const previous = availableEquipment;
+    // #region agent log
+    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'partner-audit',hypothesisId:'M1',location:'equipment.tsx:matOnly',message:'mat only selected',data:{previous},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+    await logSettingChange('availableEquipment', previous, []);
+    setAvailableEquipment([]);
+  };
+
+  const matOnlySelected = availableEquipment.length === 0;
+
   return (
     <SettingsScreenShell
       title="Equipment I have"
-      subtitle="Mat and bodyweight moves are always available. Turn on the props you own so workouts can include them."
+      subtitle="Mat and bodyweight moves are always available. Choose Mat only, or turn on the props you own."
     >
       <View style={styles.list}>
+        <Pressable
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: matOnlySelected }}
+          onPress={() => void selectMatOnly()}
+          style={[styles.option, matOnlySelected && styles.optionSelected]}
+        >
+          <Text variant="body" style={matOnlySelected ? styles.optionLabelSelected : undefined}>
+            Mat only
+          </Text>
+          <Text variant="caption" style={styles.optionDescription}>
+            No optional props — mat and bodyweight workouts only
+          </Text>
+        </Pressable>
         {OPTIONAL_EXERCISE_EQUIPMENT.map((value) => {
           const selected = availableEquipment.includes(value);
           const copy = LABELS[value];

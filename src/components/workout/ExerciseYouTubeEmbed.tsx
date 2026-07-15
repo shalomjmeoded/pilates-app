@@ -35,6 +35,26 @@ export function ExerciseYouTubeEmbed({
 }: ExerciseYouTubeEmbedProps) {
   const { videoId, embedUrl } = resolveExerciseYouTube(exercise);
 
+  // #region agent log
+  if (
+    exercise.id === 'Cat_Cow' ||
+    exercise.id === 'Leg_Lift' ||
+    exercise.id === 'Pelvic_Tilt_Into_Bridge' ||
+    exercise.id === 'Mat_Boomerang' ||
+    exercise.id === 'Mat_Double_Leg_Kick' ||
+    exercise.id === 'Mat_Leg_Pull_Back' ||
+    exercise.id === 'Mat_Kneeling_Side_Kick' ||
+    exercise.id === 'Side_Kick' ||
+    exercise.id === 'Pilates_Roll_Up' ||
+    exercise.id === 'Mat_Neck_Pull' ||
+    exercise.equipment === 'magic circle'
+  ) {
+    // #region agent log
+    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'reverse-crunch-v17',hypothesisId:'RC1',location:'ExerciseYouTubeEmbed.tsx',message:'youtube resolve',data:{exerciseId:exercise.id,videoId,expectedReverseCrunchId:exercise.id==='Reverse_Crunch'?'XY8KzdDcMFg':null,hasEmbed:Boolean(embedUrl),attr:exercise.youtubeAttribution},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+  }
+  // #endregion
+
   if (!videoId || !embedUrl) {
     return null;
   }

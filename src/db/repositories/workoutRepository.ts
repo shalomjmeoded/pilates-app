@@ -399,6 +399,36 @@ export async function discardWorkoutSession(sessionId: string): Promise<void> {
   });
 }
 
+/** Clears any session for the plan and starts fresh. Dev builds only. */
+export async function restartWorkoutSessionForDev(planId: string): Promise<WorkoutSession> {
+  if (!__DEV__) {
+    throw new Error('restartWorkoutSessionForDev is only available in development builds.');
+  }
+
+  const existing = await getSessionForPlan(planId);
+  if (existing) {
+    await discardWorkoutSession(existing.id);
+  }
+
+  // #region agent log
+  fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '1efa2d' },
+    body: JSON.stringify({
+      sessionId: '1efa2d',
+      runId: 'schedule-v1',
+      hypothesisId: 'H5',
+      location: 'workoutRepository.ts:restartWorkoutSessionForDev',
+      message: 'dev restart session',
+      data: { planId, clearedSessionId: existing?.id ?? null, priorStatus: existing?.status ?? null },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
+
+  return startWorkoutSession(planId);
+}
+
 export async function getCompletedWorkoutDatesBetween(
   startDate: string,
   endDate: string,

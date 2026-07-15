@@ -1,9 +1,12 @@
 import { getAllExercises, getExerciseById } from '@/db/repositories/exerciseRepository';
+import { getProfile } from '@/db/repositories/profileRepository';
 import { getSessionFeedback, getSessionForPlan, getWorkoutPlanByDate } from '@/db/repositories/workoutRepository';
+import { getConfiguredWeekStartsOn } from '@/engines/coaching/weekStart';
 import { PlanGenerationError, type WorkoutDayView, type WorkoutPlanExerciseDetail } from '@/types/workout';
 
 import { ensureWorkoutPlanForDate, isDateInFuture, isDateReadOnly, isDateToday } from './ensureDailyPlan';
 import { planMatchesLibrary, refreshWorkoutPlanForDate } from './repairStalePlan';
+import { isScheduledWorkoutDay } from './weeklySchedule';
 
 async function hydratePlanExercises(
   plan: NonNullable<WorkoutDayView['plan']>,
@@ -30,6 +33,49 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
   const isReadOnly = isDateReadOnly(planDate);
   let planRefreshed = false;
 
+  const profile = await getProfile();
+  const weekStartsOn = getConfiguredWeekStartsOn();
+  const isRestDay = profile
+    ? !isScheduledWorkoutDay(planDate, profile.trainingFrequency, weekStartsOn)
+    : false;
+
+  // #region agent log
+  fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '1efa2d' },
+    body: JSON.stringify({
+      sessionId: '1efa2d',
+      runId: 'schedule-v1',
+      hypothesisId: 'H2',
+      location: 'resolveWorkoutDay.ts:loadWorkoutDay',
+      message: 'day schedule classification',
+      data: {
+        planDate,
+        isToday,
+        isFuture,
+        isRestDay,
+        frequency: profile?.trainingFrequency ?? null,
+        weekStartsOn,
+      },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
+
+  if (isRestDay) {
+    return {
+      planDate,
+      plan: null,
+      exercises: [],
+      session: null,
+      sessionFeedback: [],
+      isReadOnly,
+      isToday,
+      isFuture,
+      isRestDay: true,
+    };
+  }
+
   let plan = await getWorkoutPlanByDate(planDate);
 
   if (plan) {
@@ -47,9 +93,11 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
     }
   }
 
-  if (!plan && isToday) {
+  if (!plan && (isToday || isFuture)) {
     try {
-      plan = await ensureWorkoutPlanForDate(planDate);
+      plan = await ensureWorkoutPlanForDate(planDate, undefined, {
+        allowFutureGeneration: isFuture,
+      });
     } catch (error) {
       if (error instanceof PlanGenerationError) {
         throw error;
@@ -79,6 +127,7 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
           isReadOnly,
           isToday,
           isFuture,
+          isRestDay: false,
           planRefreshed,
           partialLibraryMatch: true,
         };
@@ -103,6 +152,7 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
     isReadOnly,
     isToday,
     isFuture,
+    isRestDay: false,
     planRefreshed,
     partialLibraryMatch,
   };

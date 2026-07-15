@@ -2,11 +2,7 @@ import { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
 
 import { VisualAsset, muscleGroupIcon } from '@/components/media';
-import {
-  getExerciseGifSource,
-  getExerciseThumbnailSource,
-  hasAnimatedExerciseDemo,
-} from '@/constants/exerciseMedia';
+import { resolveExerciseDisplayMedia } from '@/constants/exerciseMedia';
 import type { Exercise } from '@/types/exercise';
 import { colors, radius, createDynamicStyles } from '@/theme';
 
@@ -23,10 +19,11 @@ export function ExerciseFrameAnimation({
   size = 120,
   fillWidth = false,
 }: ExerciseFrameAnimationProps) {
-  const startFrame = getExerciseThumbnailSource(exercise.id);
-  const endFrame = getExerciseGifSource(exercise.id);
+  const media = resolveExerciseDisplayMedia(exercise);
+  const startFrame = media.thumbnail;
+  const endFrame = media.motionFrame;
   const [showEndFrame, setShowEndFrame] = useState(false);
-  const canAnimate = hasAnimatedExerciseDemo(exercise.id);
+  const canAnimate = media.animate;
 
   const hasTwoFrames = Boolean(startFrame && endFrame && canAnimate);
 

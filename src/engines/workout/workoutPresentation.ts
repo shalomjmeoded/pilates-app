@@ -5,9 +5,15 @@ function titleCase(value: string): string {
 }
 
 export function deriveWorkoutFocusTitle(exercises: WorkoutPlanExerciseDetail[]): string {
-  const groups = [...new Set(exercises.slice(0, 6).map((item) => item.exercise.muscleGroup))];
+  const groups = [...new Set(exercises.map((item) => item.exercise.muscleGroup))];
   if (groups.length === 0) {
     return 'Full Body Flow';
+  }
+  if (groups.length >= 3) {
+    return groups
+      .slice(0, 3)
+      .map((group) => titleCase(group))
+      .join(' · ');
   }
   return groups
     .slice(0, 2)

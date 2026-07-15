@@ -1,10 +1,12 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, StyleSheet, View } from 'react-native';
+import { format, parseISO } from 'date-fns';
 
 import {
   ChangeWorkoutSheet,
   ExerciseGridCard,
+  RestDayCard,
   ResumeWorkoutBanner,
   WeekCalendarStrip,
   WorkoutCompletedBanner,
@@ -15,8 +17,18 @@ import {
 } from '@/components/workout';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
-import { discardWorkoutSession, startWorkoutSession } from '@/db/repositories/workoutRepository';
-import { getCalendarDates } from '@/engines/workout';
+import {
+  discardWorkoutSession,
+  restartWorkoutSessionForDev,
+  startWorkoutSession,
+} from '@/db/repositories/workoutRepository';
+import { getProfile } from '@/db/repositories/profileRepository';
+import {
+  ensureWeekWorkoutPlans,
+  formatPlanDate,
+  getScheduledWorkoutDatesForWeek,
+  getWeekCalendarDates,
+} from '@/engines/workout';
 import {
   deriveWhyThisWorkout,
   deriveWorkoutFocusTitle,
@@ -26,7 +38,9 @@ import { useWorkoutCalendarCompletion } from '@/hooks/useWorkoutCalendarCompleti
 import { useWorkoutDay } from '@/hooks/useWorkoutDay';
 import { usePremium } from '@/hooks/usePremium';
 import { useWorkoutStreak } from '@/hooks/useWorkoutStreak';
+import { usePreferencesStore } from '@/stores/preferencesStore';
 import { useWorkoutStore } from '@/stores/workoutStore';
+import type { TrainingFrequency } from '@/types/profile';
 import type { WorkoutChangeRequest } from '@/types/workout';
 import { applyWorkoutChangeRequest } from '@/services/workout/applyWorkoutChangeRequest';
 import { warmAiProxy } from '@/services/ai';
@@ -39,11 +53,44 @@ const DEFAULT_CHANGE_REQUEST: WorkoutChangeRequest = {
   coachNote: '',
 };
 
+const MAX_WEEK_OFFSET = 4;
+const MIN_WEEK_OFFSET = -8;
+
 export default function WorkoutScreen() {
   const router = useRouter();
   const selectedDate = useWorkoutStore((state) => state.selectedDate);
   const setSelectedDate = useWorkoutStore((state) => state.setSelectedDate);
-  const calendarDates = useMemo(() => getCalendarDates(), []);
+  const weekStartsOn = usePreferencesStore((state) => state.preferences.weekStartsOn);
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [trainingFrequency, setTrainingFrequency] = useState<TrainingFrequency | null>(null);
+  const [isEnsuringWeek, setIsEnsuringWeek] = useState(false);
+
+  const calendarDates = useMemo(
+    () => getWeekCalendarDates(weekOffset, weekStartsOn),
+    [weekOffset, weekStartsOn],
+  );
+
+  const weekStart = calendarDates[0];
+  const weekLabel = useMemo(() => {
+    if (!weekStart || !calendarDates[6]) {
+      return 'This week';
+    }
+    if (weekOffset === 0) {
+      return 'This week';
+    }
+    const start = format(parseISO(weekStart), 'MMM d');
+    const end = format(parseISO(calendarDates[6]), 'MMM d');
+    return `${start} – ${end}`;
+  }, [calendarDates, weekOffset, weekStart]);
+
+  const restDates = useMemo(() => {
+    if (!weekStart || !trainingFrequency) {
+      return new Set<string>();
+    }
+    const workoutDates = new Set(getScheduledWorkoutDatesForWeek(weekStart, trainingFrequency));
+    return new Set(calendarDates.filter((date) => !workoutDates.has(date)));
+  }, [calendarDates, trainingFrequency, weekStart]);
+
   const { data, isLoading, isRefreshing, errorCode, errorMessage, reload } =
     useWorkoutDay(selectedDate);
   const { completedDates, reload: reloadCalendar } = useWorkoutCalendarCompletion(calendarDates);
@@ -55,6 +102,72 @@ export default function WorkoutScreen() {
   const [changeError, setChangeError] = useState<string | null>(null);
 
   useEffect(() => {
+    void getProfile().then((profile) => {
+      setTrainingFrequency(profile?.trainingFrequency ?? null);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!weekStart) {
+      return;
+    }
+
+    let cancelled = false;
+    setIsEnsuringWeek(true);
+    void ensureWeekWorkoutPlans(weekStart)
+      .then((result) => {
+        if (cancelled) {
+          return;
+        }
+        // #region agent log
+        fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '1efa2d' },
+          body: JSON.stringify({
+            sessionId: '1efa2d',
+            runId: 'schedule-v1',
+            hypothesisId: 'H1',
+            location: 'workout/index.tsx:ensureWeek',
+            message: 'week strip ready',
+            data: {
+              weekOffset,
+              weekStart,
+              weekStartsOn,
+              workoutDates: result.workoutDates,
+              restDates: result.restDates,
+              ensuredCount: result.ensured.length,
+            },
+            timestamp: Date.now(),
+          }),
+        }).catch(() => {});
+        // #endregion
+        void reload();
+        void reloadCalendar();
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsEnsuringWeek(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+    // Pre-generate once per visible week; reload helpers intentionally omitted from deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- weekStart drives schedule generation
+  }, [weekStart, weekOffset, weekStartsOn]);
+
+  useEffect(() => {
+    if (calendarDates.length === 0) {
+      return;
+    }
+    if (!calendarDates.includes(selectedDate)) {
+      const today = formatPlanDate(new Date());
+      setSelectedDate(calendarDates.includes(today) ? today : calendarDates[0]);
+    }
+  }, [calendarDates, selectedDate, setSelectedDate]);
+
+  useEffect(() => {
     if (hasAccess) {
       void warmAiProxy();
     }
@@ -64,6 +177,7 @@ export default function WorkoutScreen() {
 
   const canStartWorkout =
     data?.isToday &&
+    !data.isRestDay &&
     !data.isReadOnly &&
     data.plan &&
     data.session?.status !== 'in_progress' &&
@@ -72,6 +186,7 @@ export default function WorkoutScreen() {
 
   const startUnavailableReason =
     data?.isToday &&
+    !data.isRestDay &&
     !data.isReadOnly &&
     data.plan &&
     data.session?.status !== 'in_progress' &&
@@ -92,6 +207,28 @@ export default function WorkoutScreen() {
     }
 
     router.push(`/(tabs)/workout/player/${session.id}`);
+  };
+
+  const handleRestartDev = () => {
+    if (!__DEV__ || !data?.plan) {
+      return;
+    }
+    Alert.alert('Restart workout (dev)', 'Clear this completed session and start again?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Restart',
+        style: 'destructive',
+        onPress: () => {
+          void (async () => {
+            const session = await restartWorkoutSessionForDev(data.plan!.id);
+            await reload();
+            await reloadCalendar();
+            await reloadStreak();
+            router.push(`/(tabs)/workout/player/${session.id}`);
+          })();
+        },
+      },
+    ]);
   };
 
   const openExerciseDetail = (exerciseId: string, sortOrder: number) => {
@@ -198,6 +335,10 @@ export default function WorkoutScreen() {
     runApply();
   };
 
+  const showExerciseList = Boolean(
+    !errorMessage && data && !data.isRestDay && data.exercises.length > 0,
+  );
+
   const listHeader = (
     <View style={styles.headerStack}>
       <WeekCalendarStrip
@@ -205,15 +346,23 @@ export default function WorkoutScreen() {
         selectedDate={selectedDate}
         onSelectDate={setSelectedDate}
         completedDates={completedDates}
+        restDates={restDates}
+        weekLabel={weekLabel}
+        onPreviousWeek={() => setWeekOffset((value) => Math.max(MIN_WEEK_OFFSET, value - 1))}
+        onNextWeek={() => setWeekOffset((value) => Math.min(MAX_WEEK_OFFSET, value + 1))}
+        canGoPrevious={weekOffset > MIN_WEEK_OFFSET}
+        canGoNext={weekOffset < MAX_WEEK_OFFSET}
       />
 
-      {isRefreshing ? <Text variant="bodyMuted">Updating plan...</Text> : null}
+      {isRefreshing || isEnsuringWeek ? <Text variant="bodyMuted">Updating plan...</Text> : null}
 
       {errorMessage ? (
         <WorkoutErrorState code={errorCode} message={errorMessage} onRetry={() => void reload()} />
       ) : null}
 
-      {!errorMessage && data?.session?.status === 'in_progress' && data.isToday ? (
+      {!errorMessage && data?.isRestDay ? <RestDayCard isToday={data.isToday} /> : null}
+
+      {!errorMessage && data?.session?.status === 'in_progress' && data.isToday && !data.isRestDay ? (
         <ResumeWorkoutBanner
           exerciseLabel={`exercise ${(data.session.currentExerciseIndex ?? 0) + 1}`}
           onResume={() => router.push(`/(tabs)/workout/player/${data.session!.id}`)}
@@ -221,12 +370,13 @@ export default function WorkoutScreen() {
         />
       ) : null}
 
-      {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
+      {!errorMessage && data && !data.isRestDay && data.exercises.length > 0 ? (
         <>
           {data.session?.status === 'completed' && data.isToday ? (
             <WorkoutCompletedBanner
               movementCount={data.exercises.length}
               streakDays={streakStats?.currentStreak}
+              onRestartDev={__DEV__ ? handleRestartDev : undefined}
             />
           ) : (
             <WorkoutHeroCard
@@ -246,14 +396,18 @@ export default function WorkoutScreen() {
         </>
       ) : null}
 
-      {!errorMessage && data?.isFuture ? (
+      {!errorMessage && data?.isFuture && !data.isRestDay && data.exercises.length === 0 ? (
         <WorkoutEmptyState
           title="Plan not available yet"
           message="Your personalized workout unlocks on this day. Check back then."
         />
       ) : null}
 
-      {!errorMessage && data?.isReadOnly && !data.isFuture ? (
+      {!errorMessage && data?.isFuture && !data.isRestDay && data.exercises.length > 0 ? (
+        <WorkoutReadOnlyBanner message="Preview only — this workout unlocks on this day." />
+      ) : null}
+
+      {!errorMessage && data?.isReadOnly && !data.isFuture && !data.isRestDay ? (
         <WorkoutReadOnlyBanner
           message={
             data.session?.status === 'completed'
@@ -263,19 +417,25 @@ export default function WorkoutScreen() {
         />
       ) : null}
 
-      {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
+      {!errorMessage && data && !data.isRestDay && data.exercises.length > 0 ? (
         <Text variant="label" style={styles.sectionLabel}>
-          Today&apos;s movements
+          {data.isToday ? "Today's movements" : 'Movements'}
         </Text>
       ) : null}
     </View>
   );
 
   return (
-    <Screen title="Workout" subtitle="Your daily movement, guided." isLoading={isLoading} loadingLabel="Loading your plan..." showBrandMark>
-      {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
+    <Screen
+      title="Workout"
+      subtitle="Your weekly movement, guided."
+      isLoading={isLoading}
+      loadingLabel="Loading your plan..."
+      showBrandMark
+    >
+      {showExerciseList ? (
         <FlatList
-          data={data.exercises}
+          data={data!.exercises}
           keyExtractor={(item) => `${item.exerciseId}-${item.sortOrder}`}
           numColumns={2}
           columnWrapperStyle={styles.gridRow}
@@ -286,7 +446,7 @@ export default function WorkoutScreen() {
             <View style={styles.gridItem}>
               <ExerciseGridCard
                 item={item}
-                disabled={data.isReadOnly && data.session?.status !== 'completed'}
+                disabled={data!.isReadOnly && data!.session?.status !== 'completed'}
                 onPress={() => openExerciseDetail(item.exerciseId, item.sortOrder)}
               />
             </View>
@@ -296,7 +456,7 @@ export default function WorkoutScreen() {
         <View style={styles.fallback}>{listHeader}</View>
       )}
 
-      {!errorMessage && data && !data.isFuture && data.exercises.length === 0 ? (
+      {!errorMessage && data && !data.isRestDay && !data.isFuture && data.exercises.length === 0 ? (
         <WorkoutEmptyState
           title="No workout plan"
           message="We couldn’t find exercises for this day. Pull to refresh or try again."

@@ -162,6 +162,10 @@ export async function purchaseRevenueCatCurrentOffering(
     const offerings = await Purchases.getOfferings();
     const currentPackage = offerings.current ? findPackageByPlan(offerings.current, plan) : null;
 
+    // #region agent log
+    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'partner-audit',hypothesisId:'S1',location:'revenueCatService.ts:purchase',message:'offerings lookup',data:{plan,platform:Platform.OS,hasCurrentOffering:Boolean(offerings.current),packageFound:Boolean(currentPackage),offeringId:offerings.current?.identifier??null},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+
     if (!currentPackage) {
       throw new Error(`No RevenueCat ${plan} package is available yet.`);
     }
@@ -172,6 +176,9 @@ export async function purchaseRevenueCatCurrentOffering(
     trackPremiumEvent('trial_started', { metadata: { source: 'revenuecat', plan } });
     return status;
   } catch (error) {
+    // #region agent log
+    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'partner-audit',hypothesisId:'S2',location:'revenueCatService.ts:purchaseCatch',message:'purchase failure',data:{plan,platform:Platform.OS,errorMessage:error instanceof Error?error.message:String(error),matchedNativeUnavailable:isRevenueCatNativeUnavailableError(error),isPurchasesError:isPurchasesError(error),purchasesCode:isPurchasesError(error)?error.code:null},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     if (
       isPurchasesError(error) &&
       error.code === PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR

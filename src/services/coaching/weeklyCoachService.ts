@@ -7,6 +7,7 @@ import {
   getCompletedWorkoutDatesBetween,
   getPlannedWorkoutDatesBetween,
   getRecentSkipCounts,
+  countCompletedWorkouts,
 } from '@/db/repositories/workoutRepository';
 import { getExerciseById } from '@/db/repositories/exerciseRepository';
 import {
@@ -16,11 +17,13 @@ import {
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { buildWeeklyCoachSummary } from '@/engines/coaching/buildWeeklyCoachSummary';
 import {
+  getConfiguredWeekStartsOn,
   getPreviousWeekStartDate,
   getWeekEndDate,
   getWeekStartDate,
   isWeekStartDay,
 } from '@/engines/coaching/weekStart';
+import { WEEK_START_DAY_LABELS } from '@/types/preferences';
 import { aiFacade } from '@/services/ai';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { notifyWeeklyCoachReady } from '@/services/notifications/notificationService';
@@ -108,13 +111,38 @@ export async function generateWeeklyCoachInsight(options?: {
   const weekStart = getWeekStartDate();
   const onWeekStart = isWeekStartDay();
 
+  // #region agent log
+  {
+    const { getAiProxyBaseUrl, isAiConfigured, isAiMockMode, isGeminiDirectMode } = await import(
+      '@/services/ai/config'
+    );
+    const proxy = getAiProxyBaseUrl() ?? null;
+    let proxyHost: string | null = null;
+    try {
+      proxyHost = proxy ? new URL(proxy).host : null;
+    } catch {
+      proxyHost = 'invalid_url';
+    }
+    const completedCount = await countCompletedWorkouts();
+    fetch('http://127.0.0.1:7686/ingest/ee46ee9f-47bb-4280-943b-99e933d45b4f',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1efa2d'},body:JSON.stringify({sessionId:'1efa2d',runId:'partner-audit',hypothesisId:'A1',location:'weeklyCoachService.ts:generate',message:'ai coach gate',data:{weekStart,onWeekStart,completedCount,weekStartsOn:getConfiguredWeekStartsOn(),isAiConfigured:isAiConfigured(),isAiMockMode:isAiMockMode(),isGeminiDirectMode:isGeminiDirectMode(),proxyHost,proxyIsLanHttp:Boolean(proxy?.startsWith('http://192.168.'))},timestamp:Date.now()})}).catch(()=>{});
+  }
+  // #endregion
+
+  const completedCount = await countCompletedWorkouts();
+  if (completedCount === 0) {
+    throw new Error(
+      'Finish your first week of workouts first, then check back for your weekly coach summary.',
+    );
+  }
+
   if (!onWeekStart) {
     const cachedEarly = await getCachedWeeklyCoachInsight();
     if (cachedEarly) {
       return cachedEarly;
     }
+    const weekDay = WEEK_START_DAY_LABELS[getConfiguredWeekStartsOn()];
     throw new Error(
-      'Weekly coach unlocks on the first day of your week. You can change that day in Settings when available.',
+      `Weekly coach unlocks on ${weekDay}. You can change that day in Settings → Week starts on.`,
     );
   }
 

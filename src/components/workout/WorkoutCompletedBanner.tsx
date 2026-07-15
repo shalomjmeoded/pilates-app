@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
 
+import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import { workoutStreakEncouragement } from '@/utils/encouragement';
@@ -8,9 +9,15 @@ import { workoutStreakEncouragement } from '@/utils/encouragement';
 interface WorkoutCompletedBannerProps {
   movementCount: number;
   streakDays?: number;
+  /** Dev-only: allow restarting a completed session unlimited times. */
+  onRestartDev?: () => void;
 }
 
-export function WorkoutCompletedBanner({ movementCount, streakDays }: WorkoutCompletedBannerProps) {
+export function WorkoutCompletedBanner({
+  movementCount,
+  streakDays,
+  onRestartDev,
+}: WorkoutCompletedBannerProps) {
   const streakCopy = workoutStreakEncouragement(streakDays);
 
   return (
@@ -30,6 +37,9 @@ export function WorkoutCompletedBanner({ movementCount, streakDays }: WorkoutCom
               ? ` ${streakDays} day rhythm and counting.`
               : ' Rest well and return when it feels right.'}
         </Text>
+        {__DEV__ && onRestartDev ? (
+          <Button label="Restart workout (dev)" variant="secondary" onPress={onRestartDev} />
+        ) : null}
       </View>
     </View>
   );
@@ -58,7 +68,7 @@ const styles = createDynamicStyles(() => ({
   },
   copy: {
     flex: 1,
-    gap: 4,
+    gap: spacing.xs,
   },
   title: {
     color: colors.textStrong,

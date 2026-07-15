@@ -17,6 +17,14 @@ export const EXERCISE_THUMBNAIL_DIR = 'assets/exercises/thumbnails';
 export const EXERCISE_GIF_DIR = 'assets/exercises/gifs';
 export const EXERCISE_PLACEHOLDER_DIR = 'assets/exercises/placeholders';
 
+/** YouTube storyboard stills — used when bundled thumb/gif are identical JPGs. */
+export function getYouTubeFrameSource(
+  videoId: string,
+  frame: 0 | 1 | 2 | 3 = 0,
+): ImageSourcePropType {
+  return { uri: `https://img.youtube.com/vi/${encodeURIComponent(videoId)}/${frame}.jpg` };
+}
+
 export function getExerciseThumbnailSource(exerciseId: string): ImageSourcePropType | null {
   return EXERCISE_THUMBNAIL_MANIFEST[exerciseId] ?? null;
 }
@@ -49,18 +57,62 @@ export function prefersNativeGifDemo(exerciseId: string): boolean {
   return Boolean(seed && isNativeAnimatedUri(seed.gifUri) && EXERCISE_GIF_MANIFEST[exerciseId]);
 }
 
+/**
+ * Resolve display media. Prefer YouTube storyboard frames when a curated video exists so
+ * (1) donor-copied stills don't collide across exercises, and (2) flip-book animation works
+ * even when bundled thumb/gif files are identical JPGs.
+ */
+export function resolveExerciseDisplayMedia(exercise: Exercise): {
+  thumbnail: ImageSourcePropType | null;
+  motionFrame: ImageSourcePropType | null;
+  animate: boolean;
+  preferNativeGif: boolean;
+  source: 'youtube_frames' | 'bundled_motion' | 'bundled_still' | 'none';
+} {
+  const videoId = exercise.youtubeVideoId?.trim() || null;
+  const bundledThumb = getExerciseThumbnailSource(exercise.id);
+  const bundledGif = EXERCISE_GIF_MANIFEST[exercise.id] ?? null;
+  const preferNativeGif = prefersNativeGifDemo(exercise.id);
+  const bundledMotion = hasAnimatedExerciseDemo(exercise.id);
+
+  if (videoId) {
+    return {
+      thumbnail: getYouTubeFrameSource(videoId, 0),
+      motionFrame: getYouTubeFrameSource(videoId, 1),
+      animate: true,
+      preferNativeGif: false,
+      source: 'youtube_frames',
+    };
+  }
+
+  if (bundledMotion && bundledThumb && bundledGif) {
+    return {
+      thumbnail: bundledThumb,
+      motionFrame: bundledGif,
+      animate: true,
+      preferNativeGif,
+      source: 'bundled_motion',
+    };
+  }
+
+  const still = bundledThumb ?? bundledGif ?? getExerciseGifSource(exercise.id);
+  return {
+    thumbnail: still,
+    motionFrame: still,
+    animate: false,
+    preferNativeGif: false,
+    source: still ? 'bundled_still' : 'none',
+  };
+}
+
 export function getExerciseMediaEntry(exercise: Exercise): ExerciseMediaEntry {
-  const thumbnail = getExerciseThumbnailSource(exercise.id);
-  const gif = getExerciseGifSource(exercise.id);
-  const distinct = Boolean(
-    thumbnail && EXERCISE_GIF_MANIFEST[exercise.id] && thumbnail !== EXERCISE_GIF_MANIFEST[exercise.id],
-  );
+  const resolved = resolveExerciseDisplayMedia(exercise);
 
   return {
-    thumbnail,
-    gif,
-    fallback: thumbnail ?? gif,
-    hasDistinctMotionFrame: distinct,
+    thumbnail: resolved.thumbnail,
+    gif: resolved.motionFrame,
+    fallback: resolved.thumbnail ?? resolved.motionFrame,
+    hasDistinctMotionFrame: resolved.animate && resolved.thumbnail !== resolved.motionFrame,
   };
 }
 

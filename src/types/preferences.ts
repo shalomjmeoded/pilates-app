@@ -57,12 +57,7 @@ export const DEFAULT_COACH_NUTRITION_PREFERENCES: CoachNutritionPreferences = {
   calorieSafeguardEnabled: true,
 };
 
-export const DEFAULT_AVAILABLE_EQUIPMENT: AvailableEquipmentPreference[] = [
-  'magic circle',
-  'light weights',
-  'resistance band',
-  'pilates ball',
-];
+export const DEFAULT_AVAILABLE_EQUIPMENT: AvailableEquipmentPreference[] = [];
 
 export const DEFAULT_PREFERENCES: AppPreferences = {
   onboardingCompleted: false,

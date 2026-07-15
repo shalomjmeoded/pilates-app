@@ -3,7 +3,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { muscleGroupIcon } from '@/components/media';
 import { Text } from '@/components/ui/Text';
-import { getExerciseGifSource, getExerciseThumbnailSource } from '@/constants/exerciseMedia';
+import { resolveExerciseDisplayMedia } from '@/constants/exerciseMedia';
 import type { WorkoutPlanExerciseDetail } from '@/types/workout';
 import type { Exercise } from '@/types/exercise';
 import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
@@ -36,7 +36,8 @@ function roleLabel(role: Exercise['sessionRole']): string {
 }
 
 function ExerciseGridMedia({ exercise }: { exercise: Exercise }) {
-  const source = getExerciseThumbnailSource(exercise.id) ?? getExerciseGifSource(exercise.id);
+  const media = resolveExerciseDisplayMedia(exercise);
+  const source = media.thumbnail;
 
   if (!source) {
     return (

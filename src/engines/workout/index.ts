@@ -34,3 +34,16 @@ export {
   resolveExerciseSubstitution,
   validateLibraryReplacement,
 } from './exerciseSubstitution';
+export {
+  applySchedulePhase,
+  getOrCreateSchedulePhaseOffset,
+  getScheduledWorkoutDatesForWeek,
+  getWeekCalendarDates,
+  getWeekDates,
+  isScheduledWorkoutDay,
+  setSchedulePhaseFromDate,
+  weekDayOffset,
+  workoutDayIndexInWeek,
+  workoutDayOffsetsForCount,
+} from './weeklySchedule';
+export { ensureWeekWorkoutPlans, PLAN_DIVERSITY_VERSION } from './ensureWeekPlans';
