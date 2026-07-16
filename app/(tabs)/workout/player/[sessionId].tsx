@@ -1,10 +1,11 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, AppState, ScrollView, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, AppState, Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import {
+  ExerciseMediaView,
   ExerciseSwapReasonSheet,
   ExerciseYouTubeEmbed,
   WorkoutExitSheet,
@@ -12,7 +13,6 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
-import { getProfile, saveProfile } from '@/db/repositories/profileRepository';
 import {
   completeWorkoutSession,
   discardWorkoutSession,
@@ -26,8 +26,8 @@ import { usePremium } from '@/hooks/usePremium';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
 import type { ExerciseFeedback } from '@/types/exercise';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
-import type { MediaPreference } from '@/types/profile';
 import { colors, radius, shadows, spacing } from '@/theme';
+import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
 import { lightImpactHaptic, successNotificationHaptic } from '@/utils/haptics';
 
 const REST_TIMER_SECONDS = 30;
@@ -43,7 +43,6 @@ export default function WorkoutPlayerScreen() {
   const [restSecondsRemaining, setRestSecondsRemaining] = useState(0);
   const [swapSheetVisible, setSwapSheetVisible] = useState(false);
   const [swapMessage, setSwapMessage] = useState<string | null>(null);
-  const [mediaPreference, setMediaPreference] = useState<MediaPreference>('video_streaming');
   const [feedbackBySortOrder, setFeedbackBySortOrder] = useState<Record<number, ExerciseFeedback>>(
     {},
   );
@@ -52,14 +51,6 @@ export default function WorkoutPlayerScreen() {
     planDate ?? '',
   );
   const { requirePremium } = usePremium();
-
-  useEffect(() => {
-    void getProfile().then((profile) => {
-      if (profile?.mediaPreference) {
-        setMediaPreference(profile.mediaPreference);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     if (!session || initialized.current) {
@@ -304,20 +295,9 @@ export default function WorkoutPlayerScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <ExerciseYouTubeEmbed
-          exercise={current.exercise}
-          allowStreaming={mediaPreference === 'video_streaming'}
-          onEnableStreaming={() => {
-            void (async () => {
-              const profile = await getProfile();
-              if (!profile) {
-                return;
-              }
-              await saveProfile({ ...profile, mediaPreference: 'video_streaming' });
-              setMediaPreference('video_streaming');
-            })();
-          }}
-        />
+        <ExerciseMediaView exercise={current.exercise} variant="gif" fillWidth />
+
+        <ExerciseYouTubeEmbed exercise={current.exercise} allowStreaming />
 
         <Text variant="h1" style={styles.title}>
           {current.exercise.name}
@@ -336,6 +316,12 @@ export default function WorkoutPlayerScreen() {
             </Text>
           ))}
         </View>
+
+        <Button
+          label="Watch Reference Video"
+          variant="secondary"
+          onPress={() => void Linking.openURL(buildExerciseYouTubeSearchUrl(current.exercise))}
+        />
 
         {swapMessage ? (
           <View style={styles.swapSuccess}>

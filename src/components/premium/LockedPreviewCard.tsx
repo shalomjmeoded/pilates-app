@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface LockedPreviewCardProps {
   eyebrow: string;
@@ -32,7 +32,7 @@ export function LockedPreviewCard({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
   },
@@ -66,4 +66,4 @@ const styles = createDynamicStyles(() => ({
     borderColor: colors.borderStrong,
     overflow: 'hidden',
   },
-}));
+});

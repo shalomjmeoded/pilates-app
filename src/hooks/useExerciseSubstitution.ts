@@ -77,22 +77,11 @@ export function useExerciseSubstitution(planDate: string) {
           return null;
         }
 
-        const exerciseCountBefore = plan?.exercises.length ?? 0;
         await swapPlanExercise(
           input.planId,
           input.planExercise.sortOrder,
           resolved.exercise.id,
         );
-
-        const planAfter = await getWorkoutPlanByDate(planDate);
-        if (
-          planAfter &&
-          exerciseCountBefore > 0 &&
-          planAfter.exercises.length < exerciseCountBefore
-        ) {
-          setError('Swap would shrink this session below a safe exercise count.');
-          return null;
-        }
 
         return {
           exercise: resolved.exercise,

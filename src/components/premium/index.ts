@@ -6,4 +6,3 @@ export { PremiumBadge } from './PremiumBadge';
 export { PremiumGate } from './PremiumGate';
 export { PremiumThemeGuard } from './PremiumThemeGuard';
 export { ProgressPreviewGate } from './ProgressPreviewGate';
-export { DevPremiumBypass } from './DevPremiumBypass';

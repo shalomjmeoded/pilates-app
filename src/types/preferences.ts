@@ -1,6 +1,6 @@
 export type StorageBackend = 'mmkv' | 'memory';
 
-export type ThemePreference = 'light' | 'luxe';
+export type ThemePreference = 'light' | 'luxe' | 'pride';
 
 export type CoachDeficitCutPreference = 'carbs' | 'fat' | 'balanced';
 
@@ -26,13 +26,6 @@ export interface CoachNutritionPreferences {
   calorieSafeguardEnabled: boolean;
 }
 
-export type AvailableEquipmentPreference =
-  | 'reformer'
-  | 'resistance band'
-  | 'magic circle'
-  | 'light weights'
-  | 'pilates ball';
-
 export interface AppPreferences {
   onboardingCompleted: boolean;
   theme: ThemePreference;
@@ -40,11 +33,6 @@ export interface AppPreferences {
   coachNutrition: CoachNutritionPreferences;
   /** First day of the user's training / coach week. Default Monday. */
   weekStartsOn: WeekStartsOn;
-  /**
-   * Optional props the user owns. Mat / bodyweight is always available.
-   * Empty array means mat-only (no optional props).
-   */
-  availableEquipment: AvailableEquipmentPreference[];
   cachedFlags: Record<string, boolean | string | number>;
   storageBackend: StorageBackend;
 }
@@ -57,8 +45,6 @@ export const DEFAULT_COACH_NUTRITION_PREFERENCES: CoachNutritionPreferences = {
   calorieSafeguardEnabled: true,
 };
 
-export const DEFAULT_AVAILABLE_EQUIPMENT: AvailableEquipmentPreference[] = [];
-
 export const DEFAULT_PREFERENCES: AppPreferences = {
   onboardingCompleted: false,
   theme: 'light',
@@ -68,7 +54,6 @@ export const DEFAULT_PREFERENCES: AppPreferences = {
   },
   coachNutrition: DEFAULT_COACH_NUTRITION_PREFERENCES,
   weekStartsOn: 1,
-  availableEquipment: DEFAULT_AVAILABLE_EQUIPMENT,
   cachedFlags: {},
   storageBackend: 'mmkv',
 };

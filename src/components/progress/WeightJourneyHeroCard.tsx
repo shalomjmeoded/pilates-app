@@ -1,9 +1,9 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { WeightJourney } from '@/types/progress';
-import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 import { displayWeight } from '@/utils/units';
 
 interface WeightJourneyHeroCardProps {
@@ -45,7 +45,7 @@ function formatShort(kg: number, unit: 'kg' | 'lb'): string {
   return value;
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
     paddingVertical: spacing.md,
@@ -77,4 +77,4 @@ const styles = createDynamicStyles(() => ({
   progressLabel: {
     marginTop: 4,
   },
-}));
+});

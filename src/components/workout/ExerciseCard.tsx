@@ -1,8 +1,8 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import type { WorkoutPlanExerciseDetail } from '@/types/workout';
-import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 import { ExerciseMediaView } from './ExerciseMediaView';
 
@@ -52,7 +52,7 @@ export function ExerciseCard({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: colors.surfaceCanvas,
@@ -82,4 +82,4 @@ const styles = createDynamicStyles(() => ({
     marginTop: spacing.xs,
     color: colors.accentCool,
   },
-}));
+});

@@ -1,10 +1,10 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { formatPhysiqueCategory } from '@/engines/physique/physiqueAssessmentFlow';
 import type { BodyFatAssumption, BmiInfo, TdeeInfo } from '@/types/progress';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface BmiTdeeCardsProps {
   bmi: BmiInfo;
@@ -78,7 +78,7 @@ export function BmiTdeeCards({ bmi, tdee, bodyFatAssumption }: BmiTdeeCardsProps
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   wrap: {
     gap: spacing.sm,
   },
@@ -104,4 +104,4 @@ const styles = createDynamicStyles(() => ({
     marginTop: spacing.xs,
     fontSize: 12,
   },
-}));
+});

@@ -10,12 +10,6 @@ export {
 } from './ensureDailyPlan';
 export { generateWorkoutPlan, validatePlanExerciseIds } from './planGenerator';
 export {
-  defaultTargetMinutesForProfile,
-  exerciseCountBoundsForMinutes,
-  planMeetsExerciseFloor,
-  SESSION_DURATION_BUCKETS,
-} from './sessionDurationBounds';
-export {
   isPilatesAlignedExercise,
   normalizePilatesExercise,
 } from './pilatesExerciseCatalog';
@@ -34,22 +28,3 @@ export {
   resolveExerciseSubstitution,
   validateLibraryReplacement,
 } from './exerciseSubstitution';
-export {
-  applySchedulePhase,
-  getOrCreateSchedulePhaseOffset,
-  getScheduledWorkoutDatesForWeek,
-  getWeekCalendarDates,
-  getWeekDates,
-  isScheduledWorkoutDay,
-  setSchedulePhaseFromDate,
-  weekDayOffset,
-  workoutDayIndexInWeek,
-  workoutDayOffsetsForCount,
-} from './weeklySchedule';
-export { ensureWeekWorkoutPlans, PLAN_DIVERSITY_VERSION } from './ensureWeekPlans';
-export {
-  getDayScheduleOverride,
-  isEffectiveWorkoutDay,
-  setDayScheduleOverride,
-  type DayScheduleOverride,
-} from './dayScheduleOverride';

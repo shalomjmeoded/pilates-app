@@ -1,9 +1,9 @@
-import { Modal, Pressable, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { EXERCISE_SWAP_REASONS, type ExerciseSwapReason } from '@/types/exerciseSwap';
-import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface ExerciseSwapReasonSheetProps {
   visible: boolean;
@@ -50,7 +50,7 @@ export function ExerciseSwapReasonSheet({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(46, 42, 41, 0.35)',
@@ -82,4 +82,4 @@ const styles = createDynamicStyles(() => ({
     justifyContent: 'center',
     paddingHorizontal: spacing.sm,
   },
-}));
+});

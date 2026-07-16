@@ -1,4 +1,4 @@
-import { Modal, Pressable, TextInput, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
@@ -8,7 +8,7 @@ import {
   WORKOUT_CHANGE_MINUTE_OPTIONS,
 } from '@/services/workout/workoutChangeOptions';
 import type { WorkoutChangeRequest } from '@/types/workout';
-import { colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 
 interface ChangeWorkoutSheetProps {
   visible: boolean;
@@ -134,7 +134,7 @@ export function ChangeWorkoutSheet({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(46, 42, 41, 0.35)',
@@ -190,4 +190,4 @@ const styles = createDynamicStyles(() => ({
   actions: {
     gap: spacing.xs,
   },
-}));
+});

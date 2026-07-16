@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
 import { BetterMeBrandMark } from '@/components/ui/BetterMeBrandMark';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface ScreenProps {
   children: ReactNode;
@@ -61,7 +61,7 @@ export function Screen({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -106,4 +106,4 @@ const styles = createDynamicStyles(() => ({
   loadingText: {
     marginTop: spacing.xs,
   },
-}));
+});

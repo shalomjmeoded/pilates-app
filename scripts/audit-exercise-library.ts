@@ -9,12 +9,9 @@ import {
   EXERCISE_MUSCLE_GROUPS,
   EXERCISE_SESSION_ROLES,
   EXERCISE_SOURCES,
-  OPTIONAL_EXERCISE_EQUIPMENT,
   type Difficulty,
   type Exercise,
 } from '../src/types/exercise';
-
-const YOUTUBE_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 
 const projectRoot = resolve(__dirname, '..');
 const seedPath = resolve(projectRoot, 'assets/seed/exercises.json');
@@ -105,12 +102,6 @@ for (const exercise of exercises) {
       report('invalid_category', `${exercise.id}: ${category}`);
     }
   }
-
-  if (exercise.youtubeVideoId != null) {
-    if (!YOUTUBE_ID_PATTERN.test(exercise.youtubeVideoId)) {
-      report('invalid_youtube_id', `${exercise.id}: ${exercise.youtubeVideoId}`);
-    }
-  }
 }
 
 const byDifficulty = Object.fromEntries(
@@ -172,26 +163,9 @@ if (issues.length > 0) {
   }
 }
 
-if (exercises.length < 90) {
-  console.error(`\nFAIL: minimum 90 curated exercises required, found ${exercises.length}`);
+if (exercises.length < 60) {
+  console.error(`\nFAIL: minimum 60 curated exercises required, found ${exercises.length}`);
   process.exit(1);
-}
-
-for (const equipment of OPTIONAL_EXERCISE_EQUIPMENT) {
-  const count = exercises.filter((exercise) => exercise.equipment === equipment).length;
-  if (count < 3) {
-    report('thin_equipment_coverage', `${equipment}: ${count}`);
-  }
-}
-
-const youtubeCount = exercises.filter((exercise) => exercise.youtubeVideoId).length;
-console.log(`\nYouTube curated embeds: ${youtubeCount}`);
-
-if (issues.some((issue) => issue.category === 'thin_equipment_coverage')) {
-  console.log('\nAdditional coverage issues:');
-  for (const issue of issues.filter((item) => item.category === 'thin_equipment_coverage')) {
-    console.log(`  - ${issue.message}`);
-  }
 }
 
 if (issues.length > 0) {

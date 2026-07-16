@@ -154,7 +154,7 @@ export function WeeklyCoachInsightCard({
       {error ? (
         <LoadErrorState
           title="Couldn’t load coach summary"
-          message={error}
+          message="The weekly summary did not load. Try refreshing it."
           compact
           onRetry={onGenerate}
           retryLabel="Refresh"

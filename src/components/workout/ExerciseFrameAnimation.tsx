@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Image, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 import { VisualAsset, muscleGroupIcon } from '@/components/media';
-import { resolveExerciseDisplayMedia } from '@/constants/exerciseMedia';
+import {
+  getExerciseGifSource,
+  getExerciseThumbnailSource,
+  hasAnimatedExerciseDemo,
+} from '@/constants/exerciseMedia';
 import type { Exercise } from '@/types/exercise';
-import { colors, radius, createDynamicStyles } from '@/theme';
+import { colors, radius } from '@/theme';
 
 const FRAME_INTERVAL_MS = 850;
 
@@ -19,11 +23,10 @@ export function ExerciseFrameAnimation({
   size = 120,
   fillWidth = false,
 }: ExerciseFrameAnimationProps) {
-  const media = resolveExerciseDisplayMedia(exercise);
-  const startFrame = media.thumbnail;
-  const endFrame = media.motionFrame;
+  const startFrame = getExerciseThumbnailSource(exercise.id);
+  const endFrame = getExerciseGifSource(exercise.id);
   const [showEndFrame, setShowEndFrame] = useState(false);
-  const canAnimate = media.animate;
+  const canAnimate = hasAnimatedExerciseDemo(exercise.id);
 
   const hasTwoFrames = Boolean(startFrame && endFrame && canAnimate);
 
@@ -68,7 +71,7 @@ export function ExerciseFrameAnimation({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   frame: {
     backgroundColor: colors.surfaceRose,
     borderWidth: 1,
@@ -86,4 +89,4 @@ const styles = createDynamicStyles(() => ({
     width: '100%',
     height: '100%',
   },
-}));
+});

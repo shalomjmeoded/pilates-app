@@ -1,11 +1,11 @@
-import { ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import { LockedPreviewCard } from '@/components/premium/LockedPreviewCard';
 import { PaywallHero } from '@/components/premium/PaywallHero';
 import { Text } from '@/components/ui/Text';
 import { usePremium } from '@/hooks/usePremium';
-import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
 
 interface ProgressPreviewGateProps {
   onStartTrial?: () => void;
@@ -115,7 +115,7 @@ export function ProgressPreviewGate({ onStartTrial, onRestore }: ProgressPreview
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   scroll: {
     gap: spacing.md,
     paddingBottom: spacing.xl,
@@ -177,4 +177,4 @@ const styles = createDynamicStyles(() => ({
     borderWidth: 1,
     borderColor: colors.borderLight,
   },
-}));
+});

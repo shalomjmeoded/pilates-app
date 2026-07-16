@@ -1,23 +1,16 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
 import { workoutStreakEncouragement } from '@/utils/encouragement';
 
 interface WorkoutCompletedBannerProps {
   movementCount: number;
   streakDays?: number;
-  /** Dev-only: allow restarting a completed session unlimited times. */
-  onRestartDev?: () => void;
 }
 
-export function WorkoutCompletedBanner({
-  movementCount,
-  streakDays,
-  onRestartDev,
-}: WorkoutCompletedBannerProps) {
+export function WorkoutCompletedBanner({ movementCount, streakDays }: WorkoutCompletedBannerProps) {
   const streakCopy = workoutStreakEncouragement(streakDays);
 
   return (
@@ -37,15 +30,12 @@ export function WorkoutCompletedBanner({
               ? ` ${streakDays} day rhythm and counting.`
               : ' Rest well and return when it feels right.'}
         </Text>
-        {__DEV__ && onRestartDev ? (
-          <Button label="Restart workout (dev)" variant="secondary" onPress={onRestartDev} />
-        ) : null}
       </View>
     </View>
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   banner: {
     flexDirection: 'row',
     gap: spacing.sm,
@@ -68,7 +58,7 @@ const styles = createDynamicStyles(() => ({
   },
   copy: {
     flex: 1,
-    gap: spacing.xs,
+    gap: 4,
   },
   title: {
     color: colors.textStrong,
@@ -76,4 +66,4 @@ const styles = createDynamicStyles(() => ({
   message: {
     lineHeight: 22,
   },
-}));
+});

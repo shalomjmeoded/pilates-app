@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
-import { View, ViewProps } from 'react-native';
+import { StyleSheet, View, ViewProps } from 'react-native';
 
-import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
 
 interface CardProps extends ViewProps {
   children: ReactNode;
@@ -16,7 +16,7 @@ export function Card({ children, style, elevated = true, ...props }: CardProps) 
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
@@ -30,4 +30,4 @@ const styles = createDynamicStyles(() => ({
   flat: {
     borderColor: colors.borderLight,
   },
-}));
+});

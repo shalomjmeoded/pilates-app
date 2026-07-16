@@ -397,7 +397,5 @@ export function transformToTuneExercise(
     repsBaseline: prescription.repsBaseline,
     holdSeconds: prescription.holdSeconds,
     caloriesFactor: prescription.caloriesFactor,
-    youtubeVideoId: null,
-    youtubeAttribution: null,
   };
 }

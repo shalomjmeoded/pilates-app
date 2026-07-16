@@ -12,11 +12,9 @@
     "ai-proxy": "tsx server/ai-proxy/dev-server.ts",
     "start:ai-proxy": "tsx server/ai-proxy/dev-server.ts",
     "import-exercises": "tsx scripts/import-free-exercise-db.ts",
-    "add-exercise": "tsx scripts/add-exercise.ts",
     "validate-seed": "tsx scripts/validate-exercise-seed.ts",
-    "validate-youtube": "tsx scripts/validate-youtube-embeds.ts",
     "audit-exercises": "tsx scripts/audit-exercise-library.ts",
-    "build:exercises": "npm run validate-seed && npm run audit-exercises"
+    "build:exercises": "npm run import-exercises && npm run validate-seed && npm run audit-exercises"
   },
   "dependencies": {
     "@expo-google-fonts/playfair-display": "^0.4.2",

@@ -1,10 +1,10 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { AdherenceMetric } from '@/types/progress';
-import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface NutritionAdherenceSummaryProps {
   calories: AdherenceMetric;
@@ -63,7 +63,7 @@ function AdherenceRow({ metric }: { metric: AdherenceMetric }) {
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.sm,
     backgroundColor: colors.surfaceCanvas,
@@ -115,4 +115,4 @@ const styles = createDynamicStyles(() => ({
     height: 1,
     backgroundColor: colors.borderLight,
   },
-}));
+});

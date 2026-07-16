@@ -1,9 +1,9 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { WeightStreakStats } from '@/types/progress';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface WeightStreakCardProps {
   stats: WeightStreakStats;
@@ -29,7 +29,7 @@ export function WeightStreakCard({ stats }: WeightStreakCardProps) {
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.sm,
   },
@@ -51,4 +51,4 @@ const styles = createDynamicStyles(() => ({
     borderColor: colors.borderLight,
     padding: spacing.xs,
   },
-}));
+});

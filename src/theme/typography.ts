@@ -26,10 +26,11 @@ type TypographyScale = {
 
 function buildTypography(scheme: ResolvedColorScheme): TypographyScale {
   const isLuxe = scheme === 'luxe';
+  const isPride = scheme === 'pride';
   const displayFont = isLuxe ? fontFamily.serifBold : fontFamily.bold;
   const headingFont = isLuxe ? fontFamily.serifSemibold : fontFamily.semibold;
-  const displayTracking = isLuxe ? -0.2 : -1;
-  const headingTracking = isLuxe ? 0 : -0.4;
+  const displayTracking = isLuxe ? -0.2 : isPride ? -0.5 : -1;
+  const headingTracking = isLuxe ? 0 : isPride ? -0.2 : -0.4;
 
   return {
     hero: {
@@ -50,14 +51,14 @@ function buildTypography(scheme: ResolvedColorScheme): TypographyScale {
       fontFamily: displayFont,
       fontSize: 30,
       lineHeight: 38,
-      letterSpacing: isLuxe ? -0.2 : -0.8,
+      letterSpacing: isLuxe ? -0.2 : isPride ? -0.5 : -0.8,
       color: colors.textDark,
     },
     h2: {
       fontFamily: headingFont,
       fontSize: 22,
       lineHeight: 30,
-      letterSpacing: isLuxe ? 0 : -0.3,
+      letterSpacing: isLuxe ? 0 : isPride ? -0.2 : -0.3,
       color: colors.textDark,
     },
     body: {
@@ -76,7 +77,7 @@ function buildTypography(scheme: ResolvedColorScheme): TypographyScale {
       fontFamily: fontFamily.medium,
       fontSize: 12,
       lineHeight: 16,
-      letterSpacing: 0.4,
+      letterSpacing: isPride ? 0.6 : 0.4,
       color: colors.textMuted,
       textTransform: 'uppercase',
     },

@@ -33,6 +33,12 @@ const OPTIONS: ThemeOption[] = [
     description: 'Luxe white with elegant serif type',
     premium: true,
   },
+  {
+    value: 'pride',
+    label: 'Pride',
+    description: 'Deep violet with magenta, teal, and gold accents',
+    premium: true,
+  },
 ];
 
 export default function AppearanceSettingsScreen() {

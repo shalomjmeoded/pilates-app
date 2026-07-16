@@ -1,9 +1,9 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { RecalibrationComparison } from '@/types/settings';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface PlanUpdatedCardProps {
   comparison: RecalibrationComparison;
@@ -44,7 +44,7 @@ function MacroRow({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.sm,
     paddingVertical: spacing.md,
@@ -55,4 +55,4 @@ const styles = createDynamicStyles(() => ({
   label: {
     color: colors.textMuted,
   },
-}));
+});

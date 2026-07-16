@@ -3,7 +3,6 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 import { getActiveNutritionTargets } from '@/db/repositories/nutritionRepository';
-import { setSchedulePhaseFromDate } from '@/engines/workout/weeklySchedule';
 import { completeOnboarding } from '@/services/onboarding/completeOnboarding';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
@@ -18,7 +17,6 @@ export function useFinishOnboarding() {
   const clearPersistedDraft = useOnboardingStore((state) => state.clearPersistedDraft);
   const toProfile = useOnboardingStore((state) => state.toProfile);
   const setOnboardingCompleted = usePreferencesStore((state) => state.setOnboardingCompleted);
-  const setAvailableEquipment = usePreferencesStore((state) => state.setAvailableEquipment);
   const setComparison = useRecalibrationStore((state) => state.setComparison);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,10 +41,6 @@ export function useFinishOnboarding() {
           draft,
         });
 
-        // First post-onboarding day must be a workout day, never rest.
-        setSchedulePhaseFromDate(today);
-
-        setAvailableEquipment(draft.availableEquipment);
         setOnboardingCompleted(true);
         captureProductEvent('onboarding completed', {
           entry_mode: useOnboardingStore.getState().entryMode,
@@ -92,7 +86,6 @@ export function useFinishOnboarding() {
       router,
       setComparison,
       setOnboardingCompleted,
-      setAvailableEquipment,
       setRebuildMode,
       toProfile,
     ],

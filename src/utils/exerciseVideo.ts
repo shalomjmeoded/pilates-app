@@ -3,6 +3,16 @@ import type { Exercise } from '@/types/exercise';
 /** App identity YouTube requires as HTTP Referer for embeds (Error 153). */
 export const YOUTUBE_EMBED_REFERER = 'https://com.renatovanerven.betterme';
 
+export function buildExerciseYouTubeSearchUrl(exercise: Exercise): string {
+  const videoId = exercise.youtubeVideoId?.trim();
+  if (videoId) {
+    return buildYouTubeWatchUrl(videoId);
+  }
+
+  const query = encodeURIComponent(`${exercise.name} exercise tutorial proper form`);
+  return `https://www.youtube.com/results?search_query=${query}`;
+}
+
 export function buildYouTubeEmbedUrl(videoId: string): string {
   const params = new URLSearchParams({
     playsinline: '1',

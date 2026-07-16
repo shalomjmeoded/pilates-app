@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { BetterMeBootLoader } from '@/components/ui/BetterMeBootLoader';
 import { getProfile } from '@/db/repositories/profileRepository';
+import { countWorkoutPlans } from '@/db/repositories/workoutRepository';
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { getOnboardingRoute } from '@/onboarding/constants';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
@@ -28,6 +29,21 @@ export default function Index() {
       const hasAccess = hasPremiumAccess(status);
 
       if (onboardingCompleted && hasAccess) {
+        // A successful purchase can precede first-workout generation. If the
+        // app was closed during that handoff, return to the retryable builder
+        // instead of silently skipping the first session.
+        let needsFirstWorkoutRecovery = false;
+        try {
+          needsFirstWorkoutRecovery = (await countWorkoutPlans()) === 0;
+        } catch (error) {
+          console.warn('[BetterMe] Could not verify first workout state.', error);
+        }
+
+        if (needsFirstWorkoutRecovery) {
+          setDestination('/onboarding/step-18-workout-loading');
+          return;
+        }
+
         setDestination('/(tabs)/workout');
         return;
       }

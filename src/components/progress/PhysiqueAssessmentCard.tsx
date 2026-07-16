@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -11,7 +11,7 @@ import {
   PHYSIQUE_EXPERIMENTAL_NOTE,
 } from '@/engines/physique/physiqueAssessmentFlow';
 import type { StoredPhysiqueAssessment } from '@/types/physiqueAssessment';
-import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface PhysiqueAssessmentCardProps {
   latest: StoredPhysiqueAssessment | null;
@@ -79,7 +79,7 @@ export function PhysiqueAssessmentCard({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
     borderWidth: 1,
@@ -120,4 +120,4 @@ const styles = createDynamicStyles(() => ({
   category: {
     color: colors.textStrong,
   },
-}));
+});

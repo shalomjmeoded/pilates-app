@@ -1,12 +1,12 @@
-import { Image, Pressable, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { muscleGroupIcon } from '@/components/media';
 import { Text } from '@/components/ui/Text';
-import { resolveExerciseDisplayMedia } from '@/constants/exerciseMedia';
+import { getExerciseGifSource, getExerciseThumbnailSource } from '@/constants/exerciseMedia';
 import type { WorkoutPlanExerciseDetail } from '@/types/workout';
 import type { Exercise } from '@/types/exercise';
-import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
 
 interface ExerciseGridCardProps {
   item: WorkoutPlanExerciseDetail;
@@ -36,8 +36,7 @@ function roleLabel(role: Exercise['sessionRole']): string {
 }
 
 function ExerciseGridMedia({ exercise }: { exercise: Exercise }) {
-  const media = resolveExerciseDisplayMedia(exercise);
-  const source = media.thumbnail;
+  const source = getExerciseThumbnailSource(exercise.id) ?? getExerciseGifSource(exercise.id);
 
   if (!source) {
     return (
@@ -97,7 +96,7 @@ export function ExerciseGridCard({ item, onPress, disabled = false }: ExerciseGr
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: colors.surfaceCanvas,
@@ -180,4 +179,4 @@ const styles = createDynamicStyles(() => ({
     fontSize: 11,
     lineHeight: 15,
   },
-}));
+});

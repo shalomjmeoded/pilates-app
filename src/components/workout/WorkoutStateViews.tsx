@@ -1,10 +1,10 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { PlanGenerationErrorCode } from '@/types/workout';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface WorkoutEmptyStateProps {
   title: string;
@@ -71,7 +71,7 @@ export function WorkoutReadOnlyBanner({ message }: WorkoutReadOnlyBannerProps) {
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
   },
@@ -91,4 +91,4 @@ const styles = createDynamicStyles(() => ({
   bannerText: {
     color: colors.textMuted,
   },
-}));
+});

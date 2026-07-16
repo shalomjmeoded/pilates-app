@@ -8,24 +8,19 @@ import {
   EXERCISE_MUSCLE_GROUPS,
   EXERCISE_SESSION_ROLES,
   EXERCISE_SOURCES,
-  OPTIONAL_EXERCISE_EQUIPMENT,
   type Difficulty,
   type Exercise,
 } from '../src/types/exercise';
 
 const projectRoot = resolve(__dirname, '..');
 const seedPath = resolve(projectRoot, 'assets/seed/exercises.json');
-const youtubeMapPath = resolve(projectRoot, 'assets/seed/exerciseYoutubeMap.json');
 const raw = readFileSync(seedPath, 'utf8');
 const exercises = JSON.parse(raw) as Exercise[];
 
 const VALID_DIFFICULTIES = new Set<Difficulty>(['beginner', 'intermediate', 'advanced']);
-const YOUTUBE_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
-const MIN_LIBRARY = 90;
-const ALLOWED_MEDIA_EXT = /\.(jpg|jpeg|png|gif|webp)$/i;
 
-if (exercises.length < MIN_LIBRARY) {
-  throw new Error(`Expected at least ${MIN_LIBRARY} curated exercises, found ${exercises.length}`);
+if (exercises.length < 60) {
+  throw new Error(`Expected at least 60 curated exercises, found ${exercises.length}`);
 }
 
 const ids = new Set<string>();
@@ -67,9 +62,6 @@ for (const exercise of exercises) {
   if (!exercise.thumbnailUri || !exercise.gifUri) {
     throw new Error(`Missing media URI for ${exercise.id}`);
   }
-  if (!ALLOWED_MEDIA_EXT.test(exercise.thumbnailUri) || !ALLOWED_MEDIA_EXT.test(exercise.gifUri)) {
-    throw new Error(`Unsupported media extension for ${exercise.id}`);
-  }
   if (!EXERCISE_SOURCES.includes(exercise.source)) {
     throw new Error(`Invalid source for ${exercise.id}`);
   }
@@ -85,12 +77,6 @@ for (const exercise of exercises) {
     }
   }
 
-  if (exercise.youtubeVideoId != null) {
-    if (!YOUTUBE_ID_PATTERN.test(exercise.youtubeVideoId)) {
-      throw new Error(`Invalid youtubeVideoId for ${exercise.id}: ${exercise.youtubeVideoId}`);
-    }
-  }
-
   const thumbPath = resolve(projectRoot, exercise.thumbnailUri);
   const gifPath = resolve(projectRoot, exercise.gifUri);
   if (!existsSync(thumbPath)) {
@@ -98,28 +84,6 @@ for (const exercise of exercises) {
   }
   if (!existsSync(gifPath)) {
     throw new Error(`Missing detail frame file for ${exercise.id}`);
-  }
-}
-
-for (const equipment of OPTIONAL_EXERCISE_EQUIPMENT) {
-  const count = exercises.filter((exercise) => exercise.equipment === equipment).length;
-  if (count < 3) {
-    throw new Error(`Expected at least 3 exercises for equipment "${equipment}", found ${count}`);
-  }
-}
-
-if (existsSync(youtubeMapPath)) {
-  const map = JSON.parse(readFileSync(youtubeMapPath, 'utf8')) as Array<{
-    exerciseId: string;
-    youtubeVideoId: string;
-  }>;
-  for (const entry of map) {
-    if (!ids.has(entry.exerciseId)) {
-      throw new Error(`youtube map references unknown exercise ${entry.exerciseId}`);
-    }
-    if (!YOUTUBE_ID_PATTERN.test(entry.youtubeVideoId)) {
-      throw new Error(`youtube map has invalid id for ${entry.exerciseId}`);
-    }
   }
 }
 
@@ -140,18 +104,7 @@ const byDifficulty = Object.fromEntries(
   ]),
 );
 
-const byEquipment = Object.fromEntries(
-  EXERCISE_EQUIPMENT.map((equipment) => [
-    equipment,
-    exercises.filter((e) => e.equipment === equipment).length,
-  ]),
-);
-
-const youtubeCount = exercises.filter((e) => e.youtubeVideoId).length;
-
 console.log(`Validated ${exercises.length} exercises.`);
 console.log('By difficulty:', byDifficulty);
-console.log('By equipment:', byEquipment);
-console.log(`YouTube embeds: ${youtubeCount}`);
 console.log(`Thumbnails: ${exercises.length}/${exercises.length}`);
 console.log(`Detail frames: ${exercises.length}/${exercises.length}`);

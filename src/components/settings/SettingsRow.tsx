@@ -1,8 +1,8 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface SettingsRowProps {
   label: string;
@@ -44,7 +44,7 @@ export function SettingsRow({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   row: {
     overflow: 'hidden',
     backgroundColor: colors.surfaceCanvas,
@@ -85,4 +85,4 @@ const styles = createDynamicStyles(() => ({
     justifyContent: 'center',
     backgroundColor: colors.surfaceMuted,
   },
-}));
+});

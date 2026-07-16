@@ -3,7 +3,6 @@ import { create } from 'zustand';
 import { preferencesStorage } from '@/storage/mmkv';
 import type {
   AppPreferences,
-  AvailableEquipmentPreference,
   CoachNutritionPreferences,
   ThemePreference,
   UnitPreferences,
@@ -18,7 +17,6 @@ interface PreferencesState {
   setTheme: (theme: ThemePreference) => void;
   setCoachNutrition: (prefs: CoachNutritionPreferences) => void;
   setWeekStartsOn: (weekStartsOn: WeekStartsOn) => void;
-  setAvailableEquipment: (equipment: AvailableEquipmentPreference[]) => void;
   resetForDev: () => void;
 }
 
@@ -55,11 +53,6 @@ export const usePreferencesStore = create<PreferencesState>((set) => ({
 
   setWeekStartsOn(weekStartsOn) {
     preferencesStorage.setWeekStartsOn(weekStartsOn);
-    set({ preferences: preferencesStorage.getAll() });
-  },
-
-  setAvailableEquipment(equipment) {
-    preferencesStorage.setAvailableEquipment(equipment);
     set({ preferences: preferencesStorage.getAll() });
   },
 

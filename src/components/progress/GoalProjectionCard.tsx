@@ -1,7 +1,9 @@
+import { StyleSheet } from 'react-native';
+
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { GoalProjection } from '@/types/progress';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface GoalProjectionCardProps {
   projection: GoalProjection;
@@ -27,7 +29,7 @@ export function GoalProjectionCard({ projection }: GoalProjectionCardProps) {
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
   },
@@ -47,4 +49,4 @@ const styles = createDynamicStyles(() => ({
     paddingVertical: 6,
     alignSelf: 'flex-start',
   },
-}));
+});

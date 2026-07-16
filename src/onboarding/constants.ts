@@ -1,5 +1,4 @@
 import type { ExercisePreference, FitnessGoal, GenderIdentity, Pace, TrainingFrequency, WeightTrajectory } from '@/types/profile';
-import type { AvailableEquipmentPreference } from '@/types/preferences';
 
 export const ONBOARDING_SPRING = {
   mass: 1,
@@ -7,14 +6,13 @@ export const ONBOARDING_SPRING = {
   stiffness: 120,
 } as const;
 
-export const ONBOARDING_TOTAL_STEPS = 16;
+export const ONBOARDING_TOTAL_STEPS = 15;
 
 export const ONBOARDING_ROUTES = [
   'step-00-welcome',
   'step-01-gender',
   'step-02-frequency',
   'step-03-preferences',
-  'step-04-equipment',
   'step-05-notifications',
   'step-06-height',
   'step-07-weight',
@@ -49,34 +47,6 @@ export const PREFERENCE_OPTIONS: Array<{ value: ExercisePreference; label: strin
   { value: 'cardio_burn', label: 'Cardio Burn' },
   { value: 'core_focus', label: 'Core Focus' },
   { value: 'flexibility_length', label: 'Flexibility & Length' },
-];
-
-/** Props shown in onboarding (reformer stays Settings-only). */
-export const ONBOARDING_EQUIPMENT_OPTIONS: Array<{
-  value: Exclude<AvailableEquipmentPreference, 'reformer'>;
-  label: string;
-  description: string;
-}> = [
-  {
-    value: 'magic circle',
-    label: 'Magic circle',
-    description: 'Pilates ring for arms and inner thighs',
-  },
-  {
-    value: 'light weights',
-    label: 'Light weights',
-    description: '1–5 lb dumbbells or hand weights',
-  },
-  {
-    value: 'resistance band',
-    label: 'Resistance band',
-    description: 'Mini-band or long band',
-  },
-  {
-    value: 'pilates ball',
-    label: 'Pilates ball',
-    description: 'Soft ball or stability ball',
-  },
 ];
 
 export const FITNESS_GOAL_OPTIONS: Array<{ value: FitnessGoal; label: string }> = [

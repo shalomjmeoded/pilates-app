@@ -68,20 +68,6 @@ export default function PreferencesSettingsScreen() {
         />
       ))}
 
-      <Text variant="label" style={{ marginTop: spacing.sm }}>Video demos</Text>
-      <OptionCard
-        label="Stream in-app"
-        description="Play curated video demos in the app when available."
-        selected={profile.mediaPreference === 'video_streaming'}
-        onPress={() => setProfile({ ...profile, mediaPreference: 'video_streaming' })}
-      />
-      <OptionCard
-        label="Photos only"
-        description="Keep workouts offline-friendly. You can still open YouTube separately."
-        selected={profile.mediaPreference === 'static_only'}
-        onPress={() => setProfile({ ...profile, mediaPreference: 'static_only' })}
-      />
-
       <Button label={isSaving ? 'Saving...' : 'Save preferences'} onPress={() => void handleSave()} disabled={isSaving} />
     </SettingsScreenShell>
   );

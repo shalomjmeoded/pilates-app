@@ -3,7 +3,7 @@ import { Tabs, router, useSegments } from 'expo-router';
 import type { ColorValue } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, radius, shadows, useAppTheme } from '@/theme';
+import { colors, radius, shadows } from '@/theme';
 import { fontFamily } from '@/theme/typography';
 
 type TabIconName = 'dumbbell' | 'food-apple' | 'chart-line' | 'cog';
@@ -27,7 +27,6 @@ function TabIcon({
 }
 
 export default function TabsLayout() {
-  const { scheme } = useAppTheme();
   const insets = useSafeAreaInsets();
   const segments = useSegments();
   const tabBarBottomPadding = Math.max(insets.bottom - 10, 6);
@@ -35,7 +34,6 @@ export default function TabsLayout() {
 
   return (
     <Tabs
-      key={scheme}
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.brandPrimary,

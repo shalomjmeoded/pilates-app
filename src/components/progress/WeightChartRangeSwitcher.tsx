@@ -1,8 +1,8 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import type { WeightChartRange } from '@/types/progress';
-import { colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, metrics, radius, spacing } from '@/theme';
 
 const RANGES: Array<{ key: WeightChartRange; label: string }> = [
   { key: '7d', label: '7D' },
@@ -40,7 +40,7 @@ export function WeightChartRangeSwitcher({ value, onChange }: WeightChartRangeSw
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -67,4 +67,4 @@ const styles = createDynamicStyles(() => ({
   chipTextSelected: {
     color: colors.brandPrimary,
   },
-}));
+});

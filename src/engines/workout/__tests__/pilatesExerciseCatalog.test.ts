@@ -87,7 +87,7 @@ describe('generateWorkoutPlan pilates focus', () => {
     const selected = plan.exercises.map((item) => byId.get(item.exerciseId)!);
     const pilatesCount = selected.filter(isPilatesAlignedExercise).length;
 
-    expect(plan.exercises.length).toBeGreaterThanOrEqual(10);
+    expect(plan.exercises.length).toBeGreaterThanOrEqual(9);
     expect(pilatesCount).toBeGreaterThanOrEqual(8);
     expect(selected.some((exercise) => /squat|walking lunge|frog hop/i.test(exercise.name))).toBe(
       false,

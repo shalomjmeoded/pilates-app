@@ -7,7 +7,6 @@ import {
   getCompletedWorkoutDatesBetween,
   getPlannedWorkoutDatesBetween,
   getRecentSkipCounts,
-  countCompletedWorkouts,
 } from '@/db/repositories/workoutRepository';
 import { getExerciseById } from '@/db/repositories/exerciseRepository';
 import {
@@ -17,13 +16,11 @@ import {
 import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
 import { buildWeeklyCoachSummary } from '@/engines/coaching/buildWeeklyCoachSummary';
 import {
-  getConfiguredWeekStartsOn,
   getPreviousWeekStartDate,
   getWeekEndDate,
   getWeekStartDate,
   isWeekStartDay,
 } from '@/engines/coaching/weekStart';
-import { WEEK_START_DAY_LABELS } from '@/types/preferences';
 import { aiFacade } from '@/services/ai';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { notifyWeeklyCoachReady } from '@/services/notifications/notificationService';
@@ -111,21 +108,13 @@ export async function generateWeeklyCoachInsight(options?: {
   const weekStart = getWeekStartDate();
   const onWeekStart = isWeekStartDay();
 
-  const completedCount = await countCompletedWorkouts();
-  if (completedCount === 0) {
-    throw new Error(
-      'Finish your first week of workouts first, then check back for your weekly coach summary.',
-    );
-  }
-
   if (!onWeekStart) {
     const cachedEarly = await getCachedWeeklyCoachInsight();
     if (cachedEarly) {
       return cachedEarly;
     }
-    const weekDay = WEEK_START_DAY_LABELS[getConfiguredWeekStartsOn()];
     throw new Error(
-      `Weekly coach unlocks on ${weekDay}. You can change that day in Settings → Week starts on.`,
+      'Weekly coach unlocks on the first day of your week. You can change that day in Settings when available.',
     );
   }
 

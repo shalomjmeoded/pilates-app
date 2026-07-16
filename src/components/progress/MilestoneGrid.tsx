@@ -1,10 +1,10 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { MilestoneStatus } from '@/types/progress';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface MilestoneGridProps {
   milestones: MilestoneStatus[];
@@ -38,7 +38,7 @@ export function MilestoneGrid({ milestones }: MilestoneGridProps) {
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   wrap: {
     gap: spacing.sm,
   },
@@ -64,4 +64,4 @@ const styles = createDynamicStyles(() => ({
   description: {
     fontSize: 13,
   },
-}));
+});

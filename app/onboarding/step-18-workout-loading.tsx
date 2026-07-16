@@ -41,9 +41,8 @@ function isRecoverableFirstWorkoutError(error: unknown): boolean {
 }
 
 async function prepareFirstWorkoutPlan(planDate: string): Promise<WorkoutPlan> {
-  await seedDatabaseIfNeeded();
-
   try {
+    await seedDatabaseIfNeeded();
     return await ensureWorkoutPlanForDate(planDate);
   } catch (error) {
     if (!isRecoverableFirstWorkoutError(error)) {

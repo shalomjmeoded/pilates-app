@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { Text } from '@/components/ui/Text';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface SettingsScreenShellProps {
   title: string;
@@ -33,7 +33,7 @@ export function SettingsScreenShell({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -47,4 +47,4 @@ const styles = createDynamicStyles(() => ({
     gap: spacing.sm,
     marginTop: spacing.xs,
   },
-}));
+});

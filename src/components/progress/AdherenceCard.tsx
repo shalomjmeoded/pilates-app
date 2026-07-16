@@ -1,9 +1,9 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { AdherenceMetric } from '@/types/progress';
-import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 interface AdherenceCardProps {
   metric: AdherenceMetric;
@@ -36,7 +36,7 @@ export function AdherenceCard({ metric }: AdherenceCardProps) {
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: 4,
   },
@@ -81,4 +81,4 @@ const styles = createDynamicStyles(() => ({
     marginTop: 4,
     fontSize: 12,
   },
-}));
+});

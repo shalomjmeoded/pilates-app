@@ -1,8 +1,16 @@
 import { useEffect, useMemo, useState, type ComponentProps } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Image, type ImageResizeMode, ImageSourcePropType, View, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  Image,
+  type ImageResizeMode,
+  ImageSourcePropType,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
-import { colors, radius, createDynamicStyles } from '@/theme';
+import { colors, radius } from '@/theme';
 
 export type VisualAssetIconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
 
@@ -95,7 +103,7 @@ export function VisualAsset({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   frame: {
     backgroundColor: colors.surfaceRose,
     borderWidth: 1,
@@ -111,4 +119,4 @@ const styles = createDynamicStyles(() => ({
     width: '100%',
     height: '100%',
   },
-}));
+});

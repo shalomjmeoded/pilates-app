@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { useCallback } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Pressable } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
-import { colors, metrics, radius, createDynamicStyles } from '@/theme';
+import { colors, metrics, radius } from '@/theme';
 
 import { confirmDiscardBack } from './confirmDiscardBack';
 import { useDiscardBackHandler } from './useDiscardBackHandler';
@@ -48,7 +48,7 @@ export function BackButton({
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   button: {
     minWidth: metrics.touchTargetMin,
     minHeight: metrics.touchTargetMin,
@@ -63,4 +63,4 @@ const styles = createDynamicStyles(() => ({
   pressed: {
     opacity: 0.88,
   },
-}));
+});

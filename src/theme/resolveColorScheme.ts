@@ -5,12 +5,16 @@ import type { ResolvedColorScheme } from '@/theme/tokens';
 export function nativeAppearanceForPreference(
   preference: ThemePreference,
 ): 'light' | 'dark' | 'unspecified' {
-  return 'light';
+  if (preference === 'luxe' || preference === 'light') {
+    return 'light';
+  }
+  // Pride uses dark native chrome
+  return 'dark';
 }
 
 export function resolveColorScheme(preference: ThemePreference): ResolvedColorScheme {
-  if (preference === 'luxe') {
-    return 'luxe';
+  if (preference === 'light' || preference === 'luxe' || preference === 'pride') {
+    return preference;
   }
   return 'light';
 }

@@ -1,9 +1,9 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { WorkoutStreakStats } from '@/types/workout';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface WorkoutStreakCardProps {
   stats: WorkoutStreakStats;
@@ -35,7 +35,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.sm,
   },
@@ -62,4 +62,4 @@ const styles = createDynamicStyles(() => ({
     fontSize: 20,
     lineHeight: 24,
   },
-}));
+});

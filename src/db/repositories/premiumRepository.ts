@@ -25,7 +25,20 @@ export async function getPremiumStatus(): Promise<PremiumStatus> {
     };
   }
 
-  return mapPremiumStatusRow(row);
+  const status = mapPremiumStatusRow(row);
+
+  // Do not let development-only access from older builds survive into the
+  // subscription-only flow.
+  if (status.productId === 'dev_bypass') {
+    return {
+      subscriptionStatus: 'inactive',
+      isPremium: false,
+      trialUsed: false,
+      source: 'mock',
+    };
+  }
+
+  return status;
 }
 
 export async function ensurePremiumStatusRow(): Promise<void> {

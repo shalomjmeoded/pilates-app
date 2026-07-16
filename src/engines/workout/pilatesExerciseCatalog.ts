@@ -28,28 +28,23 @@ export function isPilatesAlignedExercise(exercise: Exercise): boolean {
     return true;
   }
 
-  const propFriendly =
+  const matLike =
     exercise.equipment === 'mat' ||
     exercise.equipment === 'none' ||
     exercise.equipment === 'magic circle' ||
-    exercise.equipment === 'resistance band' ||
-    exercise.equipment === 'light weights' ||
-    exercise.equipment === 'pilates ball' ||
-    exercise.equipment === 'reformer';
+    exercise.equipment === 'resistance band';
 
   const controlFocused =
     exercise.categories.includes('core') ||
     exercise.categories.includes('posture') ||
-    exercise.categories.includes('flexibility') ||
-    exercise.categories.includes('pilates');
+    exercise.categories.includes('flexibility');
 
   const controlledPrescription =
     exercise.holdSeconds !== null ||
     CONTROLLED_HOLD_PATTERN.test(exercise.name) ||
-    exercise.sessionRole === 'cooldown' ||
-    exercise.source === 'curated_betterme';
+    exercise.sessionRole === 'cooldown';
 
-  return propFriendly && controlFocused && controlledPrescription;
+  return matLike && controlFocused && controlledPrescription;
 }
 
 export function pilatesAffinityScore(exercise: Exercise, profile: Profile): number {
@@ -65,33 +60,14 @@ export function pilatesAffinityScore(exercise: Exercise, profile: Profile): numb
   if (PILATES_NAME_PATTERN.test(exercise.name)) {
     score += 10;
   }
-  if (exercise.sessionRole === 'main' && exercise.categories.includes('pilates')) {
-    score += 5;
-  }
-  if (exercise.sessionRole === 'warmup' || exercise.sessionRole === 'cooldown') {
-    score -= 3;
-  }
   if (exercise.categories.includes('core') || exercise.categories.includes('posture')) {
     score += 4;
   }
-  if (exercise.categories.includes('pilates')) {
-    score += 2;
-  }
-  if (
-    exercise.categories.includes('flexibility') &&
-    profile.exercisePreferences.includes('flexibility_length')
-  ) {
+  if (exercise.categories.includes('pilates') || exercise.categories.includes('flexibility')) {
     score += 2;
   }
   if (exercise.equipment === 'mat' || exercise.equipment === 'magic circle') {
     score += 3;
-  }
-  if (
-    exercise.equipment === 'pilates ball' ||
-    exercise.equipment === 'light weights' ||
-    exercise.equipment === 'resistance band'
-  ) {
-    score += 2;
   }
   if (exercise.holdSeconds !== null) {
     score += 2;
@@ -123,31 +99,6 @@ export function pilatesAffinityScore(exercise: Exercise, profile: Profile): numb
   return score;
 }
 
-/** Soft-filter the pool by optional equipment the user says they own. */
-export function filterExercisesByAvailableEquipment(
-  exercises: Exercise[],
-  availableEquipment: ReadonlyArray<
-    'reformer' | 'resistance band' | 'magic circle' | 'light weights' | 'pilates ball'
-  >,
-): Exercise[] {
-  const owned = new Set(availableEquipment);
-  const filtered = exercises.filter((exercise) => {
-    if (exercise.equipment === 'mat' || exercise.equipment === 'none') {
-      return true;
-    }
-    return owned.has(
-      exercise.equipment as
-        | 'reformer'
-        | 'resistance band'
-        | 'magic circle'
-        | 'light weights'
-        | 'pilates ball',
-    );
-  });
-
-  return filtered.length >= 9 ? filtered : exercises;
-}
-
 /** Normalize seed/library rows so Pilates-aligned moves carry the pilates category. */
 export function normalizePilatesExercise(exercise: Exercise): Exercise {
   if (!isPilatesAlignedExercise(exercise)) {
@@ -163,11 +114,7 @@ export function normalizePilatesExercise(exercise: Exercise): Exercise {
     : (['pilates', ...exercise.categories] as Exercise['categories']);
 
   const tags = new Set(exercise.tags);
-  if (exercise.equipment === 'reformer') {
-    tags.add('reformer_pilates');
-  } else {
-    tags.add('mat_pilates');
-  }
+  tags.add('mat_pilates');
   if (exercise.categories.includes('core')) {
     tags.add('core_focus');
   }
@@ -188,19 +135,11 @@ export function normalizePilatesExercise(exercise: Exercise): Exercise {
   };
 }
 
-export function selectPilatesCandidatePool(
-  exercises: Exercise[],
-  availableEquipment?: ReadonlyArray<
-    'reformer' | 'resistance band' | 'magic circle' | 'light weights' | 'pilates ball'
-  >,
-): Exercise[] {
-  const scoped = availableEquipment
-    ? filterExercisesByAvailableEquipment(exercises, availableEquipment)
-    : exercises;
-  const aligned = scoped.filter(isPilatesAlignedExercise);
+export function selectPilatesCandidatePool(exercises: Exercise[]): Exercise[] {
+  const aligned = exercises.filter(isPilatesAlignedExercise);
   if (aligned.length >= 9) {
     return aligned;
   }
 
-  return scoped.filter((exercise) => !isHardExcludedExercise(exercise));
+  return exercises.filter((exercise) => !isHardExcludedExercise(exercise));
 }

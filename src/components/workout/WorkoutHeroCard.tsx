@@ -1,12 +1,12 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import type { WorkoutStreakStats } from '@/types/workout';
-import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
+import { colors, radius, shadows, spacing } from '@/theme';
 
 interface WorkoutHeroCardProps {
   focusTitle: string;
@@ -17,7 +17,6 @@ interface WorkoutHeroCardProps {
   canStart: boolean;
   startUnavailableReason?: string;
   onChangeWorkout?: () => void;
-  onTakeRestDay?: () => void;
   onStart: () => void;
 }
 
@@ -30,7 +29,6 @@ export function WorkoutHeroCard({
   canStart,
   startUnavailableReason,
   onChangeWorkout,
-  onTakeRestDay,
   onStart,
 }: WorkoutHeroCardProps) {
   const [expanded, setExpanded] = useState(false);
@@ -85,9 +83,6 @@ export function WorkoutHeroCard({
         {onChangeWorkout ? (
           <Button label="Change Workout" variant="secondary" onPress={onChangeWorkout} />
         ) : null}
-        {onTakeRestDay ? (
-          <Button label="Take a rest day" variant="secondary" onPress={onTakeRestDay} />
-        ) : null}
       </View>
 
       {expanded ? (
@@ -136,7 +131,7 @@ function MetaChip({ icon, label }: { icon: keyof typeof MaterialCommunityIcons.g
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   heroWrap: {
     backgroundColor: colors.surfaceHero,
     borderRadius: radius.hero,
@@ -260,4 +255,4 @@ const styles = createDynamicStyles(() => ({
     flex: 1,
     lineHeight: 18,
   },
-}));
+});

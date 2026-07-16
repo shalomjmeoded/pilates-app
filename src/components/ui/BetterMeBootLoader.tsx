@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -12,7 +12,7 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
-import { colors, shadows, spacing, createDynamicStyles } from '@/theme';
+import { colors, shadows, spacing } from '@/theme';
 
 interface BetterMeBootLoaderProps {
   message?: string;
@@ -90,7 +90,7 @@ export function BetterMeBootLoader({ message = 'Preparing your rhythm...' }: Bet
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -152,4 +152,4 @@ const styles = createDynamicStyles(() => ({
     textAlign: 'center',
     color: colors.brandSecondaryText,
   },
-}));
+});

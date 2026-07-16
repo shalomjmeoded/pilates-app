@@ -28,8 +28,8 @@ function insertParams(exercise: Exercise): Array<string | number | null> {
     JSON.stringify(exercise.categories),
     exercise.sessionRole,
     exercise.source,
-    exercise.youtubeVideoId,
-    exercise.youtubeAttribution,
+    exercise.youtubeVideoId ?? null,
+    exercise.youtubeAttribution ?? null,
   ];
 }
 
@@ -77,17 +77,52 @@ export async function replaceExerciseLibrary(exercises: Exercise[]): Promise<voi
   const db = await getDatabase();
 
   await db.withTransactionAsync(async () => {
-    await db.execAsync('PRAGMA foreign_keys = OFF');
-    await db.runAsync('DELETE FROM exercise_library');
-    await db.execAsync('PRAGMA foreign_keys = ON');
-
+    // Update existing rows in place so saved workout plans and sessions keep
+    // their foreign-key references while the bundled library changes.
     for (const exercise of exercises) {
       await db.runAsync(
-        `INSERT INTO exercise_library (
+        `UPDATE exercise_library SET
+          name = ?,
+          description = ?,
+          instructions_json = ?,
+          common_mistakes_json = ?,
+          difficulty = ?,
+          muscle_group = ?,
+          secondary_muscles_json = ?,
+          equipment = ?,
+          reps_baseline = ?,
+          hold_seconds = ?,
+          calories_factor = ?,
+          thumbnail_uri = ?,
+          gif_uri = ?,
+          tags_json = ?,
+          categories_json = ?,
+          session_role = ?,
+          source = ?,
+          youtube_video_id = ?,
+          youtube_attribution = ?
+        WHERE id = ?`,
+        ...insertParams(exercise).slice(1),
+        exercise.id,
+      );
+
+      await db.runAsync(
+        `INSERT OR IGNORE INTO exercise_library (
           ${INSERT_COLUMNS}
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         ...insertParams(exercise),
       );
     }
+
+    // Remove only obsolete rows that are not referenced by historical plans
+    // or sessions. This keeps referential integrity intact across app updates.
+    const keepPlaceholders = exercises.map(() => '?').join(', ');
+    await db.runAsync(
+      `DELETE FROM exercise_library
+       WHERE id NOT IN (${keepPlaceholders})
+         AND id NOT IN (SELECT exercise_id FROM workout_plan_exercises)
+         AND id NOT IN (SELECT exercise_id FROM workout_session_exercises)`,
+      ...exercises.map((exercise) => exercise.id),
+    );
   });
 }

@@ -17,7 +17,6 @@ import {
   saveWorkoutPlan,
 } from '@/db/repositories/workoutRepository';
 import { aiFacade } from '@/services/ai';
-import { preferencesStorage } from '@/storage/mmkv';
 import type { Exercise } from '@/types/exercise';
 import type { Profile } from '@/types/profile';
 import {
@@ -30,13 +29,9 @@ import {
 
 import { getWeekStartDate } from '@/engines/coaching/weekStart';
 import { generateWorkoutPlan, validatePlanExerciseIds } from './planGenerator';
-import {
-  defaultTargetMinutesForProfile,
-  exerciseCountBoundsForMinutes,
-  planMeetsExerciseFloor,
-} from './sessionDurationBounds';
 import { applyFeedbackProgression, getDeprioritizedExerciseIds } from './progression';
 
+const TARGET_MIN = 9;
 const ONBOARDING_FOCUS_AREAS: WorkoutFocusArea[] = ['core', 'glutes', 'posture', 'mobility', 'full_body'];
 const ONBOARDING_MINUTE_OPTIONS = [15, 25, 35] as const;
 const ONBOARDING_INTENSITY_OPTIONS: WorkoutIntensity[] = ['lighter', 'balanced', 'challenging'];
@@ -100,10 +95,8 @@ async function resolveGenerationOverrides(
   const weekStart = getWeekStartDate(toDateFromPlanDate(planDate));
   const thisWeekFeedback = await getWorkoutChangeFeedbackForWeek(weekStart);
   if (thisWeekFeedback) {
-    // Keep minutes/intensity for the week, but only pin focus on the day the user changed.
-    const pinFocus = thisWeekFeedback.sourceDate === planDate;
     return {
-      ...(pinFocus ? { focusArea: thisWeekFeedback.focusArea } : {}),
+      focusArea: thisWeekFeedback.focusArea,
       targetMinutes: thisWeekFeedback.targetMinutes,
       intensity: thisWeekFeedback.intensity,
     };
@@ -118,8 +111,8 @@ async function resolveGenerationOverrides(
     return undefined;
   }
 
-  // Prior-week coaching: keep duration/intensity, rotate focus per day for variety.
   return {
+    focusArea: priorFeedback.focusArea,
     targetMinutes: priorFeedback.targetMinutes,
     intensity: priorFeedback.intensity,
   };
@@ -225,14 +218,10 @@ export async function ensureWorkoutPlanForDate(
     throw new PlanGenerationError('EMPTY_LIBRARY', 'Exercise library is empty. Restart the app.');
   }
 
-  const targetMinutes =
-    resolvedOverrides?.targetMinutes ?? defaultTargetMinutesForProfile(profile.trainingFrequency);
-  const bounds = exerciseCountBoundsForMinutes(targetMinutes);
-
-  if (library.length < bounds.minExercises) {
+  if (library.length < TARGET_MIN) {
     throw new PlanGenerationError(
       'INSUFFICIENT_EXERCISES',
-      `Need at least ${bounds.minExercises} exercises in the library for a ${targetMinutes}-minute session.`,
+      `Need at least ${TARGET_MIN} exercises in the library.`,
     );
   }
 
@@ -249,7 +238,6 @@ export async function ensureWorkoutPlanForDate(
     adaptation,
     physiqueContext,
     resolvedOverrides,
-    preferencesStorage.getAvailableEquipment(),
   );
 
   if (adaptation.lastSessionFeedback.length > 0) {
@@ -259,10 +247,10 @@ export async function ensureWorkoutPlanForDate(
     };
   }
 
-  if (!planMeetsExerciseFloor(plan.exercises.length, targetMinutes)) {
+  if (plan.exercises.length < TARGET_MIN) {
     throw new PlanGenerationError(
       'INSUFFICIENT_EXERCISES',
-      `Could not build a ${targetMinutes}-minute workout with at least ${bounds.minExercises} exercises.`,
+      'Could not build a full workout plan for this day.',
     );
   }
 

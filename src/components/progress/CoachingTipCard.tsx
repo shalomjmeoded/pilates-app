@@ -1,6 +1,8 @@
+import { StyleSheet } from 'react-native';
+
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
-import { colors, spacing, createDynamicStyles } from '@/theme';
+import { colors, spacing } from '@/theme';
 
 interface CoachingTipCardProps {
   tip: string;
@@ -19,7 +21,7 @@ export function CoachingTipCard({ tip }: CoachingTipCardProps) {
   );
 }
 
-const styles = createDynamicStyles(() => ({
+const styles = StyleSheet.create({
   card: {
     gap: spacing.xs,
     backgroundColor: colors.surfaceMuted,
@@ -33,4 +35,4 @@ const styles = createDynamicStyles(() => ({
     lineHeight: 22,
     color: colors.textDark,
   },
-}));
+});

@@ -37,14 +37,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const setTheme = usePreferencesStore((state) => state.setTheme);
   const scheme = useMemo(() => resolveColorScheme(preference), [preference]);
 
-  // Apply before paint so remounted screens read the new palette (not the previous one).
-  if (getActiveColorScheme() !== scheme) {
-    applyColorScheme(scheme);
-  }
-
   useEffect(() => {
+    applyColorScheme(scheme);
     syncNativeAppearance(preference);
-  }, [preference]);
+  }, [preference, scheme]);
 
   const value = useMemo(
     () => ({
