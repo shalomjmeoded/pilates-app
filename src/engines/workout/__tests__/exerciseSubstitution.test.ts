@@ -24,6 +24,8 @@ const base: Exercise = {
   categories: ['bodyweight'],
   sessionRole: 'main',
   source: 'free_exercise_db',
+  youtubeVideoId: null,
+  youtubeAttribution: null,
 };
 
 const easier: Exercise = {

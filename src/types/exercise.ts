@@ -27,10 +27,22 @@ export const EXERCISE_EQUIPMENT = [
   'resistance band',
   'magic circle',
   'light weights',
+  'pilates ball',
   'none',
 ] as const;
 
 export type ExerciseEquipment = (typeof EXERCISE_EQUIPMENT)[number];
+
+/** Optional props the user can own (mat is always available). */
+export const OPTIONAL_EXERCISE_EQUIPMENT = [
+  'reformer',
+  'resistance band',
+  'magic circle',
+  'light weights',
+  'pilates ball',
+] as const satisfies ReadonlyArray<Exclude<ExerciseEquipment, 'mat' | 'none'>>;
+
+export type OptionalExerciseEquipment = (typeof OPTIONAL_EXERCISE_EQUIPMENT)[number];
 
 export const EXERCISE_CATEGORIES = [
   'pilates',
@@ -45,7 +57,11 @@ export const EXERCISE_CATEGORIES = [
 
 export type ExerciseCategory = (typeof EXERCISE_CATEGORIES)[number];
 
-export const EXERCISE_SOURCES = ['free_exercise_db', 'generated_betterme'] as const;
+export const EXERCISE_SOURCES = [
+  'free_exercise_db',
+  'generated_betterme',
+  'curated_betterme',
+] as const;
 
 export type ExerciseSource = (typeof EXERCISE_SOURCES)[number];
 
@@ -72,6 +88,8 @@ export interface Exercise {
   repsBaseline: number | null;
   holdSeconds: number | null;
   caloriesFactor: number;
+  youtubeVideoId: string | null;
+  youtubeAttribution: string | null;
 }
 
 export interface ExerciseRow {
@@ -93,4 +111,6 @@ export interface ExerciseRow {
   categories_json: string;
   session_role: ExerciseSessionRole;
   source: ExerciseSource;
+  youtube_video_id: string | null;
+  youtube_attribution: string | null;
 }

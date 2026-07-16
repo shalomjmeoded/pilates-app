@@ -13,7 +13,7 @@ import { buildPersonalizationSummary } from '@/onboarding/personalizationSummary
 import { captureProductEvent, getElapsedOnboardingSeconds } from '@/services/analytics/analyticsCore';
 
 export default function Step16PlanReveal() {
-  const { step, goNext, goToStep } = useOnboardingNavigation(14);
+  const { step, goNext, goToStep } = useOnboardingNavigation(15);
   const draft = useOnboardingStore((state) => state.draft);
   const entryMode = useOnboardingStore((state) => state.entryMode);
   const baselinePlan = draft.baselinePlan;
@@ -38,8 +38,8 @@ export default function Step16PlanReveal() {
         step={step}
         title="Almost there"
         subtitle="Finalizing your targets."
-        onBack={() => goToStep(entryMode === 'returning' ? 1 : 13)}
-        onNext={() => goToStep(13)}
+        onBack={() => goToStep(entryMode === 'returning' ? 1 : 14)}
+        onNext={() => goToStep(14)}
         nextLabel="Review plan setup"
         phaseLabel="Creating your plan"
         reasonWhy={null}
@@ -58,6 +58,7 @@ export default function Step16PlanReveal() {
   const personalizationSummary = buildPersonalizationSummary({
     trainingFrequency: draft.trainingFrequency,
     exercisePreferences: draft.exercisePreferences,
+    availableEquipment: draft.availableEquipment,
     pace: draft.paceKgPerWeek,
   });
 
@@ -66,7 +67,7 @@ export default function Step16PlanReveal() {
       step={step}
       title="Your plan is ready"
       subtitle="Your Pilates and nutrition program is ready."
-      onBack={() => goToStep(entryMode === 'returning' ? 1 : 13)}
+      onBack={() => goToStep(entryMode === 'returning' ? 1 : 14)}
       onNext={goNext}
       nextLabel="Continue"
       phaseLabel="Your reveal"

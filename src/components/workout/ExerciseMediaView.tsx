@@ -1,9 +1,5 @@
 import { VisualAsset, muscleGroupIcon } from '@/components/media';
-import {
-  getExerciseGifSource,
-  getExerciseThumbnailSource,
-  hasAnimatedExerciseDemo,
-} from '@/constants/exerciseMedia';
+import { resolveExerciseDisplayMedia } from '@/constants/exerciseMedia';
 import type { Exercise } from '@/types/exercise';
 
 interface ExerciseMediaViewProps {
@@ -21,17 +17,17 @@ export function ExerciseMediaView({
   fillWidth = false,
   fillHeight,
 }: ExerciseMediaViewProps) {
-  const thumbnail = getExerciseThumbnailSource(exercise.id);
-  const gif = getExerciseGifSource(exercise.id);
-  const animateDemo = variant === 'gif' && hasAnimatedExerciseDemo(exercise.id);
+  const media = resolveExerciseDisplayMedia(exercise);
+  const animateDemo = variant === 'gif' && media.animate;
+  const nativeGif = animateDemo && media.preferNativeGif;
   const resolvedFillHeight = fillHeight ?? (variant === 'gif' ? 260 : 112);
 
   return (
     <VisualAsset
-      image={thumbnail}
-      gif={gif}
+      image={media.thumbnail}
+      gif={media.motionFrame}
       preferGif={animateDemo}
-      animateFrames={animateDemo}
+      animateFrames={animateDemo && !nativeGif}
       icon={muscleGroupIcon(exercise.muscleGroup)}
       fallback="icon"
       size={size}

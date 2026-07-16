@@ -7,7 +7,6 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
-  StyleSheet,
   View,
 } from 'react-native';
 
@@ -42,7 +41,7 @@ import { useWeeklyCoach } from '@/hooks/useWeeklyCoach';
 import { useEncouragementStore } from '@/stores/encouragementStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { useProgressStore } from '@/stores/progressStore';
-import { colors, radius, spacing } from '@/theme';
+import { colors, createDynamicStyles, radius, spacing } from '@/theme';
 import type { ProgressDashboardData } from '@/types/progress';
 import { warmAiProxy } from '@/services/ai';
 
@@ -444,7 +443,7 @@ export default function ProgressScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   list: {
     flex: 1,
   },
@@ -538,4 +537,4 @@ const styles = StyleSheet.create({
   detailsStack: {
     gap: spacing.sm,
   },
-});
+}));

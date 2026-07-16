@@ -19,7 +19,8 @@ export function useWeeklyCoach() {
       setInsight(cached);
       return cached;
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Could not load weekly coach.');
+      const message = loadError instanceof Error ? loadError.message : 'Could not load weekly coach.';
+      setError(message);
       return null;
     } finally {
       setIsLoading(false);
@@ -34,9 +35,9 @@ export function useWeeklyCoach() {
       setInsight(generated);
       return generated;
     } catch (generateError) {
-      setError(
-        generateError instanceof Error ? generateError.message : 'Could not generate weekly coach.',
-      );
+      const message =
+        generateError instanceof Error ? generateError.message : 'Could not generate weekly coach.';
+      setError(message);
       return null;
     } finally {
       setIsLoading(false);

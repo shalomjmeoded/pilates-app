@@ -10,7 +10,7 @@ import {
 } from '@/constants/premiumBenefits';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import type { PremiumPlanId } from '@/types/premium';
 
 const PRIVACY_POLICY_URL = 'https://clearday-seven.vercel.app/betterme';
@@ -310,7 +310,7 @@ function PlanOption({ title, price, detail, badge, selected, onPress, compact = 
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   container: {
     gap: spacing.sm,
   },
@@ -639,7 +639,7 @@ const styles = StyleSheet.create({
   legalSeparator: {
     color: colors.textMuted,
   },
-});
+}));
 
 const benefitIconColors = ['#2F6FDB', '#24A35A', '#E1A700'];
 const trustChipIconColors = ['#24A35A', '#2F6FDB', '#E1A700'];

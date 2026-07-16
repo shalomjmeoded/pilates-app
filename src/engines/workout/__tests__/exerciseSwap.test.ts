@@ -20,6 +20,8 @@ const base: Exercise = {
   categories: ['core', 'bodyweight'],
   sessionRole: 'main',
   source: 'free_exercise_db',
+  youtubeVideoId: null,
+  youtubeAttribution: null,
 };
 
 const replacement: Exercise = {

@@ -1,9 +1,9 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { format, parseISO } from 'date-fns';
 
 import { Text } from '@/components/ui/Text';
 import { isDateToday } from '@/engines/workout';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface NutritionTodayCardProps {
   mealDate: string;
@@ -41,7 +41,7 @@ export function NutritionTodayCard({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
   remaining: {
     color: colors.brandPrimary,
   },
-});
+}));

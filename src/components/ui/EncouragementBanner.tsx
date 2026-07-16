@@ -1,9 +1,9 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { Text } from './Text';
 
 interface EncouragementBannerProps {
@@ -51,7 +51,7 @@ export function EncouragementBanner({ title, body, onDismiss }: EncouragementBan
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   banner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -91,4 +91,4 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.72,
   },
-});
+}));

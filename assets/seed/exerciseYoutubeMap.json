@@ -1,0 +1,626 @@
+[
+  {
+    "exerciseId": "3_4_Sit-Up",
+    "youtubeVideoId": "jDwoBqPH0jk",
+    "title": "Sit-Up",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Bent-Knee_Hip_Raise",
+    "youtubeVideoId": "FLVpQ2P_9QA",
+    "title": "Pelvic Lift",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Bird_Dog",
+    "youtubeVideoId": "sjUe5KpzyU4",
+    "title": "Bird Dog",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Bodyweight_Squat",
+    "youtubeVideoId": "l83R5PblSMA",
+    "title": "Bodyweight Squat",
+    "attribution": "PureGym"
+  },
+  {
+    "exerciseId": "Bodyweight_Walking_Lunge",
+    "youtubeVideoId": "yvKHkIzoVtE",
+    "title": "Walking Lunge",
+    "attribution": "Xtine Cardenas"
+  },
+  {
+    "exerciseId": "Butt_Lift_Bridge",
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "title": "Shoulder Bridge (bridge variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Cat_Cow",
+    "youtubeVideoId": "oPkENSw5ZEM",
+    "title": "Cat and Cow on the Mat",
+    "attribution": "Pilates Encyclopedia"
+  },
+  {
+    "exerciseId": "Cross-Body_Crunch",
+    "youtubeVideoId": "Xyd_fa5zoEU",
+    "title": "Crunches",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Crossover_Reverse_Lunge",
+    "youtubeVideoId": "xrPteyQLGAo",
+    "title": "Reverse Lunge",
+    "attribution": "PureGym"
+  },
+  {
+    "exerciseId": "Crunch_-_Hands_Overhead",
+    "youtubeVideoId": "Xyd_fa5zoEU",
+    "title": "Crunches",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Crunches",
+    "youtubeVideoId": "Xyd_fa5zoEU",
+    "title": "Crunches",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Dead_Bug",
+    "youtubeVideoId": "4XLEnwUr1d8",
+    "title": "Dead Bug",
+    "attribution": "Bodybuilding.com"
+  },
+  {
+    "exerciseId": "Decline_Crunch",
+    "youtubeVideoId": "Xyd_fa5zoEU",
+    "title": "Crunches",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Decline_Push-Up",
+    "youtubeVideoId": "IODxDxX7oi4",
+    "title": "Push-Up",
+    "attribution": "Calisthenic Movement"
+  },
+  {
+    "exerciseId": "Elbow_to_Knee",
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "title": "Criss Cross (elbow-to-knee variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Freehand_Jump_Squat",
+    "youtubeVideoId": "U4s4mEQ5VqU",
+    "title": "Jump Squat",
+    "attribution": "Howcast"
+  },
+  {
+    "exerciseId": "Frog_Sit-Ups",
+    "youtubeVideoId": "jDwoBqPH0jk",
+    "title": "Sit-Up",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Glute_Kickback",
+    "youtubeVideoId": "SJ1Xuz9D-ZQ",
+    "title": "Donkey Kicks / Glute Kickback",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Incline_Push-Up",
+    "youtubeVideoId": "IODxDxX7oi4",
+    "title": "Push-Up",
+    "attribution": "Calisthenic Movement"
+  },
+  {
+    "exerciseId": "Jackknife_Sit-Up",
+    "youtubeVideoId": "SXYp9AJ1uWM",
+    "title": "Jack Knife",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Leg_Lift",
+    "youtubeVideoId": "2W8xtSMPJpE",
+    "title": "Pilates Single Leg Stretch in Standing",
+    "attribution": "Pilates Consultant"
+  },
+  {
+    "exerciseId": "Mountain_Climbers",
+    "youtubeVideoId": "cnyTQDSE884",
+    "title": "Mountain Climbers",
+    "attribution": "Well+Good"
+  },
+  {
+    "exerciseId": "Oblique_Crunches",
+    "youtubeVideoId": "dsK2L5ifOvg",
+    "title": "Standing Side Crunch",
+    "attribution": "Joanna Soh"
+  },
+  {
+    "exerciseId": "Oblique_Crunches_-_On_The_Floor",
+    "youtubeVideoId": "dsK2L5ifOvg",
+    "title": "Standing Side Crunch",
+    "attribution": "Joanna Soh"
+  },
+  {
+    "exerciseId": "Pelvic_Tilt_Into_Bridge",
+    "youtubeVideoId": "FLVpQ2P_9QA",
+    "title": "Pelvic Lift",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Pilates_Hundred",
+    "youtubeVideoId": "9mlone4NObI",
+    "title": "The Hundred",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Pilates_Roll_Up",
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "title": "The Roll Up",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Pilates_Shoulder_Bridge",
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "title": "Shoulder Bridge",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Pilates_Swan",
+    "youtubeVideoId": "KAotX1bDGps",
+    "title": "Swan Prep",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Pilates_Swimming",
+    "youtubeVideoId": "rbcvbbtB6E0",
+    "title": "Swimming",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Pilates_Teaser",
+    "youtubeVideoId": "9WFOlfrqWo8",
+    "title": "The Teaser",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Plank",
+    "youtubeVideoId": "ASdvN_XEl_c",
+    "title": "Plank",
+    "attribution": "Bowflex"
+  },
+  {
+    "exerciseId": "Push-Up_Wide",
+    "youtubeVideoId": "IODxDxX7oi4",
+    "title": "Push-Up",
+    "attribution": "Calisthenic Movement"
+  },
+  {
+    "exerciseId": "Push_Up_to_Side_Plank",
+    "youtubeVideoId": "IODxDxX7oi4",
+    "title": "Push-Up",
+    "attribution": "Calisthenic Movement"
+  },
+  {
+    "exerciseId": "Reverse_Crunch",
+    "youtubeVideoId": "XY8KzdDcMFg",
+    "title": "How To Do A Reverse Crunch",
+    "attribution": "PureGym"
+  },
+  {
+    "exerciseId": "Russian_Twist",
+    "youtubeVideoId": "wkD8rjkodUI",
+    "title": "Russian Twist",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Scissor_Kick",
+    "youtubeVideoId": "CO9_19vfCf4",
+    "title": "Scissors",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Side_Lying_Leg_Lift",
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "title": "Side Kick (side-lying variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Single_Leg_Glute_Bridge",
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "title": "Shoulder Bridge (single-leg variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Sit-Up",
+    "youtubeVideoId": "jDwoBqPH0jk",
+    "title": "Sit-Up",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Step-up_with_Knee_Raise",
+    "youtubeVideoId": "dQqApCGd5Ss",
+    "title": "Step-Ups",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Tuck_Crunch",
+    "youtubeVideoId": "Xyd_fa5zoEU",
+    "title": "Crunches",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Single_Leg_Stretch",
+    "youtubeVideoId": "Ad4lgW4ieAM",
+    "title": "Single Leg Stretch",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Double_Leg_Stretch",
+    "youtubeVideoId": "fuwzt4d7FuY",
+    "title": "Double Leg Stretch",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Criss_Cross",
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "title": "Criss Cross",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Spine_Stretch_Forward",
+    "youtubeVideoId": "XZGuNaEV-nM",
+    "title": "Spine Stretch",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Saw",
+    "youtubeVideoId": "Sb0SG1cXgEY",
+    "title": "Saw",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mermaid_Stretch",
+    "youtubeVideoId": "iEUBi98L16M",
+    "title": "Mermaid Exercise",
+    "attribution": "intosport"
+  },
+  {
+    "exerciseId": "Side_Kick",
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "title": "Side Kick",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Clamshell",
+    "youtubeVideoId": "w2Op5nwUgaI",
+    "title": "Side Lying Clamshell",
+    "attribution": "FIT Sisters"
+  },
+  {
+    "exerciseId": "Fire_Hydrant",
+    "youtubeVideoId": "MRJsG9it4tg",
+    "title": "Fire Hydrant",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Donkey_Kick",
+    "youtubeVideoId": "SJ1Xuz9D-ZQ",
+    "title": "Donkey Kicks",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Hollow_Hold",
+    "youtubeVideoId": "LlDNef_Ztsc",
+    "title": "Hollow Body Hold",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Side_Plank",
+    "youtubeVideoId": "K2VljzCC16g",
+    "title": "Side Plank",
+    "attribution": "Howcast"
+  },
+  {
+    "exerciseId": "Open_Leg_Rocker",
+    "youtubeVideoId": "E4FSgzPlUcs",
+    "title": "Open Leg Rocker",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Corkscrew",
+    "youtubeVideoId": "yssUvNuQowE",
+    "title": "Corkscrew",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Childs_Pose",
+    "youtubeVideoId": "7zsKsz4uQe4",
+    "title": "Child's Pose / Shell Stretch",
+    "attribution": "Rehab My Patient"
+  },
+  {
+    "exerciseId": "Thread_the_Needle",
+    "youtubeVideoId": "SkQhKf74nZk",
+    "title": "Thread the Needle Stretch",
+    "attribution": "Hinge Health"
+  },
+  {
+    "exerciseId": "Seated_Spine_Twist",
+    "youtubeVideoId": "PPFkp7Aa3Rg",
+    "title": "Spine Twist (seated variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Magic_Circle_Hundred_Prep",
+    "youtubeVideoId": "9mlone4NObI",
+    "title": "The Hundred (Magic Circle prep)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Magic_Circle_Side_Lying_Press",
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "title": "Side Kick (magic circle variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Light_Weight_Tricep_Reach",
+    "youtubeVideoId": "nRiJVZDpdL0",
+    "title": "Triceps Dumbbell Extensions",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Light_Weight_Bridge_Press",
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "title": "Shoulder Bridge (weighted variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Light_Weight_Seated_Row",
+    "youtubeVideoId": "kDnRUErxC7k",
+    "title": "Rowing",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Light_Weight_Hundred_Arms",
+    "youtubeVideoId": "9mlone4NObI",
+    "title": "The Hundred (weighted arms)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Band_Glute_Bridge",
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "title": "Shoulder Bridge (band variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Band_Clamshell",
+    "youtubeVideoId": "w2Op5nwUgaI",
+    "title": "Side Lying Clamshell",
+    "attribution": "FIT Sisters"
+  },
+  {
+    "exerciseId": "Band_Row",
+    "youtubeVideoId": "GZbfZ033f74",
+    "title": "Seated Low Row",
+    "attribution": "YouTube"
+  },
+  {
+    "exerciseId": "Band_Pull_Apart",
+    "youtubeVideoId": "qi2y-eI_kuI",
+    "title": "Band Pull Apart",
+    "attribution": "Luke Selway"
+  },
+  {
+    "exerciseId": "Ball_Bridge",
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "title": "Shoulder Bridge (ball variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Ball_Spine_Stretch",
+    "youtubeVideoId": "XZGuNaEV-nM",
+    "title": "Spine Stretch (ball variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Ball_Side_Crunch",
+    "youtubeVideoId": "dsK2L5ifOvg",
+    "title": "Standing Side Crunch",
+    "attribution": "Joanna Soh"
+  },
+  {
+    "exerciseId": "Reformer_Footwork",
+    "youtubeVideoId": "QDBzjlhKsco",
+    "title": "Footwork",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Reformer_Hundred",
+    "youtubeVideoId": "9mlone4NObI",
+    "title": "The Hundred (Reformer)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Reformer_Long_Stretch",
+    "youtubeVideoId": "BfRY99Ka-zQ",
+    "title": "Long Stretch",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Reformer_Elephant",
+    "youtubeVideoId": "q4aSiZC1yjo",
+    "title": "Up Stretch Series",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Reformer_Mermaid",
+    "youtubeVideoId": "zprsJDjeONM",
+    "title": "Side Bend / Mermaid (Reformer)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Half_Roll_Down",
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "title": "The Roll Up (half roll-down variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Pelvic_Curl",
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "title": "Shoulder Bridge (pelvic curl variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Single_Leg_Circles",
+    "youtubeVideoId": "RZqtVL6K8DM",
+    "title": "One Leg Circle",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Rolling_Like_a_Ball",
+    "youtubeVideoId": "elkcXFPyaW8",
+    "title": "Rolling Like A Ball",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Spine_Twist",
+    "youtubeVideoId": "PPFkp7Aa3Rg",
+    "title": "Spine Twist",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Leg_Pull_Front",
+    "youtubeVideoId": "fLYsUbi_f-A",
+    "title": "Leg Pull Front",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Side_Bend",
+    "youtubeVideoId": "zprsJDjeONM",
+    "title": "Side Bend",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Neck_Pull",
+    "youtubeVideoId": "wVaSdDSxKwY",
+    "title": "Neck Pull",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Roll_Over",
+    "youtubeVideoId": "Y5YdoRMCCKM",
+    "title": "The Roll Over",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Single_Leg_Kick",
+    "youtubeVideoId": "X79gMUknrVs",
+    "title": "One Leg Kick",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Double_Leg_Kick",
+    "youtubeVideoId": "TVh6-2iWiM0",
+    "title": "Double Leg Kicks",
+    "attribution": "Amanda Tennant"
+  },
+  {
+    "exerciseId": "Mat_Boomerang",
+    "youtubeVideoId": "uh2sCUSf4zY",
+    "title": "Boomerang",
+    "attribution": "Pilates by Brittany"
+  },
+  {
+    "exerciseId": "Mat_Bicycle",
+    "youtubeVideoId": "a2L7tfx8XbU",
+    "title": "Criss Cross (bicycle variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Kneeling_Side_Kick",
+    "youtubeVideoId": "hgLDMHCcw4k",
+    "title": "Side Kick Kneeling",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Leg_Pull_Back",
+    "youtubeVideoId": "Ei5ciLGi0vE",
+    "title": "Leg Pull Front and Leg Pull Back",
+    "attribution": "Pilates by Zola"
+  },
+  {
+    "exerciseId": "Mat_Teaser_Prep",
+    "youtubeVideoId": "9WFOlfrqWo8",
+    "title": "The Teaser (prep)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Mat_Swan_Dive",
+    "youtubeVideoId": "mjZZ22GLcDc",
+    "title": "Swan Dive",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Magic_Circle_Bridge_Squeeze",
+    "youtubeVideoId": "QFv_Fex3Mko",
+    "title": "Shoulder Bridge (magic circle variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Band_Roll_Down",
+    "youtubeVideoId": "H_-JE2yN1W0",
+    "title": "The Roll Up (band variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Band_Side_Lying_Kick",
+    "youtubeVideoId": "nG9JfDHJJlY",
+    "title": "Side Kick (band variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Band_Hundred",
+    "youtubeVideoId": "9mlone4NObI",
+    "title": "The Hundred (Band)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Ball_Pike",
+    "youtubeVideoId": "4YOKVI9aSjE",
+    "title": "Pike on a Swiss Ball",
+    "attribution": "Howcast"
+  },
+  {
+    "exerciseId": "Ball_Hamstring_Curl",
+    "youtubeVideoId": "WNB90xXLEOg",
+    "title": "Stability Ball Leg Curl",
+    "attribution": "Mind Pump TV"
+  },
+  {
+    "exerciseId": "Ball_Plank",
+    "youtubeVideoId": "ASdvN_XEl_c",
+    "title": "Plank",
+    "attribution": "Bowflex"
+  },
+  {
+    "exerciseId": "Light_Weight_Coordination",
+    "youtubeVideoId": "3dYwRDMassE",
+    "title": "Coordination (weighted variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Light_Weight_Standing_Side_Bend",
+    "youtubeVideoId": "zprsJDjeONM",
+    "title": "Side Bend (standing weighted variation)",
+    "attribution": "Pilates Anytime"
+  },
+  {
+    "exerciseId": "Reformer_Coordination",
+    "youtubeVideoId": "3dYwRDMassE",
+    "title": "Coordination",
+    "attribution": "Pilates Anytime"
+  }
+]

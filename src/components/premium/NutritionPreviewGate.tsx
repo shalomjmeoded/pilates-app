@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { CompactMacroSummary } from '@/components/nutrition/CompactMacroSummary';
 import { RemainingCaloriesHero } from '@/components/nutrition/RemainingCaloriesHero';
@@ -9,7 +9,7 @@ import { Text } from '@/components/ui/Text';
 import { getOrCreateNutritionTargets } from '@/db/repositories/nutritionRepository';
 import { formatPlanDate } from '@/engines/workout';
 import { usePremium } from '@/hooks/usePremium';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import type { NutritionTargets } from '@/types/nutrition';
 
 const SAMPLE_TARGETS: NutritionTargets = {
@@ -118,7 +118,7 @@ export function NutritionPreviewGate({ onStartTrial, onRestore }: NutritionPrevi
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   scroll: {
     gap: spacing.md,
     paddingBottom: spacing.xl,
@@ -182,4 +182,4 @@ const styles = StyleSheet.create({
   aiSampleResult: {
     color: colors.brandPrimary,
   },
-});
+}));

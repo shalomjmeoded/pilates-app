@@ -67,7 +67,7 @@ export default function Step00Welcome() {
         <Animated.View entering={FadeInUp.delay(220).duration(280)} style={styles.ctaWrap}>
           <Button
             label={returning ? 'Review my plan' : 'Get started'}
-            onPress={returning ? () => goToStep(14) : goNext}
+            onPress={returning ? () => goToStep(15) : goNext}
           />
           {returning ? (
             <Pressable

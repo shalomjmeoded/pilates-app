@@ -16,7 +16,18 @@ CREATE TABLE IF NOT EXISTS appearance (
 let appearanceDb: SQLiteDatabase | null = null;
 
 function isThemePreference(value: string | undefined | null): value is ThemePreference {
-  return value === 'light' || value === 'luxe' || value === 'pride';
+  return value === 'light' || value === 'luxe';
+}
+
+function normalizeThemePreference(value: string | undefined | null): ThemePreference | null {
+  if (isThemePreference(value)) {
+    return value;
+  }
+  // Legacy Pride theme — map to Wellness.
+  if (value === 'pride') {
+    return 'light';
+  }
+  return null;
 }
 
 function getAppearanceDatabase(): SQLiteDatabase {
@@ -35,7 +46,11 @@ export function readThemePreferenceSync(): ThemePreference | null {
       'SELECT value FROM appearance WHERE key = ?',
       THEME_KEY,
     );
-    return isThemePreference(row?.value) ? row.value : null;
+    const normalized = normalizeThemePreference(row?.value);
+    if (normalized && row?.value === 'pride') {
+      writeThemePreferenceSync(normalized);
+    }
+    return normalized;
   } catch {
     return null;
   }

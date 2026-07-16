@@ -5,11 +5,13 @@ import { PremiumBadge } from '@/components/premium';
 import { SettingsRow, SettingsSection } from '@/components/settings';
 import { Screen } from '@/components/ui/Screen';
 import { usePreferencesStore } from '@/stores/preferencesStore';
+import { WEEK_START_DAY_LABELS } from '@/types/preferences';
 import { colors, spacing } from '@/theme';
 
 export default function SettingsScreen() {
   const router = useRouter();
   const units = usePreferencesStore((state) => state.preferences.units);
+  const weekStartsOn = usePreferencesStore((state) => state.preferences.weekStartsOn);
 
   return (
     <Screen title="Settings" subtitle="Your rhythm, your data, your control." showBrandMark>
@@ -20,6 +22,12 @@ export default function SettingsScreen() {
           <SettingsRow accentColor={colors.brandSecondary} label="Profile" value="Body & activity" onPress={() => router.push('/(tabs)/settings/profile')} />
           <SettingsRow accentColor={colors.brandSecondary} label="Goals" value="Weight & pace" onPress={() => router.push('/(tabs)/settings/goals')} />
           <SettingsRow accentColor={colors.brandSecondary} label="Preferences" value="Exercise styles" onPress={() => router.push('/(tabs)/settings/preferences')} />
+          <SettingsRow
+            accentColor={colors.brandSecondary}
+            label="Equipment I have"
+            value="Props & reformer"
+            onPress={() => router.push('/(tabs)/settings/equipment')}
+          />
           <SettingsRow label="Plan assumptions" onPress={() => router.push('/(tabs)/settings/plan-assumptions')} />
         </SettingsSection>
 
@@ -37,7 +45,7 @@ export default function SettingsScreen() {
           <SettingsRow
             accentColor={colors.brandPrimary}
             label="Theme"
-            value="Wellness · Golden · Pride"
+            value="Wellness · Golden"
             onPress={() => router.push('/(tabs)/settings/appearance')}
           />
         </SettingsSection>
@@ -52,6 +60,12 @@ export default function SettingsScreen() {
             label="Measurement units"
             value={`${units.height === 'cm' ? 'cm' : 'in'} · ${units.weight}`}
             onPress={() => router.push('/(tabs)/settings/units')}
+          />
+          <SettingsRow
+            accentColor={colors.accentCool}
+            label="Week starts on"
+            value={WEEK_START_DAY_LABELS[weekStartsOn]}
+            onPress={() => router.push('/(tabs)/settings/week-start')}
           />
         </SettingsSection>
 
@@ -76,6 +90,16 @@ export default function SettingsScreen() {
         <SettingsSection title="About" accentColor={colors.textMuted}>
           <SettingsRow label="About BetterMe" onPress={() => router.push('/(tabs)/settings/about')} />
         </SettingsSection>
+
+        {__DEV__ ? (
+          <SettingsSection title="Developer" accentColor={colors.destructive}>
+            <SettingsRow
+              label="Exercise browser"
+              value="Search · media · YouTube"
+              onPress={() => router.push('/(tabs)/settings/exercise-browser')}
+            />
+          </SettingsSection>
+        ) : null}
       </ScrollView>
     </Screen>
   );

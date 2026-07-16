@@ -1,8 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { macroProgress } from '@/engines/nutrition';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface MacroProgressBarProps {
   label: string;
@@ -46,7 +46,7 @@ export function MacroProgressBar({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.xs,
   },
@@ -65,4 +65,4 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: radius.pill,
   },
-});
+}));

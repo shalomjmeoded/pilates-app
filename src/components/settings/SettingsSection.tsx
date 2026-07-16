@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 interface SettingsSectionProps {
   title: string;
@@ -24,7 +24,7 @@ export function SettingsSection({ title, children, accentColor = colors.brandSec
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.xs,
   },
@@ -49,4 +49,4 @@ const styles = StyleSheet.create({
   group: {
     gap: 8,
   },
-});
+}));

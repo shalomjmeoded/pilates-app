@@ -399,6 +399,20 @@ export async function discardWorkoutSession(sessionId: string): Promise<void> {
   });
 }
 
+/** Clears any session for the plan and starts fresh. Dev builds only. */
+export async function restartWorkoutSessionForDev(planId: string): Promise<WorkoutSession> {
+  if (!__DEV__) {
+    throw new Error('restartWorkoutSessionForDev is only available in development builds.');
+  }
+
+  const existing = await getSessionForPlan(planId);
+  if (existing) {
+    await discardWorkoutSession(existing.id);
+  }
+
+  return startWorkoutSession(planId);
+}
+
 export async function getCompletedWorkoutDatesBetween(
   startDate: string,
   endDate: string,

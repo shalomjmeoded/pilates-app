@@ -1,7 +1,10 @@
 import { getAllExercises, getExerciseById } from '@/db/repositories/exerciseRepository';
+import { getProfile } from '@/db/repositories/profileRepository';
 import { getSessionFeedback, getSessionForPlan, getWorkoutPlanByDate } from '@/db/repositories/workoutRepository';
+import { getConfiguredWeekStartsOn } from '@/engines/coaching/weekStart';
 import { PlanGenerationError, type WorkoutDayView, type WorkoutPlanExerciseDetail } from '@/types/workout';
 
+import { isEffectiveWorkoutDay } from './dayScheduleOverride';
 import { ensureWorkoutPlanForDate, isDateInFuture, isDateReadOnly, isDateToday } from './ensureDailyPlan';
 import { planMatchesLibrary, refreshWorkoutPlanForDate } from './repairStalePlan';
 
@@ -30,6 +33,26 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
   const isReadOnly = isDateReadOnly(planDate);
   let planRefreshed = false;
 
+  const profile = await getProfile();
+  const weekStartsOn = getConfiguredWeekStartsOn();
+  const isRestDay = profile
+    ? !isEffectiveWorkoutDay(planDate, profile.trainingFrequency, weekStartsOn)
+    : false;
+
+  if (isRestDay) {
+    return {
+      planDate,
+      plan: null,
+      exercises: [],
+      session: null,
+      sessionFeedback: [],
+      isReadOnly,
+      isToday,
+      isFuture,
+      isRestDay: true,
+    };
+  }
+
   let plan = await getWorkoutPlanByDate(planDate);
 
   if (plan) {
@@ -47,9 +70,11 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
     }
   }
 
-  if (!plan && isToday) {
+  if (!plan && (isToday || isFuture)) {
     try {
-      plan = await ensureWorkoutPlanForDate(planDate);
+      plan = await ensureWorkoutPlanForDate(planDate, undefined, {
+        allowFutureGeneration: isFuture,
+      });
     } catch (error) {
       if (error instanceof PlanGenerationError) {
         throw error;
@@ -79,6 +104,7 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
           isReadOnly,
           isToday,
           isFuture,
+          isRestDay: false,
           planRefreshed,
           partialLibraryMatch: true,
         };
@@ -103,6 +129,7 @@ export async function loadWorkoutDay(planDate: string): Promise<WorkoutDayView> 
     isReadOnly,
     isToday,
     isFuture,
+    isRestDay: false,
     planRefreshed,
     partialLibraryMatch,
   };

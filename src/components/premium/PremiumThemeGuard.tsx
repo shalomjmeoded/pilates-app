@@ -6,7 +6,6 @@ import type { ThemePreference } from '@/types/preferences';
 
 const PREMIUM_THEME_FALLBACKS: Partial<Record<ThemePreference, ThemePreference>> = {
   luxe: 'light',
-  pride: 'light',
 };
 
 /**

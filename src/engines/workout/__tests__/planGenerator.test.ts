@@ -43,6 +43,8 @@ function makeExercise(
     categories: ['pilates', 'core'],
     sessionRole,
     source: 'free_exercise_db',
+    youtubeVideoId: null,
+    youtubeAttribution: null,
   };
 }
 
@@ -83,8 +85,32 @@ describe('generateWorkoutPlan overrides', () => {
       { targetMinutes: 35, focusArea: 'core', intensity: 'balanced' },
     );
 
-    expect(shortPlan.exercises.length).toBe(9);
+    expect(shortPlan.exercises.length).toBeGreaterThanOrEqual(5);
+    expect(shortPlan.exercises.length).toBeLessThanOrEqual(8);
+    expect(longPlan.exercises.length).toBeGreaterThanOrEqual(10);
     expect(longPlan.exercises.length).toBeGreaterThan(shortPlan.exercises.length);
+  });
+
+  it('enforces duration floors for 15 / 25 / 35 minute sessions', () => {
+    const fifteen = generateWorkoutPlan(baseProfile, exercises, '2026-06-13', 'p15', undefined, undefined, {
+      targetMinutes: 15,
+      focusArea: 'full_body',
+      intensity: 'balanced',
+    });
+    const twentyFive = generateWorkoutPlan(baseProfile, exercises, '2026-06-13', 'p25', undefined, undefined, {
+      targetMinutes: 25,
+      focusArea: 'full_body',
+      intensity: 'balanced',
+    });
+    const thirtyFive = generateWorkoutPlan(baseProfile, exercises, '2026-06-13', 'p35', undefined, undefined, {
+      targetMinutes: 35,
+      focusArea: 'full_body',
+      intensity: 'balanced',
+    });
+
+    expect(fifteen.exercises.length).toBeGreaterThanOrEqual(5);
+    expect(twentyFive.exercises.length).toBeGreaterThanOrEqual(8);
+    expect(thirtyFive.exercises.length).toBeGreaterThanOrEqual(10);
   });
 
   it('uses intensity override to adjust set volume', () => {

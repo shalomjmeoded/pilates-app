@@ -1,24 +1,25 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
-import { ExerciseMediaView, ExerciseSwapReasonSheet } from '@/components/workout';
+import { ExerciseSwapReasonSheet, ExerciseYouTubeEmbed } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { getExerciseById } from '@/db/repositories/exerciseRepository';
+import { getProfile, saveProfile } from '@/db/repositories/profileRepository';
 import { getWorkoutPlanByDate } from '@/db/repositories/workoutRepository';
 import { isDateToday } from '@/engines/workout';
 import { useExerciseSubstitution } from '@/hooks/useExerciseSubstitution';
 import { usePremium } from '@/hooks/usePremium';
 import type { Exercise } from '@/types/exercise';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
+import type { MediaPreference } from '@/types/profile';
 import type { WorkoutPlanExercise } from '@/types/workout';
 import { colors, spacing } from '@/theme';
-import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
 
 function titleCase(value: string): string {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
@@ -37,18 +38,21 @@ export default function ExerciseDetailModal() {
   const [planId, setPlanId] = useState<string | null>(null);
   const [swapSheetVisible, setSwapSheetVisible] = useState(false);
   const [swapMessage, setSwapMessage] = useState<string | null>(null);
+  const [mediaPreference, setMediaPreference] = useState<MediaPreference>('video_streaming');
 
   const { substitute, isSwapping, error, clearError } = useExerciseSubstitution(params.planDate);
   const { requirePremium } = usePremium();
 
   const reload = async () => {
-    const [exerciseRow, plan] = await Promise.all([
+    const [exerciseRow, plan, profile] = await Promise.all([
       getExerciseById(params.exerciseId),
       getWorkoutPlanByDate(params.planDate),
+      getProfile(),
     ]);
 
     setExercise(exerciseRow);
     setPlanId(plan?.id ?? null);
+    setMediaPreference(profile?.mediaPreference ?? 'video_streaming');
     const sortOrder = params.sortOrder ? Number(params.sortOrder) : undefined;
     const match = plan?.exercises.find(
       (item) =>
@@ -105,6 +109,16 @@ export default function ExerciseDetailModal() {
     setSwapSheetVisible(false);
   };
 
+  const handleEnableStreaming = async () => {
+    const profile = await getProfile();
+    if (!profile) {
+      return;
+    }
+    const next = { ...profile, mediaPreference: 'video_streaming' as const };
+    await saveProfile(next);
+    setMediaPreference('video_streaming');
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <SubscreenTopBar />
@@ -114,7 +128,11 @@ export default function ExerciseDetailModal() {
           <Text variant="bodyMuted">{titleCase(exercise.muscleGroup)}</Text>
         </View>
 
-        <ExerciseMediaView exercise={exercise} variant="gif" fillWidth />
+        <ExerciseYouTubeEmbed
+          exercise={exercise}
+          allowStreaming={mediaPreference === 'video_streaming'}
+          onEnableStreaming={() => void handleEnableStreaming()}
+        />
 
         <Card style={styles.summaryCard}>
           <View style={styles.prescriptionRow}>
@@ -149,13 +167,6 @@ export default function ExerciseDetailModal() {
             </Text>
           ))}
         </Card>
-
-        <Button
-          label="Watch Reference Video"
-          variant="secondary"
-          onPress={() => void Linking.openURL(buildExerciseYouTubeSearchUrl(exercise))}
-          accessibilityLabel={`Search YouTube for ${exercise.name} reference videos`}
-        />
 
         <Card style={styles.card}>
           <Text variant="label">Common mistakes</Text>

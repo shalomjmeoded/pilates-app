@@ -1,4 +1,4 @@
-/** BetterMe palettes — wellness default, Golden Mode, and Pride. */
+/** BetterMe palettes — wellness default and Golden Mode. */
 
 /**
  * Default wellness palette — premium, mature, women-friendly Pilates identity.
@@ -76,52 +76,13 @@ export const luxeColors = {
   destructive: '#B4534B',
 } as const;
 
-/**
- * "Pride" — premium palette with magenta, teal, and soft gold accents on a
- * deep violet base. Paywall-gated.
- */
-export const prideColors = {
-  plum: '#241433',
-  dustyRose: '#6B3A7A',
-  warmSand: '#2E1A40',
-  sage: '#F472B6',
-  softCream: '#12081A',
-  warmWhite: '#1A0F24',
-
-  backgroundPrimary: '#12081A',
-  surfaceCanvas: '#1A0F24',
-  surfaceRose: '#241433',
-  surfacePeach: '#2A1840',
-  surfaceSelected: '#3A2058',
-  surfaceMuted: '#1E1230',
-  warningSurface: '#2A2210',
-  illustrationBg: '#241433',
-  surfaceHero: '#241433',
-  surfaceLuxury: '#3A2058',
-
-  brandPrimary: '#F472B6',
-  brandSecondary: '#6B3A7A',
-  brandSecondaryText: '#E9D5FF',
-  accentWarm: '#FBBF24',
-  accentCool: '#2DD4BF',
-  success: '#4ADE80',
-
-  textDark: '#F5EEF8',
-  textMuted: '#B8A4C8',
-  textStrong: '#FFFFFF',
-  borderLight: '#2E1A40',
-  borderStrong: '#6B3A7A',
-  destructive: '#FB7185',
-} as const;
-
 export type ColorPalette = typeof lightColors;
 
-export type ResolvedColorScheme = 'light' | 'luxe' | 'pride';
+export type ResolvedColorScheme = 'light' | 'luxe';
 
 const PALETTES: Record<ResolvedColorScheme, Record<keyof ColorPalette, string>> = {
   light: lightColors,
   luxe: luxeColors,
-  pride: prideColors,
 };
 
 let activeScheme: ResolvedColorScheme = 'light';
@@ -185,25 +146,6 @@ function buildShadows(scheme: ResolvedColorScheme): ShadowScale {
         shadowOpacity: 0.16,
         shadowRadius: 28,
         elevation: 4,
-      },
-    };
-  }
-
-  if (scheme === 'pride') {
-    return {
-      card: {
-        shadowColor: '#09040F',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.38,
-        shadowRadius: 18,
-        elevation: 4,
-      },
-      hero: {
-        shadowColor: '#F472B6',
-        shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.24,
-        shadowRadius: 28,
-        elevation: 6,
       },
     };
   }

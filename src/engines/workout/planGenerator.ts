@@ -16,6 +16,12 @@ import {
 } from './pilatesExerciseCatalog';
 import type { AdaptationContext } from './progression';
 import { swapSkippedExercises } from './progression';
+import {
+  defaultTargetMinutesForProfile,
+  exerciseCountBoundsForMinutes,
+} from './sessionDurationBounds';
+import { workoutDayIndexInWeek } from './weeklySchedule';
+import { getConfiguredWeekStartsOn } from '@/engines/coaching/weekStart';
 
 export interface PhysiquePlanContext {
   physiqueCategory: PhysiqueCategory;
@@ -23,17 +29,15 @@ export interface PhysiquePlanContext {
 
 export type WorkoutFocus = 'core_control' | 'posterior_chain' | 'mobility_recovery' | 'full_body_control';
 
-const TARGET_MIN = 9;
-const TARGET_MAX = 12;
-const MIN_PILATES_ALIGNED = 8;
 const TARGET_DISTINCT_MUSCLE_GROUPS = 4;
-const DATE_VARIETY_WEIGHT = 6;
-const RECENT_EXERCISE_PENALTY = 3;
+const DATE_VARIETY_WEIGHT = 10;
+const RECENT_EXERCISE_PENALTY = 5;
 
 interface PlanControls {
   focus: WorkoutFocus;
   targetMin: number;
   targetMax: number;
+  targetMinutes: number;
   intensity: WorkoutIntensity;
 }
 
@@ -42,36 +46,36 @@ const GOAL_WEEKLY_FOCUS: Record<Profile['fitnessGoal'], WorkoutFocus[]> = {
     'full_body_control',
     'core_control',
     'posterior_chain',
-    'full_body_control',
     'mobility_recovery',
-    'core_control',
     'full_body_control',
+    'core_control',
+    'posterior_chain',
   ],
   get_toned: [
-    'full_body_control',
     'posterior_chain',
-    'mobility_recovery',
     'core_control',
-    'posterior_chain',
+    'mobility_recovery',
     'full_body_control',
+    'posterior_chain',
+    'core_control',
     'mobility_recovery',
   ],
   maintain: [
-    'full_body_control',
     'mobility_recovery',
+    'full_body_control',
     'core_control',
     'posterior_chain',
     'mobility_recovery',
     'full_body_control',
-    'mobility_recovery',
+    'core_control',
   ],
   build_muscle: [
     'posterior_chain',
-    'core_control',
     'full_body_control',
-    'posterior_chain',
+    'core_control',
     'mobility_recovery',
     'posterior_chain',
+    'full_body_control',
     'core_control',
   ],
 };
@@ -98,7 +102,15 @@ function dayIndex(planDate: string): number {
 
 function weeklyFocusFor(profile: Profile, planDate: string): WorkoutFocus {
   const weeklyFocus = GOAL_WEEKLY_FOCUS[profile.fitnessGoal];
-  return weeklyFocus[dayIndex(planDate)] ?? 'full_body_control';
+  const scheduledIndex = workoutDayIndexInWeek(
+    planDate,
+    profile.trainingFrequency,
+    getConfiguredWeekStartsOn(),
+  );
+  if (scheduledIndex >= 0) {
+    return weeklyFocus[scheduledIndex % weeklyFocus.length] ?? 'full_body_control';
+  }
+  return weeklyFocus[dayIndex(planDate) % weeklyFocus.length] ?? 'full_body_control';
 }
 
 function mapFocusAreaToWorkoutFocus(area: WorkoutFocusArea): WorkoutFocus {
@@ -116,16 +128,6 @@ function mapFocusAreaToWorkoutFocus(area: WorkoutFocusArea): WorkoutFocus {
   }
 }
 
-function targetMaxForMinutes(targetMinutes: number): number {
-  if (targetMinutes <= 18) {
-    return 9;
-  }
-  if (targetMinutes <= 28) {
-    return 10;
-  }
-  return TARGET_MAX;
-}
-
 function resolvePlanControls(
   profile: Profile,
   planDate: string,
@@ -135,12 +137,15 @@ function resolvePlanControls(
   const focus = overrides?.focusArea
     ? mapFocusAreaToWorkoutFocus(overrides.focusArea)
     : weeklyFocusFor(profile, planDate);
-  const targetMax = overrides?.targetMinutes ? targetMaxForMinutes(overrides.targetMinutes) : TARGET_MAX;
+  const targetMinutes =
+    overrides?.targetMinutes ?? defaultTargetMinutesForProfile(profile.trainingFrequency);
+  const bounds = exerciseCountBoundsForMinutes(targetMinutes);
 
   return {
     focus,
-    targetMin: Math.min(TARGET_MIN, targetMax),
-    targetMax,
+    targetMin: bounds.minExercises,
+    targetMax: bounds.maxExercises,
+    targetMinutes,
     intensity,
   };
 }
@@ -256,6 +261,25 @@ function scoreExercise(
     focusExerciseBonus(exercise, focus) +
     dateVarietyBonus(exercise, planDate);
 
+  // Prefer Pilates mains; keep stretch/warmup/cooldown as accessories unless recovery focus.
+  if (focus !== 'mobility_recovery') {
+    if (exercise.sessionRole === 'main' && exercise.categories.includes('pilates')) {
+      score += 6;
+    }
+    if (exercise.sessionRole === 'warmup') {
+      score -= 8;
+    }
+    if (exercise.sessionRole === 'cooldown') {
+      score -= 6;
+    }
+    if (
+      exercise.categories.includes('flexibility') &&
+      !profile.exercisePreferences.includes('flexibility_length')
+    ) {
+      score -= 4;
+    }
+  }
+
   score -= Math.min(9, (recentExerciseCounts[exercise.id] ?? 0) * RECENT_EXERCISE_PENALTY);
 
   if (deprioritizedIds.has(exercise.id)) {
@@ -314,6 +338,9 @@ function targetDistinctMuscleGroups(candidates: Exercise[], targetMin: number): 
   );
 }
 
+const MAX_WARMUP_IN_PLAN = 2;
+const MAX_COOLDOWN_IN_PLAN = 1;
+
 function selectBalancedExercises(
   candidates: Exercise[],
   profile: Profile,
@@ -326,15 +353,32 @@ function selectBalancedExercises(
   const selected: Exercise[] = [];
   const selectedIds = new Set<string>();
   const targetGroups = targetDistinctMuscleGroups(candidates, controls.targetMin);
+  const capAccessories = controls.focus !== 'mobility_recovery';
 
   while (selected.length < controls.targetMax && selected.length < candidates.length) {
     const muscleGroupCounts = countMuscleGroups(selected);
     const distinctGroups = muscleGroupCounts.size;
     const shouldPrioritizeNewGroup =
       selected.length < controls.targetMin && distinctGroups < targetGroups;
+    const warmupCount = selected.filter((exercise) => exercise.sessionRole === 'warmup').length;
+    const cooldownCount = selected.filter((exercise) => exercise.sessionRole === 'cooldown').length;
 
     const next = candidates
-      .filter((exercise) => !selectedIds.has(exercise.id))
+      .filter((exercise) => {
+        if (selectedIds.has(exercise.id)) {
+          return false;
+        }
+        if (!capAccessories) {
+          return true;
+        }
+        if (exercise.sessionRole === 'warmup' && warmupCount >= MAX_WARMUP_IN_PLAN) {
+          return false;
+        }
+        if (exercise.sessionRole === 'cooldown' && cooldownCount >= MAX_COOLDOWN_IN_PLAN) {
+          return false;
+        }
+        return true;
+      })
       .sort((a, b) => {
         if (shouldPrioritizeNewGroup) {
           const aNewGroup = !muscleGroupCounts.has(a.muscleGroup);
@@ -441,6 +485,71 @@ export function validatePlanExerciseIds(
   return planExercises.every((item) => libraryIds.has(item.exerciseId));
 }
 
+function ensureWarmupBookend(
+  selected: Exercise[],
+  candidates: Exercise[],
+  focus: WorkoutFocus,
+): Exercise[] {
+  const targetWarmups = focus === 'mobility_recovery' ? MAX_WARMUP_IN_PLAN : 1;
+  let next = [...selected];
+  let warmupCount = next.filter((exercise) => exercise.sessionRole === 'warmup').length;
+  if (warmupCount >= targetWarmups) {
+    return next;
+  }
+
+  const selectedIds = new Set(next.map((exercise) => exercise.id));
+  const warmups = candidates.filter(
+    (exercise) => exercise.sessionRole === 'warmup' && !selectedIds.has(exercise.id),
+  );
+
+  for (const warmup of warmups) {
+    if (warmupCount >= targetWarmups) {
+      break;
+    }
+    const lastMainIndex = [...next]
+      .map((exercise, index) => ({ exercise, index }))
+      .reverse()
+      .find((entry) => entry.exercise.sessionRole === 'main')?.index;
+
+    if (lastMainIndex === undefined) {
+      next = [warmup, ...next];
+    } else {
+      next[lastMainIndex] = warmup;
+    }
+    selectedIds.add(warmup.id);
+    warmupCount += 1;
+  }
+
+  return next;
+}
+
+function backfillExercises(
+  selected: Exercise[],
+  pools: Exercise[][],
+  targetMin: number,
+): Exercise[] {
+  const filled = [...selected];
+  const selectedIds = new Set(filled.map((exercise) => exercise.id));
+
+  for (const pool of pools) {
+    if (filled.length >= targetMin) {
+      break;
+    }
+    for (const exercise of pool) {
+      if (filled.length >= targetMin) {
+        break;
+      }
+      if (selectedIds.has(exercise.id)) {
+        continue;
+      }
+      filled.push(exercise);
+      selectedIds.add(exercise.id);
+    }
+  }
+
+  return filled;
+}
+
 export function generateWorkoutPlan(
   profile: Profile,
   exercises: Exercise[],
@@ -449,32 +558,41 @@ export function generateWorkoutPlan(
   adaptation?: AdaptationContext,
   physique?: PhysiquePlanContext,
   overrides?: WorkoutGenerationOverrides,
+  availableEquipment?: ReadonlyArray<
+    'reformer' | 'resistance band' | 'magic circle' | 'light weights' | 'pilates ball'
+  >,
 ): WorkoutPlan {
   const deprioritizedIds = adaptation?.skippedFrequentIds ?? new Set<string>();
-  const pilatesPool = selectPilatesCandidatePool(exercises);
   const controls = resolvePlanControls(profile, planDate, overrides);
   const recentExerciseCounts = adaptation?.recentExerciseCounts ?? {};
 
-  const preferencePool = pilatesPool.filter(
+  // Progressive pools: prefer equipment + preferences, then widen until the duration floor is met.
+  const equippedPool = selectPilatesCandidatePool(exercises, availableEquipment);
+  const openPilatesPool = selectPilatesCandidatePool(exercises);
+  const preferencePool = equippedPool.filter(
     (exercise) =>
       exercise.tags.some((tag) => profile.exercisePreferences.includes(tag)) ||
       isPilatesAlignedExercise(exercise),
   );
+  const deprioritizedFiltered = (pool: Exercise[]) =>
+    pool.filter((exercise) => !deprioritizedIds.has(exercise.id));
 
-  const candidates =
-    preferencePool.length >= TARGET_MIN
-      ? preferencePool
-      : pilatesPool.filter((exercise) => !deprioritizedIds.has(exercise.id));
+  const candidatePools: Exercise[][] = [
+    preferencePool,
+    deprioritizedFiltered(equippedPool),
+    equippedPool,
+    deprioritizedFiltered(openPilatesPool),
+    openPilatesPool,
+    deprioritizedFiltered(exercises),
+    exercises,
+  ];
 
-  const finalCandidates =
-    candidates.length >= TARGET_MIN
-      ? candidates
-      : pilatesPool.length >= TARGET_MIN
-        ? pilatesPool
-        : exercises.filter((exercise) => !deprioritizedIds.has(exercise.id));
+  let workingPool =
+    candidatePools.find((pool) => pool.length >= controls.targetMin) ??
+    exercises;
 
-  const selected = selectBalancedExercises(
-    finalCandidates,
+  let selected = selectBalancedExercises(
+    workingPool,
     profile,
     deprioritizedIds,
     planDate,
@@ -483,20 +601,32 @@ export function generateWorkoutPlan(
     physique,
   );
 
-  while (selected.length < controls.targetMin && selected.length < finalCandidates.length) {
-    const next = finalCandidates.find(
-      (exercise) => !selected.some((item) => item.id === exercise.id),
-    );
-    if (!next) {
-      break;
-    }
-    selected.push(next);
+  if (selected.length < controls.targetMin) {
+    selected = backfillExercises(selected, candidatePools, controls.targetMin);
   }
 
+  // If still short, try selecting again from the widest pool that can satisfy the floor.
+  if (selected.length < controls.targetMin) {
+    const widePool =
+      candidatePools.find((pool) => pool.length >= controls.targetMin) ?? exercises;
+    workingPool = widePool;
+    selected = selectBalancedExercises(
+      widePool,
+      profile,
+      deprioritizedIds,
+      planDate,
+      controls,
+      recentExerciseCounts,
+      physique,
+    );
+    selected = backfillExercises(selected, candidatePools, controls.targetMin);
+  }
+
+  const minPilatesAligned = Math.min(controls.targetMin, Math.max(3, controls.targetMin - 1));
   let pilatesAlignedCount = selected.filter(isPilatesAlignedExercise).length;
-  if (pilatesAlignedCount < MIN_PILATES_ALIGNED && pilatesPool.length >= MIN_PILATES_ALIGNED) {
+  if (pilatesAlignedCount < minPilatesAligned && openPilatesPool.length >= minPilatesAligned) {
     const selectedIds = new Set(selected.map((exercise) => exercise.id));
-    const upgrades = [...pilatesPool]
+    const upgrades = [...openPilatesPool]
       .filter((exercise) => !selectedIds.has(exercise.id))
       .sort(
         (a, b) =>
@@ -525,7 +655,7 @@ export function generateWorkoutPlan(
       );
 
     for (const upgrade of upgrades) {
-      if (pilatesAlignedCount >= MIN_PILATES_ALIGNED) {
+      if (pilatesAlignedCount >= minPilatesAligned) {
         break;
       }
       const replaceIndex = selected.findIndex((exercise) => !isPilatesAlignedExercise(exercise));
@@ -538,6 +668,13 @@ export function generateWorkoutPlan(
       pilatesAlignedCount += 1;
     }
   }
+
+  // Failsafe: never drop below the duration floor after pilates upgrades.
+  if (selected.length < controls.targetMin) {
+    selected = backfillExercises(selected, candidatePools, controls.targetMin);
+  }
+
+  selected = ensureWarmupBookend(selected, workingPool, controls.focus);
 
   let planExercises: WorkoutPlanExercise[] = orderWorkoutFlow(selected).map((exercise, index) => ({
     exerciseId: exercise.id,
@@ -557,8 +694,42 @@ export function generateWorkoutPlan(
     planExercises = swapSkippedExercises(planExercises, adaptation.lastSessionFeedback, adaptation);
   }
 
+  // Re-assert floor after skip swaps (1:1 replacements should preserve length).
   if (planExercises.length < controls.targetMin) {
-    throw new Error(`Plan must include at least ${controls.targetMin} exercises.`);
+    const knownIds = new Set(planExercises.map((item) => item.exerciseId));
+    const filler = backfillExercises(
+      planExercises
+        .map((item) => exercises.find((exercise) => exercise.id === item.exerciseId))
+        .filter((exercise): exercise is Exercise => Boolean(exercise)),
+      candidatePools,
+      controls.targetMin,
+    );
+    planExercises = orderWorkoutFlow(filler).map((exercise, index) => {
+      const existing = planExercises.find((item) => item.exerciseId === exercise.id);
+      if (existing) {
+        return { ...existing, sortOrder: index + 1 };
+      }
+      knownIds.add(exercise.id);
+      return {
+        exerciseId: exercise.id,
+        sortOrder: index + 1,
+        sets: setsForExercise(
+          profile,
+          exercise,
+          controls.focus,
+          controls.intensity,
+          adaptation?.lastSessionDifficulty,
+        ),
+        reps: exercise.repsBaseline,
+        holdSeconds: exercise.holdSeconds,
+      };
+    });
+  }
+
+  if (planExercises.length < controls.targetMin) {
+    throw new Error(
+      `Plan must include at least ${controls.targetMin} exercises for a ${controls.targetMinutes}-minute session.`,
+    );
   }
 
   if (!validatePlanExerciseIds(planExercises, exercises)) {

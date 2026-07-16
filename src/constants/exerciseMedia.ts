@@ -9,77 +9,21 @@ export interface ExerciseMediaEntry {
   thumbnail: ImageSourcePropType | null;
   gif: ImageSourcePropType | null;
   fallback: ImageSourcePropType | null;
+  /** True when gif/webp is distinct from the thumbnail (motion demo available). */
+  hasDistinctMotionFrame: boolean;
 }
-
-const STATIC_DEMO_EXERCISE_IDS = new Set<string>([
-  '3_4_Sit-Up',
-  'Bent-Knee_Hip_Raise',
-  'Bird_Dog',
-  'Bodyweight_Squat',
-  'Bodyweight_Walking_Lunge',
-  'Butt_Lift_Bridge',
-  'Cat_Cow',
-  'Cross-Body_Crunch',
-  'Crossover_Reverse_Lunge',
-  'Crunch_-_Hands_Overhead',
-  'Crunches',
-  'Dead_Bug',
-  'Decline_Crunch',
-  'Decline_Push-Up',
-  'Elbow_to_Knee',
-  'Flat_Bench_Lying_Leg_Raise',
-  'Flutter_Kicks',
-  'Freehand_Jump_Squat',
-  'Frog_Sit-Ups',
-  'Glute_Kickback',
-  'Incline_Push-Up',
-  'Jackknife_Sit-Up',
-  'Leg_Lift',
-  'Mountain_Climbers',
-  'Oblique_Crunches',
-  'Oblique_Crunches_-_On_The_Floor',
-  'Pelvic_Tilt_Into_Bridge',
-  'Pilates_Hundred',
-  'Pilates_Roll_Up',
-  'Pilates_Shoulder_Bridge',
-  'Pilates_Swan',
-  'Pilates_Swimming',
-  'Pilates_Teaser',
-  'Plank',
-  'Push-Up_Wide',
-  'Push_Up_to_Side_Plank',
-  'Reverse_Crunch',
-  'Russian_Twist',
-  'Scissor_Kick',
-  'Side_Lying_Leg_Lift',
-  'Single_Leg_Glute_Bridge',
-  'Sit-Up',
-  'Step-up_with_Knee_Raise',
-  'Superman',
-  'Tuck_Crunch',
-  'Single_Leg_Stretch',
-  'Double_Leg_Stretch',
-  'Criss_Cross',
-  'Spine_Stretch_Forward',
-  'Saw',
-  'Mermaid_Stretch',
-  'Side_Kick',
-  'Clamshell',
-  'Fire_Hydrant',
-  'Donkey_Kick',
-  'Toe_Taps',
-  'Hollow_Hold',
-  'Side_Plank',
-  'Open_Leg_Rocker',
-  'Corkscrew',
-  'Childs_Pose',
-  'Thread_the_Needle',
-  'Seated_Spine_Twist',
-]);
 
 export const EXERCISE_THUMBNAIL_DIR = 'assets/exercises/thumbnails';
 export const EXERCISE_GIF_DIR = 'assets/exercises/gifs';
 export const EXERCISE_PLACEHOLDER_DIR = 'assets/exercises/placeholders';
+
+/** YouTube storyboard stills — used when bundled thumb/gif are identical JPGs. */
+export function getYouTubeFrameSource(
+  videoId: string,
+  frame: 0 | 1 | 2 | 3 = 0,
+): ImageSourcePropType {
+  return { uri: `https://img.youtube.com/vi/${encodeURIComponent(videoId)}/${frame}.jpg` };
+}
 
 export function getExerciseThumbnailSource(exerciseId: string): ImageSourcePropType | null {
   return EXERCISE_THUMBNAIL_MANIFEST[exerciseId] ?? null;
@@ -89,22 +33,85 @@ export function getExerciseGifSource(exerciseId: string): ImageSourcePropType | 
   return EXERCISE_GIF_MANIFEST[exerciseId] ?? getExerciseThumbnailSource(exerciseId);
 }
 
+function isNativeAnimatedUri(uri: string | undefined | null): boolean {
+  return Boolean(uri && /\.(gif|webp)$/i.test(uri));
+}
+
+/**
+ * Animate when we have a real GIF/WebP, or a distinct second still for flip-book.
+ * Identical stills (same require) will not flip-book.
+ */
 export function hasAnimatedExerciseDemo(exerciseId: string): boolean {
-  return Boolean(
-    getExerciseThumbnailSource(exerciseId) &&
-      EXERCISE_GIF_MANIFEST[exerciseId] &&
-      !STATIC_DEMO_EXERCISE_IDS.has(exerciseId),
-  );
+  const seed = (exercisesSeed as Exercise[]).find((exercise) => exercise.id === exerciseId);
+  if (seed && isNativeAnimatedUri(seed.gifUri)) {
+    return true;
+  }
+  const thumbnail = getExerciseThumbnailSource(exerciseId);
+  const gif = EXERCISE_GIF_MANIFEST[exerciseId];
+  return Boolean(thumbnail && gif && thumbnail !== gif);
+}
+
+/** Prefer native GIF/WebP over flip-book when the seed points at an animated file. */
+export function prefersNativeGifDemo(exerciseId: string): boolean {
+  const seed = (exercisesSeed as Exercise[]).find((exercise) => exercise.id === exerciseId);
+  return Boolean(seed && isNativeAnimatedUri(seed.gifUri) && EXERCISE_GIF_MANIFEST[exerciseId]);
+}
+
+/**
+ * Resolve display media for thumbnails/cards.
+ * Prefer bundled exercise photos; never autoplay flip-book or YouTube storyboard animation.
+ * Motion demos live in the YouTube embed on detail/player screens.
+ */
+export function resolveExerciseDisplayMedia(exercise: Exercise): {
+  thumbnail: ImageSourcePropType | null;
+  motionFrame: ImageSourcePropType | null;
+  animate: boolean;
+  preferNativeGif: boolean;
+  source: 'youtube_frames' | 'bundled_motion' | 'bundled_still' | 'none';
+} {
+  const bundledThumb = getExerciseThumbnailSource(exercise.id);
+  const bundledGif = EXERCISE_GIF_MANIFEST[exercise.id] ?? null;
+  const still = bundledThumb ?? bundledGif ?? getExerciseGifSource(exercise.id);
+
+  if (still) {
+    return {
+      thumbnail: still,
+      motionFrame: still,
+      animate: false,
+      preferNativeGif: false,
+      source: 'bundled_still',
+    };
+  }
+
+  const videoId = exercise.youtubeVideoId?.trim() || null;
+  if (videoId) {
+    const frame = getYouTubeFrameSource(videoId, 0);
+    return {
+      thumbnail: frame,
+      motionFrame: frame,
+      animate: false,
+      preferNativeGif: false,
+      source: 'youtube_frames',
+    };
+  }
+
+  return {
+    thumbnail: null,
+    motionFrame: null,
+    animate: false,
+    preferNativeGif: false,
+    source: 'none',
+  };
 }
 
 export function getExerciseMediaEntry(exercise: Exercise): ExerciseMediaEntry {
-  const thumbnail = getExerciseThumbnailSource(exercise.id);
-  const gif = getExerciseGifSource(exercise.id);
+  const resolved = resolveExerciseDisplayMedia(exercise);
 
   return {
-    thumbnail,
-    gif,
-    fallback: thumbnail ?? gif,
+    thumbnail: resolved.thumbnail,
+    gif: resolved.motionFrame,
+    fallback: resolved.thumbnail ?? resolved.motionFrame,
+    hasDistinctMotionFrame: resolved.animate && resolved.thumbnail !== resolved.motionFrame,
   };
 }
 

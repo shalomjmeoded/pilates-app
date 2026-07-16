@@ -12,9 +12,14 @@ describe('onboarding flow', () => {
     expect(ONBOARDING_ROUTES).toHaveLength(ONBOARDING_TOTAL_STEPS);
     expect(getOnboardingRoute(1)).toBe('step-00-welcome');
     expect(getOnboardingRoute(2)).toBe('step-01-gender');
-    expect(getOnboardingRoute(5)).toBe('step-05-notifications');
-    expect(getOnboardingRoute(10)).toBe('step-11-goal-weight');
-    expect(getOnboardingRoute(11)).toBe('step-14-pace');
+    expect(getOnboardingRoute(5)).toBe('step-04-equipment');
+    expect(getOnboardingRoute(6)).toBe('step-05-notifications');
+    expect(getOnboardingRoute(11)).toBe('step-11-goal-weight');
+    expect(getOnboardingRoute(12)).toBe('step-14-pace');
+  });
+
+  it('defaults equipment to mat only', () => {
+    expect(useOnboardingStore.getState().draft.availableEquipment).toEqual([]);
   });
 
   it('allows a complete onboarding profile with no movement preference selected', () => {
@@ -35,7 +40,7 @@ describe('onboarding flow', () => {
 
     expect(profile).not.toBeNull();
     expect(profile?.exercisePreferences).toEqual([]);
-    expect(profile?.mediaPreference).toBe('static_only');
+    expect(profile?.mediaPreference).toBe('video_streaming');
     expect(profile?.weightTrajectory).toBe('steady_state');
   });
 

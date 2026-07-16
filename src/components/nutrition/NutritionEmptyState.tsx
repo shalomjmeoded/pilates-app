@@ -1,8 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 export function NutritionEmptyState({ onAddMeal }: { onAddMeal: () => void }) {
   return (
@@ -18,7 +18,7 @@ export function NutritionEmptyState({ onAddMeal }: { onAddMeal: () => void }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'stretch',
   },
-});
+}));

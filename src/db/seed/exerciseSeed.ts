@@ -12,10 +12,10 @@ import { getSessionForPlan, getWorkoutPlanByDate } from '@/db/repositories/worko
 import { preferencesStorage } from '@/storage/mmkv';
 import type { Exercise } from '@/types/exercise';
 
-export const EXERCISE_LIBRARY_VERSION = 7;
+export const EXERCISE_LIBRARY_VERSION = 17;
 const LIBRARY_VERSION_KEY = 'exercise_library_version';
 const LIBRARY_MIN = 60;
-const LIBRARY_MAX = 80;
+const LIBRARY_MAX = 130;
 
 function needsReseed(existingCount: number, storedVersion: number | undefined): boolean {
   if (storedVersion !== EXERCISE_LIBRARY_VERSION) {
