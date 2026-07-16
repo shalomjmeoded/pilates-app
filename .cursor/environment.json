@@ -1,0 +1,14 @@
+{
+  "name": "pilates-app",
+  "install": "npm install --legacy-peer-deps && (test -f .env || cp .env.example .env) && (test -f server/ai-proxy/.env || cp server/ai-proxy/.env.example server/ai-proxy/.env)",
+  "ports": [
+    {
+      "name": "metro",
+      "port": 8081
+    },
+    {
+      "name": "ai-proxy",
+      "port": 8787
+    }
+  ]
+}
