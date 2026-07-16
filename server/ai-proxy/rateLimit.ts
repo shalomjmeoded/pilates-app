@@ -83,7 +83,7 @@ export function checkRateLimit(input: RateLimitCheckInput): RateLimitResult {
     return {
       allowed: false,
       code: 'UNAUTHORIZED',
-      message: 'AI features require BetterMe Premium.',
+      message: 'AI features require Pilates at Home Premium.',
     };
   }
 

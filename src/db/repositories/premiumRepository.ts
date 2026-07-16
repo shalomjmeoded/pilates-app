@@ -1,5 +1,9 @@
 import { getDatabase } from '@/db/connection';
 import { mapPremiumStatusRow } from '@/db/mappers';
+import {
+  getDevPremiumStatus,
+  isDevPremiumBypassEnabled,
+} from '@/services/monetization/devPremiumBypass';
 import type { PremiumStatus } from '@/types/premium';
 
 interface PremiumStatusRow {
@@ -11,6 +15,10 @@ interface PremiumStatusRow {
 }
 
 export async function getPremiumStatus(): Promise<PremiumStatus> {
+  if (isDevPremiumBypassEnabled()) {
+    return getDevPremiumStatus();
+  }
+
   const db = await getDatabase();
   const row = await db.getFirstAsync<PremiumStatusRow>(
     'SELECT is_premium, product_id, expires_at, trial_used, source FROM premium_status WHERE id = 1',
@@ -28,7 +36,7 @@ export async function getPremiumStatus(): Promise<PremiumStatus> {
   const status = mapPremiumStatusRow(row);
 
   // Do not let development-only access from older builds survive into the
-  // subscription-only flow.
+  // subscription-only flow when the env flag is off.
   if (status.productId === 'dev_bypass') {
     return {
       subscriptionStatus: 'inactive',

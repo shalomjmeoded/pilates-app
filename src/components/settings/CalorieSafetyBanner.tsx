@@ -1,8 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { SAFETY_WARNING_MESSAGE } from '@/engines/calculations';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface CalorieSafetyBannerProps {
   threshold: number;
@@ -24,7 +24,7 @@ export function CalorieSafetyBanner({ threshold }: CalorieSafetyBannerProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   banner: {
     backgroundColor: colors.warningSurface,
     borderRadius: radius.card,
@@ -45,4 +45,4 @@ const styles = StyleSheet.create({
   threshold: {
     marginTop: 4,
   },
-});
+}));

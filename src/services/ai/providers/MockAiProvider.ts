@@ -88,6 +88,7 @@ export class MockAiProvider implements AiProvider {
         wins: [`Completed ${summary.workoutsCompleted} workouts.`],
         focusForNextWeek: 'Keep your next week simple and repeatable.',
         nutritionTip: 'Anchor each day with a protein-rich meal.',
+        weightTip: 'Keep morning weigh-ins steady so your trend stays clear.',
         workoutTip: 'Prioritize form and breathing over speed.',
       }),
     );

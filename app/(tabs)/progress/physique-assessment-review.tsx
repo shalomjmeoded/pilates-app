@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -16,7 +16,7 @@ import {
 } from '@/engines/physique/physiqueAssessmentFlow';
 import { useSavePhysiqueAssessment } from '@/hooks/useSavePhysiqueAssessment';
 import { usePhysiqueAssessmentReviewStore } from '@/stores/physiqueAssessmentReviewStore';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 export default function PhysiqueAssessmentReviewScreen() {
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function PhysiqueAssessmentReviewScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <Text variant="h1">Review Assessment</Text>
         <Text variant="bodyMuted">
-          Review before saving. BetterMe never saves AI results without your confirmation.
+          Review before saving. Pilates at Home never saves AI results without your confirmation.
         </Text>
 
         <Card style={styles.card}>
@@ -90,7 +90,7 @@ export default function PhysiqueAssessmentReviewScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     lineHeight: 18,
   },
-});
+}));

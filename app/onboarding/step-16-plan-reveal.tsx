@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { AccessibilityInfo, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, View } from 'react-native';
 
 import { OnboardingShell, PlanRevealHero } from '@/components/onboarding';
 import { Text } from '@/components/ui/Text';
@@ -7,7 +7,7 @@ import { SAFETY_WARNING_MESSAGE } from '@/engines/calculations';
 import { trainingFrequencyToWorkoutsPerWeek } from '@/engines/monetization/premiumAccess';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { successNotificationHaptic } from '@/utils/haptics';
 import { buildPersonalizationSummary } from '@/onboarding/personalizationSummary';
 import { captureProductEvent, getElapsedOnboardingSeconds } from '@/services/analytics/analyticsCore';
@@ -102,7 +102,7 @@ export default function Step16PlanReveal() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   warning: {
     backgroundColor: colors.warningSurface,
     borderRadius: 16,
@@ -130,4 +130,4 @@ const styles = StyleSheet.create({
   fallbackText: {
     lineHeight: 22,
   },
-});
+}));

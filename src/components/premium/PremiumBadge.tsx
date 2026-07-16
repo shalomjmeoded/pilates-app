@@ -1,8 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { usePremium } from '@/hooks/usePremium';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 export function PremiumBadge() {
   const { status, hasAccess } = usePremium();
@@ -43,7 +43,7 @@ export function PremiumBadge() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   badge: {
     alignSelf: 'flex-start',
     minHeight: 34,
@@ -90,4 +90,4 @@ const styles = StyleSheet.create({
   activeText: {
     color: colors.surfaceCanvas,
   },
-});
+}));

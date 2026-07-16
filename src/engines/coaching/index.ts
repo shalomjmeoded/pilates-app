@@ -1,6 +1,11 @@
 export { buildCoachingInsights } from './buildCoachingInsights';
 export { buildWeeklyCoachSummary } from './buildWeeklyCoachSummary';
 export { buildLocalWeeklyCoachFallback } from './buildLocalWeeklyCoachFallback';
+export {
+  WEEKLY_COACH_UNLOCK_PERCENT,
+  computeWeeklyCoachReadiness,
+  type WeeklyCoachReadiness,
+} from './weeklyCoachReadiness';
 export { buildWeeklyReportCard } from './weeklyReportCard';
 export {
   getWeekStartDate,

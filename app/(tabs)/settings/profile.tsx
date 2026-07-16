@@ -14,7 +14,7 @@ import {
 } from '@/onboarding/constants';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import type { ExercisePreference, Profile } from '@/types/profile';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 import { kgToLb, lbToKg, cmToInches, inchesToCm } from '@/utils/units';
 import { getBirthYearBounds, parsePositiveNumber } from '@/onboarding/helpers';
 
@@ -155,11 +155,11 @@ export default function ProfileSettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   section: {
     marginTop: spacing.xs,
   },
   error: {
     color: colors.brandPrimary,
   },
-});
+}));

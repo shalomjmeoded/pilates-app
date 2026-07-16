@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { AccessibilityInfo, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, View } from 'react-native';
 
 import { OptionCard, OnboardingShell } from '@/components/onboarding';
 import { Text } from '@/components/ui/Text';
@@ -10,7 +10,7 @@ import {
   requestNotificationPermissions,
 } from '@/services/notifications/notificationService';
 import { useOnboardingStore } from '@/stores/onboardingStore';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 const REMINDER_PREVIEW = [
   { icon: 'silverware-fork-knife' as const, time: '8:00', label: 'Breakfast check-in' },
@@ -41,7 +41,7 @@ export default function Step05Notifications() {
     setAnnouncedStatus(
       granted
         ? 'Reminders enabled. You can fine-tune times in Settings.'
-        : 'No problem — BetterMe works fully without reminders.',
+        : 'No problem — Pilates at Home works fully without reminders.',
     );
   };
 
@@ -105,7 +105,7 @@ export default function Step05Notifications() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   preview: {
     gap: spacing.xs,
     backgroundColor: colors.surfaceCanvas,
@@ -153,4 +153,4 @@ const styles = StyleSheet.create({
   status: {
     marginTop: spacing.xs,
   },
-});
+}));

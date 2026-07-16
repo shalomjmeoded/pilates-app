@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   Easing,
   FadeIn,
@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 const LOADING_DURATION_MS = 3200;
 
@@ -83,7 +83,7 @@ export function OnboardingPlanProgress({ onComplete }: OnboardingPlanProgressPro
 
 export const ONBOARDING_PLAN_LOADING_MS = LOADING_DURATION_MS;
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   container: {
     width: '100%',
     maxWidth: 340,
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   stagePending: {
     color: colors.textMuted,
   },
-});
+}));

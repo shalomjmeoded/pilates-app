@@ -1,7 +1,7 @@
-import { Pressable, PressableProps, StyleSheet, ViewStyle } from 'react-native';
+import { Pressable, PressableProps, ViewStyle } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import { fontFamily } from '@/theme/typography';
 
 type ButtonVariant = 'primary' | 'secondary' | 'square';
@@ -38,7 +38,7 @@ export function Button({ label, variant = 'primary', style, disabled, ...props }
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   base: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -63,9 +63,9 @@ const styles = StyleSheet.create({
   secondaryLabel: {
     color: colors.brandPrimary,
   },
-});
+}));
 
-const variantStyles = StyleSheet.create({
+const variantStyles = createDynamicStyles(() => ({
   primary: {
     backgroundColor: colors.brandPrimary,
     borderRadius: radius.pill,
@@ -85,4 +85,4 @@ const variantStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.plum,
   },
-});
+}));

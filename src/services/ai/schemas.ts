@@ -52,6 +52,7 @@ export const aiWeeklyCoachSchema = z.object({
   wins: z.array(z.string().min(1)).min(1).max(5),
   focusForNextWeek: z.string().min(1),
   nutritionTip: z.string().min(1),
+  weightTip: z.string().min(1),
   workoutTip: z.string().min(1),
 });
 

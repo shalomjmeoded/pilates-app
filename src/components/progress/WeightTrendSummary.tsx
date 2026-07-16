@@ -1,11 +1,11 @@
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { formatTrendLabel } from '@/engines/progress/weightTrends';
 import type { WeightTrendAverages } from '@/types/progress';
 import { kgToLb } from '@/utils/units';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 interface WeightTrendSummaryProps {
   trends: WeightTrendAverages;
@@ -33,7 +33,7 @@ export function WeightTrendSummary({ trends, weightUnit }: WeightTrendSummaryPro
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     gap: spacing.xs,
   },
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
     borderColor: colors.borderLight,
     padding: spacing.xs,
   },
-});
+}));

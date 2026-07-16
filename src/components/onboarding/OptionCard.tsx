@@ -1,8 +1,8 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
 
 interface OptionCardProps {
@@ -68,7 +68,7 @@ export function OptionCard({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -114,4 +114,4 @@ const styles = StyleSheet.create({
     borderColor: colors.brandPrimary,
     backgroundColor: colors.brandPrimary,
   },
-});
+}));

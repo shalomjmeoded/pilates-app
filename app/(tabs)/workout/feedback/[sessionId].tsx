@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -21,7 +21,7 @@ import type {
   WorkoutDifficultyRating,
   WorkoutSessionExerciseFeedback,
 } from '@/types/workout';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 import { workoutStreakEncouragement } from '@/utils/encouragement';
 import { successNotificationHaptic } from '@/utils/haptics';
 
@@ -177,7 +177,7 @@ function SummaryMetric({ label, value }: { label: string; value: number }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -266,4 +266,4 @@ const styles = StyleSheet.create({
     lineHeight: 12,
     letterSpacing: 0,
   },
-});
+}));

@@ -2,12 +2,12 @@ const allowDirectGemini = process.env.EXPO_PUBLIC_ENABLE_DIRECT_GEMINI === 'true
 
 module.exports = {
   expo: {
-    name: 'BetterMe',
+    name: 'Pilates at Home',
     slug: 'tune',
     version: '1.1',
     orientation: 'portrait',
     icon: './assets/icon.png',
-    scheme: 'betterme',
+    scheme: 'pilatesathome',
     userInterfaceStyle: 'light',
     ios: {
       supportsTablet: true,
@@ -18,7 +18,7 @@ module.exports = {
     },
     android: {
       adaptiveIcon: {
-        backgroundColor: '#F7F3ED',
+        backgroundColor: '#98AF94',
         foregroundImage: './assets/android-icon-foreground.png',
         backgroundImage: './assets/android-icon-background.png',
         monochromeImage: './assets/android-icon-monochrome.png',
@@ -54,9 +54,9 @@ module.exports = {
         'expo-image-picker',
         {
           photosPermission:
-            'BetterMe uses selected photos for meal nutrition estimates and optional physique wellness assessments.',
+            'Pilates at Home uses selected photos for meal nutrition estimates and optional physique wellness assessments.',
           cameraPermission:
-            'BetterMe uses your camera for meal nutrition estimates and optional physique wellness assessments.',
+            'Pilates at Home uses your camera for meal nutrition estimates and optional physique wellness assessments.',
         },
       ],
     ],

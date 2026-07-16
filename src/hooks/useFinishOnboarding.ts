@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 import { getActiveNutritionTargets } from '@/db/repositories/nutritionRepository';
+import { setSchedulePhaseFromDate } from '@/engines/workout';
 import { completeOnboarding } from '@/services/onboarding/completeOnboarding';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
@@ -40,6 +41,9 @@ export function useFinishOnboarding() {
           profile,
           draft,
         });
+
+        // First post-onboarding day must be a workout day, never rest.
+        setSchedulePhaseFromDate(today);
 
         setOnboardingCompleted(true);
         captureProductEvent('onboarding completed', {

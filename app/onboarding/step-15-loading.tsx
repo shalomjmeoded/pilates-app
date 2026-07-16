@@ -1,6 +1,6 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { BackHandler, StyleSheet, View } from 'react-native';
+import { BackHandler, Image, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -16,7 +16,9 @@ import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
-import { colors, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
+
+const APP_ICON = require('../../assets/icon.png');
 
 export default function Step15Loading() {
   const { replaceNext, goToStep } = useOnboardingNavigation(13);
@@ -88,9 +90,7 @@ export default function Step15Loading() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Animated.View style={[styles.mark, glowStyle]}>
-            <Text variant="display" style={styles.logo}>
-              BetterMe
-            </Text>
+            <Image source={APP_ICON} style={styles.markIcon} resizeMode="cover" accessibilityLabel="Pilates at Home" />
           </Animated.View>
           <Text variant="h1" style={styles.title}>
             Creating your plan
@@ -108,9 +108,7 @@ export default function Step15Loading() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Animated.View style={[styles.mark, glowStyle]}>
-          <Text variant="display" style={styles.logo}>
-            BetterMe
-          </Text>
+          <Image source={APP_ICON} style={styles.markIcon} resizeMode="cover" accessibilityLabel="Pilates at Home" />
         </Animated.View>
         <Text variant="h1" style={styles.title}>
           Creating your plan
@@ -124,7 +122,7 @@ export default function Step15Loading() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -137,18 +135,19 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   mark: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: 112,
+    height: 112,
+    borderRadius: radius.hero,
     backgroundColor: colors.surfaceCanvas,
     borderWidth: 1,
     borderColor: colors.borderLight,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
-  logo: {
-    color: colors.brandPrimary,
-    fontSize: 28,
+  markIcon: {
+    width: '100%',
+    height: '100%',
   },
   title: {
     textAlign: 'center',
@@ -157,4 +156,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     maxWidth: 320,
   },
-});
+}));

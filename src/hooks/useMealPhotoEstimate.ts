@@ -94,7 +94,7 @@ export function useMealPhotoEstimate(mealDate: string) {
 
         const premium = await getCurrentPremiumStatus();
         if (!premium.isPremium) {
-          setError('AI photo estimates require BetterMe Premium.');
+          setError('AI photo estimates require Pilates at Home Premium.');
           return;
         }
 
@@ -133,7 +133,7 @@ export function useMealPhotoEstimate(mealDate: string) {
         }
 
         if (estimateError instanceof AiProxyError && estimateError.code === 'UNAUTHORIZED') {
-          setError('AI photo estimates require BetterMe Premium.');
+          setError('AI photo estimates require Pilates at Home Premium.');
           setShowManualFallbackCta(false);
           return;
         }

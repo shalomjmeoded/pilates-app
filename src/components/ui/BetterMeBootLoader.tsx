@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -12,7 +12,9 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
-import { colors, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
+
+const APP_ICON = require('../../../assets/icon.png');
 
 interface BetterMeBootLoaderProps {
   message?: string;
@@ -68,17 +70,17 @@ export function BetterMeBootLoader({ message = 'Preparing your rhythm...' }: Bet
           <Animated.View style={[styles.outerRing, outerRingStyle]} />
           <Animated.View style={[styles.innerRing, innerRingStyle]} />
           <View style={[styles.core, shadows.hero]}>
-            <Text
-              variant="hero"
-              style={styles.logo}
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              minimumFontScale={0.74}
-            >
-              BetterMe
-            </Text>
+            <Image
+              source={APP_ICON}
+              style={styles.icon}
+              resizeMode="cover"
+              accessibilityLabel="Pilates at Home"
+            />
           </View>
         </View>
+        <Text variant="h2" style={styles.wordmark}>
+          Pilates at Home
+        </Text>
         <Text variant="bodyMuted" style={styles.tagline}>
           Movement, nourishment, and calm progress — in one rhythm.
         </Text>
@@ -90,7 +92,7 @@ export function BetterMeBootLoader({ message = 'Preparing your rhythm...' }: Bet
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -103,45 +105,47 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   markWrap: {
-    width: 220,
-    height: 156,
+    width: 168,
+    height: 168,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.xs,
   },
   outerRing: {
     position: 'absolute',
-    width: 208,
-    height: 140,
-    borderRadius: 70,
+    width: 156,
+    height: 156,
+    borderRadius: 78,
     borderWidth: 1.5,
     borderColor: colors.accentWarm,
   },
   innerRing: {
     position: 'absolute',
-    width: 176,
-    height: 112,
-    borderRadius: 56,
+    width: 132,
+    height: 132,
+    borderRadius: 66,
     borderWidth: 1,
     borderColor: colors.brandSecondary,
   },
   core: {
-    width: 156,
-    height: 88,
-    borderRadius: 44,
+    width: 108,
+    height: 108,
+    borderRadius: radius.hero,
     backgroundColor: colors.surfaceHero,
     borderWidth: 1,
     borderColor: colors.borderStrong,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
-  logo: {
+  icon: {
     width: '100%',
+    height: '100%',
+  },
+  wordmark: {
     color: colors.brandPrimary,
-    fontSize: 30,
-    lineHeight: 36,
-    letterSpacing: 0,
     textAlign: 'center',
+    paddingHorizontal: spacing.sm,
   },
   tagline: {
     textAlign: 'center',
@@ -152,4 +156,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.brandSecondaryText,
   },
-});
+}));

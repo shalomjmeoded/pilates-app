@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, BackHandler, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, BackHandler, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/ui/Button';
@@ -15,7 +15,7 @@ import {
   deriveWorkoutFocusTitle,
   estimateWorkoutMinutes,
 } from '@/engines/workout/workoutPresentation';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { PlanGenerationError, type WorkoutPlan } from '@/types/workout';
 import { captureProductEvent, getElapsedOnboardingSeconds } from '@/services/analytics/analyticsCore';
 import { successNotificationHaptic } from '@/utils/haptics';
@@ -255,7 +255,7 @@ export default function Step18WorkoutLoading() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -334,4 +334,4 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: spacing.xs,
   },
-});
+}));

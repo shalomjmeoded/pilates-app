@@ -1,11 +1,11 @@
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import { PremiumBadge } from '@/components/premium';
 import { SettingsRow, SettingsSection } from '@/components/settings';
 import { Screen } from '@/components/ui/Screen';
 import { usePreferencesStore } from '@/stores/preferencesStore';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -74,16 +74,16 @@ export default function SettingsScreen() {
         </SettingsSection>
 
         <SettingsSection title="About" accentColor={colors.textMuted}>
-          <SettingsRow label="About BetterMe" onPress={() => router.push('/(tabs)/settings/about')} />
+          <SettingsRow label="About Pilates at Home" onPress={() => router.push('/(tabs)/settings/about')} />
         </SettingsSection>
       </ScrollView>
     </Screen>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   scroll: {
     gap: spacing.sm,
     paddingBottom: spacing.lg,
   },
-});
+}));

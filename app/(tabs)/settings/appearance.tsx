@@ -25,7 +25,7 @@ const OPTIONS: ThemeOption[] = [
   {
     value: 'light',
     label: 'Wellness',
-    description: 'Soft plum and rose — the BetterMe Pilates look',
+    description: 'Soft plum and rose — the Pilates at Home look',
   },
   {
     value: 'luxe',

@@ -30,9 +30,9 @@ export default function PrivacySettingsScreen() {
       <Card style={styles.card}>
         <Text variant="h2">AI explanation</Text>
         <Text variant="bodyMuted" style={styles.copy}>
-          AI is optional and premium-gated. You review every AI meal estimate before saving. BetterMe stores local audit
-          rows in ai_outputs (feature, request summary, validation result) and quota counters in ai_usage — never full
-          meal photos. AI is never used for ads.
+          AI is optional and premium-gated. You review every AI meal estimate before saving. Pilates at Home stores local
+          audit rows in ai_outputs (feature, request summary, validation result) and quota counters in ai_usage — never
+          full meal photos. AI is never used for ads.
         </Text>
       </Card>
 
@@ -46,7 +46,7 @@ export default function PrivacySettingsScreen() {
       <Card style={styles.card}>
         <Text variant="h2">No ads. Minimal product analytics.</Text>
         <Text variant="bodyMuted" style={styles.copy}>
-          BetterMe uses an anonymous device identifier to measure onboarding completion and basic
+          Pilates at Home uses an anonymous device identifier to measure onboarding completion and basic
           feature activation. Analytics never includes your profile answers, body measurements,
           meals, photos, goals, or free text. Session replay and advertising tracking are disabled.
         </Text>

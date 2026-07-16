@@ -11,11 +11,12 @@ export default function Step01Gender() {
   return (
     <OnboardingShell
       step={step}
-      title="Let&apos;s personalize BetterMe"
+      title="Let&apos;s personalize Pilates at Home"
       subtitle="A few details help us build your plan."
       showBack={false}
       onNext={goNext}
       nextDisabled={!genderIdentity}
+      titleLines={3}
       centerBody
     >
       {GENDER_OPTIONS.map((option, index) => (

@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import Svg, { Circle, Defs, Line, LinearGradient, Path, Stop } from 'react-native-svg';
 
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { buildChartLayout, filterLogsByRange } from '@/engines/progress';
 import type { WeightChartRange, WeightLog } from '@/types/progress';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 import { displayWeight } from '@/utils/units';
 
 import { WeightChartRangeSwitcher } from './WeightChartRangeSwitcher';
@@ -103,7 +103,7 @@ export function WeightChart({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     gap: spacing.sm,
   },
@@ -117,4 +117,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-});
+}));

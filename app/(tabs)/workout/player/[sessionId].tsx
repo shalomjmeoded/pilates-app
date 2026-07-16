@@ -1,11 +1,10 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, AppState, Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, AppState, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import {
-  ExerciseMediaView,
   ExerciseSwapReasonSheet,
   ExerciseYouTubeEmbed,
   WorkoutExitSheet,
@@ -26,8 +25,7 @@ import { usePremium } from '@/hooks/usePremium';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
 import type { ExerciseFeedback } from '@/types/exercise';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
-import { colors, radius, shadows, spacing } from '@/theme';
-import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import { lightImpactHaptic, successNotificationHaptic } from '@/utils/haptics';
 
 const REST_TIMER_SECONDS = 30;
@@ -295,8 +293,6 @@ export default function WorkoutPlayerScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <ExerciseMediaView exercise={current.exercise} variant="gif" fillWidth />
-
         <ExerciseYouTubeEmbed exercise={current.exercise} allowStreaming />
 
         <Text variant="h1" style={styles.title}>
@@ -316,12 +312,6 @@ export default function WorkoutPlayerScreen() {
             </Text>
           ))}
         </View>
-
-        <Button
-          label="Watch Reference Video"
-          variant="secondary"
-          onPress={() => void Linking.openURL(buildExerciseYouTubeSearchUrl(current.exercise))}
-        />
 
         {swapMessage ? (
           <View style={styles.swapSuccess}>
@@ -405,7 +395,7 @@ function titleCase(value: string): string {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -522,4 +512,4 @@ const styles = StyleSheet.create({
     minHeight: 50,
     paddingHorizontal: 8,
   },
-});
+}));

@@ -1,9 +1,9 @@
 import { Feather } from '@expo/vector-icons';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
-import { colors, metrics, radius, shadows, spacing } from '@/theme';
+import { colors, metrics, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import { fontFamily } from '@/theme/typography';
 
 interface FloatingActionButtonProps {
@@ -39,7 +39,7 @@ export function FloatingActionButton({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   fab: {
     position: 'absolute',
     right: spacing.sm,
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     transform: [{ scale: 0.98 }],
   },
-});
+}));

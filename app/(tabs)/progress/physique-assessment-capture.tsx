@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { Image, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Image, ScrollView, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { usePhysiquePhotoAssessment } from '@/hooks/usePhysiquePhotoAssessment';
 import type { PhysiquePhotoAngle } from '@/types/physiqueAssessment';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 const ANGLES: Array<{ angle: PhysiquePhotoAngle; label: string; required?: boolean }> = [
   { angle: 'front', label: 'Front photo', required: true },
@@ -112,7 +112,7 @@ export default function PhysiqueAssessmentCaptureScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -153,4 +153,4 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.brandPrimary,
   },
-});
+}));

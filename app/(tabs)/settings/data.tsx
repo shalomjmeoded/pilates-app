@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 import { exportDataViaShareSheet } from '@/services/export/exportData';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 export default function DataSettingsScreen() {
   const [isExporting, setIsExporting] = useState(false);
@@ -45,7 +45,7 @@ export default function DataSettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     gap: spacing.sm,
   },
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
   error: {
     color: colors.brandPrimary,
   },
-});
+}));

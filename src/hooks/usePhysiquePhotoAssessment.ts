@@ -117,7 +117,7 @@ export function usePhysiquePhotoAssessment(disclaimerAcceptedAt: string) {
         return;
       }
       if (assessError instanceof AiProxyError && assessError.code === 'UNAUTHORIZED') {
-        setError('Visual physique assessment requires BetterMe Premium.');
+        setError('Visual physique assessment requires Pilates at Home Premium.');
         return;
       }
       if (assessError instanceof AiProxyError && assessError.code === 'RATE_LIMITED') {

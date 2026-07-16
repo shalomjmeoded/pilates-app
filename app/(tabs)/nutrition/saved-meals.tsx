@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PremiumGate } from '@/components/premium';
@@ -15,7 +15,7 @@ import { deleteSavedMeal, getSavedMeals, saveSavedMeal } from '@/db/repositories
 import { parseMealNumber, validateMealInput } from '@/engines/nutrition';
 import { useEncouragementStore } from '@/stores/encouragementStore';
 import type { SavedMeal } from '@/types/nutrition';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { mealLoggedEncouragement } from '@/utils/encouragement';
 
 export default function SavedMealsScreen() {
@@ -151,7 +151,7 @@ export default function SavedMealsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: { flex: 1, backgroundColor: colors.backgroundPrimary },
   container: { padding: spacing.sm, gap: spacing.sm },
   templateCard: {
@@ -165,4 +165,4 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   delete: { minHeight: 44, justifyContent: 'center' },
   deleteText: { color: colors.brandPrimary },
-});
+}));

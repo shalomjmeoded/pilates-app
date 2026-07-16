@@ -15,7 +15,7 @@ import {
   saveManualNutritionTargets,
 } from '@/services/recalibration/recalibrateProfile';
 import { useRecalibrationStore } from '@/stores/recalibrationStore';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 import { useRouter } from 'expo-router';
 
 export default function NutritionSettingsScreen() {
@@ -131,11 +131,11 @@ export default function NutritionSettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   section: {
     marginTop: spacing.xs,
   },
   error: {
     color: colors.brandPrimary,
   },
-});
+}));

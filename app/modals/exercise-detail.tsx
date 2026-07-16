@@ -1,15 +1,11 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
-import {
-  ExerciseMediaView,
-  ExerciseSwapReasonSheet,
-  ExerciseYouTubeEmbed,
-} from '@/components/workout';
+import { ExerciseSwapReasonSheet, ExerciseYouTubeEmbed } from '@/components/workout';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
@@ -21,8 +17,7 @@ import { usePremium } from '@/hooks/usePremium';
 import type { Exercise } from '@/types/exercise';
 import type { ExerciseSwapReason } from '@/types/exerciseSwap';
 import type { WorkoutPlanExercise } from '@/types/workout';
-import { colors, spacing } from '@/theme';
-import { buildExerciseYouTubeSearchUrl } from '@/utils/exerciseVideo';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 function titleCase(value: string): string {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
@@ -118,8 +113,6 @@ export default function ExerciseDetailModal() {
           <Text variant="bodyMuted">{titleCase(exercise.muscleGroup)}</Text>
         </View>
 
-        <ExerciseMediaView exercise={exercise} variant="gif" fillWidth />
-
         <ExerciseYouTubeEmbed exercise={exercise} allowStreaming />
 
         <Card style={styles.summaryCard}>
@@ -155,13 +148,6 @@ export default function ExerciseDetailModal() {
             </Text>
           ))}
         </Card>
-
-        <Button
-          label="Watch Reference Video"
-          variant="secondary"
-          onPress={() => void Linking.openURL(buildExerciseYouTubeSearchUrl(exercise))}
-          accessibilityLabel={`Search YouTube for ${exercise.name} reference videos`}
-        />
 
         <Card style={styles.card}>
           <Text variant="label">Common mistakes</Text>
@@ -205,7 +191,7 @@ function MetaPill({ label }: { label: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -264,4 +250,4 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.brandPrimary,
   },
-});
+}));

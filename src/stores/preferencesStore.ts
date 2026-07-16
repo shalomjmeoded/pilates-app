@@ -39,7 +39,8 @@ export const usePreferencesStore = create<PreferencesState>((set) => ({
 
   setTheme(theme) {
     preferencesStorage.setTheme(theme);
-    const { applyColorScheme } = require('@/theme/tokens') as typeof import('@/theme/tokens');
+    const { applyColorScheme } =
+      require('@/theme/tokens') as typeof import('@/theme/tokens');
     const { resolveColorScheme } =
       require('@/theme/resolveColorScheme') as typeof import('@/theme/resolveColorScheme');
     applyColorScheme(resolveColorScheme(theme));

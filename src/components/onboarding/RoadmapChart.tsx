@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
+import { LayoutChangeEvent, Pressable, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import Svg, {
   Circle,
@@ -13,7 +13,7 @@ import Svg, {
 
 import { Text } from '@/components/ui/Text';
 import type { RoadmapPoint } from '@/types/calculations';
-import { colors, metrics, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
 import { displayWeight } from '@/utils/units';
 import { selectionHaptic } from '@/utils/haptics';
 
@@ -258,7 +258,7 @@ export function RoadmapChart({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.sm,
   },
@@ -351,4 +351,4 @@ const styles = StyleSheet.create({
   weekChipTextActive: {
     color: colors.brandPrimary,
   },
-});
+}));
