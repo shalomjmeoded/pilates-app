@@ -10,13 +10,23 @@ export interface WeeklyCoachSummary {
   skippedExerciseCount: number;
   topSkippedExerciseNames: string[];
   goal: FitnessGoal;
+  /** Days in the review week with a weight log. */
+  weightLogDays?: number;
+  /** Days in the review week with calorie intake logged. */
+  nutritionLogDays?: number;
+  averageCalories?: number | null;
+  averageProteinG?: number | null;
 }
 
 export interface WeeklyCoachInsightContent {
   summary: string;
   wins: string[];
   focusForNextWeek: string;
+  /** Genuine feedback on food choices and calorie/protein patterns. */
   nutritionTip: string;
+  /** Genuine feedback on weight trend and logging rhythm. */
+  weightTip: string;
+  /** Genuine feedback on how sessions/exercises went. */
   workoutTip: string;
   source: 'ai' | 'local';
   generatedAt: string;

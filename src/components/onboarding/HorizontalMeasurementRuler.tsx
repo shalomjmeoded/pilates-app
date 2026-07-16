@@ -1,17 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import {
-  FlatList,
-  ListRenderItemInfo,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { FlatList, ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, Pressable, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { Text } from '@/components/ui/Text';
-import { MOTION, colors, metrics, radius, spacing } from '@/theme';
+import { MOTION, colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
 import { kgToLb } from '@/utils/units';
 
@@ -241,7 +233,7 @@ export function HorizontalMeasurementRuler({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   container: {
     gap: spacing.sm,
   },
@@ -326,4 +318,4 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
   },
-});
+}));

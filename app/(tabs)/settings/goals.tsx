@@ -10,7 +10,7 @@ import { FITNESS_GOAL_OPTIONS, TRAJECTORY_OPTIONS } from '@/onboarding/constants
 import { parsePositiveNumber } from '@/onboarding/helpers';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import type { Profile } from '@/types/profile';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 import { kgToLb, lbToKg } from '@/utils/units';
 
 export default function GoalsSettingsScreen() {
@@ -96,11 +96,11 @@ export default function GoalsSettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   section: {
     marginTop: spacing.xs,
   },
   error: {
     color: colors.brandPrimary,
   },
-});
+}));

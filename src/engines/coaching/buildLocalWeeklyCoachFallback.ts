@@ -10,7 +10,7 @@ function buildWins(summary: WeeklyCoachSummary): string[] {
 
   if (summary.workoutsPlanned > 0 && summary.workoutsCompleted >= summary.workoutsPlanned) {
     wins.push(
-      `You honored every planned session — ${summary.workoutsCompleted} of ${summary.workoutsCompleted}. That is real commitment.`,
+      `You honored every planned session — ${summary.workoutsCompleted} of ${summary.workoutsPlanned}. That is real commitment.`,
     );
   } else if (summary.workoutsCompleted >= 3) {
     wins.push(`You moved ${summary.workoutsCompleted} times — consistency like that compounds.`);
@@ -36,7 +36,7 @@ function buildWins(summary: WeeklyCoachSummary): string[] {
 }
 
 /**
- * Data-driven, empowering insight used whenever the AI coach is unavailable.
+ * Data-driven insight used only if the AI coach is unavailable.
  */
 export function buildLocalWeeklyCoachFallback(
   summary: WeeklyCoachSummary,
@@ -56,6 +56,22 @@ export function buildLocalWeeklyCoachFallback(
       'You ran a bit over target — small portion tweaks work better than skipping meals.';
   }
 
+  let weightTip =
+    'Keep a steady weigh-in rhythm a few mornings a week so the trend stays clear.';
+  if ((summary.weightLogDays ?? 0) < 3) {
+    weightTip =
+      'Weight logs were sparse — aim for 4–5 morning weigh-ins next week so we can coach the trend, not one noisy day.';
+  } else if (summary.weightTrend === 'down' && summary.goal === 'lose_weight') {
+    weightTip =
+      'Your trend is gently down — protect sleep and protein so the drop stays sustainable.';
+  } else if (summary.weightTrend === 'up' && summary.goal === 'lose_weight') {
+    weightTip =
+      'Weight ticked up — check sodium, cycle timing, and weekend calories before changing the plan.';
+  } else if (summary.weightTrend === 'stable') {
+    weightTip =
+      'Weight held steady — that is useful data. Pair it with session consistency before chasing a bigger deficit.';
+  }
+
   let workoutTip =
     'Warm up gently, move with intention, and leave a little energy for tomorrow.';
   if (summary.topSkippedExerciseNames.length > 0) {
@@ -63,6 +79,11 @@ export function buildLocalWeeklyCoachFallback(
   } else if (summary.workoutsCompleted < 2) {
     workoutTip =
       'Momentum beats intensity right now — book one 20-minute session you know you can finish.';
+  } else if (
+    summary.workoutsPlanned > 0 &&
+    summary.workoutsCompleted < summary.workoutsPlanned
+  ) {
+    workoutTip = `You finished ${summary.workoutsCompleted} of ${summary.workoutsPlanned} sessions — protect one non‑negotiable slot next week and keep rest days intentional.`;
   }
 
   let focusForNextWeek = `Choose one kind, repeatable habit that supports your ${goalLabel(summary.goal)} goal.`;
@@ -86,6 +107,7 @@ export function buildLocalWeeklyCoachFallback(
     wins,
     focusForNextWeek,
     nutritionTip,
+    weightTip,
     workoutTip,
     source: 'local',
     generatedAt: new Date().toISOString(),

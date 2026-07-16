@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
 import { BetterMeBrandMark } from '@/components/ui/BetterMeBrandMark';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 interface ScreenProps {
   children: ReactNode;
@@ -44,7 +44,9 @@ export function Screen({
           <View style={styles.header}>
             {title ? (
               <View style={styles.titleRow}>
-                <Text variant="h1" style={styles.title}>{title}</Text>
+                <Text variant="h1" style={styles.title} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8}>
+                  {title}
+                </Text>
                 {showBrandMark ? <BetterMeBrandMark compact showDescriptor /> : null}
               </View>
             ) : null}
@@ -61,7 +63,7 @@ export function Screen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -106,4 +108,4 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: spacing.xs,
   },
-});
+}));

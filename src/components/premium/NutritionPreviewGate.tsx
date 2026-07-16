@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { CompactMacroSummary } from '@/components/nutrition/CompactMacroSummary';
 import { RemainingCaloriesHero } from '@/components/nutrition/RemainingCaloriesHero';
@@ -9,7 +9,7 @@ import { Text } from '@/components/ui/Text';
 import { getOrCreateNutritionTargets } from '@/db/repositories/nutritionRepository';
 import { formatPlanDate } from '@/engines/workout';
 import { usePremium } from '@/hooks/usePremium';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import type { NutritionTargets } from '@/types/nutrition';
 
 const SAMPLE_TARGETS: NutritionTargets = {
@@ -72,7 +72,7 @@ export function NutritionPreviewGate({ onStartTrial, onRestore }: NutritionPrevi
       <View style={styles.intro}>
         <Text variant="section">Nourishment tailored to you</Text>
         <Text variant="bodyMuted">
-          Your macro targets are already calculated. Unlock BetterMe to log meals and see your day unfold.
+          Your macro targets are already calculated. Unlock Pilates at Home to log meals and see your day unfold.
         </Text>
       </View>
 
@@ -98,7 +98,7 @@ export function NutritionPreviewGate({ onStartTrial, onRestore }: NutritionPrevi
             <View style={styles.aiCopy}>
               <Text variant="h2">AI meal logging</Text>
               <Text variant="bodyMuted">
-                Describe or photograph a meal — BetterMe estimates calories and macros in seconds.
+                Describe or photograph a meal — Pilates at Home estimates calories and macros in seconds.
               </Text>
             </View>
           </View>
@@ -118,7 +118,7 @@ export function NutritionPreviewGate({ onStartTrial, onRestore }: NutritionPrevi
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   scroll: {
     gap: spacing.md,
     paddingBottom: spacing.xl,
@@ -182,4 +182,4 @@ const styles = StyleSheet.create({
   aiSampleResult: {
     color: colors.brandPrimary,
   },
-});
+}));

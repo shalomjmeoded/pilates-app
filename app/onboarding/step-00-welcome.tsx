@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Pressable, View, useWindowDimensions } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,7 +9,7 @@ import { Text } from '@/components/ui/Text';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { captureProductEvent, resetOnboardingAnalyticsSession } from '@/services/analytics/analyticsCore';
 
 const WELCOME_SHOWCASE_IMAGE = require('../../assets/onboarding/welcome-showcase-v2.png');
@@ -38,7 +38,7 @@ export default function Step00Welcome() {
   return (
     <OnboardingShell
       step={step}
-      title={returning ? 'Welcome back to BetterMe' : 'Welcome to BetterMe'}
+      title={returning ? 'Welcome back to Pilates at Home' : 'Welcome to Pilates at Home'}
       subtitle={
         returning
           ? 'Your saved plan is ready for a quick review.'
@@ -47,7 +47,7 @@ export default function Step00Welcome() {
       showBack={false}
       hideFooter
       scrollEnabled={false}
-      titleLines={2}
+      titleLines={3}
       phaseLabel="Welcome"
       centerBody
       centerIntro
@@ -88,7 +88,7 @@ export default function Step00Welcome() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   screen: {
     flex: 1,
     alignItems: 'center',
@@ -134,4 +134,4 @@ const styles = StyleSheet.create({
     color: colors.brandPrimary,
     fontFamily: 'PlusJakartaSans_600SemiBold',
   },
-});
+}));

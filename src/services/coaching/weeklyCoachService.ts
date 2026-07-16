@@ -13,13 +13,16 @@ import {
   getWeeklyCoachInsight,
   upsertWeeklyCoachInsight,
 } from '@/db/repositories/coachingRepository';
-import { hasPremiumAccess } from '@/engines/monetization/premiumAccess';
+import { hasPremiumAccess, trainingFrequencyToWorkoutsPerWeek } from '@/engines/monetization/premiumAccess';
 import { buildWeeklyCoachSummary } from '@/engines/coaching/buildWeeklyCoachSummary';
+import {
+  computeWeeklyCoachReadiness,
+  type WeeklyCoachReadiness,
+} from '@/engines/coaching/weeklyCoachReadiness';
 import {
   getPreviousWeekStartDate,
   getWeekEndDate,
   getWeekStartDate,
-  isWeekStartDay,
 } from '@/engines/coaching/weekStart';
 import { aiFacade } from '@/services/ai';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
@@ -41,29 +44,66 @@ async function resolveSkippedExerciseNames(withinDays: number): Promise<string[]
   return names;
 }
 
-export async function loadWeeklyCoachSummary(): Promise<WeeklyCoachSummary> {
+async function loadReviewWeekContext(): Promise<{
+  summary: WeeklyCoachSummary;
+  readiness: WeeklyCoachReadiness;
+}> {
   const profile = await getProfile();
   const reviewWeekStart = getPreviousWeekStartDate();
   const reviewWeekEnd = getWeekEndDate(reviewWeekStart);
 
   const [nutritionRows, weightLogs, skippedExerciseNames, plannedDates, completedDates] =
     await Promise.all([
-      getRecentDailyTotals(7),
+      getRecentDailyTotals(21),
       getAllWeightLogs(),
-      resolveSkippedExerciseNames(7),
+      resolveSkippedExerciseNames(14),
       getPlannedWorkoutDatesBetween(reviewWeekStart, reviewWeekEnd),
       getCompletedWorkoutDatesBetween(reviewWeekStart, reviewWeekEnd),
     ]);
 
-  return buildWeeklyCoachSummary({
-    nutritionRows,
+  const weekNutrition = nutritionRows.filter(
+    (row) => row.mealDate >= reviewWeekStart && row.mealDate <= reviewWeekEnd,
+  );
+  const weekWeights = weightLogs.filter((log) => {
+    const day = log.loggedAt.slice(0, 10);
+    return day >= reviewWeekStart && day <= reviewWeekEnd;
+  });
+
+  const frequencyPlanned = profile
+    ? trainingFrequencyToWorkoutsPerWeek(profile.trainingFrequency)
+    : 0;
+  const workoutsPlanned = plannedDates.length > 0 ? plannedDates.length : frequencyPlanned;
+
+  const readiness = computeWeeklyCoachReadiness({
+    reviewWeekStart,
+    reviewWeekEnd,
+    weightLogs: weekWeights,
+    nutritionRows: weekNutrition,
     workoutsCompleted: completedDates.length,
-    workoutsPlanned: plannedDates.length,
-    weightLogs,
+    workoutsPlanned,
+  });
+
+  const summary = buildWeeklyCoachSummary({
+    nutritionRows: weekNutrition,
+    workoutsCompleted: completedDates.length,
+    workoutsPlanned,
+    weightLogs: weekWeights,
     skippedExerciseNames,
     goal: profile?.fitnessGoal ?? 'maintain',
     referenceDate: parseISO(`${reviewWeekStart}T12:00:00`),
   });
+
+  return { summary, readiness };
+}
+
+export async function loadWeeklyCoachSummary(): Promise<WeeklyCoachSummary> {
+  const { summary } = await loadReviewWeekContext();
+  return summary;
+}
+
+export async function loadWeeklyCoachReadiness(): Promise<WeeklyCoachReadiness> {
+  const { readiness } = await loadReviewWeekContext();
+  return readiness;
 }
 
 function toStoredInsight(
@@ -72,6 +112,7 @@ function toStoredInsight(
     wins: string[];
     focusForNextWeek: string;
     nutritionTip: string;
+    weightTip: string;
     workoutTip: string;
   },
   source: 'ai' | 'local',
@@ -98,7 +139,9 @@ function cachedMatchesSummary(
   }
   return (
     input.workoutsPlanned === summary.workoutsPlanned &&
-    input.workoutsCompleted === summary.workoutsCompleted
+    input.workoutsCompleted === summary.workoutsCompleted &&
+    input.calorieAdherencePercent === summary.calorieAdherencePercent &&
+    input.proteinAdherencePercent === summary.proteinAdherencePercent
   );
 }
 
@@ -106,24 +149,20 @@ export async function generateWeeklyCoachInsight(options?: {
   notify?: boolean;
 }): Promise<WeeklyCoachInsightContent> {
   const weekStart = getWeekStartDate();
-  const onWeekStart = isWeekStartDay();
 
-  if (!onWeekStart) {
-    const cachedEarly = await getCachedWeeklyCoachInsight();
-    if (cachedEarly) {
-      return cachedEarly;
-    }
+  const { summary, readiness } = await loadReviewWeekContext();
+
+  if (!readiness.unlocked) {
     throw new Error(
-      'Weekly coach unlocks on the first day of your week. You can change that day in Settings when available.',
+      `Weekly AI Coach unlocks at ${readiness.unlockThreshold}% logging. You’re at ${readiness.overallPercent}% — keep logging weight, meals, and sessions.`,
     );
   }
 
-  const summary = await loadWeeklyCoachSummary();
   const cached = await getCachedWeeklyCoachInsight();
   const row = cached ? await getWeeklyCoachInsight(weekStart) : null;
   const cachedInput = row?.payload.weeklyCoachInput;
 
-  if (cached && cachedMatchesSummary(cachedInput, summary)) {
+  if (cached && cached.source === 'ai' && cachedMatchesSummary(cachedInput, summary)) {
     return cached;
   }
 
@@ -131,7 +170,7 @@ export async function generateWeeklyCoachInsight(options?: {
   const premium = await getCurrentPremiumStatus();
 
   if (!hasPremiumAccess(premium)) {
-    throw new Error('Weekly AI coach requires BetterMe Premium.');
+    throw new Error('Weekly AI coach requires Pilates at Home Premium.');
   }
 
   let insight: WeeklyCoachInsightContent;
@@ -139,10 +178,9 @@ export async function generateWeeklyCoachInsight(options?: {
     const aiResult = await aiFacade.generateWeeklyCoach(summary);
     insight = toStoredInsight(aiResult, 'ai');
   } catch {
-    const { buildLocalWeeklyCoachFallback } = await import(
-      '@/engines/coaching/buildLocalWeeklyCoachFallback'
+    throw new Error(
+      'Your coach is ready, but AI feedback couldn’t be reached. Check your connection and try again.',
     );
-    insight = buildLocalWeeklyCoachFallback(summary);
   }
 
   if (adjustment) {

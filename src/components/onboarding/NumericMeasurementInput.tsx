@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, metrics, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
 import { fontFamily } from '@/theme/typography';
 
 interface NumericMeasurementInputProps {
@@ -51,7 +51,7 @@ export function NumericMeasurementInput({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.xs,
   },
@@ -88,4 +88,4 @@ const styles = StyleSheet.create({
   unitTogglePressed: {
     opacity: 0.9,
   },
-});
+}));

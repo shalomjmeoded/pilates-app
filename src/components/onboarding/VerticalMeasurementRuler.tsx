@@ -1,13 +1,8 @@
 import { useEffect, useRef } from 'react';
-import {
-  PanResponder,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { PanResponder, Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, metrics, radius, spacing } from '@/theme';
+import { colors, metrics, radius, spacing, createDynamicStyles } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
 import { cmToInches, formatFeetInches } from '@/utils/units';
 
@@ -196,7 +191,7 @@ export function VerticalMeasurementRuler({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   container: {
     gap: 12,
   },
@@ -324,4 +319,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+}));

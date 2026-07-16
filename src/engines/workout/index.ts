@@ -28,3 +28,21 @@ export {
   resolveExerciseSubstitution,
   validateLibraryReplacement,
 } from './exerciseSubstitution';
+export {
+  applySchedulePhase,
+  getOrCreateSchedulePhaseOffset,
+  getScheduledWorkoutDatesForWeek,
+  getWeekCalendarDates,
+  getWeekDates,
+  isScheduledWorkoutDay,
+  setSchedulePhaseFromDate,
+  weekDayOffset,
+  workoutDayIndexInWeek,
+  workoutDayOffsetsForCount,
+} from './weeklySchedule';
+export {
+  getDayScheduleOverride,
+  isEffectiveWorkoutDay,
+  setDayScheduleOverride,
+  type DayScheduleOverride,
+} from './dayScheduleOverride';

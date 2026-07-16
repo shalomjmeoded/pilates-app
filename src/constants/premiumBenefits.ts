@@ -1,4 +1,4 @@
-export const PAYWALL_TITLE = 'Your personalized BetterMe plan is ready.';
+export const PAYWALL_TITLE = 'Your personalized Pilates at Home plan is ready.';
 
 export const PAYWALL_SUBTITLE =
   'Everything you shared is woven into daily movement, nutrition, and coaching — designed for calm, sustainable progress.';

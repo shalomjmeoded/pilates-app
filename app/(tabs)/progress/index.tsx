@@ -1,15 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import {
-  FlatList,
-  ListRenderItemInfo,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { FlatList, ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, Pressable, View } from 'react-native';
 
 import {
   BmiTdeeCards,
@@ -42,7 +34,7 @@ import { useWeeklyCoach } from '@/hooks/useWeeklyCoach';
 import { useEncouragementStore } from '@/stores/encouragementStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { useProgressStore } from '@/stores/progressStore';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import type { ProgressDashboardData } from '@/types/progress';
 import { warmAiProxy } from '@/services/ai';
 
@@ -307,6 +299,7 @@ export default function ProgressScreen() {
           <View style={styles.sectionStack}>
             <WeeklyCoachInsightCard
               insight={weeklyCoach.insight}
+              readiness={weeklyCoach.readiness}
               isLoading={weeklyCoach.isLoading}
               error={weeklyCoach.error}
               highlighted={highlightWeeklyCoach}
@@ -444,7 +437,7 @@ export default function ProgressScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   list: {
     flex: 1,
   },
@@ -538,4 +531,4 @@ const styles = StyleSheet.create({
   detailsStack: {
     gap: spacing.sm,
   },
-});
+}));

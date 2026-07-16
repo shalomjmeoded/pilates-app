@@ -45,7 +45,7 @@ export function useExerciseSubstitution(planDate: string) {
           .map((item) => item.id);
 
         if (!hasPremiumAccess(premium)) {
-          setError('Exercise substitutions require BetterMe Premium.');
+          setError('Exercise substitutions require Pilates at Home Premium.');
           return null;
         }
 

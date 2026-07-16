@@ -1,48 +1,52 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
 
+import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
-import { workoutStreakEncouragement } from '@/utils/encouragement';
 
-interface WorkoutCompletedBannerProps {
-  movementCount: number;
-  streakDays?: number;
+interface RestDayCardProps {
+  isToday?: boolean;
+  onAddWorkout?: () => void;
+  isAddingWorkout?: boolean;
 }
 
-export function WorkoutCompletedBanner({ movementCount, streakDays }: WorkoutCompletedBannerProps) {
-  const streakCopy = workoutStreakEncouragement(streakDays);
-
+export function RestDayCard({ isToday, onAddWorkout, isAddingWorkout }: RestDayCardProps) {
   return (
-    <View style={[styles.banner, shadows.card]}>
+    <View style={[styles.card, shadows.card]}>
       <View style={styles.iconWrap}>
-        <MaterialCommunityIcons name="heart-outline" size={28} color={colors.brandPrimary} />
+        <MaterialCommunityIcons name="spa-outline" size={28} color={colors.brandPrimary} />
       </View>
       <View style={styles.copy}>
         <Text variant="h2" style={styles.title}>
-          You showed up today
+          {isToday ? 'Rest day today' : 'Rest day'}
         </Text>
         <Text variant="bodyMuted" style={styles.message}>
-          {movementCount} movements complete — your body thanks you for the care.
-          {streakCopy
-            ? ` ${streakCopy.title} ${streakCopy.body}`
-            : streakDays && streakDays > 0
-              ? ` ${streakDays} day rhythm and counting.`
-              : ' Rest well and return when it feels right.'}
+          Recovery is part of the plan. Stretch lightly if you like, and come back strong on your next
+          workout day.
         </Text>
+        {onAddWorkout ? (
+          <Button
+            label={isAddingWorkout ? 'Adding workout…' : 'Add a workout today'}
+            variant="secondary"
+            onPress={onAddWorkout}
+            disabled={isAddingWorkout}
+          />
+        ) : null}
       </View>
     </View>
   );
 }
 
 const styles = createDynamicStyles(() => ({
-  banner: {
+  card: {
     flexDirection: 'row',
     gap: spacing.sm,
     backgroundColor: colors.surfaceRose,
     borderRadius: radius.hero,
     borderWidth: 1,
     borderColor: colors.borderStrong,
+    borderStyle: 'dashed',
     padding: spacing.sm,
     alignItems: 'flex-start',
   },
@@ -58,7 +62,7 @@ const styles = createDynamicStyles(() => ({
   },
   copy: {
     flex: 1,
-    gap: 4,
+    gap: spacing.xs,
   },
   title: {
     color: colors.textStrong,

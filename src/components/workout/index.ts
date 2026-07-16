@@ -9,6 +9,7 @@ export { WorkoutExitSheet } from './WorkoutExitSheet';
 export { WorkoutHeroCard } from './WorkoutHeroCard';
 export { FeedbackSelector, feedbackLabel } from './FeedbackSelector';
 export { WeekCalendarStrip, buildCompletedDatesSet } from './WeekCalendarStrip';
+export { RestDayCard } from './RestDayCard';
 export { ResumeWorkoutBanner } from './ResumeWorkoutBanner';
 export { WorkoutStreakCard } from './WorkoutStreakCard';
 export { WorkoutCompletedBanner } from './WorkoutCompletedBanner';

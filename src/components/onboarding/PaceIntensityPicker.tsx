@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -9,7 +9,7 @@ import Animated, {
 
 import { Text } from '@/components/ui/Text';
 import { PACE_OPTIONS } from '@/onboarding/constants';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import type { Pace } from '@/types/profile';
 import { formatPacePercent, paceToPercent } from '@/utils/pace';
 
@@ -153,7 +153,7 @@ export function PaceIntensityPicker({ value, onChange }: PaceIntensityPickerProp
 
 const THUMB_SIZE = 28;
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   container: {
     gap: spacing.sm,
   },
@@ -269,4 +269,4 @@ const styles = StyleSheet.create({
   chipLabelSelected: {
     color: colors.brandPrimary,
   },
-});
+}));

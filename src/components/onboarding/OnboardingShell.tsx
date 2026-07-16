@@ -21,7 +21,7 @@ import { Text } from '@/components/ui/Text';
 import { BetterMeBrandMark } from '@/components/ui/BetterMeBrandMark';
 import { ONBOARDING_TOTAL_STEPS } from '@/onboarding/constants';
 import { getOnboardingPhase, getOnboardingPhaseIndex } from '@/onboarding/stepCopy';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { lightImpactHaptic } from '@/utils/haptics';
 
 interface OnboardingShellProps {
@@ -272,7 +272,7 @@ export function OnboardingShell({
                     ]}
                     numberOfLines={titleLines}
                     adjustsFontSizeToFit
-                    minimumFontScale={0.82}
+                    minimumFontScale={0.72}
                   >
                     {title}
                   </Text>
@@ -329,7 +329,7 @@ export function OnboardingShell({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -552,9 +552,9 @@ const styles = StyleSheet.create({
   nextDisabledReason: {
     textAlign: 'center',
   },
-});
+}));
 
-const headerAccessoryLayerStyles = StyleSheet.create({
+const headerAccessoryLayerStyles = createDynamicStyles(() => ({
   front: {
     width: 48,
     height: 48,
@@ -584,7 +584,7 @@ const headerAccessoryLayerStyles = StyleSheet.create({
     transform: [{ rotate: '10deg' }],
     zIndex: 1,
   },
-});
+}));
 
 const headerAccessoryLayerStyleList = [
   headerAccessoryLayerStyles.front,
@@ -592,7 +592,7 @@ const headerAccessoryLayerStyleList = [
   headerAccessoryLayerStyles.backRight,
 ];
 
-const headerAccessoryBackgroundLayerStyles = StyleSheet.create({
+const headerAccessoryBackgroundLayerStyles = createDynamicStyles(() => ({
   front: {
     width: 58,
     height: 58,
@@ -622,7 +622,7 @@ const headerAccessoryBackgroundLayerStyles = StyleSheet.create({
     transform: [{ rotate: '10deg' }],
     zIndex: 1,
   },
-});
+}));
 
 const headerAccessoryBackgroundLayerStyleList = [
   headerAccessoryBackgroundLayerStyles.front,

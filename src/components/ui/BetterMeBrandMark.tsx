@@ -1,7 +1,7 @@
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius } from '@/theme';
+import { colors, radius, createDynamicStyles } from '@/theme';
 
 const BETTERME_ICON = require('../../../assets/icon.png');
 
@@ -20,10 +20,10 @@ export function BetterMeBrandMark({
 
   return (
     <View
-      style={styles.container}
+      style={[styles.container, compact && styles.containerCompact]}
       accessible
       accessibilityRole="image"
-      accessibilityLabel={showDescriptor ? 'BetterMe: Pilates Coach' : 'BetterMe'}
+      accessibilityLabel={showDescriptor ? 'Pilates at Home: Daily Coach' : 'Pilates at Home'}
     >
       <Image
         source={BETTERME_ICON}
@@ -31,13 +31,19 @@ export function BetterMeBrandMark({
         style={[styles.icon, { width: size, height: size }]}
       />
       {showWordmark ? (
-        <View style={styles.wordmarkStack}>
-          <Text variant="label" style={[styles.wordmark, compact && styles.wordmarkCompact]}>
-            {showDescriptor ? 'BetterMe:' : 'BetterMe'}
+        <View style={[styles.wordmarkStack, compact && styles.wordmarkStackCompact]}>
+          <Text
+            variant="label"
+            style={[styles.wordmark, compact && styles.wordmarkCompact]}
+            numberOfLines={compact ? 2 : 1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.78}
+          >
+            {showDescriptor ? 'Pilates at Home:' : 'Pilates at Home'}
           </Text>
           {showDescriptor ? (
             <Text variant="caption" style={styles.descriptor} numberOfLines={1}>
-              Pilates Coach
+              Daily Coach
             </Text>
           ) : null}
         </View>
@@ -46,29 +52,38 @@ export function BetterMeBrandMark({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 7,
-    flexShrink: 0,
+    flexShrink: 1,
+    minWidth: 0,
+  },
+  containerCompact: {
+    maxWidth: 148,
   },
   icon: {
     borderRadius: radius.square,
     borderWidth: 1,
     borderColor: colors.borderLight,
     backgroundColor: colors.surfaceHero,
+    flexShrink: 0,
   },
   wordmark: {
     color: colors.brandPrimary,
   },
   wordmarkStack: {
     flexShrink: 1,
+    minWidth: 0,
     gap: 0,
   },
+  wordmarkStackCompact: {
+    maxWidth: 118,
+  },
   wordmarkCompact: {
-    fontSize: 11,
-    lineHeight: 13,
+    fontSize: 10,
+    lineHeight: 12,
   },
   descriptor: {
     color: colors.textMuted,
@@ -76,4 +91,4 @@ const styles = StyleSheet.create({
     lineHeight: 11,
     letterSpacing: 0,
   },
-});
+}));

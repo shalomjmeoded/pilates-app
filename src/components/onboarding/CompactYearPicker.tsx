@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import {
   getBirthYearBounds,
   isBirthYearWithinSupportedAge,
 } from '@/onboarding/helpers';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { selectionHaptic } from '@/utils/haptics';
 
 const { minYear: MIN_YEAR, maxYear: MAX_YEAR } = getBirthYearBounds();
@@ -107,7 +107,7 @@ export function CompactYearPicker({ value, onChange }: CompactYearPickerProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: spacing.sm,
   },
@@ -165,4 +165,4 @@ const styles = StyleSheet.create({
   actionKeyText: {
     color: colors.brandPrimary,
   },
-});
+}));

@@ -56,6 +56,7 @@ export interface WorkoutDayView {
   isReadOnly: boolean;
   isToday: boolean;
   isFuture: boolean;
+  isRestDay?: boolean;
   planRefreshed?: boolean;
   partialLibraryMatch?: boolean;
 }

@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 
 import {
   PAYWALL_OUTCOME_BENEFITS,
@@ -10,10 +10,10 @@ import {
 } from '@/constants/premiumBenefits';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
-import { colors, radius, shadows, spacing } from '@/theme';
+import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import type { PremiumPlanId } from '@/types/premium';
 
-const PRIVACY_POLICY_URL = 'https://clearday-seven.vercel.app/betterme';
+const PRIVACY_POLICY_URL = 'https://clearday-seven.vercel.app/pilates-at-home';
 const TERMS_OF_USE_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
 
 export interface PaywallOutcomeSummary {
@@ -310,7 +310,7 @@ function PlanOption({ title, price, detail, badge, selected, onPress, compact = 
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   container: {
     gap: spacing.sm,
   },
@@ -639,12 +639,12 @@ const styles = StyleSheet.create({
   legalSeparator: {
     color: colors.textMuted,
   },
-});
+}));
 
 const benefitIconColors = ['#2F6FDB', '#24A35A', '#E1A700'];
 const trustChipIconColors = ['#24A35A', '#2F6FDB', '#E1A700'];
 
-const benefitAccentStyleMap = StyleSheet.create({
+const benefitAccentStyleMap = createDynamicStyles(() => ({
   blue: {
     backgroundColor: '#EAF2FF',
     borderColor: '#BBD4FF',
@@ -657,7 +657,7 @@ const benefitAccentStyleMap = StyleSheet.create({
     backgroundColor: '#FFF7D7',
     borderColor: '#F4DC7D',
   },
-});
+}));
 
 const benefitAccentStyleList = [
   benefitAccentStyleMap.blue,
@@ -665,7 +665,7 @@ const benefitAccentStyleList = [
   benefitAccentStyleMap.yellow,
 ];
 
-const trustChipStyleMap = StyleSheet.create({
+const trustChipStyleMap = createDynamicStyles(() => ({
   green: {
     backgroundColor: '#ECF9F1',
     borderColor: '#BFE8CD',
@@ -678,7 +678,7 @@ const trustChipStyleMap = StyleSheet.create({
     backgroundColor: '#FFF7D7',
     borderColor: '#F4DC7D',
   },
-});
+}));
 
 const trustChipStyleList = [
   trustChipStyleMap.green,

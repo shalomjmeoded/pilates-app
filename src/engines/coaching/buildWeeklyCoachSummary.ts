@@ -47,6 +47,21 @@ export interface BuildWeeklyCoachSummaryInput {
 export function buildWeeklyCoachSummary(
   input: BuildWeeklyCoachSummaryInput,
 ): WeeklyCoachSummary {
+  const loggedNutrition = input.nutritionRows.filter((row) => row.caloriesConsumed > 0);
+  const averageCalories =
+    loggedNutrition.length > 0
+      ? Math.round(
+          loggedNutrition.reduce((sum, row) => sum + row.caloriesConsumed, 0) /
+            loggedNutrition.length,
+        )
+      : null;
+  const averageProteinG =
+    loggedNutrition.length > 0
+      ? Math.round(
+          loggedNutrition.reduce((sum, row) => sum + row.proteinG, 0) / loggedNutrition.length,
+        )
+      : null;
+
   return {
     weekStart: getWeekStartDate(input.referenceDate),
     workoutsCompleted: input.workoutsCompleted,
@@ -65,5 +80,9 @@ export function buildWeeklyCoachSummary(
     skippedExerciseCount: input.skippedExerciseNames.length,
     topSkippedExerciseNames: input.skippedExerciseNames.slice(0, 3),
     goal: input.goal,
+    weightLogDays: new Set(input.weightLogs.map((log) => log.loggedAt.slice(0, 10))).size,
+    nutritionLogDays: loggedNutrition.length,
+    averageCalories,
+    averageProteinG,
   };
 }

@@ -9,7 +9,7 @@ import { Text } from '@/components/ui/Text';
 import { getProfile } from '@/db/repositories/profileRepository';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 export default function RebuildPlanScreen() {
   const router = useRouter();
@@ -60,7 +60,7 @@ export default function RebuildPlanScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   card: {
     gap: spacing.xs,
   },
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   error: {
     color: colors.brandPrimary,
   },
-});
+}));

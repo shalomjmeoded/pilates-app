@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Linking, StyleSheet } from 'react-native';
+import { Linking } from 'react-native';
 
 import { ReminderTimeRow, SettingsScreenShell } from '@/components/settings';
 import { Button } from '@/components/ui/Button';
@@ -13,7 +13,7 @@ import {
   syncAllReminders,
 } from '@/services/notifications/notificationService';
 import type { Reminder } from '@/types/settings';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, createDynamicStyles } from '@/theme';
 
 export default function NotificationsSettingsScreen() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
@@ -113,16 +113,16 @@ export default function NotificationsSettingsScreen() {
 
       {permissionDenied ? (
         <Text variant="bodyMuted" style={styles.denied}>
-          You can keep using BetterMe without notifications.
+          You can keep using Pilates at Home without notifications.
         </Text>
       ) : null}
     </SettingsScreenShell>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   denied: {
     color: colors.brandPrimary,
     lineHeight: 22,
   },
-});
+}));

@@ -57,7 +57,10 @@ export default function PlanAssumptionsScreen() {
   const { tdee, multiplier } = calculateTdee(bmr, profile.trainingFrequency);
 
   return (
-    <SettingsScreenShell title="Plan assumptions" subtitle="What BetterMe is using for your plan today.">
+    <SettingsScreenShell
+      title="Plan assumptions"
+      subtitle="What Pilates at Home is using for your plan today."
+    >
       <Card style={{ gap: spacing.xs }}>
         <Text variant="label">Goal</Text>
         <Text variant="body">{profile.fitnessGoal.replaceAll('_', ' ')}</Text>

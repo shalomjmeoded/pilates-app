@@ -32,6 +32,7 @@ export interface AiWeeklyCoachInsight {
   wins: string[];
   focusForNextWeek: string;
   nutritionTip: string;
+  weightTip: string;
   workoutTip: string;
 }
 

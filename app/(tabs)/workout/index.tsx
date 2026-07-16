@@ -5,6 +5,7 @@ import { Alert, FlatList, StyleSheet, View } from 'react-native';
 import {
   ChangeWorkoutSheet,
   ExerciseGridCard,
+  RestDayCard,
   ResumeWorkoutBanner,
   WeekCalendarStrip,
   WorkoutCompletedBanner,
@@ -16,7 +17,12 @@ import {
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { discardWorkoutSession, startWorkoutSession } from '@/db/repositories/workoutRepository';
-import { getCalendarDates } from '@/engines/workout';
+import { getProfile } from '@/db/repositories/profileRepository';
+import {
+  getCalendarDates,
+  isEffectiveWorkoutDay,
+  setDayScheduleOverride,
+} from '@/engines/workout';
 import {
   deriveWhyThisWorkout,
   deriveWorkoutFocusTitle,
@@ -27,6 +33,7 @@ import { useWorkoutDay } from '@/hooks/useWorkoutDay';
 import { usePremium } from '@/hooks/usePremium';
 import { useWorkoutStreak } from '@/hooks/useWorkoutStreak';
 import { useWorkoutStore } from '@/stores/workoutStore';
+import type { TrainingFrequency } from '@/types/profile';
 import type { WorkoutChangeRequest } from '@/types/workout';
 import { applyWorkoutChangeRequest } from '@/services/workout/applyWorkoutChangeRequest';
 import { warmAiProxy } from '@/services/ai';
@@ -44,6 +51,10 @@ export default function WorkoutScreen() {
   const selectedDate = useWorkoutStore((state) => state.selectedDate);
   const setSelectedDate = useWorkoutStore((state) => state.setSelectedDate);
   const calendarDates = useMemo(() => getCalendarDates(), []);
+  const [trainingFrequency, setTrainingFrequency] = useState<TrainingFrequency | null>(null);
+  const [scheduleRevision, setScheduleRevision] = useState(0);
+  const [isAddingWorkout, setIsAddingWorkout] = useState(false);
+
   const { data, isLoading, isRefreshing, errorCode, errorMessage, reload } =
     useWorkoutDay(selectedDate);
   const { completedDates, reload: reloadCalendar } = useWorkoutCalendarCompletion(calendarDates);
@@ -55,15 +66,35 @@ export default function WorkoutScreen() {
   const [changeError, setChangeError] = useState<string | null>(null);
 
   useEffect(() => {
+    void getProfile().then((profile) => {
+      setTrainingFrequency(profile?.trainingFrequency ?? null);
+    });
+  }, []);
+
+  useEffect(() => {
     if (hasAccess) {
       void warmAiProxy();
     }
   }, [hasAccess]);
 
+  const restDates = useMemo(() => {
+    if (!trainingFrequency) {
+      return new Set<string>();
+    }
+    const rest = new Set<string>();
+    for (const date of calendarDates) {
+      if (!isEffectiveWorkoutDay(date, trainingFrequency)) {
+        rest.add(date);
+      }
+    }
+    return rest;
+  }, [calendarDates, trainingFrequency, scheduleRevision]);
+
   const MIN_STARTABLE_MOVEMENTS = 9;
 
   const canStartWorkout =
     data?.isToday &&
+    !data.isRestDay &&
     !data.isReadOnly &&
     data.plan &&
     data.session?.status !== 'in_progress' &&
@@ -72,6 +103,7 @@ export default function WorkoutScreen() {
 
   const startUnavailableReason =
     data?.isToday &&
+    !data.isRestDay &&
     !data.isReadOnly &&
     data.plan &&
     data.session?.status !== 'in_progress' &&
@@ -130,6 +162,67 @@ export default function WorkoutScreen() {
       },
     ]);
   };
+
+  const handleAddWorkoutOnRestDay = () => {
+    if (!data?.isToday || !data.isRestDay) {
+      return;
+    }
+    Alert.alert(
+      'Add a workout today?',
+      'We’ll build a session for today. You can switch back to rest anytime.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Add workout',
+          onPress: () => {
+            void (async () => {
+              setIsAddingWorkout(true);
+              try {
+                setDayScheduleOverride(selectedDate, 'workout');
+                setScheduleRevision((value) => value + 1);
+                await reload();
+                await reloadCalendar();
+              } finally {
+                setIsAddingWorkout(false);
+              }
+            })();
+          },
+        },
+      ],
+    );
+  };
+
+  const handleTakeRestDay = () => {
+    if (!data?.isToday || data.isRestDay) {
+      return;
+    }
+    if (data.session?.status === 'completed' || data.session?.status === 'in_progress') {
+      return;
+    }
+    Alert.alert(
+      'Take a rest day?',
+      'Today becomes a rest day. You can add a workout again anytime.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Rest today',
+          onPress: () => {
+            setDayScheduleOverride(selectedDate, 'rest');
+            setScheduleRevision((value) => value + 1);
+            void reload();
+            void reloadCalendar();
+          },
+        },
+      ],
+    );
+  };
+
+  const canTakeRestDay =
+    Boolean(data?.isToday) &&
+    !data?.isRestDay &&
+    !data?.isReadOnly &&
+    data?.session?.status !== 'completed' &&
+    data?.session?.status !== 'in_progress';
 
   const confirmDiscardAndApplyChange = async () => {
     setIsApplyingChange(true);
@@ -198,6 +291,10 @@ export default function WorkoutScreen() {
     runApply();
   };
 
+  const showExerciseList = Boolean(
+    !errorMessage && data && !data.isRestDay && !data.isFuture && data.exercises.length > 0,
+  );
+
   const listHeader = (
     <View style={styles.headerStack}>
       <WeekCalendarStrip
@@ -205,6 +302,7 @@ export default function WorkoutScreen() {
         selectedDate={selectedDate}
         onSelectDate={setSelectedDate}
         completedDates={completedDates}
+        restDates={restDates}
       />
 
       {isRefreshing ? <Text variant="bodyMuted">Updating plan...</Text> : null}
@@ -213,7 +311,15 @@ export default function WorkoutScreen() {
         <WorkoutErrorState code={errorCode} message={errorMessage} onRetry={() => void reload()} />
       ) : null}
 
-      {!errorMessage && data?.session?.status === 'in_progress' && data.isToday ? (
+      {!errorMessage && data?.isRestDay ? (
+        <RestDayCard
+          isToday={data.isToday}
+          onAddWorkout={data.isToday ? handleAddWorkoutOnRestDay : undefined}
+          isAddingWorkout={isAddingWorkout}
+        />
+      ) : null}
+
+      {!errorMessage && data?.session?.status === 'in_progress' && data.isToday && !data.isRestDay ? (
         <ResumeWorkoutBanner
           exerciseLabel={`exercise ${(data.session.currentExerciseIndex ?? 0) + 1}`}
           onResume={() => router.push(`/(tabs)/workout/player/${data.session!.id}`)}
@@ -221,7 +327,7 @@ export default function WorkoutScreen() {
         />
       ) : null}
 
-      {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
+      {!errorMessage && data && !data.isRestDay && !data.isFuture && data.exercises.length > 0 ? (
         <>
           {data.session?.status === 'completed' && data.isToday ? (
             <WorkoutCompletedBanner
@@ -238,6 +344,7 @@ export default function WorkoutScreen() {
               canStart={Boolean(canStartWorkout)}
               startUnavailableReason={startUnavailableReason}
               onChangeWorkout={data.isToday && !data.isReadOnly ? openChangeSheet : undefined}
+              onTakeRestDay={canTakeRestDay ? handleTakeRestDay : undefined}
               onStart={() => {
                 requirePremium('start_workout', () => void handleStartWorkout());
               }}
@@ -246,14 +353,14 @@ export default function WorkoutScreen() {
         </>
       ) : null}
 
-      {!errorMessage && data?.isFuture ? (
+      {!errorMessage && data?.isFuture && !data.isRestDay ? (
         <WorkoutEmptyState
           title="Plan not available yet"
           message="Your personalized workout unlocks on this day. Check back then."
         />
       ) : null}
 
-      {!errorMessage && data?.isReadOnly && !data.isFuture ? (
+      {!errorMessage && data?.isReadOnly && !data.isFuture && !data.isRestDay ? (
         <WorkoutReadOnlyBanner
           message={
             data.session?.status === 'completed'
@@ -263,7 +370,7 @@ export default function WorkoutScreen() {
         />
       ) : null}
 
-      {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
+      {!errorMessage && data && !data.isRestDay && !data.isFuture && data.exercises.length > 0 ? (
         <Text variant="label" style={styles.sectionLabel}>
           Today&apos;s movements
         </Text>
@@ -272,10 +379,16 @@ export default function WorkoutScreen() {
   );
 
   return (
-    <Screen title="Workout" subtitle="Your daily movement, guided." isLoading={isLoading} loadingLabel="Loading your plan..." showBrandMark>
-      {!errorMessage && data && !data.isFuture && data.exercises.length > 0 ? (
+    <Screen
+      title="Workout"
+      subtitle="Your daily movement, guided."
+      isLoading={isLoading}
+      loadingLabel="Loading your plan..."
+      showBrandMark
+    >
+      {showExerciseList ? (
         <FlatList
-          data={data.exercises}
+          data={data!.exercises}
           keyExtractor={(item) => `${item.exerciseId}-${item.sortOrder}`}
           numColumns={2}
           columnWrapperStyle={styles.gridRow}
@@ -286,7 +399,7 @@ export default function WorkoutScreen() {
             <View style={styles.gridItem}>
               <ExerciseGridCard
                 item={item}
-                disabled={data.isReadOnly && data.session?.status !== 'completed'}
+                disabled={data!.isReadOnly && data!.session?.status !== 'completed'}
                 onPress={() => openExerciseDetail(item.exerciseId, item.sortOrder)}
               />
             </View>
@@ -296,7 +409,7 @@ export default function WorkoutScreen() {
         <View style={styles.fallback}>{listHeader}</View>
       )}
 
-      {!errorMessage && data && !data.isFuture && data.exercises.length === 0 ? (
+      {!errorMessage && data && !data.isRestDay && !data.isFuture && data.exercises.length === 0 ? (
         <WorkoutEmptyState
           title="No workout plan"
           message="We couldn’t find exercises for this day. Pull to refresh or try again."

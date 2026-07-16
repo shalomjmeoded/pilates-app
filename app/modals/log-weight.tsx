@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MealFormField } from '@/components/nutrition/MealFormField';
@@ -11,7 +11,7 @@ import { getWeightLogById, saveWeightLog, updateWeightLog } from '@/db/repositor
 import { parseWeightInput, validateWeightKg } from '@/engines/progress';
 import { useEncouragementStore } from '@/stores/encouragementStore';
 import { usePreferencesStore } from '@/stores/preferencesStore';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { weightLoggedEncouragement } from '@/utils/encouragement';
 import { kgToLb, lbToKg } from '@/utils/units';
 
@@ -158,7 +158,7 @@ export default function LogWeightModal() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -206,4 +206,4 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     marginTop: spacing.sm,
   },
-});
+}));

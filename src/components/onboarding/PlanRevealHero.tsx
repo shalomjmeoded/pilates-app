@@ -1,8 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Image, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Image, View, useWindowDimensions } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 const WORKOUT_PREVIEW = [
   {
@@ -188,7 +188,7 @@ function MacroPill({ label, value, icon, tone }: MacroPillProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   wrap: {
     gap: 7,
   },
@@ -405,9 +405,9 @@ const styles = StyleSheet.create({
     color: '#167A40',
     fontFamily: 'PlusJakartaSans_600SemiBold',
   },
-});
+}));
 
-const macroToneStyles = StyleSheet.create({
+const macroToneStyles = createDynamicStyles(() => ({
   blue: {
     backgroundColor: '#EAF2FF',
     borderColor: '#BBD4FF',
@@ -424,7 +424,7 @@ const macroToneStyles = StyleSheet.create({
     backgroundColor: '#F3EDF8',
     borderColor: '#D6C0E8',
   },
-});
+}));
 
 const macroIconColors = {
   blue: '#2F6FDB',

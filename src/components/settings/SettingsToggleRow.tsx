@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface SettingsToggleRowProps {
   label: string;
@@ -32,7 +32,7 @@ export function SettingsToggleRow({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   row: {
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.card,
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     marginTop: spacing.xs,
   },
-});
+}));

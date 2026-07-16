@@ -1,8 +1,8 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import type { ExerciseFeedback } from '@/types/exercise';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 const OPTIONS: Array<{ value: ExerciseFeedback; label: string }> = [
   { value: 'completed', label: 'Completed smoothly' },
@@ -48,7 +48,7 @@ export function feedbackLabel(feedback: ExerciseFeedback): string {
   return FEEDBACK_LABELS[feedback];
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   row: {
     gap: spacing.xs,
   },
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   chipTextSelected: {
     color: colors.brandPrimary,
   },
-});
+}));

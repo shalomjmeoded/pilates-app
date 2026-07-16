@@ -1,6 +1,6 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
@@ -16,7 +16,7 @@ import {
   PHYSIQUE_EXPERIMENTAL_NOTE,
 } from '@/engines/physique/physiqueAssessmentFlow';
 import { usePhysiqueAssessment } from '@/hooks/usePhysiqueAssessment';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 export default function PhysiqueAssessmentScreen() {
   const router = useRouter();
@@ -95,7 +95,7 @@ export default function PhysiqueAssessmentScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: {
     flex: 1,
     backgroundColor: colors.backgroundPrimary,
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.brandPrimary,
   },
-});
+}));

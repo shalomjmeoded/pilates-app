@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, FlatList, Pressable, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { format, parseISO } from 'date-fns';
 
@@ -15,7 +15,7 @@ import {
   searchWeightLogs,
 } from '@/db/repositories/weightLogRepository';
 import { usePreferencesStore } from '@/stores/preferencesStore';
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 import { displayWeight } from '@/utils/units';
 import type { WeightLog } from '@/types/progress';
 
@@ -116,7 +116,7 @@ export default function WeightHistoryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = createDynamicStyles(() => ({
   safeArea: { flex: 1, backgroundColor: colors.backgroundPrimary },
   container: { flex: 1, padding: spacing.sm, gap: spacing.sm },
   search: {
@@ -133,4 +133,4 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   deleteButton: { minHeight: 44, justifyContent: 'center', paddingHorizontal: spacing.sm },
   delete: { color: colors.brandPrimary },
-});
+}));

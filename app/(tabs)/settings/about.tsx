@@ -5,9 +5,12 @@ import { spacing, createDynamicStyles } from '@/theme';
 
 export default function AboutSettingsScreen() {
   return (
-    <SettingsScreenShell title="About" subtitle="BetterMe — movement, nutrition, reflection.">
+    <SettingsScreenShell
+      title="About"
+      subtitle="Pilates at Home: Daily Coach & Nutrition — movement, nutrition, reflection."
+    >
       <Card style={styles.card}>
-        <Text variant="h2">BetterMe</Text>
+        <Text variant="h2">Pilates at Home</Text>
         <Text variant="bodyMuted">Version 1.0.0</Text>
         <Text variant="bodyMuted" style={styles.copy}>
           A local-first wellness app for Pilates-inspired movement, thoughtful nutrition, and calm

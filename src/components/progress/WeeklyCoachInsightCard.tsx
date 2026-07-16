@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { LoadErrorState } from '@/components/ui/LoadErrorState';
 import { Text } from '@/components/ui/Text';
+import type { WeeklyCoachReadiness } from '@/engines/coaching/weeklyCoachReadiness';
 import { useDelayedLoadingMessage } from '@/hooks/useDelayedLoadingMessage';
 import type { WeeklyCoachInsightContent } from '@/types/coaching';
 import { colors, radius, spacing, createDynamicStyles } from '@/theme';
 
 interface WeeklyCoachInsightCardProps {
   insight: WeeklyCoachInsightContent | null;
+  readiness?: WeeklyCoachReadiness | null;
   isLoading?: boolean;
   error?: string | null;
   onGenerate: () => void;
@@ -22,6 +24,7 @@ interface WeeklyCoachInsightCardProps {
 
 export function WeeklyCoachInsightCard({
   insight,
+  readiness,
   isLoading = false,
   error,
   onGenerate,
@@ -31,6 +34,7 @@ export function WeeklyCoachInsightCard({
 }: WeeklyCoachInsightCardProps) {
   const [expanded, setExpanded] = useState(false);
   const loadingMessage = useDelayedLoadingMessage(isLoading);
+  const readinessLocked = Boolean(readiness && !readiness.unlocked);
 
   if (locked) {
     return (
@@ -64,8 +68,8 @@ export function WeeklyCoachInsightCard({
   }
 
   return (
-    <Card style={[styles.card, highlighted && styles.highlighted]}>
-      {insight ? (
+    <Card style={[styles.card, highlighted && styles.highlighted, readinessLocked && styles.cardDimmed]}>
+      {insight && !readinessLocked ? (
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={expanded ? 'Collapse weekly AI coach' : 'Expand weekly AI coach'}
@@ -100,13 +104,45 @@ export function WeeklyCoachInsightCard({
           <View style={styles.headerCopy}>
             <Text variant="label" style={styles.headerLabel}>Weekly AI coach</Text>
             <Text variant="bodyMuted">
-              Summary-only insights from your week — never your full meal or workout history.
+              {readinessLocked
+                ? 'Log weight, meals, and sessions to unlock a real coach review of last week.'
+                : 'Genuine AI coaching on your food, weight trend, and how sessions went.'}
             </Text>
           </View>
         </View>
       )}
 
-      {insight && expanded ? (
+      {readiness ? (
+        <View style={styles.readinessBlock}>
+          <View style={styles.readinessHeader}>
+            <Text variant="label" style={styles.sectionLabel}>
+              {readiness.unlocked
+                ? 'Coach unlocked'
+                : `Unlock at ${readiness.unlockThreshold}%`}
+            </Text>
+            <Text variant="h2" style={styles.readinessPercent}>
+              {readiness.overallPercent}%
+            </Text>
+          </View>
+          <View style={styles.progressTrack}>
+            <View
+              style={[
+                styles.progressFill,
+                {
+                  width: `${Math.min(100, readiness.overallPercent)}%`,
+                  backgroundColor: readiness.unlocked ? colors.success : colors.brandPrimary,
+                },
+              ]}
+            />
+          </View>
+          <Text variant="caption" style={styles.readinessHint}>
+            Last week · weight {readiness.weight.percent}% · meals {readiness.nutrition.percent}% ·
+            sessions {readiness.sessions.percent}%
+          </Text>
+        </View>
+      ) : null}
+
+      {insight && expanded && !readinessLocked ? (
         <View style={styles.section}>
           {insight.wins.length > 0 ? (
             <View style={styles.winsWrap}>
@@ -127,9 +163,15 @@ export function WeeklyCoachInsightCard({
           />
           <CoachGuidanceRow
             icon="food-apple-outline"
-            label="Nutrition"
+            label="Food choices"
             body={insight.nutritionTip}
             color={colors.accentWarm}
+          />
+          <CoachGuidanceRow
+            icon="scale-bathroom"
+            label="Weight"
+            body={insight.weightTip}
+            color={colors.brandSecondary}
           />
           {insight.targetAdjustmentSummary ? (
             <CoachGuidanceRow
@@ -141,7 +183,7 @@ export function WeeklyCoachInsightCard({
           ) : null}
           <CoachGuidanceRow
             icon="yoga"
-            label="Movement"
+            label="Sessions & exercises"
             body={insight.workoutTip}
             color={colors.accentCool}
           />
@@ -151,10 +193,10 @@ export function WeeklyCoachInsightCard({
         </View>
       ) : null}
 
-      {error ? (
+      {error && !readinessLocked ? (
         <LoadErrorState
           title="Couldn’t load coach summary"
-          message="The weekly summary did not load. Try refreshing it."
+          message={error}
           compact
           onRetry={onGenerate}
           retryLabel="Refresh"
@@ -168,10 +210,18 @@ export function WeeklyCoachInsightCard({
       ) : null}
 
       <Button
-        label={isLoading ? 'Loading...' : insight ? 'Refresh weekly summary' : 'Generate weekly summary'}
+        label={
+          isLoading
+            ? 'Loading...'
+            : readinessLocked
+              ? `Locked · ${readiness?.overallPercent ?? 0}% of ${readiness?.unlockThreshold ?? 70}%`
+              : insight
+                ? 'Refresh weekly summary'
+                : 'Generate weekly summary'
+        }
         variant="secondary"
         onPress={onGenerate}
-        disabled={isLoading}
+        disabled={isLoading || readinessLocked}
       />
     </Card>
   );
@@ -207,6 +257,9 @@ const styles = createDynamicStyles(() => ({
     borderWidth: 1,
     borderColor: colors.borderStrong,
     backgroundColor: colors.surfaceCanvas,
+  },
+  cardDimmed: {
+    opacity: 0.92,
   },
   highlighted: {
     borderColor: colors.brandPrimary,
@@ -274,6 +327,36 @@ const styles = createDynamicStyles(() => ({
   expandHint: {
     color: colors.brandPrimary,
     fontFamily: 'PlusJakartaSans_600SemiBold',
+  },
+  readinessBlock: {
+    gap: 6,
+    borderRadius: radius.square,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    backgroundColor: colors.surfaceMuted,
+    padding: spacing.sm,
+  },
+  readinessHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  readinessPercent: {
+    color: colors.brandPrimary,
+  },
+  readinessHint: {
+    color: colors.textMuted,
+    lineHeight: 18,
+  },
+  progressTrack: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.borderLight,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 4,
   },
   winsWrap: {
     gap: 6,
