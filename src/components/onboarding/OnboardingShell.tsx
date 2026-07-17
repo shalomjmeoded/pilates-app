@@ -443,22 +443,16 @@ const styles = createDynamicStyles(() => ({
   },
   titleContrastWrap: {
     alignSelf: 'flex-start',
-    overflow: 'hidden',
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: 'rgba(205, 190, 178, 0.52)',
-    backgroundColor: 'rgba(253, 252, 250, 0.82)',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
+    overflow: 'visible',
   },
   titleContrastCentered: {
     alignSelf: 'center',
   },
   titleContrast: {
     paddingRight: 0,
-    textShadowColor: 'rgba(253, 252, 250, 0.85)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
+    textShadowColor: 'rgba(253, 252, 250, 1)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8,
   },
   titleCentered: {
     paddingRight: 0,

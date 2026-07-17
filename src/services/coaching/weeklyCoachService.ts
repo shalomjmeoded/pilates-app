@@ -25,6 +25,7 @@ import {
   getWeekStartDate,
 } from '@/engines/coaching/weekStart';
 import { aiFacade } from '@/services/ai';
+import { buildLocalWeeklyCoachFallback } from '@/engines/coaching/buildLocalWeeklyCoachFallback';
 import { getCurrentPremiumStatus } from '@/services/monetization/currentPremiumStatus';
 import { notifyWeeklyCoachReady } from '@/services/notifications/notificationService';
 import { ensureWeeklyTargetAdjustment } from '@/services/coaching/weeklyTargetAdjustmentService';
@@ -177,10 +178,9 @@ export async function generateWeeklyCoachInsight(options?: {
   try {
     const aiResult = await aiFacade.generateWeeklyCoach(summary);
     insight = toStoredInsight(aiResult, 'ai');
-  } catch {
-    throw new Error(
-      'Your coach is ready, but AI feedback couldn’t be reached. Check your connection and try again.',
-    );
+  } catch (error) {
+    console.warn('[Pilates at Home] AI coach unavailable; using local coach fallback.', error);
+    insight = buildLocalWeeklyCoachFallback(summary);
   }
 
   if (adjustment) {

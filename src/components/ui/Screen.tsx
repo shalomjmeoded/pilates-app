@@ -47,7 +47,11 @@ export function Screen({
                 <Text variant="h1" style={styles.title} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8}>
                   {title}
                 </Text>
-                {showBrandMark ? <BetterMeBrandMark compact showDescriptor /> : null}
+                {showBrandMark ? (
+                  <View style={styles.brandMarkWrap}>
+                    <BetterMeBrandMark />
+                  </View>
+                ) : null}
               </View>
             ) : null}
             {subtitle ? (
@@ -91,6 +95,11 @@ const styles = createDynamicStyles(() => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: spacing.xs,
+  },
+  brandMarkWrap: {
+    width: 150,
+    flexShrink: 0,
+    alignItems: 'flex-end',
   },
   subtitle: {
     marginBottom: spacing.xs,

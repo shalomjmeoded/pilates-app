@@ -1,4 +1,4 @@
-/** BetterMe palettes — wellness default, Golden Mode, and Pride. */
+/** Pilates at Home palettes — wellness default, Golden Mode, and Pride. */
 
 /**
  * Default wellness palette — premium, mature, women-friendly Pilates identity.

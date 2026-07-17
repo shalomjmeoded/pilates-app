@@ -36,7 +36,7 @@ export function deriveWhyThisWorkout(exercises: WorkoutPlanExerciseDetail[]): st
 
 export function estimateWorkoutMinutes(input: number | WorkoutPlanExerciseDetail[]): number {
   if (typeof input === 'number') {
-    return Math.max(12, Math.round(input * 2.2));
+    return Math.max(12, Math.round(input * 1.7));
   }
 
   if (input.length === 0) {
@@ -46,9 +46,9 @@ export function estimateWorkoutMinutes(input: number | WorkoutPlanExerciseDetail
   const totalSeconds = input.reduce((sum, item) => {
     const activeSecondsPerSet = item.holdSeconds
       ? item.holdSeconds
-      : Math.max(1, item.reps ?? 8) * 4;
-    const betweenSetRest = Math.max(0, item.sets - 1) * 18;
-    return sum + activeSecondsPerSet * item.sets + betweenSetRest + 15;
+      : Math.max(1, item.reps ?? 8) * 2.2;
+    const betweenSetRest = Math.max(0, item.sets - 1) * 6;
+    return sum + activeSecondsPerSet * item.sets + betweenSetRest + 5;
   }, 0);
 
   return Math.max(8, Math.round(totalSeconds / 60));

@@ -131,7 +131,15 @@ function MetaChip({ icon, label }: { icon: keyof typeof MaterialCommunityIcons.g
   return (
     <View style={styles.chip}>
       <MaterialCommunityIcons name={icon} size={16} color={colors.brandPrimary} />
-      <Text variant="caption">{label}</Text>
+      <Text
+        variant="caption"
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.86}
+        style={styles.chipText}
+      >
+        {label}
+      </Text>
     </View>
   );
 }
@@ -192,19 +200,26 @@ const styles = createDynamicStyles(() => ({
   },
   metaRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    alignItems: 'center',
     gap: spacing.xs,
   },
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    justifyContent: 'center',
+    flex: 1,
+    minWidth: 0,
+    gap: 4,
     backgroundColor: colors.surfaceCanvas,
     borderRadius: radius.pill,
-    paddingHorizontal: spacing.sm,
+    paddingHorizontal: spacing.xs,
     paddingVertical: 6,
     borderWidth: 1,
     borderColor: colors.borderLight,
+  },
+  chipText: {
+    flexShrink: 1,
+    textAlign: 'center',
   },
   streakRow: {
     flexDirection: 'row',

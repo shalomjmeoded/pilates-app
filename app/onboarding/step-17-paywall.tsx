@@ -11,7 +11,6 @@ import { useFinishOnboarding } from '@/hooks/useFinishOnboarding';
 import { useOnboardingNavigation } from '@/hooks/useOnboardingNavigation';
 import { usePremium } from '@/hooks/usePremium';
 import { deriveWeightTrajectory } from '@/onboarding/deriveWeightTrajectory';
-import { isDevPremiumBypassEnabled } from '@/services/monetization/devPremiumBypass';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
 import {
   scheduleOnboardingPaywallNudge,
@@ -106,18 +105,11 @@ function buildPaywallOutcome(
 export default function Step17Paywall() {
   const { step, goBack } = useOnboardingNavigation(15);
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
-  const { beginFreeTrial, restore, hydrate } = usePremium();
+  const { beginFreeTrial, restore } = usePremium();
   const draft = useOnboardingStore((state) => state.draft);
   const weightUnit = usePreferencesStore((state) => state.preferences.units.weight);
   const [actionError, setActionError] = useState<string | null>(null);
   const outcome = buildPaywallOutcome(draft, weightUnit);
-  const showDevBypass = isDevPremiumBypassEnabled();
-
-  useEffect(() => {
-    if (showDevBypass) {
-      void hydrate();
-    }
-  }, [hydrate, showDevBypass]);
 
   useEffect(() => {
     if (!rebuildMode) {
@@ -194,16 +186,6 @@ export default function Step17Paywall() {
           onStartTrial={(plan) => void unlockPlan(() => beginFreeTrial(plan))}
           onRestore={() => void unlockPlan(restore)}
         />
-        {showDevBypass ? (
-          <Button
-            label={isSubmitting ? 'Continuing...' : 'Continue without purchase (dev)'}
-            variant="secondary"
-            onPress={() => void unlockPlan(async () => {
-              await hydrate();
-            })}
-            disabled={isSubmitting}
-          />
-        ) : null}
         {isSubmitting ? <Text variant="bodyMuted">Unlocking your plan...</Text> : null}
         {actionError || error ? (
           <Text variant="body" style={styles.error}>

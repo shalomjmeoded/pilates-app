@@ -37,6 +37,14 @@ describe('estimateWorkoutMinutes', () => {
     expect(estimateWorkoutMinutes(holds)).toBeGreaterThan(estimateWorkoutMinutes(repetitions));
   });
 
+  it('keeps a standard nine-movement session close to fifteen minutes', () => {
+    const standard = Array.from({ length: 9 }, (_, index) =>
+      movement({ exerciseId: `standard-${index}`, sortOrder: index + 1, sets: 3, reps: 12 }),
+    );
+
+    expect(estimateWorkoutMinutes(standard)).toBe(14);
+  });
+
   it('returns zero for an empty session', () => {
     expect(estimateWorkoutMinutes([])).toBe(0);
   });

@@ -7,11 +7,11 @@ export default function AboutSettingsScreen() {
   return (
     <SettingsScreenShell
       title="About"
-      subtitle="Pilates at Home: Daily Coach & Nutrition — movement, nutrition, reflection."
+      subtitle="At-home Pilates, nutrition, and calm progress in one place."
     >
       <Card style={styles.card}>
         <Text variant="h2">Pilates at Home</Text>
-        <Text variant="bodyMuted">Version 1.0.0</Text>
+        <Text variant="bodyMuted">Version 1.2</Text>
         <Text variant="bodyMuted" style={styles.copy}>
           A local-first wellness app for Pilates-inspired movement, thoughtful nutrition, and calm
           progress tracking.

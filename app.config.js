@@ -4,7 +4,7 @@ module.exports = {
   expo: {
     name: 'Pilates at Home',
     slug: 'tune',
-    version: '1.1',
+    version: '1.2',
     orientation: 'portrait',
     icon: './assets/icon.png',
     scheme: 'pilatesathome',

@@ -129,8 +129,9 @@ function defaultOnboardingRequest(profile: Profile): {
       : profile.fitnessGoal === 'maintain'
         ? 'mobility'
         : 'full_body';
-  const targetMinutes =
-    profile.trainingFrequency === 'none' ? 15 : profile.trainingFrequency === '1_2' ? 25 : 35;
+  // Keep the first session easy to start; users can request a longer session
+  // from Change Workout once they know their preferred rhythm.
+  const targetMinutes = 15;
   const intensity: WorkoutIntensity =
     profile.trainingFrequency === 'none' ? 'lighter' : profile.paceKgPerWeek >= 1 ? 'challenging' : 'balanced';
 

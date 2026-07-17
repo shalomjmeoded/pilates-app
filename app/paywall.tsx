@@ -5,11 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SubscreenTopBar } from '@/components/navigation';
 import { PaywallHero } from '@/components/premium';
-import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 import { useFinishOnboarding } from '@/hooks/useFinishOnboarding';
 import { usePremium } from '@/hooks/usePremium';
-import { isDevPremiumBypassEnabled } from '@/services/monetization/devPremiumBypass';
 import { trackPremiumEvent } from '@/services/monetization/premiumAnalytics';
 import { usePreferencesStore } from '@/stores/preferencesStore';
 import { colors, spacing, createDynamicStyles } from '@/theme';
@@ -22,7 +20,6 @@ export default function PaywallScreen() {
   const { finish, isSubmitting, error, rebuildMode } = useFinishOnboarding();
   const { beginFreeTrial, restore, hasAccess, hydrate } = usePremium();
   const [actionError, setActionError] = useState<string | null>(null);
-  const showDevBypass = isDevPremiumBypassEnabled();
 
   useEffect(() => {
     trackPremiumEvent('paywall_viewed');
@@ -61,16 +58,6 @@ export default function PaywallScreen() {
           onStartTrial={(plan) => void completeAccess(() => beginFreeTrial(plan))}
           onRestore={() => void completeAccess(restore)}
         />
-        {showDevBypass ? (
-          <Button
-            label={isSubmitting ? 'Continuing...' : 'Continue without purchase (dev)'}
-            variant="secondary"
-            onPress={() => void completeAccess(async () => {
-              await hydrate();
-            })}
-            disabled={isSubmitting}
-          />
-        ) : null}
         {isSubmitting ? <Text variant="bodyMuted">Unlocking your plan...</Text> : null}
         {actionError || error ? (
           <Text variant="body" style={styles.error}>

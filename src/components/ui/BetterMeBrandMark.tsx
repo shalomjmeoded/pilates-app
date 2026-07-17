@@ -3,30 +3,28 @@ import { Image, View } from 'react-native';
 import { Text } from '@/components/ui/Text';
 import { colors, radius, createDynamicStyles } from '@/theme';
 
-const BETTERME_ICON = require('../../../assets/icon.png');
+const APP_ICON = require('../../../assets/icon.png');
 
 interface BetterMeBrandMarkProps {
   showWordmark?: boolean;
   compact?: boolean;
-  showDescriptor?: boolean;
 }
 
 export function BetterMeBrandMark({
   showWordmark = true,
   compact = false,
-  showDescriptor = false,
 }: BetterMeBrandMarkProps) {
-  const size = compact ? 22 : 28;
+  const size = compact ? 26 : 28;
 
   return (
     <View
       style={[styles.container, compact && styles.containerCompact]}
       accessible
       accessibilityRole="image"
-      accessibilityLabel={showDescriptor ? 'Pilates at Home: Daily Coach' : 'Pilates at Home'}
+      accessibilityLabel="Pilates at Home"
     >
       <Image
-        source={BETTERME_ICON}
+        source={APP_ICON}
         resizeMode="cover"
         style={[styles.icon, { width: size, height: size }]}
       />
@@ -35,17 +33,12 @@ export function BetterMeBrandMark({
           <Text
             variant="label"
             style={[styles.wordmark, compact && styles.wordmarkCompact]}
-            numberOfLines={compact ? 2 : 1}
+            numberOfLines={1}
             adjustsFontSizeToFit
-            minimumFontScale={0.78}
+            minimumFontScale={0.9}
           >
-            {showDescriptor ? 'Pilates at Home:' : 'Pilates at Home'}
+            Pilates at Home
           </Text>
-          {showDescriptor ? (
-            <Text variant="caption" style={styles.descriptor} numberOfLines={1}>
-              Daily Coach
-            </Text>
-          ) : null}
         </View>
       ) : null}
     </View>
@@ -61,7 +54,7 @@ const styles = createDynamicStyles(() => ({
     minWidth: 0,
   },
   containerCompact: {
-    maxWidth: 148,
+    maxWidth: 150,
   },
   icon: {
     borderRadius: radius.square,
@@ -79,16 +72,10 @@ const styles = createDynamicStyles(() => ({
     gap: 0,
   },
   wordmarkStackCompact: {
-    maxWidth: 118,
+    maxWidth: 116,
   },
   wordmarkCompact: {
-    fontSize: 10,
-    lineHeight: 12,
-  },
-  descriptor: {
-    color: colors.textMuted,
-    fontSize: 9,
-    lineHeight: 11,
-    letterSpacing: 0,
+    fontSize: 13,
+    lineHeight: 17,
   },
 }));

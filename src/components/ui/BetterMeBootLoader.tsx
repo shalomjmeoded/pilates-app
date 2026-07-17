@@ -78,7 +78,13 @@ export function BetterMeBootLoader({ message = 'Preparing your rhythm...' }: Bet
             />
           </View>
         </View>
-        <Text variant="h2" style={styles.wordmark}>
+        <Text
+          variant="h2"
+          style={styles.wordmark}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.9}
+        >
           Pilates at Home
         </Text>
         <Text variant="bodyMuted" style={styles.tagline}>
@@ -145,7 +151,11 @@ const styles = createDynamicStyles(() => ({
   wordmark: {
     color: colors.brandPrimary,
     textAlign: 'center',
-    paddingHorizontal: spacing.sm,
+    width: '100%',
+    maxWidth: 280,
+    paddingHorizontal: spacing.xs,
+    fontSize: 24,
+    lineHeight: 30,
   },
   tagline: {
     textAlign: 'center',

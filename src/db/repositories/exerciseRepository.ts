@@ -1,5 +1,6 @@
 import { getDatabase } from '@/db/connection';
 import { mapExerciseRow } from '@/db/mappers';
+import { CURATED_EXERCISE_IDS } from '@/constants/exerciseCatalog';
 import type { Exercise, ExerciseRow } from '@/types/exercise';
 
 const INSERT_COLUMNS = `id, name, description, instructions_json, common_mistakes_json,
@@ -35,16 +36,20 @@ function insertParams(exercise: Exercise): Array<string | number | null> {
 
 export async function countExercises(): Promise<number> {
   const db = await getDatabase();
+  const placeholders = CURATED_EXERCISE_IDS.map(() => '?').join(', ');
   const row = await db.getFirstAsync<{ count: number }>(
-    'SELECT COUNT(*) as count FROM exercise_library',
+    `SELECT COUNT(*) as count FROM exercise_library WHERE id IN (${placeholders})`,
+    ...CURATED_EXERCISE_IDS,
   );
   return row?.count ?? 0;
 }
 
 export async function getAllExercises(): Promise<Exercise[]> {
   const db = await getDatabase();
+  const placeholders = CURATED_EXERCISE_IDS.map(() => '?').join(', ');
   const rows = await db.getAllAsync<ExerciseRow>(
-    'SELECT * FROM exercise_library ORDER BY name ASC',
+    `SELECT * FROM exercise_library WHERE id IN (${placeholders}) ORDER BY name ASC`,
+    ...CURATED_EXERCISE_IDS,
   );
   return rows.map(mapExerciseRow);
 }

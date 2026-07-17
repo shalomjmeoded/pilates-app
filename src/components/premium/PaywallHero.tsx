@@ -13,7 +13,7 @@ import { Text } from '@/components/ui/Text';
 import { colors, radius, shadows, spacing, createDynamicStyles } from '@/theme';
 import type { PremiumPlanId } from '@/types/premium';
 
-const PRIVACY_POLICY_URL = 'https://clearday-seven.vercel.app/pilates-at-home';
+const PRIVACY_POLICY_URL = 'https://clearday-seven.vercel.app/betterme';
 const TERMS_OF_USE_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
 
 export interface PaywallOutcomeSummary {
