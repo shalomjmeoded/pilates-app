@@ -10,7 +10,7 @@ module.exports = {
     scheme: 'pilatesathome',
     userInterfaceStyle: 'light',
     ios: {
-      supportsTablet: false,
+      supportsTablet: true,
       bundleIdentifier: 'com.renatovanerven.betterme',
       infoPlist: {
         // Keep the readable brand name in native iOS metadata as well as Expo's config.
