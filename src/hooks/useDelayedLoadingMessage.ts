@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 export function useDelayedLoadingMessage(
   active: boolean,
-  message = 'Waking your Pilates at Home coach...',
+  message = 'Waking your Form: Pilates Studio coach...',
   delayMs = 3_500,
 ): string | null {
   const [visibleMessage, setVisibleMessage] = useState<string | null>(null);

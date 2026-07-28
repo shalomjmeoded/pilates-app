@@ -11,7 +11,7 @@ export default function Step01Gender() {
   return (
     <OnboardingShell
       step={step}
-      title="Let&apos;s personalize Pilates at Home"
+      title="Let&apos;s personalize Form: Pilates Studio"
       subtitle="A few details help us build your plan."
       showBack={false}
       onNext={goNext}

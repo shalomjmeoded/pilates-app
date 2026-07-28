@@ -47,16 +47,16 @@ const PAYWALL_NUDGE_DELAYS_SECONDS = [3 * 60 * 60, 24 * 60 * 60, 72 * 60 * 60] a
 
 const GENERIC_PAYWALL_NUDGE_COPY: Array<{ title: string; body: string }> = [
   {
-    title: 'Your Pilates at Home plan is ready',
+    title: 'Your Form: Pilates Studio plan is ready',
     body: "Unlock your AI-powered Pilates and nutrition coach when you're ready to begin.",
   },
   {
     title: 'Your first plan is waiting',
-    body: 'Start your personalized Pilates and nutrition rhythm with Pilates at Home.',
+    body: 'Start your personalized Pilates and nutrition rhythm with Form: Pilates Studio.',
   },
   {
     title: 'Begin when it feels right',
-    body: 'Your Pilates at Home coach is ready to help you turn your plan into progress.',
+    body: 'Your Form: Pilates Studio coach is ready to help you turn your plan into progress.',
   },
 ];
 

@@ -2,9 +2,9 @@ const allowDirectGemini = process.env.EXPO_PUBLIC_ENABLE_DIRECT_GEMINI === 'true
 
 module.exports = {
   expo: {
-    name: 'Pilates at Home',
+    name: 'Form: Pilates Studio',
     slug: 'tune',
-    version: '1.2',
+    version: '1.3',
     orientation: 'portrait',
     icon: './assets/icon.png',
     scheme: 'pilatesathome',
@@ -14,18 +14,12 @@ module.exports = {
       bundleIdentifier: 'com.renatovanerven.betterme',
       infoPlist: {
         // Keep the readable brand name in native iOS metadata as well as Expo's config.
-        CFBundleDisplayName: 'Pilates at Home',
-        CFBundleName: 'Pilates at Home',
+        CFBundleDisplayName: 'Form: Pilates Studio',
+        CFBundleName: 'Form: Pilates Studio',
         ITSAppUsesNonExemptEncryption: false,
       },
     },
     android: {
-      adaptiveIcon: {
-        backgroundColor: '#98AF94',
-        foregroundImage: './assets/android-icon-foreground.png',
-        backgroundImage: './assets/android-icon-background.png',
-        monochromeImage: './assets/android-icon-monochrome.png',
-      },
       package: 'com.renatovanerven.betterme',
       predictiveBackGestureEnabled: false,
     },
@@ -57,9 +51,9 @@ module.exports = {
         'expo-image-picker',
         {
           photosPermission:
-            'Pilates at Home uses selected photos for meal nutrition estimates and optional physique wellness assessments.',
+            'Form: Pilates Studio uses selected photos for meal nutrition estimates and optional physique wellness assessments.',
           cameraPermission:
-            'Pilates at Home uses your camera for meal nutrition estimates and optional physique wellness assessments.',
+            'Form: Pilates Studio uses your camera for meal nutrition estimates and optional physique wellness assessments.',
         },
       ],
     ],

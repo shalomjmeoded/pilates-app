@@ -74,7 +74,7 @@ export default function SettingsScreen() {
         </SettingsSection>
 
         <SettingsSection title="About" accentColor={colors.textMuted}>
-          <SettingsRow label="About Pilates at Home" onPress={() => router.push('/(tabs)/settings/about')} />
+          <SettingsRow label="About Form: Pilates Studio" onPress={() => router.push('/(tabs)/settings/about')} />
         </SettingsSection>
       </ScrollView>
     </Screen>

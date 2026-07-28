@@ -41,7 +41,7 @@ export default function Step05Notifications() {
     setAnnouncedStatus(
       granted
         ? 'Reminders enabled. You can fine-tune times in Settings.'
-        : 'No problem — Pilates at Home works fully without reminders.',
+        : 'No problem — Form: Pilates Studio works fully without reminders.',
     );
   };
 

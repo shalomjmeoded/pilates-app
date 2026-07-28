@@ -88,12 +88,12 @@ async function fetchAiResponse<T>(
     } catch (error) {
       if (isAbortError(error)) {
         throw new AiProxyError(
-          'Your Pilates at Home coach took too long to respond. Please try again.',
+          'Your Form: Pilates Studio coach took too long to respond. Please try again.',
           'TIMEOUT',
         );
       }
       throw new AiProxyError(
-        'Could not reach your Pilates at Home coach. Check your connection and try again.',
+        'Could not reach your Form: Pilates Studio coach. Check your connection and try again.',
         'NETWORK_ERROR',
       );
     }

@@ -38,7 +38,7 @@ export default function Step00Welcome() {
   return (
     <OnboardingShell
       step={step}
-      title={returning ? 'Welcome back to Pilates at Home' : 'Welcome to Pilates at Home'}
+      title={returning ? 'Welcome back to Form: Pilates Studio' : 'Welcome to Form: Pilates Studio'}
       subtitle={
         returning
           ? 'Your saved plan is ready for a quick review.'

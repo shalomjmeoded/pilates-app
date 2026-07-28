@@ -44,7 +44,7 @@ export default function PhysiqueAssessmentReviewScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <Text variant="h1">Review Assessment</Text>
         <Text variant="bodyMuted">
-          Review before saving. Pilates at Home never saves AI results without your confirmation.
+          Review before saving. Form: Pilates Studio never saves AI results without your confirmation.
         </Text>
 
         <Card style={styles.card}>

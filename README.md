@@ -1,4 +1,4 @@
-# Pilates at Home
+# Form: Pilates Studio
 
 Local-first Pilates and wellness app built with **Expo (React Native)**. Workouts, nutrition, progress tracking, and premium AI features (meal estimates, weekly coach, physique assessment) with data stored on-device in SQLite.
 

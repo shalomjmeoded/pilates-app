@@ -89,7 +89,7 @@ export const PREMIUM_UPSELLS: Record<PremiumFeatureKey, PremiumUpsellContent> = 
   premium_theme: {
     featureName: 'premium_theme',
     title: 'Premium Themes',
-    description: 'Unlock Golden Mode and Pride — signature looks for Pilates at Home.',
+    description: 'Unlock Golden Mode and Pride — signature looks for Form: Pilates Studio.',
     benefits: [
       'Golden Mode — editorial white + champagne gold',
       'Pride — deep violet with magenta, teal, and gold',

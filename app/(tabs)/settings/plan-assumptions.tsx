@@ -59,7 +59,7 @@ export default function PlanAssumptionsScreen() {
   return (
     <SettingsScreenShell
       title="Plan assumptions"
-      subtitle="What Pilates at Home is using for your plan today."
+      subtitle="What Form: Pilates Studio is using for your plan today."
     >
       <Card style={{ gap: spacing.xs }}>
         <Text variant="label">Goal</Text>

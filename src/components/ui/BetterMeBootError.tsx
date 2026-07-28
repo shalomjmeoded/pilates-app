@@ -21,7 +21,7 @@ export function BetterMeBootError({ message, onRetry }: BetterMeBootErrorProps) 
           adjustsFontSizeToFit
           minimumFontScale={0.8}
         >
-          Couldn&apos;t start Pilates at Home
+          Couldn&apos;t start Form: Pilates Studio
         </Text>
         <Text variant="bodyMuted" style={styles.message}>
           {message}

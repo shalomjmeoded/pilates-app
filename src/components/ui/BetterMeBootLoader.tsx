@@ -74,7 +74,7 @@ export function BetterMeBootLoader({ message = 'Preparing your rhythm...' }: Bet
               source={APP_ICON}
               style={styles.icon}
               resizeMode="cover"
-              accessibilityLabel="Pilates at Home"
+              accessibilityLabel="Form: Pilates Studio"
             />
           </View>
         </View>
@@ -85,7 +85,7 @@ export function BetterMeBootLoader({ message = 'Preparing your rhythm...' }: Bet
           adjustsFontSizeToFit
           minimumFontScale={0.9}
         >
-          Pilates at Home
+          Form: Pilates Studio
         </Text>
         <Text variant="bodyMuted" style={styles.tagline}>
           Movement, nourishment, and calm progress — in one rhythm.

@@ -90,7 +90,7 @@ export default function Step15Loading() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <Animated.View style={[styles.mark, glowStyle]}>
-            <Image source={APP_ICON} style={styles.markIcon} resizeMode="cover" accessibilityLabel="Pilates at Home" />
+            <Image source={APP_ICON} style={styles.markIcon} resizeMode="cover" accessibilityLabel="Form: Pilates Studio" />
           </Animated.View>
           <Text variant="h1" style={styles.title}>
             Creating your plan
@@ -108,7 +108,7 @@ export default function Step15Loading() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Animated.View style={[styles.mark, glowStyle]}>
-          <Image source={APP_ICON} style={styles.markIcon} resizeMode="cover" accessibilityLabel="Pilates at Home" />
+          <Image source={APP_ICON} style={styles.markIcon} resizeMode="cover" accessibilityLabel="Form: Pilates Studio" />
         </Animated.View>
         <Text variant="h1" style={styles.title}>
           Creating your plan

@@ -186,7 +186,7 @@ describe('Phase 8.8 AI QA — client', () => {
     (getPremiumStatus as jest.Mock).mockResolvedValue({ isPremium: false });
     mockFetchResponse(403, {
       ok: false,
-      error: 'AI features require Pilates at Home Premium.',
+      error: 'AI features require Form: Pilates Studio Premium.',
       code: 'UNAUTHORIZED',
     });
 

@@ -113,7 +113,7 @@ export default function NotificationsSettingsScreen() {
 
       {permissionDenied ? (
         <Text variant="bodyMuted" style={styles.denied}>
-          You can keep using Pilates at Home without notifications.
+          You can keep using Form: Pilates Studio without notifications.
         </Text>
       ) : null}
     </SettingsScreenShell>

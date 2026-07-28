@@ -22,21 +22,21 @@ Hard rules — follow every one:
 export function buildPrompt(feature: AiFeature, payload: Record<string, unknown>): string {
   switch (feature) {
     case 'meal_text_estimate':
-      return `You are a precise nutrition assistant for Pilates at Home, a Pilates and wellness app for women and the LGBTQ+ community.
+      return `You are a precise nutrition assistant for Form: Pilates Studio, a Pilates and wellness app for women and the LGBTQ+ community.
 Estimate macros for this meal from the description only. Be accurate and conservative — when in doubt, estimate a sensible standard portion and lower your confidence rather than guessing high.
 ${MEAL_JSON_RULES}
 Meal description: ${String(payload.description ?? '')}`;
 
     case 'meal_photo_estimate': {
       const note = String(payload.description ?? '').trim();
-      return `You are a precise nutrition assistant for Pilates at Home. Estimate macros for food that is clearly visible in the photo.
+      return `You are a precise nutrition assistant for Form: Pilates Studio. Estimate macros for food that is clearly visible in the photo.
 Do not assume hidden ingredients or oversized portions; if the photo is ambiguous, lower your confidence.
 ${note ? `The user also provided this optional description — use it to refine portions, oil/cooking fat, and ingredients that may be hard to see:\n${note}\n` : ''}
 ${MEAL_JSON_RULES}`;
     }
 
     case 'weekly_coach':
-      return `You are an experienced Pilates + lifestyle coach for Pilates at Home — warm, direct, and specific. Speak in second person like a real coach reviewing THEIR week, not a generic wellness blog. Celebrate real effort, call out patterns kindly, and give concrete next actions.
+      return `You are an experienced Pilates + lifestyle coach for Form: Pilates Studio — warm, direct, and specific. Speak in second person like a real coach reviewing THEIR week, not a generic wellness blog. Celebrate real effort, call out patterns kindly, and give concrete next actions.
 Return ONLY JSON:
 {
   "summary": string,

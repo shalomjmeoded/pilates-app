@@ -46,7 +46,7 @@ export function useMealTextEstimate(mealDate: string) {
     try {
       const premium = await getCurrentPremiumStatus();
       if (!premium.isPremium) {
-        setError('AI meal estimates require Pilates at Home Premium.');
+        setError('AI meal estimates require Form: Pilates Studio Premium.');
         return;
       }
 
@@ -65,7 +65,7 @@ export function useMealTextEstimate(mealDate: string) {
       });
     } catch (estimateError) {
       if (estimateError instanceof AiProxyError && estimateError.code === 'UNAUTHORIZED') {
-        setError('AI meal estimates require Pilates at Home Premium.');
+        setError('AI meal estimates require Form: Pilates Studio Premium.');
         setShowManualFallbackCta(false);
         return;
       }

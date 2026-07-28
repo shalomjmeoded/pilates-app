@@ -171,7 +171,7 @@ export async function generateWeeklyCoachInsight(options?: {
   const premium = await getCurrentPremiumStatus();
 
   if (!hasPremiumAccess(premium)) {
-    throw new Error('Weekly AI coach requires Pilates at Home Premium.');
+    throw new Error('Weekly AI coach requires Form: Pilates Studio Premium.');
   }
 
   let insight: WeeklyCoachInsightContent;
@@ -179,7 +179,7 @@ export async function generateWeeklyCoachInsight(options?: {
     const aiResult = await aiFacade.generateWeeklyCoach(summary);
     insight = toStoredInsight(aiResult, 'ai');
   } catch (error) {
-    console.warn('[Pilates at Home] AI coach unavailable; using local coach fallback.', error);
+    console.warn('[Form: Pilates Studio] AI coach unavailable; using local coach fallback.', error);
     insight = buildLocalWeeklyCoachFallback(summary);
   }
 

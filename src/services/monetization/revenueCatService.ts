@@ -19,7 +19,7 @@ import { captureProductEvent } from '@/services/analytics/analyticsCore';
 
 let configured = false;
 const REVENUECAT_NATIVE_UNAVAILABLE_MESSAGE =
-  'In-app purchases require a Pilates at Home development build or TestFlight build. Expo Go cannot open the Apple sandbox purchase sheet.';
+  'In-app purchases require a Form: Pilates Studio development build or TestFlight build. Expo Go cannot open the Apple sandbox purchase sheet.';
 
 function isPurchasesError(error: unknown): error is PurchasesError {
   return (

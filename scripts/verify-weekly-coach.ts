@@ -87,7 +87,7 @@ function printSection(title: string): void {
 }
 
 function buildCoachPrompt(summary: Record<string, unknown>): string {
-  return `You are an experienced Pilates + lifestyle coach for Pilates at Home — warm, direct, and specific. Speak in second person like a real coach reviewing THEIR week, not a generic wellness blog. Celebrate real effort, call out patterns kindly, and give concrete next actions.
+  return `You are an experienced Pilates + lifestyle coach for Form: Pilates Studio — warm, direct, and specific. Speak in second person like a real coach reviewing THEIR week, not a generic wellness blog. Celebrate real effort, call out patterns kindly, and give concrete next actions.
 Return ONLY JSON:
 {
   "summary": string,

@@ -17,7 +17,7 @@ export function mealEstimateErrorMessage(error: unknown, fallback: string): stri
     return 'Could not reach the AI service. Check your connection or enter macros manually.';
   }
   if (error instanceof AiProxyError && error.code === 'UNAUTHORIZED') {
-    return 'AI meal estimates require Pilates at Home Premium.';
+    return 'AI meal estimates require Form: Pilates Studio Premium.';
   }
   return error instanceof Error ? error.message : fallback;
 }

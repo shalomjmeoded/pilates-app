@@ -163,7 +163,7 @@ export default function Step17Paywall() {
   return (
     <OnboardingShell
       step={step}
-      title="Unlock Pilates at Home"
+      title="Unlock Form: Pilates Studio"
       subtitle="Start your free trial."
       onBack={goBack}
       hideFooter

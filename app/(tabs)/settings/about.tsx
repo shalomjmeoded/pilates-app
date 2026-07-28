@@ -10,7 +10,7 @@ export default function AboutSettingsScreen() {
       subtitle="At-home Pilates, nutrition, and calm progress in one place."
     >
       <Card style={styles.card}>
-        <Text variant="h2">Pilates at Home</Text>
+        <Text variant="h2">Form: Pilates Studio</Text>
         <Text variant="bodyMuted">Version 1.2</Text>
         <Text variant="bodyMuted" style={styles.copy}>
           A local-first wellness app for Pilates-inspired movement, thoughtful nutrition, and calm

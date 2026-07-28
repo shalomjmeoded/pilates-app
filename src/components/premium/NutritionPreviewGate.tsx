@@ -72,7 +72,7 @@ export function NutritionPreviewGate({ onStartTrial, onRestore }: NutritionPrevi
       <View style={styles.intro}>
         <Text variant="section">Nourishment tailored to you</Text>
         <Text variant="bodyMuted">
-          Your macro targets are already calculated. Unlock Pilates at Home to log meals and see your day unfold.
+          Your macro targets are already calculated. Unlock Form: Pilates Studio to log meals and see your day unfold.
         </Text>
       </View>
 
@@ -98,7 +98,7 @@ export function NutritionPreviewGate({ onStartTrial, onRestore }: NutritionPrevi
             <View style={styles.aiCopy}>
               <Text variant="h2">AI meal logging</Text>
               <Text variant="bodyMuted">
-                Describe or photograph a meal — Pilates at Home estimates calories and macros in seconds.
+                Describe or photograph a meal — Form: Pilates Studio estimates calories and macros in seconds.
               </Text>
             </View>
           </View>

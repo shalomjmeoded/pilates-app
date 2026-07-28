@@ -37,7 +37,7 @@ export async function exportDataViaShareSheet(): Promise<void> {
   const json = JSON.stringify(payload, null, 2);
 
   await Share.share({
-    title: 'Pilates at Home Data Export',
+    title: 'Form: Pilates Studio Data Export',
     message: json,
   });
 }

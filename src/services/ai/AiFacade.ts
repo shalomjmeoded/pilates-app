@@ -7,7 +7,7 @@ import { MockAiProvider } from './providers/MockAiProvider';
 export class AiNotConfiguredError extends Error {
   constructor() {
     super(
-      'AI provider is not configured. Set EXPO_PUBLIC_AI_PROXY_URL to your Pilates at Home AI proxy.',
+      'AI provider is not configured. Set EXPO_PUBLIC_AI_PROXY_URL to your Form: Pilates Studio AI proxy.',
     );
     this.name = 'AiNotConfiguredError';
   }

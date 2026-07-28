@@ -2,7 +2,7 @@ import type { GenderIdentity } from '@/types/profile';
 import type { SafetyWarning } from '@/types/calculations';
 
 export const SAFETY_WARNING_MESSAGE =
-  'Caution: Your configured calorie or macro target is very low. Pilates at Home does not recommend maintaining this routine long-term.';
+  'Caution: Your configured calorie or macro target is very low. Form: Pilates Studio does not recommend maintaining this routine long-term.';
 
 const THRESHOLDS: Record<GenderIdentity, number> = {
   female: 1200,

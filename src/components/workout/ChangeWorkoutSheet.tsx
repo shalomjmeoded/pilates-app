@@ -35,7 +35,7 @@ export function ChangeWorkoutSheet({
         <Pressable style={styles.sheet} onPress={(event) => event.stopPropagation()}>
           <Text variant="h2">Change today&apos;s workout</Text>
           <Text variant="bodyMuted">
-            Tell Pilates at Home what you want to focus on and we&apos;ll rebuild this week around it.
+            Tell Form: Pilates Studio what you want to focus on and we&apos;ll rebuild this week around it.
           </Text>
 
           <View style={styles.section}>

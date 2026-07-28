@@ -21,7 +21,7 @@ export function BetterMeBrandMark({
       style={[styles.container, compact && styles.containerCompact]}
       accessible
       accessibilityRole="image"
-      accessibilityLabel="Pilates at Home"
+      accessibilityLabel="Form: Pilates Studio"
     >
       <Image
         source={APP_ICON}
@@ -37,7 +37,7 @@ export function BetterMeBrandMark({
             adjustsFontSizeToFit
             minimumFontScale={0.9}
           >
-            Pilates at Home
+            Form: Pilates Studio
           </Text>
         </View>
       ) : null}
